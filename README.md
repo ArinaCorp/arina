@@ -1,5 +1,4 @@
-# Yii2 Boilerplate
-Yet another [Yii2](http://www.yiiframework.com/) application skeleton =)
+# Arina
 
 ## DIRECTORY STRUCTURE
 
@@ -13,23 +12,45 @@ web/				the entry script and Web resources
 
 ## REQUIREMENTS
 
-The minimum requirement by this project template that your Web server supports PHP 5.4.0.
+The minimum requirement by this project that your Web server supports PHP 5.4.0.
 
 ## INSTALL
+
+### Vendors
 
 If you do not have [Composer](http://getcomposer.org/), you may install it by following the instructions
 at [getcomposer.org](http://getcomposer.org/doc/00-intro.md#installation-nix).
 
-You can then install this project template using the following command:
-
+To install vendors run
 ```
 composer global require "fxp/composer-asset-plugin:~1.1.1"
-composer create-project "nullref/yii2-app" --stability=dev
+composer install -o
 ```
-
 If you use composer.phar as local file, you have to use commands begin with `php composer.phar`
 
-### Usage guide
+or
+
+`make vendors-install`
+
+### .env
+
+Next create `.env` file:
+
+Copy from example: `cp .env.example` and set custom vars. 
+
+Or run `make env`
+
+### Create DB
+
+You can create DB manual or user command `make db-create db-name=<name_of_db>`
+
+### Run migrations
+
+You have to run:
+
+`php yii modules-migrate` or `make db-migrate`
+
+## Usage guide
 
 If you want to add this project to remote repository using PhpStorm, follow next steps
 

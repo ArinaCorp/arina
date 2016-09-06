@@ -11,7 +11,7 @@ db-migrate:
 db-create:
 	mysql -u root -p -e 'CREATE SCHEMA $(db-name) DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;'
 env:
-	(cp .env.example .env) && (nano .env)
+	(cp -n .env.example .env) || (php yii env)
 message:
 	php yii message src/messages/config.php
 vendors-update:
