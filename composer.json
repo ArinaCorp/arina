@@ -1,0 +1,69 @@
+{
+    "name": "nullref/yii2-app",
+    "description": "Yii 2 Project Template",
+    "keywords": ["yii2", "framework", "project template"],
+    "type": "project",
+    "license": "MIT",
+    "support": {
+        "issues": "https://github.com/yiisoft/yii2/issues?state=open",
+        "forum": "http://www.yiiframework.com/forum/",
+        "wiki": "http://www.yiiframework.com/wiki/",
+        "irc": "irc://irc.freenode.net/yii",
+        "source": "https://github.com/yiisoft/yii2"
+    },
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.4.0",
+        "yiisoft/yii2": ">=2.0.4",
+        "yiisoft/yii2-bootstrap": "*",
+        "yiisoft/yii2-swiftmailer": "*",
+        "vlucas/phpdotenv": "~1.0@dev",
+        "nullref/yii2-useful": "dev-master",
+        "nullref/yii2-core": "dev-master",
+        "nullref/yii2-admin": "dev-master"
+    },
+    "require-dev": {
+        "yiisoft/yii2-codeception": "*",
+        "yiisoft/yii2-debug": "*",
+        "yiisoft/yii2-gii": "*",
+        "yiisoft/yii2-faker": "*"
+    },
+    "config": {
+        "process-timeout": 1800
+    },
+    "scripts": {
+        "post-create-project-cmd": [
+            "yii\\composer\\Installer::postCreateProject",
+            "cp .env.example .env"
+        ]
+    },
+    "extra": {
+        "asset-repositories": [
+            {
+                "type": "bower-git",
+                "url": "https://github.com/adobe-webplatform/eve.git",
+                "name": "bower-asset/eve"
+            }
+        ],
+        "asset-vcs-driver-options": {
+            "github-no-api": true
+        },
+        "asset-pattern-skip-version": "(-build|-patch)",
+        "yii\\composer\\Installer::postCreateProject": {
+            "setPermission": [
+                {
+                    "runtime": "0777",
+                    "web/assets": "0777",
+                    "yii": "0755"
+                }
+            ],
+            "generateCookieValidationKey": [
+                "src/config/web.php"
+            ]
+        },
+        "asset-installer-paths": {
+            "npm-asset-library": "vendor/npm",
+            "bower-asset-library": "vendor/bower"
+        }
+    }
+}
