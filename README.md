@@ -12,7 +12,11 @@ web/				the entry script and Web resources
 
 ## REQUIREMENTS
 
-The minimum requirement by this project that your Web server supports PHP 5.4.0.
+The minimum requirement by this project that your Web server supports PHP 5.4.0. with extensions:
+- mbstring
+- curl
+- pdo
+- json
 
 ## INSTALL
 
@@ -42,7 +46,7 @@ Or run `make env`
 
 ### Create DB
 
-You can create DB manual or user command `make db-create db-name=<name_of_db>`
+You can create DB manual or use command `make db-create db-name=<name_of_db>`
 
 ### Run migrations
 
