@@ -54,12 +54,3 @@ You have to run:
 
 `php yii modules-migrate` or `make db-migrate`
 
-## Usage guide
-
-If you want to add this project to remote repository using PhpStorm, follow next steps
-
-    1. At the end of installing project remove current VCS in composer dialog.
-    2. In PhpStorm -> VCS -> Enable Version Control Integration
-    3. Add all files to git
-    4. VCS -> Commit and Push
-    5. Before Push phase define your repository
