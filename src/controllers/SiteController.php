@@ -2,12 +2,13 @@
 
 namespace app\controllers;
 
+use nullref\core\interfaces\IAdminController;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 
 
-class SiteController extends Controller
+class SiteController extends Controller implements IAdminController
 {
     public function behaviors()
     {
