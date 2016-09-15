@@ -20,6 +20,6 @@ class m160911_143902_add_audience_table extends Migration
 
     public function down()
     {
-        $this->dropTable('{{%audience}}');
+        $this->dropTable('{{%directories_audience}}');
     }
 }
