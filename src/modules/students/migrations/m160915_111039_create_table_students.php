@@ -1,5 +1,5 @@
 <?php
-
+/* @author VasyaKog */
 use yii\db\Migration;
 use nullref\core\traits\MigrationTrait;
 

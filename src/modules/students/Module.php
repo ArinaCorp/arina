@@ -1,5 +1,5 @@
 <?php
-
+/* @author VasyaKog */
 namespace app\modules\students;
 
 use nullref\core\interfaces\IAdminModule;
@@ -18,12 +18,6 @@ class Module extends BaseModule implements IAdminModule
     /**
      * @inheritdoc
      */
-    public function init()
-    {
-        parent::init();
-
-        // custom initialization code goes here
-    }
 
     public static function getAdminMenu()
     {
@@ -33,7 +27,7 @@ class Module extends BaseModule implements IAdminModule
             'items' => [
                 [
                     'label' => Yii::t('app', 'List'),
-                    'url' => ['/students/list'],
+                    'url' => ['/students'],
                     'icon' => 'list',
                 ],
             ]

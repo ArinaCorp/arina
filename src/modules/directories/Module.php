@@ -22,7 +22,7 @@ class Module extends BaseModule implements IAdminModule
         return [
             'label' => Yii::t('app', 'Directories'),
             'icon' => 'tasks',
-            'items' => [
+            'items' => [    
                 [
                     'label' => Yii::t('app', 'Audiences'),
                     'url' => ['/directories/audience'],

@@ -10,6 +10,7 @@ $config = [
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     'runtimePath' => dirname(dirname(__DIR__)) . '/runtime',
     'bootstrap' => ['log'],
+    'language'=> 'uk',
     'components' => [
         'formatter' => [
             'class' => 'app\components\Formatter',
