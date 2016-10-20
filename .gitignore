@@ -29,9 +29,5 @@ phpunit.phar
 # local phpunit config
 /phpunit.xml
 
-# dot.env vars
-.env
-.env.example
-
 # Codeception
 codecept.phar

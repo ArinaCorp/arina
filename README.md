@@ -54,3 +54,33 @@ You have to run:
 
 `php yii modules-migrate` or `make db-migrate`
 
+### Config for LAMP
+
+`/etc/hosts` => `127.0.0.1 	arina.dev`
+
+
+`/etc/apache2/sites-enabled/arina.dev.conf`
+
+```
+<VirtualHost *:80>
+   ServerName arina.dev
+   ServerAlias www.arina.dev
+   DocumentRoot /home/disicis/projects/php/arina/web
+   <Directory /home/disicis/projects/php/arina/web/>
+       Options Indexes FollowSymLinks MultiViews
+       AllowOverride All
+   </Directory>
+ </VirtualHost>
+```
+
+'/etc/apache2/apache2.conf'
+```
+IncludeOptional conf-enabled/*.conf
+
+IncludeOptional sites-enabled/*.conf
+
+ServerName localhost
+
+Include /etc/phpmyadmin/apache.conf #for phpmyadmin
+```
+
