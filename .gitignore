@@ -8,6 +8,9 @@ nbproject
 .buildpath
 .project
 .settings
+.env
+.env.example
+.gitignore
 
 # windows thumbnail cache
 Thumbs.db
