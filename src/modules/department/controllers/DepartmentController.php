@@ -2,6 +2,7 @@
 
 namespace app\modules\department\controllers;
 
+use Yii;
 use app\modules\department\models\Department;
 use app\modules\department\models\DepartmentQuery;
 use yii\web\Controller;

@@ -2,8 +2,10 @@
 
 namespace app\modules\department\models;
 
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
+use app\modules\department\models\Department;
 
 /**
  * DepartmentQuery represents the model behind the search form of `app\modules\department\models\Department`.
