@@ -1,10 +1,12 @@
 <?php
 
+use app\modules\directories\models\audience\Audience;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
+
 /* @var $this yii\web\View */
-/* @var $model app\modules\directories\models\Audience */
+/* @var $model app\modules\directories\models\audience\Audience */
 
 $this->title = $model->name;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Audiences'), 'url' => ['index']];

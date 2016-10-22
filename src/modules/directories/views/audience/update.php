@@ -1,9 +1,10 @@
 <?php
 
+use app\modules\directories\models\audience\Audience;
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model app\modules\directories\models\Audience */
+/* @var $model app\modules\directories\models\audience\Audience */
 
 $this->title = Yii::t('app', 'Update {modelClass}: ', [
     'modelClass' => 'Audience',

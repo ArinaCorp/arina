@@ -1,8 +1,9 @@
 <?php
 
-namespace app\modules\directories\models;
+namespace app\modules\directories\models\audience;
 
 use Yii;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "{{%directories_audience}}".
@@ -12,10 +13,10 @@ use Yii;
  * @property string $name
  * @property integer $type
  * @property integer $id_teacher
- *
  * @property string $typeTitle
  */
-class Audience extends \yii\db\ActiveRecord
+
+class Audience extends ActiveRecord
 {
     const TYPE_LECTURE = 1;
     const TYPE_LABORATORY = 2;
@@ -25,6 +26,7 @@ class Audience extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+
     public static function tableName()
     {
         return '{{%directories_audience}}';
@@ -34,6 +36,7 @@ class Audience extends \yii\db\ActiveRecord
      * @inheritdoc
      * @return AudienceQuery the active query used by this AR class.
      */
+
     public static function find()
     {
         return new AudienceQuery(get_called_class());

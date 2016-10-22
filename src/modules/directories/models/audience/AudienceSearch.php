@@ -1,20 +1,21 @@
 <?php
 
-namespace app\modules\directories\models;
+namespace app\modules\directories\models\audience;
 
-use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\modules\directories\models\Audience;
 
 /**
- * AudienceSearch represents the model behind the search form about `app\modules\directories\models\Audience`.
+ * AudienceSearch represents the model behind the search form about `app\modules\directories\models\audience\Audience`.
  */
+
 class AudienceSearch extends Audience
 {
+
     /**
      * @inheritdoc
      */
+
     public function rules()
     {
         return [
@@ -26,6 +27,7 @@ class AudienceSearch extends Audience
     /**
      * @inheritdoc
      */
+
     public function scenarios()
     {
         // bypass scenarios() implementation in the parent class
