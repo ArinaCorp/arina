@@ -8,9 +8,6 @@ nbproject
 .buildpath
 .project
 .settings
-.env
-.env.example
-.gitignore
 
 # windows thumbnail cache
 Thumbs.db
@@ -22,7 +19,7 @@ vendor
 composer.phar
 
 # composer install
-# composer.lock
+composer.lock
 
 # Mac DS_Store Files
 .DS_Store
@@ -34,3 +31,6 @@ phpunit.phar
 
 # Codeception
 codecept.phar
+
+# dot.env
+.env
