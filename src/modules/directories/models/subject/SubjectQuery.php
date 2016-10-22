@@ -9,7 +9,6 @@ use yii\db\ActiveQuery;
  *
  * @see Subject
  */
-
 class SubjectQuery extends ActiveQuery
 {
 

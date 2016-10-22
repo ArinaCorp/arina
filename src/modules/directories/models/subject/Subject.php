@@ -14,7 +14,6 @@ use yii\db\ActiveRecord;
  * @property string $short_name
  * @property integer $practice
  */
-
 class Subject extends ActiveRecord
 {
 
@@ -46,7 +45,7 @@ class Subject extends ActiveRecord
     {
         return [
             [['practice'], 'integer'],
-            [['title', 'short_name','code'], 'string', 'max' => 255],
+            [['title', 'short_name', 'code'], 'string', 'max' => 255],
         ];
     }
 

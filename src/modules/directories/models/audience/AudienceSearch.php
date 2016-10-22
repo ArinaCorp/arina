@@ -8,7 +8,6 @@ use yii\data\ActiveDataProvider;
 /**
  * AudienceSearch represents the model behind the search form about `app\modules\directories\models\audience\Audience`.
  */
-
 class AudienceSearch extends Audience
 {
 

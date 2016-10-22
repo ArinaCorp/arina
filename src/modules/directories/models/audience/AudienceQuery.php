@@ -9,7 +9,6 @@ use yii\db\ActiveQuery;
  *
  * @see Audience
  */
-
 class AudienceQuery extends ActiveQuery
 {
     /*public function active()

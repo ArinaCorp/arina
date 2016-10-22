@@ -13,7 +13,6 @@ use nullref\core\interfaces\IAdminController;
 /**
  * SubjectController implements the CRUD actions for Subject model.
  */
-
 class SubjectController extends Controller implements IAdminController
 {
 

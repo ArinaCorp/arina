@@ -8,7 +8,6 @@ use yii\data\ActiveDataProvider;
 /**
  * SubjectSearch represents the model behind the search form about `app\modules\directories\models\subject\Subject`.
  */
-
 class SubjectSearch extends Subject
 {
 
@@ -20,7 +19,7 @@ class SubjectSearch extends Subject
     {
         return [
             [['id', 'practice'], 'integer'],
-            [['title', 'short_name','code'], 'safe'],
+            [['title', 'short_name', 'code'], 'safe'],
         ];
     }
 
@@ -64,7 +63,7 @@ class SubjectSearch extends Subject
 
         $query->andFilterWhere(['like', 'title', $this->title])
             ->andFilterWhere(['like', 'code', $this->code])
-                ->andFilterWhere(['like', 'short_name', $this->short_name]);
+            ->andFilterWhere(['like', 'short_name', $this->short_name]);
 
         return $dataProvider;
     }

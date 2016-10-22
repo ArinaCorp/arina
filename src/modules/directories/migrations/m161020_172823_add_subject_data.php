@@ -9,7 +9,7 @@ class m161020_172823_add_subject_data extends Migration
 
     public function up()
     {
-        $this->batchInsert('{{%subject}}', ['id','title','code','short_name','practice'],
+        $this->batchInsert('{{%subject}}', ['id', 'title', 'code', 'short_name', 'practice'],
             [
                 [120, 'Географія', 'ЗО.13', 'Географія', NULL],
                 [119, 'Біологія', 'ЗО.12', 'Біологія', NULL],

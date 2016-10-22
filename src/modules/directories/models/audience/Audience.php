@@ -15,7 +15,6 @@ use yii\db\ActiveRecord;
  * @property integer $id_teacher
  * @property string $typeTitle
  */
-
 class Audience extends ActiveRecord
 {
     const TYPE_LECTURE = 1;
