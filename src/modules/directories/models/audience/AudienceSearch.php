@@ -18,7 +18,7 @@ class AudienceSearch extends Audience
     public function rules()
     {
         return [
-            [['id', 'type', 'id_teacher'], 'integer'],
+            [['id', 'type', 'id_teacher', 'capacity'], 'integer'],
             [['number', 'name'], 'safe'],
         ];
     }
@@ -63,6 +63,7 @@ class AudienceSearch extends Audience
             'id' => $this->id,
             'type' => $this->type,
             'id_teacher' => $this->id_teacher,
+            'capacity' => $this->capacity,
         ]);
 
         $query->andFilterWhere(['like', 'number', $this->number])

@@ -12,6 +12,7 @@ use yii\db\ActiveRecord;
  * @property string $number
  * @property string $name
  * @property integer $type
+ * @property integer $capacity
  * @property integer $id_teacher
  * @property string $typeTitle
  */
@@ -70,7 +71,7 @@ class Audience extends ActiveRecord
     public function rules()
     {
         return [
-            [['type', 'id_teacher'], 'integer'],
+            [['type', 'id_teacher', 'capacity'], 'integer'],
             [['number', 'name'], 'string', 'max' => 255],
         ];
     }
@@ -86,6 +87,7 @@ class Audience extends ActiveRecord
             'name' => Yii::t('app', 'Name'),
             'type' => Yii::t('app', 'Type'),
             'id_teacher' => Yii::t('app', 'Id Teacher'),
+            'capacity' => Yii::t('app', 'Capacity'),
         ];
     }
 }
