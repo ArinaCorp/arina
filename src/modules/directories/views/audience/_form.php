@@ -1,11 +1,11 @@
 <?php
 
-use app\modules\directories\models\Audience;
+use app\modules\directories\models\audience\Audience;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\modules\directories\models\Audience */
+/* @var $model app\modules\directories\models\audience\Audience */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
