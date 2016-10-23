@@ -22,7 +22,7 @@ class Module extends BaseModule implements IAdminModule
         return [
             'label' => Yii::t('app', 'Directories'),
             'icon' => 'tasks',
-            'items' => [    
+            'items' => [
                 [
                     'label' => Yii::t('app', 'Audiences'),
                     'url' => ['/directories/audience'],
@@ -32,6 +32,26 @@ class Module extends BaseModule implements IAdminModule
                     'label' => Yii::t('app', 'Subject'),
                     'url' => ['/directories/subject'],
                     'icon' => 'book',
+                ],
+                [
+                    'label' => Yii::t('app', 'Department'),
+                    'url' => ['/directories/department'],
+                    'icon' => 'folder',
+                ],
+                [
+                    'label' => Yii::t('app', 'Speciality'),
+                    'url' => ['/directories/speciality'],
+                    'icon' => 'folder',
+                ],
+                [
+                    'label' => Yii::t('app', 'Qualification'),
+                    'url' => ['/directories/qualification'],
+                    'icon' => 'folder',
+                ],
+                [
+                    'label' => Yii::t('app', 'SpecialityQualification'),
+                    'url' => ['/directories/speciality-qualification'],
+                    'icon' => 'folder',
                 ],
             ]
         ];

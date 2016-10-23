@@ -2,22 +2,22 @@
 
 namespace app\modules\directories\controllers;
 
+use nullref\core\interfaces\IAdminController;
 use Yii;
-use app\modules\directories\models\audience\Audience;
-use app\modules\directories\models\audience\AudienceSearch;
+use app\modules\directories\models\SpecialityQualification;
+use app\modules\directories\models\SpecialityQualificationSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use nullref\core\interfaces\IAdminController;
 
 /**
- * AudienceController implements the CRUD actions for Audience model.
+ * SpecialityQualificationController implements the CRUD actions for SpecialityQualification model.
  */
-/**
- * *some testing
- * */
-class AudienceController extends Controller implements IAdminController
+class SpecialityQualificationController extends Controller implements IAdminController
 {
+    /**
+     * @inheritdoc
+     */
     public function behaviors()
     {
         return [
@@ -31,12 +31,12 @@ class AudienceController extends Controller implements IAdminController
     }
 
     /**
-     * Lists all Audience models.
+     * Lists all SpecialityQualification models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new AudienceSearch();
+        $searchModel = new SpecialityQualificationSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -46,7 +46,7 @@ class AudienceController extends Controller implements IAdminController
     }
 
     /**
-     * Displays a single Audience model.
+     * Displays a single SpecialityQualification model.
      * @param integer $id
      * @return mixed
      */
@@ -58,13 +58,13 @@ class AudienceController extends Controller implements IAdminController
     }
 
     /**
-     * Creates a new Audience model.
+     * Creates a new SpecialityQualification model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Audience();
+        $model = new SpecialityQualification();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -76,7 +76,7 @@ class AudienceController extends Controller implements IAdminController
     }
 
     /**
-     * Updates an existing Audience model.
+     * Updates an existing SpecialityQualification model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -95,7 +95,7 @@ class AudienceController extends Controller implements IAdminController
     }
 
     /**
-     * Deletes an existing Audience model.
+     * Deletes an existing SpecialityQualification model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -108,15 +108,15 @@ class AudienceController extends Controller implements IAdminController
     }
 
     /**
-     * Finds the Audience model based on its primary key value.
+     * Finds the SpecialityQualification model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Audience the loaded model
+     * @return SpecialityQualification the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Audience::findOne($id)) !== null) {
+        if (($model = SpecialityQualification::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

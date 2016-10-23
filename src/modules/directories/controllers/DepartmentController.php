@@ -2,22 +2,23 @@
 
 namespace app\modules\directories\controllers;
 
+use nullref\core\interfaces\IAdminController;
+use nullref\core\interfaces\IAdminModule;
 use Yii;
-use app\modules\directories\models\audience\Audience;
-use app\modules\directories\models\audience\AudienceSearch;
+use app\modules\directories\models\Department;
+use app\modules\directories\models\DepartmentQuery;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use nullref\core\interfaces\IAdminController;
 
 /**
- * AudienceController implements the CRUD actions for Audience model.
+ * DepartmentController implements the CRUD actions for Department model.
  */
-/**
- * *some testing
- * */
-class AudienceController extends Controller implements IAdminController
+class DepartmentController extends Controller implements IAdminController
 {
+    /**
+     * @inheritdoc
+     */
     public function behaviors()
     {
         return [
@@ -31,12 +32,12 @@ class AudienceController extends Controller implements IAdminController
     }
 
     /**
-     * Lists all Audience models.
+     * Lists all Department models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new AudienceSearch();
+        $searchModel = new DepartmentQuery();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -46,7 +47,7 @@ class AudienceController extends Controller implements IAdminController
     }
 
     /**
-     * Displays a single Audience model.
+     * Displays a single Department model.
      * @param integer $id
      * @return mixed
      */
@@ -58,13 +59,13 @@ class AudienceController extends Controller implements IAdminController
     }
 
     /**
-     * Creates a new Audience model.
+     * Creates a new Department model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Audience();
+        $model = new Department();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -76,7 +77,7 @@ class AudienceController extends Controller implements IAdminController
     }
 
     /**
-     * Updates an existing Audience model.
+     * Updates an existing Department model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -95,7 +96,7 @@ class AudienceController extends Controller implements IAdminController
     }
 
     /**
-     * Deletes an existing Audience model.
+     * Deletes an existing Department model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -108,15 +109,15 @@ class AudienceController extends Controller implements IAdminController
     }
 
     /**
-     * Finds the Audience model based on its primary key value.
+     * Finds the Department model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Audience the loaded model
+     * @return Department the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Audience::findOne($id)) !== null) {
+        if (($model = Department::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
