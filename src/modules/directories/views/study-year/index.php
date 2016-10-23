@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 
-$this->title = Yii::t('app', 'Study Years');
+$this->title = Yii::t('app', 'Study years list');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="study-year-index">
@@ -20,7 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 
     <p>
-        <?= Html::a(Yii::t('app', 'Create Study Year'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('app', 'Adding new study year'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([

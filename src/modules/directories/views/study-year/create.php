@@ -6,8 +6,8 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\modules\directories\models\StudyYear */
 
-$this->title = Yii::t('app', 'Create Study Year');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Study Years'), 'url' => ['index']];
+$this->title = Yii::t('app', 'Adding new study year');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Study years list' ), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="study-year-create">

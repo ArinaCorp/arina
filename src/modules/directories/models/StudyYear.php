@@ -38,8 +38,8 @@ class StudyYear extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'year_start' => Yii::t('app', 'Year Start'),
-            'year_end' => Yii::t('app','Year End'),
+            'year_start' => Yii::t('app', 'Start of the study year'),
+            'year_end' => Yii::t('app','End of the study year'),
         ];
     }
 
