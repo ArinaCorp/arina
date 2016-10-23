@@ -38,6 +38,16 @@ class Module extends BaseModule implements IAdminModule
                     'url' => ['/directories/speciality'],
                     'icon' => 'folder',
                 ],
+                [
+                    'label' => Yii::t('app', 'Qualification'),
+                    'url' => ['/directories/qualification'],
+                    'icon' => 'folder',
+                ],
+                [
+                    'label' => Yii::t('app', 'SpecialityQualification'),
+                    'url' => ['/directories/speciality-qualification'],
+                    'icon' => 'folder',
+                ],
             ]
         ];
     }

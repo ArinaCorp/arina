@@ -20,7 +20,10 @@
         "vlucas/phpdotenv": "~1.0@dev",
         "nullref/yii2-useful": "dev-master",
         "nullref/yii2-core": "dev-master",
-        "nullref/yii2-admin": "dev-master"
+        "nullref/yii2-admin": "dev-master",
+        "2amigos/yii2-date-picker-widget": "~1.0",
+        "kartik-v/yii2-widget-spinner": "@dev",
+        "kartik-v/yii2-widget-touchspin": "*"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

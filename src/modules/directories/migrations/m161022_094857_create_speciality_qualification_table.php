@@ -15,6 +15,8 @@ class m161022_094857_create_speciality_qualification_table extends Migration
         $this->createTable('speciality_qualification', [
             'id' => $this->primaryKey(),
             'title' => $this->string(),
+            'speciality_id'=>$this->integer(),
+            'qualification_id'=>$this->integer(),
             'years_count' => $this->integer(),
             'months_count' => $this->integer(),
         ]);

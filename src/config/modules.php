@@ -9,8 +9,4 @@ return array_merge(require(__DIR__ . '/installed_modules.php'), [
     'directories' => [
         'class' => 'app\modules\directories\Module',
     ],
-
-    'speciality' => [
-        'class' => 'app\modules\speciality\Module',
-    ],
 ]);

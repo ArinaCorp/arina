@@ -6,6 +6,7 @@ use yii\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $searchModel app\modules\department\models\DepartmentQuery */
 /* @var $dataProvider yii\data\ActiveDataProvider */
+/* @var $model \app\modules\directories\models\Department */
 
 $this->title = Yii::t('app', 'Departments');
 $this->params['breadcrumbs'][] = $this->title;
@@ -27,7 +28,14 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'title',
             'head_id',
-
+            [
+                'attribute'=>'specialities',
+                'format'=>'raw',
+                'value'=> function ($model, $key, $index, $widget) {
+                    /* @var $model \app\modules\directories\models\Department*/
+                    return $model->getSpecialitiesListLinks();
+                },
+            ],
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>

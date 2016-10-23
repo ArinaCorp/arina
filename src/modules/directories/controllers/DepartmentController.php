@@ -2,6 +2,8 @@
 
 namespace app\modules\directories\controllers;
 
+use nullref\core\interfaces\IAdminController;
+use nullref\core\interfaces\IAdminModule;
 use Yii;
 use app\modules\directories\models\Department;
 use app\modules\directories\models\DepartmentQuery;
@@ -12,7 +14,7 @@ use yii\filters\VerbFilter;
 /**
  * DepartmentController implements the CRUD actions for Department model.
  */
-class DepartmentController extends Controller
+class DepartmentController extends Controller implements IAdminController
 {
     /**
      * @inheritdoc
