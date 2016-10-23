@@ -28,6 +28,11 @@ class Module extends BaseModule implements IAdminModule
                     'url' => ['/directories/audience'],
                     'icon' => 'folder',
                 ],
+                [
+                    'label' => Yii::t('app', 'Subject'),
+                    'url' => ['/directories/subject'],
+                    'icon' => 'book',
+                ],
             ]
         ];
     }

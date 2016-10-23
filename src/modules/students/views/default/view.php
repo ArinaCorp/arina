@@ -26,12 +26,17 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ]) ?>
     </p>
-
+    <div class="row">
+        <div class="col-md-2 col-md-offset-5">
+            <?= $model->getPhoto();?>
+        </div>
+    </div>
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
             'student_code',
             'sseed_id',
+            
             'last_name',
             'first_name',
             'middle_name',
@@ -41,15 +46,17 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'birth_day',
             'passport_code',
+            'passport_issued',
             'tax_id',
             [
                 'attribute' => 'created_at',
-                'value' => date('H:m d.m.y',$model->created_at),
+                'value' => date('H:m d.m.y', $model->created_at),
             ],
             [
                 'attribute' => 'updated_at',
-                'value' => date('H:m d.m.Y',$model->updated_at),
+                'value' => date('H:m d.m.Y', $model->updated_at),
             ],
+
         ],
     ]) ?>
 

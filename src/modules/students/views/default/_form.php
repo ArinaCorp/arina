@@ -10,16 +10,26 @@ use yii\bootstrap\ActiveForm;
 ?>
 
 <div class="student-form">
-
-    <?php $form = ActiveForm::begin(); ?>
+    <?php \yii\widgets\Pjax::begin(); ?>
+    <?php $form = ActiveForm::begin(
+        [
+            'options' => [
+                'enctype' => 'multipart/form-data',
+            ],
+        ]
+    ); ?>
     <p class="note"><?php echo Yii::t('app', 'Fields with <span class="required">*</span> are required.'); ?></p>
     <?php echo $form->errorSummary($model); ?>
-    <?= $form->field($model, 'student_code')->widget(\yii\widgets\MaskedInput::className(), ['mask' => 'AA №99999999'],['placeholder'=>$model->getAttributeLabel('birth_day')]);
+    <?= $form->field($model, 'student_code')->widget(\yii\widgets\MaskedInput::className(), ['mask' => 'AA №99999999'], ['placeholder' => $model->getAttributeLabel('birth_day')]);
     ?>
 
-    <?= $form->field($model, 'last_name')->textInput(['maxlength' => true,'placeholder' => $model->getAttributeLabel('last_name')]) ?>
+    <?= $form->field($model, 'photo')->fileInput();
+    ?>
+    <?= $model->getThumbFileUrl('photo', 'thumb');?>
 
-    <?= $form->field($model, 'first_name')->textInput(['maxlength' => true,'placeholder' => $model->getAttributeLabel('first_name')]) ?>
+    <?= $form->field($model, 'last_name')->textInput(['maxlength' => true, 'placeholder' => $model->getAttributeLabel('last_name')]) ?>
+
+    <?= $form->field($model, 'first_name')->textInput(['maxlength' => true, 'placeholder' => $model->getAttributeLabel('first_name')]) ?>
 
     <?= $form->field($model, 'middle_name')->textInput(['maxlength' => true, 'placeholder' => $model->getAttributeLabel('middle_name')]) ?>
 
@@ -35,6 +45,8 @@ use yii\bootstrap\ActiveForm;
 
     <?= $form->field($model, 'passport_code')->widget(\yii\widgets\MaskedInput::className(), ['mask' => 'AA №999999']) ?>
 
+    <?= $form->field($model, 'passport_issued')->textInput(['maxlength' => true, 'placeholder' => $model->getAttributeLabel('passport_issued')]) ?>
+
     <?= $form->field($model, 'birth_certificate')->widget(\yii\widgets\MaskedInput::className(), ['mask' => 'AA №999999']);
     ?>
 
@@ -47,5 +59,5 @@ use yii\bootstrap\ActiveForm;
     </div>
 
     <?php ActiveForm::end(); ?>
-
+    <?php \yii\widgets\Pjax::end(); ?>
 </div>

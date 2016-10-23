@@ -47,4 +47,6 @@ return [
     'Create' =>'Створити',
     'Birth Certificate'=>'Свідоцтво про народження',
     'List'=>'Список',
+    'Passport issued'=>'Паспорт видано',
+    'Photo' =>'Фотографія'
 ];

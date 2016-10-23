@@ -34,3 +34,6 @@ codecept.phar
 
 # dot.env
 .env
+
+#uploads directory
+
