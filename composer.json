@@ -26,7 +26,7 @@
         "nex/yii2-datepicker": "*",
         "yiisoft/yii2-jui": "^2.0",
         "yii-dream-team/yii2-upload-behavior": "*",
-        "kartik-v/yii2-widget-fileinput": "@dev"
+        "kartik-v/yii2-widget-fileinput": "@dev",
         "kartik-v/yii2-widget-spinner": "@dev",
         "kartik-v/yii2-widget-touchspin": "*"
     },
