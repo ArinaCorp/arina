@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\department\models;
+namespace app\modules\directories\models;
 
 /**
  * This is the model class for table "department".

@@ -1,18 +1,18 @@
 <?php
 
-namespace app\modules\department\controllers;
+namespace app\modules\directories\controllers;
 
 use Yii;
-use app\modules\department\models\Department;
-use app\modules\department\models\DepartmentQuery;
+use app\modules\directories\models\Speciality;
+use app\modules\directories\models\SpecialitySearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * DepartmentController implements the CRUD actions for Department model.
+ * SpecialityController implements the CRUD actions for Speciality model.
  */
-class DepartmentController extends Controller
+class SpecialityController extends Controller
 {
     /**
      * @inheritdoc
@@ -30,12 +30,12 @@ class DepartmentController extends Controller
     }
 
     /**
-     * Lists all Department models.
+     * Lists all Speciality models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new DepartmentQuery();
+        $searchModel = new SpecialitySearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -45,7 +45,7 @@ class DepartmentController extends Controller
     }
 
     /**
-     * Displays a single Department model.
+     * Displays a single Speciality model.
      * @param integer $id
      * @return mixed
      */
@@ -57,13 +57,13 @@ class DepartmentController extends Controller
     }
 
     /**
-     * Creates a new Department model.
+     * Creates a new Speciality model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Department();
+        $model = new Speciality();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -75,7 +75,7 @@ class DepartmentController extends Controller
     }
 
     /**
-     * Updates an existing Department model.
+     * Updates an existing Speciality model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -94,7 +94,7 @@ class DepartmentController extends Controller
     }
 
     /**
-     * Deletes an existing Department model.
+     * Deletes an existing Speciality model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -107,15 +107,15 @@ class DepartmentController extends Controller
     }
 
     /**
-     * Finds the Department model based on its primary key value.
+     * Finds the Speciality model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Department the loaded model
+     * @return Speciality the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Department::findOne($id)) !== null) {
+        if (($model = Speciality::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models;
+namespace app\modules\directories\models;
 
 /**
  * This is the ActiveQuery class for [[Speciality]].

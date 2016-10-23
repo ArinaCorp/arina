@@ -1,8 +1,6 @@
 <?php
 
-namespace app\models;
-
-
+namespace app\modules\directories\models;
 
 /**
  * This is the model class for table "speciality".
