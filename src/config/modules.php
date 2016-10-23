@@ -17,8 +17,4 @@ return array_merge(require(__DIR__ . '/installed_modules.php'), [
         'class' => 'app\modules\directories\Module',
     ],
 
-    'subjects' => [
-        'class' => 'app\modules\subjects\Module',
-    ],
-
 ]);

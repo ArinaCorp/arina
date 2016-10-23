@@ -1,13 +1,15 @@
 <?php
 
-namespace app\modules\directories\models;
+namespace app\modules\directories\models\audience;
+
+use yii\db\ActiveQuery;
 
 /**
  * This is the ActiveQuery class for [[Audience]].
  *
  * @see Audience
  */
-class AudienceQuery extends \yii\db\ActiveQuery
+class AudienceQuery extends ActiveQuery
 {
     /*public function active()
     {

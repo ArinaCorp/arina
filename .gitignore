@@ -19,7 +19,7 @@ vendor
 composer.phar
 
 # composer install
-# composer.lock
+composer.lock
 
 # Mac DS_Store Files
 .DS_Store
@@ -29,9 +29,8 @@ phpunit.phar
 # local phpunit config
 /phpunit.xml
 
-# dot.env vars
-.env
-.env.example
-
 # Codeception
 codecept.phar
+
+# dot.env
+.env
