@@ -1,20 +1,20 @@
 <?php
 
-namespace app\modules\students\controllers;
-/* @author VasyaKog */
-use yii\filters\VerbFilter;
-use yii\web\Controller;
-use app\modules\students\models\StudentSearch;
-use app\modules\students\models\Student;
-use yii\web\NotFoundHttpException;
+namespace app\modules\directories\controllers;
 
 use nullref\core\interfaces\IAdminController;
+use nullref\core\interfaces\IAdminModule;
 use Yii;
+use app\modules\directories\models\StudyYear;
+use yii\data\ActiveDataProvider;
+use yii\web\Controller;
+use yii\web\NotFoundHttpException;
+use yii\filters\VerbFilter;
 
 /**
- * Default controller for the `students` module
+ * StudyYearController implements the CRUD actions for StudyYear model.
  */
-class DefaultController extends Controller implements IAdminController
+class StudyYearController extends Controller implements IAdminController
 {
     /**
      * @inheritdoc
@@ -32,43 +32,32 @@ class DefaultController extends Controller implements IAdminController
     }
 
     /**
-     * Lists all Student models.
+     * Lists all StudyYear models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new StudentSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = new ActiveDataProvider([
+            'query' => StudyYear::find(),
+        ]);
 
         return $this->render('index', [
-            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
 
-    /**
-     * Displays a single Student model.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
 
     /**
-     * Creates a new Student model.
+     * Creates a new StudyYear model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Student();
+        $model = new StudyYear();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -77,7 +66,7 @@ class DefaultController extends Controller implements IAdminController
     }
 
     /**
-     * Updates an existing Student model.
+     * Updates an existing StudyYear model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -87,7 +76,7 @@ class DefaultController extends Controller implements IAdminController
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -96,7 +85,7 @@ class DefaultController extends Controller implements IAdminController
     }
 
     /**
-     * Deletes an existing Student model.
+     * Deletes an existing StudyYear model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -109,15 +98,15 @@ class DefaultController extends Controller implements IAdminController
     }
 
     /**
-     * Finds the Student model based on its primary key value.
+     * Finds the StudyYear model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Student the loaded model
+     * @return StudyYear the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Student::findOne($id)) !== null) {
+        if (($model = StudyYear::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

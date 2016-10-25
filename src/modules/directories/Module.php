@@ -29,6 +29,11 @@ class Module extends BaseModule implements IAdminModule
                     'icon' => 'folder',
                 ],
                 [
+                    'label' => Yii::t('app', 'Subject'),
+                    'url' => ['/directories/subject'],
+                    'icon' => 'book',
+                ],
+                [
                     'label' => Yii::t('app', 'Department'),
                     'url' => ['/directories/department'],
                     'icon' => 'folder',
@@ -47,6 +52,11 @@ class Module extends BaseModule implements IAdminModule
                     'label' => Yii::t('app', 'SpecialityQualification'),
                     'url' => ['/directories/speciality-qualification'],
                     'icon' => 'folder',
+                ],
+                [
+                    'label' => Yii::t('app', 'Study years'),
+                    'url' => ['/directories/study-year'],
+                    'icon' => 'graduation-cap',
                 ],
             ]
         ];
