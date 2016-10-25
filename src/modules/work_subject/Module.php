@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\wp_subject;
+namespace app\modules\work_subject;
 
 use nullref\core\interfaces\IAdminModule;
 use Yii;
@@ -18,6 +18,7 @@ class Module extends BaseModule implements IAdminModule
      */
 
     public $controllerNamespace = 'app\modules\work_subject\controllers';
+    public $modelsNamespace = 'app\modules\work_subject\models';
 
     /**
      * @inheritdoc
