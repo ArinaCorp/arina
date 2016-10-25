@@ -4,9 +4,9 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\modules\directories\models\SpecialitySearch */
+/* @var $searchModel app\modules\directories\models\speciality\SpecialitySearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
-/* @var $model \app\modules\directories\models\Speciality */
+/* @var $model \app\modules\directories\models\speciality\Speciality */
 
 $this->title = Yii::t('app', 'Specialities');
 $this->params['breadcrumbs'][] = $this->title;

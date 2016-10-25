@@ -36,7 +36,7 @@ class Module extends BaseModule implements IAdminModule
                 [
                     'label' => Yii::t('app', 'Department'),
                     'url' => ['/directories/department'],
-                    'icon' => 'folder',
+                    'icon' => 'sticky-note',
                 ],
                 [
                     'label' => Yii::t('app', 'Speciality'),

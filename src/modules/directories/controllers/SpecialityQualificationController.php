@@ -4,8 +4,8 @@ namespace app\modules\directories\controllers;
 
 use nullref\core\interfaces\IAdminController;
 use Yii;
-use app\modules\directories\models\SpecialityQualification;
-use app\modules\directories\models\SpecialityQualificationSearch;
+use app\modules\directories\models\specialityqualification\SpecialityQualification;
+use app\modules\directories\models\specialityqualification\SpecialityQualificationSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;

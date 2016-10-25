@@ -1,8 +1,11 @@
 <?php
 
-namespace app\modules\directories\models;
+namespace app\modules\directories\models\speciality;
 
 use yii\helpers\ArrayHelper;
+use app\modules\directories\models\department\Department;
+use app\modules\directories\models\specialityqualification\SpecialityQualification;
+use app\modules\directories\models\qualification\Qualification;
 
 /**
  * This is the model class for table "speciality".

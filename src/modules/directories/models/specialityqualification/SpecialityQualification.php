@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\directories\models;
+namespace app\modules\directories\models\specialityqualification;
 
 use Yii;
 use app\modules\directories\models\Speciality;

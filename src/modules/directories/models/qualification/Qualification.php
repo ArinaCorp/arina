@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\directories\models;
+namespace app\modules\directories\models\qualification;
 
 use Yii;
 use yii\helpers\ArrayHelper;

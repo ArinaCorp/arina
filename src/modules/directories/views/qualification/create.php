@@ -4,7 +4,7 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model app\modules\directories\models\Qualification */
+/* @var $model app\modules\directories\models\qualification\Qualification */
 
 $this->title = Yii::t('app', 'Create Qualification');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Qualifications'), 'url' => ['index']];
