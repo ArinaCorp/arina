@@ -34,7 +34,6 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute'=>'department_id',
                 'value'=>$model->department->title,
-
             ],
             'number',
             'accreditation_date',
