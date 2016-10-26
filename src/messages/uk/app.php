@@ -55,4 +55,5 @@ return [
     'Study years list' => 'Перелік навчальних років',
     'Update study year' => 'Редагувати навчальний рік',
     'Delete study year' => 'Видалити навчальний рік',
+    'Passport issued date'=> 'Дата видачі паспорта',
 ];

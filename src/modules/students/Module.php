@@ -30,6 +30,11 @@ class Module extends BaseModule implements IAdminModule
                     'url' => ['/students'],
                     'icon' => 'list',
                 ],
+                [
+                    'label' => Yii::t('app', 'Import'),
+                    'url' => ['/students/import'],
+                    'icon' => 'list',
+                ],
             ]
         ];
     }
