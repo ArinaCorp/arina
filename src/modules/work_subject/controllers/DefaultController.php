@@ -2,6 +2,7 @@
 
 namespace app\modules\work_subject\controllers;
 
+use app\modules\work_subject\models\WorkSubjectSearch;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use app\modules\work_subject\models\WorkSubject;
@@ -29,6 +30,19 @@ class DefaultController extends Controller implements IAdminController
                 ],
             ],
         ];
+    }
+
+
+
+    public function actionIndex()
+    {
+        $searchModel = new WorkSubjectSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
     }
 
 }

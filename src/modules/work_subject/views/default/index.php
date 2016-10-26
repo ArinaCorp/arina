@@ -3,22 +3,24 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
-/* @var $this yii\web\View */
-/* @var $searchModel app\modules\students\models\StudentSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
+use yii\web\View;
+use app\modules\work_subject\models\WorkSubjectSearch;
+use yii\data\ActiveDataProvider;
 
-/* @author VasyaKog */
+/* @var $this View
+ * @var $searchModel WorkSubjectSearch
+ * @var $dataProvider ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Students');
+$this->title = Yii::t('app', 'Work subjects');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="student-index">
+<div class="work-subject-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php  //echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <div class="col-lg-8">
-        <?= Html::a(Yii::t('app', 'Create Student'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('app', 'Create work subject'), ['create'], ['class' => 'btn btn-success']) ?>
     </div>
     <?php Pjax::begin(); ?>
     <?= GridView::widget([
@@ -26,21 +28,11 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-            //'id',
-            'student_code',
-            //'sseed_id',
-            //'user_id',
-            'last_name',
+            'id',
+            'plan_id',
+            'subject_id',
             'first_name',
             'middle_name',
-            // 'gender',
-            // 'birth_day',
-            // 'passport_code',
-            // 'tax_id',
-            // 'form_of_study_id',
-            // 'status',
-            // 'created_at',
-            // 'updated_at',
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
