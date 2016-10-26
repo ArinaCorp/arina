@@ -1,16 +1,16 @@
 <?php
 
-namespace app\modules\directories\models;
+namespace app\modules\directories\models\speciality;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\modules\directories\models\Qualification;
+use app\modules\directories\models\speciality\Speciality;
 
 /**
- * QualificationSearch represents the model behind the search form of `app\modules\directories\models\Qualification`.
+ * SpecialitySearch represents the model behind the search form of `app\modules\directories\models\Speciality`.
  */
-class QualificationSearch extends Qualification
+class SpecialitySearch extends Speciality
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ class QualificationSearch extends Qualification
     public function rules()
     {
         return [
-            [['id'], 'integer'],
-            [['title'], 'safe'],
+            [['id', 'department_id'], 'integer'],
+            [['title', 'department', 'number', 'accreditation_date'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class QualificationSearch extends Qualification
      */
     public function search($params)
     {
-        $query = Qualification::find();
+        $query = Speciality::find();
 
         // add conditions that should always apply here
 
@@ -60,9 +60,13 @@ class QualificationSearch extends Qualification
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
+            'department_id' => $this->department_id,
+            'accreditation_date' => $this->accreditation_date,
         ]);
 
-        $query->andFilterWhere(['like', 'title', $this->title]);
+        $query->andFilterWhere(['like', 'title', $this->title])
+            ->andFilterWhere(['like', 'department', $this->department])
+            ->andFilterWhere(['like', 'number', $this->number]);
 
         return $dataProvider;
     }

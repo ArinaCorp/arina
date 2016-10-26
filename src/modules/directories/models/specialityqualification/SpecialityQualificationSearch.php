@@ -1,11 +1,11 @@
 <?php
 
-namespace app\modules\directories\models;
+namespace app\modules\directories\models\specialityqualification;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\modules\directories\models\SpecialityQualification;
+use app\modules\directories\models\specialityqualification\SpecialityQualification;
 
 /**
  * SpecialityQualificationSearch represents the model behind the search form of `app\modules\directories\models\SpecialityQualification`.

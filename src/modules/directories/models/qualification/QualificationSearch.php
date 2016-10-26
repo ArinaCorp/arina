@@ -1,15 +1,16 @@
 <?php
 
-namespace app\modules\directories\models;
+namespace app\modules\directories\models\qualification;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
+use app\modules\directories\models\qualification\Qualification;
 
 /**
- * DepartmentQuery represents the model behind the search form of `app\modules\department\models\Department`.
+ * QualificationSearch represents the model behind the search form of `app\modules\directories\models\Qualification`.
  */
-class DepartmentQuery extends Department
+class QualificationSearch extends Qualification
 {
     /**
      * @inheritdoc
@@ -17,7 +18,7 @@ class DepartmentQuery extends Department
     public function rules()
     {
         return [
-            [['id', 'head_id'], 'integer'],
+            [['id'], 'integer'],
             [['title'], 'safe'],
         ];
     }
@@ -40,7 +41,7 @@ class DepartmentQuery extends Department
      */
     public function search($params)
     {
-        $query = Department::find();
+        $query = Qualification::find();
 
         // add conditions that should always apply here
 
@@ -59,7 +60,6 @@ class DepartmentQuery extends Department
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'head_id' => $this->head_id,
         ]);
 
         $query->andFilterWhere(['like', 'title', $this->title]);

@@ -4,7 +4,7 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model app\modules\department\models\Department */
+/* @var $model app\modules\directories\models\department\Department */
 
 $this->title = Yii::t('app', 'Create Department');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Departments'), 'url' => ['index']];

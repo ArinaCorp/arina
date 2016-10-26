@@ -4,7 +4,7 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model app\modules\directories\models\SpecialityQualification */
+/* @var $model app\modules\directories\models\specialityqualification\SpecialityQualification */
 
 $this->title = Yii::t('app', 'Create Speciality Qualification');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Speciality Qualifications'), 'url' => ['index']];
