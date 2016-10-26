@@ -19,7 +19,7 @@ class SpecialitySearch extends Speciality
     {
         return [
             [['id', 'department_id'], 'integer'],
-            [['title', 'department', 'number', 'accreditation_date'], 'safe'],
+            [['title', 'department', 'number', 'accreditation_date', 'short_title'], 'safe'],
         ];
     }
 
@@ -65,6 +65,7 @@ class SpecialitySearch extends Speciality
         ]);
 
         $query->andFilterWhere(['like', 'title', $this->title])
+            ->andFilterWhere(['like', 'short_title', $this->short_title])
             ->andFilterWhere(['like', 'department', $this->department])
             ->andFilterWhere(['like', 'number', $this->number]);
 

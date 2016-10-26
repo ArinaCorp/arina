@@ -34,6 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
             //'id',
             'title',
+            'short_title',
             [
                 'attribute' => 'department_id',
                 'format' => 'raw',

@@ -18,6 +18,8 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'id') ?>
 
     <?= $form->field($model, 'title') ?>
+    
+    <?= $form->field($model, 'short_title') ?>
 
     <?= $form->field($model, 'department_id') ?>
     

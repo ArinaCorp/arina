@@ -30,6 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'title',
+            'short_title',
             [
                 'attribute'=>'department_id',
                 'value'=>$model->department->title,

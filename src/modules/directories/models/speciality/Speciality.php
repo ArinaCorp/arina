@@ -37,8 +37,8 @@ class Speciality extends \yii\db\ActiveRecord
         return [
             [['department_id'], 'integer'],
             [['accreditation_date'], 'safe'],
-            [['title', 'number'], 'string', 'max' => 255],
-            [['department_id', 'title'], 'required'],
+            [['title', 'number', 'short_title'], 'string', 'max' => 255],
+            [['department_id', 'title', 'short_title'], 'required'],
         ];
     }
 
