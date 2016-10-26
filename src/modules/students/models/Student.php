@@ -196,7 +196,7 @@ class Student extends \yii\db\ActiveRecord
             if (!is_null($item['photo'])) $student->photo = $item['photo'];
             $student->save();
             if (!is_null($item['last_name']['@attributes']['uk'])) {
-                $path = __DIR__ . "/../../../../web/uploads/students/photo/";
+                $path = Yii::getAlias('@web')."/web/uploads/students/photo/";
                 copy($_FILES['File']['tmp_name']['photos'][$i], $path . 'student_' . $student->id . '.jpeg');
             }
             $i++;
