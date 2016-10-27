@@ -4,16 +4,22 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\modules\department\models\DepartmentQuery */
 /* @var $dataProvider yii\data\ActiveDataProvider */
-/* @var $model \app\modules\directories\models\Department */
+/* @var $model \app\modules\directories\models\department\Department */
 
 $this->title = Yii::t('app', 'Departments');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="department-index">
+    
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">
+                <?= Html::encode($this->title) ?>
+            </h1>
+        </div>
+    </div>
 
-    <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>

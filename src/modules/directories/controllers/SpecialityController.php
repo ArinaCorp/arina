@@ -4,8 +4,8 @@ namespace app\modules\directories\controllers;
 
 use nullref\core\interfaces\IAdminController;
 use Yii;
-use app\modules\directories\models\Speciality;
-use app\modules\directories\models\SpecialitySearch;
+use app\modules\directories\models\speciality\Speciality;
+use app\modules\directories\models\speciality\SpecialitySearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;

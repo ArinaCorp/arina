@@ -1,13 +1,13 @@
 <?php
 
-namespace app\modules\directories\models;
+namespace app\modules\directories\models\qualification;
 
 /**
- * This is the ActiveQuery class for [[Speciality]].
+ * This is the ActiveQuery class for [[Qualification]].
  *
- * @see Speciality
+ * @see Qualification
  */
-class SpecialityQuery extends \yii\db\ActiveQuery
+class QualificationQuery extends \yii\db\ActiveQuery
 {
     /*public function active()
     {
@@ -16,7 +16,7 @@ class SpecialityQuery extends \yii\db\ActiveQuery
 
     /**
      * @inheritdoc
-     * @return Speciality[]|array
+     * @return Qualification[]|array
      */
     public function all($db = null)
     {
@@ -25,7 +25,7 @@ class SpecialityQuery extends \yii\db\ActiveQuery
 
     /**
      * @inheritdoc
-     * @return Speciality|array|null
+     * @return Qualification|array|null
      */
     public function one($db = null)
     {

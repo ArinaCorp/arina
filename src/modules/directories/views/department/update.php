@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model app\modules\department\models\Department */
+/* @var $model app\modules\directories\models\department\Department */
 
 $this->title = Yii::t('app', 'Update {modelClass}: ', [
     'modelClass' => 'Department',

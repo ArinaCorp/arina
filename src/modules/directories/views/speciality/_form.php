@@ -2,9 +2,10 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use app\modules\directories\models\department\Department;
 
 /* @var $this yii\web\View */
-/* @var $model app\modules\directories\models\Speciality */
+/* @var $model app\modules\directories\models\speciality\Speciality */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
@@ -14,7 +15,9 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'department_id')->dropDownList(\app\modules\directories\models\Department::getList(), ['prompt' => Yii::t('app', 'Select department')]) ?>
+    <?= $form->field($model, 'short_title')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'department_id')->dropDownList(Department::getList(), ['prompt' => Yii::t('app', 'Select department')]) ?>
 
     <?= $form->field($model, 'number')->textInput(['maxlength' => true]) ?>
 
