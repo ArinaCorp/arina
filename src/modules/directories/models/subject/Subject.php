@@ -48,7 +48,7 @@ class Subject extends ActiveRecord
     public function rules()
     {
         return [
-            [['practice'], 'integer'],
+            [['id', 'practice'], 'integer'],
             [['title', 'short_name', 'code'], 'string', 'max' => 255],
         ];
     }

@@ -21,4 +21,7 @@ return array_merge(require(__DIR__ . '/installed_modules.php'), [
         'class' => 'app\modules\directories\Module',
     ],
 
+    'employee' => [
+        'class' => 'app\modules\employee\Module',
+    ],
 ]);
