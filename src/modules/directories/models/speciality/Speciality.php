@@ -56,7 +56,7 @@ class Speciality extends \yii\db\ActiveRecord
 
     public function getSpecialityQualifications()
     {
-        return $this->hasMany(SpecialityQualification::className(), ['speciality_id' => 'id']);
+        return $this->hasMany(\app\modules\directories\models\speciality_qualification\SpecialityQualification::className(), ['speciality_id' => 'id']);
     }
 
     public function getQualification()

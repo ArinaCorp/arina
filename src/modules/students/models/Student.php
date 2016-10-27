@@ -175,16 +175,18 @@ class Student extends \yii\db\ActiveRecord
         $array = json_decode($json, TRUE);
         $i = 0;
         foreach ($array['student'] as $item) {
-            $student = self::findOne(['sseed_id' => $item]);
+            $student = self::findOne(['sseed_id' => $item['edbo_education_id']]);
+
             if (is_null($student)) {
                 $student = new Student();
             }
+            var_dump($item);
             if (!is_null($item['last_name']['@attributes']['uk'])) $student->last_name = $item['last_name']['@attributes']['uk'];
             if (!is_null($item['first_name']['@attributes']['uk'])) $student->first_name = $item['first_name']['@attributes']['uk'];
             if (!is_null($item['middle_name']['@attributes']['uk'])) $student->middle_name = $item['middle_name']['@attributes']['uk'];
             if (!is_null($item['birthday'])) $student->birth_day = $item['birthday'];
             if (!is_null($item['sex'])) $student->gender = $item['sex'];
-            if (!is_null($item['sex'])) $student->tax_id = $item['sex'];
+            if (!is_null($item['ipn'])) $student->tax_id = $item['ipn'];
             if (!is_null($item['person_document']['@attributes']['ID'])) if ($item['person_document']['@attributes']['ID'] == '1') {
                 if (!is_null($item['person_document']['@attributes']['seria'])) $student->passport_code = $item['person_document']['@attributes']['seria'] . ' №' . $item['person_document']['@attributes']['number'];
                 if (!is_null($item['person_document']['@attributes']['issued_by'])) $student->passport_issued = $item['person_document']['@attributes']['issued_by'];
@@ -194,9 +196,10 @@ class Student extends \yii\db\ActiveRecord
             }
             if (!is_null($item['edbo_education_id'])) $student->sseed_id = $item['edbo_education_id'];
             if (!is_null($item['photo'])) $student->photo = $item['photo'];
+            var_dump($student);
             $student->save();
             if (!is_null($item['last_name']['@attributes']['uk'])) {
-                $path = Yii::getAlias('@web')."/uploads/students/photo/";
+                $path = __DIR__ . "/../../../../web/uploads/students/photo/";
                 copy($_FILES['File']['tmp_name']['photos'][$i], $path . 'student_' . $student->id . '.jpeg');
             }
             $i++;

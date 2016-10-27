@@ -12,7 +12,7 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'speciality_qualifications_id')->dropDownList(\app\modules\directories\models\SpecialityQualification::getTreeList()) ?>
+    <?= $form->field($model, 'speciality_qualifications_id')->dropDownList(\app\modules\directories\models\speciality_qualification\SpecialityQualification::getTreeList()) ?>
 
     <?= $form->field($model, 'created_study_year_id')->dropDownList(\app\modules\directories\models\StudyYear::getYearList()) ?>
 

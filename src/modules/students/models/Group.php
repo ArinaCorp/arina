@@ -2,7 +2,7 @@
 
 namespace app\modules\students\models;
 
-use app\modules\directories\models\SpecialityQualification;
+use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 use app\modules\directories\models\StudyYear;
 use Yii;
 
@@ -15,7 +15,6 @@ use Yii;
  * @property integer $number_group
  * @property string $title
  * @property integer $group_leader_id
- *
  * @property SpecialityQualification $specialityQualification
  * @property Student $groupLeader
  * @property StudyYear $studyYear;

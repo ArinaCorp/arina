@@ -2,6 +2,7 @@
 
 namespace app\modules\directories\models\speciality_qualification;
 
+use app\modules\directories\models\department\Department;
 use Yii;
 use \yii\db\ActiveRecord;
 use app\modules\directories\models\speciality\Speciality;
@@ -69,10 +70,33 @@ class SpecialityQualification extends ActiveRecord
     public function getSpeciality() {
         return $this->hasOne(Speciality::className(),['id'=>'speciality_id']);
     }
+    public static function getTreeList(){
+        $list = [];
+        $department = Department::find()->all();
+        foreach ($department as $item) {
+            /* @var $item Department */
+            $list[$item->title] = [];
+            foreach ($item->specialities as $speciality) {
+                /**
+                 * @var $speciality Speciality
+                 */
+                $list[$item->title][$speciality->title] = [];
+                foreach ($speciality->specialityQualifications as $specialityQualification){
+                    /**
+                     * @var $specialityQualification SpecialityQualification
+                     */
+                    $list[$item->title][$speciality->title][$specialityQualification->id]=$specialityQualification->title;
+                }
+            }
+        }
+        return $list;
+    }
 
     public function getSubjectRelation()
     {
         return $this->hasMany(SubjectRelation::className(), ['speciality_qualification_id' => 'id']);
     }
+
+
 
 }

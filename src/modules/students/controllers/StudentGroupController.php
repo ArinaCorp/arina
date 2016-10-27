@@ -1,23 +1,20 @@
 <?php
 
-namespace app\modules\directories\controllers;
+namespace app\modules\students\controllers;
 
-use app\modules\directories\models\speciality_qualification\SpecialityQualification;
-use nullref\core\interfaces\IAdminController;
 use Yii;
-use app\modules\directories\models\speciality_qualification\SpecialityQualificationSearch;
+use app\modules\students\models\StudentGroup;
+use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use nullref\core\interfaces\IAdminController;
 
 /**
- * SpecialityQualificationController implements the CRUD actions for SpecialityQualification model.
+ * StudentGroupController implements the CRUD actions for StudentGroup model.
  */
-class SpecialityQualificationController extends Controller implements IAdminController
+class StudentGroupController extends Controller implements IAdminController
 {
-    /**
-     * @inheritdoc
-     */
     public function behaviors()
     {
         return [
@@ -31,22 +28,22 @@ class SpecialityQualificationController extends Controller implements IAdminCont
     }
 
     /**
-     * Lists all SpecialityQualification models.
+     * Lists all StudentGroup models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new SpecialityQualificationSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = new ActiveDataProvider([
+            'query' => StudentGroup::find(),
+        ]);
 
         return $this->render('index', [
-            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
 
     /**
-     * Displays a single SpecialityQualification model.
+     * Displays a single StudentGroup model.
      * @param integer $id
      * @return mixed
      */
@@ -58,13 +55,13 @@ class SpecialityQualificationController extends Controller implements IAdminCont
     }
 
     /**
-     * Creates a new SpecialityQualification model.
+     * Creates a new StudentGroup model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new SpecialityQualification();
+        $model = new StudentGroup();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -76,7 +73,7 @@ class SpecialityQualificationController extends Controller implements IAdminCont
     }
 
     /**
-     * Updates an existing SpecialityQualification model.
+     * Updates an existing StudentGroup model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -95,7 +92,7 @@ class SpecialityQualificationController extends Controller implements IAdminCont
     }
 
     /**
-     * Deletes an existing SpecialityQualification model.
+     * Deletes an existing StudentGroup model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -108,15 +105,15 @@ class SpecialityQualificationController extends Controller implements IAdminCont
     }
 
     /**
-     * Finds the SpecialityQualification model based on its primary key value.
+     * Finds the StudentGroup model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return SpecialityQualification the loaded model
+     * @return StudentGroup the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = SpecialityQualification::findOne($id)) !== null) {
+        if (($model = StudentGroup::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
