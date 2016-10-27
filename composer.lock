@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "255768e3939acfc25a469c24916feb31",
-    "content-hash": "a32eb6a2414daf6e3cb9f0433ff2dedc",
+    "hash": "4aa0ce6ebe495946ebd409a87fa5f64a",
+    "content-hash": "32ffb4108b1f3411280f00ecd10bc272",
     "packages": [
         {
             "name": "2amigos/yii2-date-picker-widget",
@@ -684,6 +684,54 @@
             "time": "2016-07-16 12:58:58"
         },
         {
+            "name": "fortawesome/font-awesome",
+            "version": "v4.7.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/FortAwesome/Font-Awesome.git",
+                "reference": "a8386aae19e200ddb0f6845b5feeee5eb7013687"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/FortAwesome/Font-Awesome/zipball/a8386aae19e200ddb0f6845b5feeee5eb7013687",
+                "reference": "a8386aae19e200ddb0f6845b5feeee5eb7013687",
+                "shasum": ""
+            },
+            "require-dev": {
+                "jekyll": "1.0.2",
+                "lessc": "1.4.2"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "4.6.x-dev"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "OFL-1.1",
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Dave Gandy",
+                    "email": "dave@fontawesome.io",
+                    "homepage": "http://twitter.com/davegandy",
+                    "role": "Developer"
+                }
+            ],
+            "description": "The iconic font and CSS framework",
+            "homepage": "http://fontawesome.io/",
+            "keywords": [
+                "FontAwesome",
+                "awesome",
+                "bootstrap",
+                "font",
+                "icon"
+            ],
+            "time": "2016-10-24 15:52:54"
+        },
+        {
             "name": "kartik-v/bootstrap-fileinput",
             "version": "dev-master",
             "source": {
@@ -1081,12 +1129,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/NullRefExcep/yii2-core.git",
-                "reference": "28f1a8c745e1855d91cd0fbead3df3de8f104a68"
+                "reference": "8037c51f5d62ccf75b3fc9bd6eebc2155fb9c68e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/NullRefExcep/yii2-core/zipball/28f1a8c745e1855d91cd0fbead3df3de8f104a68",
-                "reference": "28f1a8c745e1855d91cd0fbead3df3de8f104a68",
+                "url": "https://api.github.com/repos/NullRefExcep/yii2-core/zipball/8037c51f5d62ccf75b3fc9bd6eebc2155fb9c68e",
+                "reference": "8037c51f5d62ccf75b3fc9bd6eebc2155fb9c68e",
                 "shasum": ""
             },
             "require": {
@@ -1109,7 +1157,7 @@
             "license": [
                 "MIT"
             ],
-            "time": "2016-10-22 21:41:21"
+            "time": "2016-10-26 00:11:32"
         },
         {
             "name": "nullref/yii2-sb-admin-2",
@@ -1214,16 +1262,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rmrevin/yii2-fontawesome.git",
-                "reference": "04698ebc0976ad09b52bd32c5404397a6e7c6ae6"
+                "reference": "7f8aea081fc896a2b897f6648b362fa1d1ede88f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rmrevin/yii2-fontawesome/zipball/04698ebc0976ad09b52bd32c5404397a6e7c6ae6",
-                "reference": "04698ebc0976ad09b52bd32c5404397a6e7c6ae6",
+                "url": "https://api.github.com/repos/rmrevin/yii2-fontawesome/zipball/7f8aea081fc896a2b897f6648b362fa1d1ede88f",
+                "reference": "7f8aea081fc896a2b897f6648b362fa1d1ede88f",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4.0",
+                "fortawesome/font-awesome": "~4.7",
+                "php": ">=5.5.0",
                 "yiisoft/yii2": "2.0.*"
             },
             "type": "yii2-extension",
@@ -1257,7 +1306,7 @@
                 "font",
                 "yii"
             ],
-            "time": "2016-09-01 18:13:40"
+            "time": "2016-10-25 15:18:24"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -1566,12 +1615,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-framework.git",
-                "reference": "79f9a1c524c79acc12f0d3cfc6aac0c5cac20d91"
+                "reference": "e792a329eb16a3202034253f46f147d39651a912"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/79f9a1c524c79acc12f0d3cfc6aac0c5cac20d91",
-                "reference": "79f9a1c524c79acc12f0d3cfc6aac0c5cac20d91",
+                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/e792a329eb16a3202034253f46f147d39651a912",
+                "reference": "e792a329eb16a3202034253f46f147d39651a912",
                 "shasum": ""
             },
             "require": {
@@ -1652,7 +1701,7 @@
                 "framework",
                 "yii2"
             ],
-            "time": "2016-10-23 11:02:59"
+            "time": "2016-10-27 13:19:13"
         },
         {
             "name": "yiisoft/yii2-bootstrap",
@@ -1886,12 +1935,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fzaninotto/Faker.git",
-                "reference": "409c90a58a0018aab219a9b521cfb57483596474"
+                "reference": "f207b4a855fc971241d7084b923ff2e78096104b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/409c90a58a0018aab219a9b521cfb57483596474",
-                "reference": "409c90a58a0018aab219a9b521cfb57483596474",
+                "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/f207b4a855fc971241d7084b923ff2e78096104b",
+                "reference": "f207b4a855fc971241d7084b923ff2e78096104b",
                 "shasum": ""
             },
             "require": {
@@ -1928,7 +1977,7 @@
                 "faker",
                 "fixtures"
             ],
-            "time": "2016-10-20 13:01:38"
+            "time": "2016-10-24 07:55:38"
         },
         {
             "name": "phpspec/php-diff",
@@ -2020,12 +2069,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-debug.git",
-                "reference": "4f8de2192fe354c8b903a083fcdcc3d1ddaccc8c"
+                "reference": "99f2f9275674a3b461632268adc78e90f2e9b29d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-debug/zipball/4f8de2192fe354c8b903a083fcdcc3d1ddaccc8c",
-                "reference": "4f8de2192fe354c8b903a083fcdcc3d1ddaccc8c",
+                "url": "https://api.github.com/repos/yiisoft/yii2-debug/zipball/99f2f9275674a3b461632268adc78e90f2e9b29d",
+                "reference": "99f2f9275674a3b461632268adc78e90f2e9b29d",
                 "shasum": ""
             },
             "require": {
@@ -2059,7 +2108,7 @@
                 "debugger",
                 "yii2"
             ],
-            "time": "2016-10-13 20:17:27"
+            "time": "2016-10-26 16:39:50"
         },
         {
             "name": "yiisoft/yii2-faker",
@@ -2114,12 +2163,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-gii.git",
-                "reference": "12762bb0272db0bfceceeb151a1df6ec7a1898ce"
+                "reference": "ffefc12a47f9bdabdd53076767b92dbceb6283e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-gii/zipball/12762bb0272db0bfceceeb151a1df6ec7a1898ce",
-                "reference": "12762bb0272db0bfceceeb151a1df6ec7a1898ce",
+                "url": "https://api.github.com/repos/yiisoft/yii2-gii/zipball/ffefc12a47f9bdabdd53076767b92dbceb6283e9",
+                "reference": "ffefc12a47f9bdabdd53076767b92dbceb6283e9",
                 "shasum": ""
             },
             "require": {
@@ -2159,7 +2208,7 @@
                 "gii",
                 "yii2"
             ],
-            "time": "2016-10-13 08:51:30"
+            "time": "2016-10-26 10:37:38"
         }
     ],
     "aliases": [],

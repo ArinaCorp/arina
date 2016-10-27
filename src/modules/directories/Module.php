@@ -58,6 +58,11 @@ class Module extends BaseModule implements IAdminModule
                     'url' => ['/directories/study-year'],
                     'icon' => 'graduation-cap',
                 ],
+                [
+                    'label' => Yii::t('app', 'Position'),
+                    'url' => ['/directories/position'],
+                    'icon' => 'graduation-cap',
+                ],
             ]
         ];
     }

@@ -4,6 +4,7 @@ namespace app\modules\directories\models\position;
 
 use Yii;
 use yii\db\ActiveRecord;
+use \yii\db\ActiveQuery;
 use app\modules\employee\models\Employee;
 
 /**
@@ -65,6 +66,10 @@ class Position extends ActiveRecord
             'max_hour_2' => Yii::t('app','Max load hours').' 2',
         );
     }
+
+    /**
+     * @return ActiveQuery
+     */
 
     public function getEmployee()
     {
