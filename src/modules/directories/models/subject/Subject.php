@@ -2,6 +2,7 @@
 
 namespace app\modules\directories\models\subject;
 
+use app\modules\directories\models\relation\SubjectRelation;
 use Yii;
 use yii\db\ActiveRecord;
 
@@ -13,7 +14,10 @@ use yii\db\ActiveRecord;
  * @property string $code
  * @property string $short_name
  * @property integer $practice
+ *
+ * @property SubjectRelation[] $relations
  */
+
 class Subject extends ActiveRecord
 {
 
@@ -62,6 +66,11 @@ class Subject extends ActiveRecord
             'short_name' => Yii::t('app', 'Short name'),
             'practice' => Yii::t('app', 'Practice'),
         ];
+    }
+
+    public function getSubjectRelation()
+    {
+        return $this->hasMany(SubjectRelation::className(), ['subject_id' => 'id']);
     }
 
 }
