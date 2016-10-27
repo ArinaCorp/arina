@@ -18,7 +18,7 @@ class QualificationSearch extends Qualification
     public function rules()
     {
         return [
-            [['id'], 'integer'],
+            [['id', 'sort_order'], 'integer'],
             [['title'], 'safe'],
         ];
     }
@@ -60,6 +60,7 @@ class QualificationSearch extends Qualification
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
+            'sort_order' => $this->sort_order,
         ]);
 
         $query->andFilterWhere(['like', 'title', $this->title]);

@@ -3,8 +3,9 @@
 namespace app\modules\directories\models\specialityqualification;
 
 use Yii;
-use app\modules\directories\models\Speciality;
-use app\modules\directories\models\Qualification;
+use app\modules\directories\models\speciality\Speciality;
+use app\modules\directories\models\qualification\Qualification;
+use app\modules\directories\models\department\Department;
 
 /**
  * This is the model class for table "speciality_qualification".
