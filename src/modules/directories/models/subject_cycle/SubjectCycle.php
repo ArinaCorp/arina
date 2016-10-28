@@ -3,6 +3,7 @@
 namespace app\modules\directories\models\relation;
 
 use Yii;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 /**
@@ -14,13 +15,11 @@ use yii\db\ActiveRecord;
  *
  * @property $relations SubjectRelation[]
  */
-
 class SubjectCycle extends ActiveRecord
 {
     /**
      * @inheritdoc
      */
-
     public static function tableName()
     {
         return '{{%subject_cycle}}';
@@ -29,31 +28,31 @@ class SubjectCycle extends ActiveRecord
     /**
      * @return array validation rules for model attributes.
      */
-
     public function rules()
     {
-        return array(
-            array('title', 'required'),
-            array('title', 'length', 'max' => 255),
-            array('id', 'required'),
-            array('id', 'numerical', 'integerOnly' => true),
-            array('id', 'unique'),
-            array('id, title', 'safe', 'on' => 'search'),
-        );
+        return [
+            [['id', 'title'], 'required'],
+            [['id', 'title'], 'safe', 'on' => 'search'],
+            [['title'], 'string', 'max' => 255],
+            [['id'], 'integer'],
+            [['id'], 'unique']
+        ];
     }
 
     /**
      * @return array customized attribute labels (name=>label)
      */
-
     public function attributeLabels()
     {
-        return array(
+        return [
             'id' => Yii::t('subject', 'Cycle number'),
-            'title' => Yii::t('base', 'Title'),
-        );
+            'title' => Yii::t('app', 'Title'),
+        ];
     }
 
+    /**
+     * @return ActiveQuery
+     */
     public function getSubjectRelation()
     {
         return $this->hasMany(SubjectRelation::className(), ['subject_cycle_id' => 'id']);

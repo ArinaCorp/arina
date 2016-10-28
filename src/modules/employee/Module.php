@@ -1,21 +1,22 @@
 <?php
 
-namespace app\modules\work_subject;
+namespace app\modules\employee;
 
 use nullref\core\interfaces\IAdminModule;
 use Yii;
 use yii\base\Module as BaseModule;
 
 /**
- * work subject module definition class
+ * employee module definition class
  */
+
 class Module extends BaseModule implements IAdminModule
 {
     /**
      * @inheritdoc
      */
-    public $controllerNamespace = 'app\modules\work_subject\controllers';
-    public $modelsNamespace = 'app\modules\work_subject\models';
+    public $controllerNamespace = 'app\modules\employee\controllers';
+    public $modelsNamespace = 'app\modules\employee\models';
 
     /**
      * @inheritdoc
@@ -23,16 +24,15 @@ class Module extends BaseModule implements IAdminModule
     public static function getAdminMenu()
     {
         return [
-            'label' => Yii::t('app', 'Work subject'),
+            'label' => Yii::t('app', 'Employee'),
             'icon' => 'users',
             'items' => [
                 [
                     'label' => Yii::t('app', 'List'),
-                    'url' => ['/work_subject'],
+                    'url' => ['/employee'],
                     'icon' => 'list',
                 ],
             ]
         ];
     }
-
 }

@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "bbd4ec732cede7d352a6fdec33db5879",
-    "content-hash": "26e273181074731840f88d0746678a71",
+    "hash": "4aa0ce6ebe495946ebd409a87fa5f64a",
+    "content-hash": "32ffb4108b1f3411280f00ecd10bc272",
     "packages": [
         {
             "name": "2amigos/yii2-date-picker-widget",
@@ -184,13 +184,13 @@
             "version": "v1.4.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/uxsolutions/bootstrap-datepicker.git",
-                "reference": "e7ca6bb94dc483817f2ff10fc2b723b2b935e016"
+                "url": "https://github.com/eternicode/bootstrap-datepicker.git",
+                "reference": "173a4fd37a852026d7e4ea2cc5d939e4d5c791f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/uxsolutions/bootstrap-datepicker/zipball/e7ca6bb94dc483817f2ff10fc2b723b2b935e016",
-                "reference": "e7ca6bb94dc483817f2ff10fc2b723b2b935e016",
+                "url": "https://api.github.com/repos/eternicode/bootstrap-datepicker/zipball/173a4fd37a852026d7e4ea2cc5d939e4d5c791f1",
+                "reference": "173a4fd37a852026d7e4ea2cc5d939e4d5c791f1",
                 "shasum": ""
             },
             "require": {
@@ -1610,66 +1610,17 @@
             "time": "2016-03-25 05:52:20"
         },
         {
-            "name": "yii2tech/ar-position",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/yii2tech/ar-position.git",
-                "reference": "337a1b0240aea2722b8dff4461c2ee322fa5414e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/yii2tech/ar-position/zipball/337a1b0240aea2722b8dff4461c2ee322fa5414e",
-                "reference": "337a1b0240aea2722b8dff4461c2ee322fa5414e",
-                "shasum": ""
-            },
-            "require": {
-                "yiisoft/yii2": "*"
-            },
-            "type": "yii2-extension",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "yii2tech\\ar\\position\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Paul Klimov",
-                    "email": "klimov.paul@gmail.com"
-                }
-            ],
-            "description": "Provides support for ActiveRecord custom sort in Yii2",
-            "keywords": [
-                "active",
-                "order",
-                "position",
-                "record",
-                "sort",
-                "yii2"
-            ],
-            "time": "2016-02-06 14:14:56"
-        },
-        {
             "name": "yiisoft/yii2",
             "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-framework.git",
-                "reference": "614114e0b2b81c06708915e6cc5bbc2378c91df5"
+                "reference": "e792a329eb16a3202034253f46f147d39651a912"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/614114e0b2b81c06708915e6cc5bbc2378c91df5",
-                "reference": "614114e0b2b81c06708915e6cc5bbc2378c91df5",
+                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/e792a329eb16a3202034253f46f147d39651a912",
+                "reference": "e792a329eb16a3202034253f46f147d39651a912",
                 "shasum": ""
             },
             "require": {
@@ -1750,7 +1701,7 @@
                 "framework",
                 "yii2"
             ],
-            "time": "2016-10-27 06:55:55"
+            "time": "2016-10-27 13:19:13"
         },
         {
             "name": "yiisoft/yii2-bootstrap",

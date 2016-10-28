@@ -1,20 +1,19 @@
 <?php
 
-namespace app\modules\directories\models\subject;
+namespace app\modules\work_subject\models;
 
 use yii\db\ActiveQuery;
 
 /**
- * This is the ActiveQuery class for [[Subject]].
+ * This is the ActiveQuery class for [[WorkSubject]].
  *
- * @see Subject
+ * @see WorkSubject
  */
-class SubjectQuery extends ActiveQuery
+class WorkSubjectQuery extends ActiveQuery
 {
-
     /**
      * @inheritdoc
-     * @return Subject[]|array
+     * @return WorkSubject[]|array
      */
     public function all($db = null)
     {
@@ -23,7 +22,7 @@ class SubjectQuery extends ActiveQuery
 
     /**
      * @inheritdoc
-     * @return Subject|array|null
+     * @return WorkSubject|array|null
      */
     public function one($db = null)
     {

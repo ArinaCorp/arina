@@ -5,11 +5,12 @@ namespace app\modules\work_subject\models;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
+use app\modules\directories\models\subject\Subject;
 
 /**
  * @property integer $id
- * @property integer $plan_id
  * @property integer $subject_id
+ * @property integer $plan_id
  * @property array $total
  * @property array $lectures
  * @property array $labs
@@ -22,11 +23,13 @@ use yii\db\ActiveRecord;
  * @property integer $project_hours
  * @property array $control_hours
  * @property bool $dual_labs
- * @property bool $dual_practice */
-
+ * @property bool $dual_practice
+ *
+ * @property Subject $subject
+ *
+ */
 class WorkSubject extends ActiveRecord
 {
-
     public function behaviors()
     {
         return [
@@ -57,16 +60,14 @@ class WorkSubject extends ActiveRecord
     /**
      * @inheritdoc
      */
-
     public static function tableName()
     {
-        return 'wp_subject';
+        return '{{%wp_subject}}';
     }
 
     /**
      * @inheritdoc
      */
-
     public function rules()
     {
         return [
@@ -81,7 +82,6 @@ class WorkSubject extends ActiveRecord
     /**
      * @inheritdoc
      */
-
     public function attributeLabels()
     {
         return [
@@ -104,5 +104,12 @@ class WorkSubject extends ActiveRecord
         ];
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSubject()
+    {
+        return $this->hasOne(Subject::className(), ['id' => 'subject_id']);
+    }
 
 }

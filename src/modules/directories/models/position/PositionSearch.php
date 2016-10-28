@@ -1,14 +1,14 @@
 <?php
 
-namespace app\modules\directories\models\subject;
+namespace app\modules\directories\models\position;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 
 /**
- * SubjectSearch represents the model behind the search form about `app\modules\directories\models\subject\Subject`.
+ * PositionSearch represents the model behind the search form about `app\modules\directories\models\position\Position`.
  */
-class SubjectSearch extends Subject
+class PositionSearch extends Position
 {
     /**
      * @inheritdoc
@@ -16,8 +16,8 @@ class SubjectSearch extends Subject
     public function rules()
     {
         return [
-            [['id', 'practice'], 'integer'],
-            [['title', 'short_name', 'code'], 'safe'],
+            [['id', 'max_hours_1', 'max_hours_2'], 'integer'],
+            [['title'], 'safe'],
         ];
     }
 
@@ -38,7 +38,7 @@ class SubjectSearch extends Subject
      */
     public function search($params)
     {
-        $query = Subject::find();
+        $query = Position::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -52,12 +52,9 @@ class SubjectSearch extends Subject
 
         $query->andFilterWhere([
             'id' => $this->id,
-            'practice' => $this->practice,
         ]);
 
-        $query->andFilterWhere(['like', 'title', $this->title])
-            ->andFilterWhere(['like', 'code', $this->code])
-            ->andFilterWhere(['like', 'short_name', $this->short_name]);
+        $query->andFilterWhere(['like', 'title', $this->title]);
 
         return $dataProvider;
     }
