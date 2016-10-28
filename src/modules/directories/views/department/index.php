@@ -38,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute'=>'specialities',
                 'format'=>'raw',
                 'value'=> function ($model, $key, $index, $widget) {
-                    /* @var $model \app\modules\directories\models\Department*/
+                    /* @var $model \app\modules\directories\models\department\Department*/
                     return $model->getSpecialitiesListLinks();
                 },
             ],
