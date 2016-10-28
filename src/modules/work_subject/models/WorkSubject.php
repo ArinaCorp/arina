@@ -10,6 +10,7 @@ use app\modules\directories\models\subject\Subject;
 /**
  * @property integer $id
  * @property integer $subject_id
+ * @property integer $plan_id
  * @property array $total
  * @property array $lectures
  * @property array $labs
@@ -27,10 +28,8 @@ use app\modules\directories\models\subject\Subject;
  * @property Subject $subject
  *
  */
-
 class WorkSubject extends ActiveRecord
 {
-
     public function behaviors()
     {
         return [
@@ -61,16 +60,14 @@ class WorkSubject extends ActiveRecord
     /**
      * @inheritdoc
      */
-
     public static function tableName()
     {
-        return 'wp_subject';
+        return '{{%wp_subject}}';
     }
 
     /**
      * @inheritdoc
      */
-
     public function rules()
     {
         return [
@@ -85,7 +82,6 @@ class WorkSubject extends ActiveRecord
     /**
      * @inheritdoc
      */
-
     public function attributeLabels()
     {
         return [
@@ -108,10 +104,12 @@ class WorkSubject extends ActiveRecord
         ];
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getSubject()
     {
         return $this->hasOne(Subject::className(), ['id' => 'subject_id']);
     }
-
 
 }

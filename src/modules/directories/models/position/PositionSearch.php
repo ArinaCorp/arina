@@ -8,14 +8,11 @@ use yii\data\ActiveDataProvider;
 /**
  * PositionSearch represents the model behind the search form about `app\modules\directories\models\position\Position`.
  */
-
 class PositionSearch extends Position
 {
-
     /**
      * @inheritdoc
      */
-
     public function rules()
     {
         return [
@@ -27,7 +24,6 @@ class PositionSearch extends Position
     /**
      * @inheritdoc
      */
-
     public function scenarios()
     {
         // bypass scenarios() implementation in the parent class
@@ -40,7 +36,6 @@ class PositionSearch extends Position
      * @param array $params
      * @return ActiveDataProvider
      */
-
     public function search($params)
     {
         $query = Position::find();
@@ -52,8 +47,6 @@ class PositionSearch extends Position
         $this->load($params);
 
         if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
             return $dataProvider;
         }
 

@@ -7,7 +7,7 @@ use Yii;
 use yii\db\ActiveRecord;
 
 /**
- * This is the model class for table "{{%subject}}".
+ * This is the model class for table "subject".
  *
  * @property integer $id
  * @property string $title
@@ -17,14 +17,12 @@ use yii\db\ActiveRecord;
  *
  * @property SubjectRelation[] $relations
  */
-
 class Subject extends ActiveRecord
 {
 
     /**
      * @inheritdoc
      */
-
     public static function tableName()
     {
         return '{{%subject}}';
@@ -34,17 +32,14 @@ class Subject extends ActiveRecord
      * @inheritdoc
      * @return SubjectQuery the active query used by this AR class.
      */
-
     public static function find()
     {
         return new SubjectQuery(get_called_class());
     }
 
-
     /**
      * @inheritdoc
      */
-
     public function rules()
     {
         return [
@@ -56,7 +51,6 @@ class Subject extends ActiveRecord
     /**
      * @inheritdoc
      */
-
     public function attributeLabels()
     {
         return [

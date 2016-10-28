@@ -15,14 +15,12 @@ class Module extends BaseModule implements IAdminModule
     /**
      * @inheritdoc
      */
-
     public $controllerNamespace = 'app\modules\employee\controllers';
     public $modelsNamespace = 'app\modules\employee\models';
 
     /**
      * @inheritdoc
      */
-
     public static function getAdminMenu()
     {
         return [

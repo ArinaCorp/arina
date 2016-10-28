@@ -10,11 +10,9 @@ use yii\data\ActiveDataProvider;
  */
 class SubjectSearch extends Subject
 {
-
     /**
      * @inheritdoc
      */
-
     public function rules()
     {
         return [
@@ -26,7 +24,6 @@ class SubjectSearch extends Subject
     /**
      * @inheritdoc
      */
-
     public function scenarios()
     {
         // bypass scenarios() implementation in the parent class
@@ -39,7 +36,6 @@ class SubjectSearch extends Subject
      * @param array $params
      * @return ActiveDataProvider
      */
-
     public function search($params)
     {
         $query = Subject::find();
@@ -51,8 +47,6 @@ class SubjectSearch extends Subject
         $this->load($params);
 
         if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
             return $dataProvider;
         }
 

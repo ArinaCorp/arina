@@ -9,15 +9,12 @@ use yii\db\ActiveQuery;
  *
  * @see WorkSubject
  */
-
 class WorkSubjectQuery extends ActiveQuery
 {
-
     /**
      * @inheritdoc
      * @return WorkSubject[]|array
      */
-
     public function all($db = null)
     {
         return parent::all($db);
@@ -27,7 +24,6 @@ class WorkSubjectQuery extends ActiveQuery
      * @inheritdoc
      * @return WorkSubject|array|null
      */
-
     public function one($db = null)
     {
         return parent::one($db);

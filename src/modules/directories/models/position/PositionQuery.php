@@ -9,14 +9,12 @@ use yii\db\ActiveQuery;
  *
  * @see Position
  */
-
 class PositionQuery extends ActiveQuery
 {
     /**
      * @inheritdoc
      * @return Position[]|array
      */
-
     public function all($db = null)
     {
         return parent::all($db);
@@ -26,7 +24,6 @@ class PositionQuery extends ActiveQuery
      * @inheritdoc
      * @return Position|array|null
      */
-
     public function one($db = null)
     {
         return parent::one($db);

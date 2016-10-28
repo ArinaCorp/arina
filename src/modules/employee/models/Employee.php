@@ -20,14 +20,10 @@ use yii\db\ActiveRecord;
  * @property string $birth_date
  * @property string $passport
  * @property string $passport_issued_by
- *
- *
  */
-
 class Employee extends ActiveRecord
 {
     /** Types */
-
     const TYPE_NONE = 0;
     const TYPE_TEACHER = 1;
     const TYPE_OTHER = 2;
@@ -35,7 +31,6 @@ class Employee extends ActiveRecord
     /**
      * @return string the associated database table name
      */
-
     public static function tableName()
     {
         return '{{%employee}}';
@@ -44,24 +39,21 @@ class Employee extends ActiveRecord
     /**
      * @return array validation rules for model attributes.
      */
-
     public function rules()
     {
         return [
             [['id', 'position_id', 'is_in_education', 'gender', 'type', 'cyclic_commission_id'], 'integer'],
-
             [['last_name', 'first_name', 'middle_name', 'position_id', 'is_in_education',
                 'gender', 'birth_date', 'passport', 'passport_issued_by','type'], 'required'],
-
             [['birth_date','cyclic_commission_id', 'passport', 'passport_issued_by'], 'safe'],
 
             [['passport', 'id'], 'unique'],
         ];
     }
+
     /**
      * @return array customized attribute labels (name=>label)
      */
-
     public function attributeLabels()
     {
         return [
@@ -97,11 +89,12 @@ class Employee extends ActiveRecord
 
     public static function getTypes()
     {
-        return array(
-            self::TYPE_OTHER => Yii::t('employee','Інший працівник'),
-            self::TYPE_TEACHER => Yii::t('employee','Викладач'),
-            self::TYPE_NONE => Yii::t('employee','Ніхто'),
-        );
+        return [
+            self::TYPE_NONE => Yii::t('employee', 'Ніхто'),
+            self::TYPE_OTHER => Yii::t('employee', 'Інший працівник'),
+            self::TYPE_TEACHER => Yii::t('employee', 'Викладач'),
+            //TODO: fix it
+        ];
     }
 
 }

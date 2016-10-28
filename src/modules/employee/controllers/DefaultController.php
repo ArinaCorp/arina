@@ -1,18 +1,17 @@
 <?php
 
-namespace app\modules\students\controllers;
-/* @author VasyaKog */
+namespace app\modules\employee\controllers;
+
 use yii\filters\VerbFilter;
 use yii\web\Controller;
-use app\modules\students\models\StudentSearch;
-use app\modules\students\models\Student;
+use app\modules\employee\models\EmployeeSearch;
+use app\modules\employee\models\Employee;
 use yii\web\NotFoundHttpException;
-
 use nullref\core\interfaces\IAdminController;
 use Yii;
 
 /**
- * Default controller for the `students` module
+ * Default controller for the `employee` module
  */
 class DefaultController extends Controller implements IAdminController
 {
@@ -32,12 +31,12 @@ class DefaultController extends Controller implements IAdminController
     }
 
     /**
-     * Lists all Student models.
+     * Lists all Employee models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new StudentSearch();
+        $searchModel = new EmployeeSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -47,7 +46,7 @@ class DefaultController extends Controller implements IAdminController
     }
 
     /**
-     * Displays a single Student model.
+     * Displays a single Employee model.
      * @param integer $id
      * @return mixed
      */
@@ -59,13 +58,13 @@ class DefaultController extends Controller implements IAdminController
     }
 
     /**
-     * Creates a new Student model.
+     * Creates a new Employee model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Student();
+        $model = new Employee();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -77,7 +76,7 @@ class DefaultController extends Controller implements IAdminController
     }
 
     /**
-     * Updates an existing Student model.
+     * Updates an existing Employee model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -96,7 +95,7 @@ class DefaultController extends Controller implements IAdminController
     }
 
     /**
-     * Deletes an existing Student model.
+     * Deletes an existing Employee model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -109,18 +108,18 @@ class DefaultController extends Controller implements IAdminController
     }
 
     /**
-     * Finds the Student model based on its primary key value.
+     * Finds the Employee model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Student the loaded model
+     * @return Employee the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Student::findOne($id)) !== null) {
+        if (($model = Employee::findOne($id)) !== null)
             return $model;
-        } else {
+        else
             throw new NotFoundHttpException('The requested page does not exist.');
-        }
     }
+
 }

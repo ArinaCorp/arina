@@ -16,13 +16,11 @@ use app\modules\employee\models\Employee;
  *
  * @property Employee[] $employee
  */
-
 class Category extends ActiveRecord
 {
     /**
      * @return string the associated database table name
      */
-
     public static function tableName()
     {
         return '{{%category}}';
@@ -31,7 +29,6 @@ class Category extends ActiveRecord
     /**
      * @return array validation rules for model attributes.
      */
-
     public function rules()
     {
         return [
@@ -44,19 +41,17 @@ class Category extends ActiveRecord
     /**
      * @return array customized attribute labels (name=>label)
      */
-
     public function attributeLabels()
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'title' => Yii::t('app','Title'),
+            'title' => Yii::t('app', 'Title'),
         ];
     }
 
     /**
      * @return ActiveQuery
      */
-
     public function getEmployee()
     {
         return $this->hasMany(Employee::className(), ['category_id' => 'id']);

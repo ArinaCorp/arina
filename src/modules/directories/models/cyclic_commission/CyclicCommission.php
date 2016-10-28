@@ -3,6 +3,7 @@
 namespace app\modules\directories\models\cyclic_commission;
 
 use Yii;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use app\modules\teacher\models\Teacher;
 
@@ -14,11 +15,9 @@ use app\modules\teacher\models\Teacher;
  * @property string $title
  * @property integer $head_id
  *
- * The followings are the available model relations:
  * @property Teacher[] $teachers
  * @property Teacher $head
  */
-
 class CyclicCommission extends ActiveRecord
 {
     public function getHeadName()
@@ -32,7 +31,6 @@ class CyclicCommission extends ActiveRecord
     /**
      * @return string the associated database table name
      */
-
     public static function tableName()
     {
         return '{{%cyclic_commission}}';
@@ -41,7 +39,6 @@ class CyclicCommission extends ActiveRecord
     /**
      * @return array validation rules for model attributes.
      */
-
     public function rules()
     {
         return [
@@ -54,18 +51,16 @@ class CyclicCommission extends ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-
     public function getTeachers()
     {
         return $this->hasMany(Teacher::className(), ['cyclic_commission_id' => 'id']);
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-
     public function getHead()
     {
         return $this->hasOne(Teacher::className(), ['head_id' => 'id']);
@@ -74,7 +69,6 @@ class CyclicCommission extends ActiveRecord
     /**
      * @return array customized attribute labels (name=>label)
      */
-
     public function attributeLabels()
     {
         return [

@@ -6,7 +6,6 @@ use Yii;
 use app\modules\employee\models\Employee;
 use app\modules\directories\models\cyclic_commission\CyclicCommission;
 
-
 /**
  * This is the model class for table "teacher".
  *
@@ -18,17 +17,14 @@ use app\modules\directories\models\cyclic_commission\CyclicCommission;
  * @property string $short_name
  * @property integer $cyclic_commission_id
  *
- *
  * @property CyclicCommission $cyclicCommission
  */
 class Teacher extends Employee
 {
-
     /**
      * @inheritdoc
      * @return array validation rules for model attributes.
      */
-
     public function rules()
     {
         return [
@@ -42,7 +38,6 @@ class Teacher extends Employee
     /**
      * @return array customized attribute labels (name=>label)
      */
-
     public function attributeLabels()
     {
         return [
@@ -55,6 +50,9 @@ class Teacher extends Employee
         ];
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getCyclicCommission()
     {
         return $this->hasOne(CyclicCommission::className(), ['id' => 'cyclic_commission_id']);

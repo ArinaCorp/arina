@@ -18,13 +18,11 @@ use app\modules\employee\models\Employee;
  *
  * @property Employee[] $employee
  */
-
 class Position extends ActiveRecord
 {
     /**
      * @return string the associated database table name
      */
-
     public static function tableName()
     {
         return '{{%position}}';
@@ -34,16 +32,14 @@ class Position extends ActiveRecord
      * @inheritdoc
      * @return PositionQuery the active query used by this AR class.
      */
-
     public static function find()
     {
-    return new PositionQuery(get_called_class());
+        return new PositionQuery(get_called_class());
     }
 
     /**
      * @return array validation rules for model attributes.
      */
-
     public function rules()
     {
         return [
@@ -56,21 +52,19 @@ class Position extends ActiveRecord
     /**
      * @return array customized attribute labels (name=>label)
      */
-
     public function attributeLabels()
     {
         return array(
             'id' => Yii::t('app', 'ID'),
-            'title' => Yii::t('app','Title'),
-            'max_hour_1' => Yii::t('app','Max load hours').' 1',
-            'max_hour_2' => Yii::t('app','Max load hours').' 2',
+            'title' => Yii::t('app', 'Title'),
+            'max_hour_1' => Yii::t('app', 'Max load hours').' 1',
+            'max_hour_2' => Yii::t('app', 'Max load hours').' 2',
         );
     }
 
     /**
      * @return ActiveQuery
      */
-
     public function getEmployee()
     {
         return $this->hasMany(Employee::className(), ['position_id' => 'id']);

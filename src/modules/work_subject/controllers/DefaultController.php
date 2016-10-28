@@ -5,21 +5,17 @@ namespace app\modules\work_subject\controllers;
 use app\modules\work_subject\models\WorkSubjectSearch;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
-use app\modules\work_subject\models\WorkSubject;
-use yii\web\NotFoundHttpException;
 use nullref\core\interfaces\IAdminController;
 use Yii;
 
 /**
  * Default controller for the `students` module
  */
-
 class DefaultController extends Controller implements IAdminController
 {
     /**
      * @inheritdoc
      */
-
     public function behaviors()
     {
         return [
@@ -33,7 +29,7 @@ class DefaultController extends Controller implements IAdminController
     }
 
 
-
+    //TODO: finish contoller
     public function actionIndex()
     {
         $searchModel = new WorkSubjectSearch();
