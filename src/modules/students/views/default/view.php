@@ -47,6 +47,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'birth_day',
             'passport_code',
             'passport_issued',
+            'passport_issued_date',
             'tax_id',
             [
                 'attribute' => 'created_at',

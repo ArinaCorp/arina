@@ -3,11 +3,8 @@
 namespace app\modules\directories\models\speciality_qualification;
 
 use Yii;
-use \yii\db\ActiveRecord;
-use app\modules\directories\models\speciality\Speciality;
-use app\modules\directories\models\qualification\Qualification;
-use app\modules\directories\models\relation\SubjectRelation;
-
+use app\modules\directories\models\Speciality;
+use app\modules\directories\models\Qualification;
 
 /**
  * This is the model class for table "speciality_qualification".
@@ -23,13 +20,11 @@ use app\modules\directories\models\relation\SubjectRelation;
  * @property $qualification Qualification
  * @property $relations SubjectRelation[]
  */
-
-class SpecialityQualification extends ActiveRecord
+class SpecialityQualification extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
-
     public static function tableName()
     {
         return '{{%speciality_qualification}}';
@@ -61,18 +56,40 @@ class SpecialityQualification extends ActiveRecord
             'months_count' => Yii::t('app', 'Months Count'),
         ];
     }
-
     public function getQualification(){
         return $this->hasOne(Qualification::className(),['id'=>'qualification_id']);
     }
-
     public function getSpeciality() {
         return $this->hasOne(Speciality::className(),['id'=>'speciality_id']);
+    }
+    public static function getTreeList(){
+        $list = [];
+
+        $department = Department::find()->all();
+        foreach ($department as $item) {
+            /* @var $item Department */
+            $list[$item->title] = [];
+            foreach ($item->specialities as $speciality) {
+                /**
+                 * @var $speciality Speciality
+                 */
+                $list[$item->title][$speciality->title] = [];
+                foreach ($speciality->specialityQualifications as $specialityQualification){
+                    /**
+                     * @var $specialityQualification SpecialityQualification
+                     */
+                    $list[$item->title][$speciality->title][$specialityQualification->id]=$specialityQualification->title;
+                }
+            }
+        }
+        return $list;
     }
 
     public function getSubjectRelation()
     {
         return $this->hasMany(SubjectRelation::className(), ['speciality_qualification_id' => 'id']);
     }
+
+
 
 }

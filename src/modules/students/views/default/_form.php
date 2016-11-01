@@ -47,6 +47,14 @@ use yii\bootstrap\ActiveForm;
 
     <?= $form->field($model, 'passport_issued')->textInput(['maxlength' => true, 'placeholder' => $model->getAttributeLabel('passport_issued')]) ?>
 
+    <?= $form->field($model, 'passport_issued_date')->widget(dosamigos\datepicker\DatePicker::className(), [
+        'language' => 'uk',
+        'clientOptions' => [
+            'autoclose' => true,
+
+        ]
+    ]); ?>
+
     <?= $form->field($model, 'birth_certificate')->widget(\yii\widgets\MaskedInput::className(), ['mask' => 'AA №999999']);
     ?>
 
