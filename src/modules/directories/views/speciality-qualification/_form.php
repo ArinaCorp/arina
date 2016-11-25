@@ -5,7 +5,7 @@ use yii\widgets\ActiveForm;
 use kartik\touchspin\TouchSpin;
 
 /* @var $this yii\web\View */
-/* @var $model app\modules\directories\models\SpecialityQualification */
+/* @var $model app\modules\directories\models\specialityqualification\SpecialityQualification */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 

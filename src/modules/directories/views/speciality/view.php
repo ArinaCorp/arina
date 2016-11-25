@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model app\modules\directories\models\Speciality */
+/* @var $model app\modules\directories\models\speciality\Speciality */
 
 $this->title = $model->title;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Specialities'), 'url' => ['index']];
@@ -30,10 +30,10 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'title',
+            'short_title',
             [
                 'attribute'=>'department_id',
                 'value'=>$model->department->title,
-
             ],
             'number',
             'accreditation_date',

@@ -4,15 +4,15 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\grid\GridView;
 
-
-/* @var $this yii\web\View */
-/* @var $model app\modules\directories\models\subject\Subject */
-/* @var $form ActiveForm */
-/* @var $dataProvider yii\data\ActiveDataProvider */
-/* @var $searchModel \app\modules\directories\models\subject\SubjectSearch */
+/** @var $this yii\web\View
+ * @var $model app\modules\directories\models\subject\Subject
+ * @var $form ActiveForm
+ * @var $dataProvider yii\data\ActiveDataProvider
+ * @var $searchModel \app\modules\directories\models\subject\SubjectSearch */
 
 $this->title = Yii::t('app', 'Subjects');
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="subject-index">
 

@@ -42,6 +42,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => 'typeTitle',
             ],
             'id_teacher',
+            'capacity',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

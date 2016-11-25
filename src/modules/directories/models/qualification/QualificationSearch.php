@@ -1,16 +1,16 @@
 <?php
 
-namespace app\modules\directories\models;
+namespace app\modules\directories\models\qualification;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\modules\directories\models\SpecialityQualification;
+use app\modules\directories\models\qualification\Qualification;
 
 /**
- * SpecialityQualificationSearch represents the model behind the search form of `app\modules\directories\models\SpecialityQualification`.
+ * QualificationSearch represents the model behind the search form of `app\modules\directories\models\Qualification`.
  */
-class SpecialityQualificationSearch extends SpecialityQualification
+class QualificationSearch extends Qualification
 {
     /**
      * @inheritdoc
@@ -18,7 +18,7 @@ class SpecialityQualificationSearch extends SpecialityQualification
     public function rules()
     {
         return [
-            [['id', 'years_count', 'months_count'], 'integer'],
+            [['id'], 'integer'],
             [['title'], 'safe'],
         ];
     }
@@ -41,7 +41,7 @@ class SpecialityQualificationSearch extends SpecialityQualification
      */
     public function search($params)
     {
-        $query = SpecialityQualification::find();
+        $query = Qualification::find();
 
         // add conditions that should always apply here
 
@@ -60,8 +60,6 @@ class SpecialityQualificationSearch extends SpecialityQualification
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'years_count' => $this->years_count,
-            'months_count' => $this->months_count,
         ]);
 
         $query->andFilterWhere(['like', 'title', $this->title]);

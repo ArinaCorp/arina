@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\directories\models;
+namespace app\modules\directories\models\department;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -12,7 +12,7 @@ use yii\helpers\Url;
  * @property string $title
  * @property integer $head_id
  *
- * @property Speciality[] $specialities
+ * @property \app\modules\directories\models\speciality\Speciality[] $specialities
  */
 class Department extends \yii\db\ActiveRecord
 {
@@ -55,7 +55,7 @@ class Department extends \yii\db\ActiveRecord
         ];
     }
     public function getSpecialities(){
-        return $this->hasMany(Speciality::className(), ['department_id' => 'id']);
+        return $this->hasMany(\app\modules\directories\models\speciality\Speciality::className(), ['department_id' => 'id']);
     }
     public function getSpecialitiesListLinks(){
         $string="";
