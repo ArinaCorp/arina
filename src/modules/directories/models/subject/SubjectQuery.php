@@ -16,7 +16,6 @@ class SubjectQuery extends ActiveQuery
      * @inheritdoc
      * @return Subject[]|array
      */
-
     public function all($db = null)
     {
         return parent::all($db);
@@ -26,7 +25,6 @@ class SubjectQuery extends ActiveQuery
      * @inheritdoc
      * @return Subject|array|null
      */
-
     public function one($db = null)
     {
         return parent::one($db);

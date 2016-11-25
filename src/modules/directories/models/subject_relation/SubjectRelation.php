@@ -3,6 +3,7 @@
 namespace app\modules\directories\models\relation;
 
 use Yii;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use app\modules\directories\models\subject\Subject;
 use app\modules\directories\models\speciality_qualification\SpecialityQualification;
@@ -20,13 +21,8 @@ use app\modules\directories\models\speciality_qualification\SpecialityQualificat
  * @property SpecialityQualification $speciality_qualification;
  * @property SubjectCycle $subject_cycle;
  */
-
 class SubjectRelation extends ActiveRecord
 {
-    /**
-     * @return string
-     */
-
     public function getId()
     {
         return $this->subject_id . '.' . $this->speciality_qualification_id . '.' . $this->subject_cycle_id;
@@ -40,7 +36,6 @@ class SubjectRelation extends ActiveRecord
     /**
      * @return string the associated database table name
      */
-
     public static function tableName()
     {
         return '{{%subject_relation}}';
@@ -49,26 +44,34 @@ class SubjectRelation extends ActiveRecord
     /**
      * @return array validation rules for model attributes.
      */
-
     public function rules()
     {
-        return array(
-            array('subject_id, speciality_qualification_id, subject_cycle_id', 'required'),
-            array('subject_id, speciality_qualification_id, subject_cycle_id', 'numerical', 'integerOnly' => true),
-            array('subject_id, speciality_qualification_id, subject_cycle_id', 'safe', 'on' => 'search'),
-        );
+        return [
+            [['subject_id', 'speciality_qualification_id', 'subject_cycle_id'], 'required'],
+            [['subject_id', 'speciality_qualification_id', 'subject_cycle_id'], 'integer'],
+            [['subject_id', 'speciality_qualification_id', 'subject_cycle_id'], 'safe'],
+        ];
     }
 
+    /**
+     * @return ActiveQuery
+     */
     public function getSubject()
     {
         return $this->hasOne(Subject::className(), ['id' => 'subject_id']);
     }
 
+    /**
+     * @return ActiveQuery
+     */
     public function getSubjectCycle()
     {
         return $this->hasOne(SubjectCycle::className(), ['id' => 'subject_cycle_id']);
     }
 
+    /**
+     * @return ActiveQuery
+     */
     public function getSpecialityQualification()
     {
         return $this->hasOne(SpecialityQualification::className(), ['id' => 'speciality_qualification_id']);
@@ -77,7 +80,6 @@ class SubjectRelation extends ActiveRecord
     /**
      * @return array customized attribute labels (name=>label)
      */
-
     public function attributeLabels()
     {
         return array(

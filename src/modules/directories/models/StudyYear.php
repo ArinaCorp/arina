@@ -57,8 +57,11 @@ class StudyYear extends \yii\db\ActiveRecord
             /**
              * @var StudyYear $studyYear
              */
-            $items[$studyYear->id]=$studyYear->year_start.'/'.$studyYear->getYearEnd();
+            $items[$studyYear->id]=$studyYear->getFullName();
         }
         return $items;
+    }
+    public function getFullName(){
+        return $this->year_start.'/'.$this->getYearEnd();
     }
 }

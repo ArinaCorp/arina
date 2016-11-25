@@ -138,6 +138,11 @@ class Student extends \yii\db\ActiveRecord
         return $this->gender ? Yii::t('app', 'Female') : Yii::t('app', 'Male');
     }
 
+    public function getFullNameAndCode()
+    {
+        return $this->getFullName() . ' ' . $this->student_code;
+    }
+
     public function getFullName()
     {
         return $this->last_name . ' ' . $this->first_name . ' ' . $this->middle_name;
@@ -175,7 +180,8 @@ class Student extends \yii\db\ActiveRecord
         $array = json_decode($json, TRUE);
         $i = 0;
         foreach ($array['student'] as $item) {
-            $student = self::findOne(['sseed_id' => $item]);
+            $student = self::findOne(['sseed_id' => $item['edbo_education_id']]);
+
             if (is_null($student)) {
                 $student = new Student();
             }
@@ -184,7 +190,7 @@ class Student extends \yii\db\ActiveRecord
             if (!is_null($item['middle_name']['@attributes']['uk'])) $student->middle_name = $item['middle_name']['@attributes']['uk'];
             if (!is_null($item['birthday'])) $student->birth_day = $item['birthday'];
             if (!is_null($item['sex'])) $student->gender = $item['sex'];
-            if (!is_null($item['sex'])) $student->tax_id = $item['sex'];
+            if (!is_null($item['ipn'])) $student->tax_id = $item['ipn'];
             if (!is_null($item['person_document']['@attributes']['ID'])) if ($item['person_document']['@attributes']['ID'] == '1') {
                 if (!is_null($item['person_document']['@attributes']['seria'])) $student->passport_code = $item['person_document']['@attributes']['seria'] . ' №' . $item['person_document']['@attributes']['number'];
                 if (!is_null($item['person_document']['@attributes']['issued_by'])) $student->passport_issued = $item['person_document']['@attributes']['issued_by'];
@@ -194,12 +200,59 @@ class Student extends \yii\db\ActiveRecord
             }
             if (!is_null($item['edbo_education_id'])) $student->sseed_id = $item['edbo_education_id'];
             if (!is_null($item['photo'])) $student->photo = $item['photo'];
+            var_dump($student);
             $student->save();
             if (!is_null($item['last_name']['@attributes']['uk'])) {
-                $path = Yii::getAlias('@web')."/web/uploads/students/photo/";
+                $path = __DIR__ . "/../../../../web/uploads/students/photo/";
                 copy($_FILES['File']['tmp_name']['photos'][$i], $path . 'student_' . $student->id . '.jpeg');
             }
             $i++;
         }
+    }
+
+    public function getGroupArray($date = null)
+    {
+        if ($date == null) {
+            $date = date('d.m.y');
+        };
+        $listRecord = StudentGroup::find()->where(['student_id' => $this->id])->all();
+        $listGroup = array();
+        // sort($listRecord,1);
+
+        foreach ($listRecord as $item) {
+
+            if ($item->type == 0) {
+
+                if ($date < $item->date) continue;
+                $k = 1;
+                if (in_array($item->group_id, $listGroup)) continue;
+                foreach ($listRecord as $item2) {
+                    if ($item2->date > $date) continue;
+                    if ($item->group_id == $item2->group_id) {
+                        if ($item != $item2 && $item2->type == 1) {
+                            $k += 1;
+                        }
+                    }
+                }
+
+                if ($k % 2 != 0) {
+                    array_push($listGroup, $item->group_id);
+                }
+            }
+        }
+        return $listGroup;
+    }
+
+    public function getGroupLinksList()
+    {
+        $links = "";
+        $arr = $this->getGroupArray();
+        if (empty($arr)) return Yii::t('app', 'This student has not group');
+        foreach ($arr as $item) {
+            $group = Group::findOne(['id' => $item]);
+            $links .= Html::a($group->title, ['/students/group/view', 'id' => $group->id]);
+        }
+        return $links;
+
     }
 }

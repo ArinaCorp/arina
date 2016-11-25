@@ -1,9 +1,11 @@
 <?php
 
 namespace app\modules\directories\models\department;
+
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
+use app\modules\directories\models\speciality\Speciality;
 
 /**
  * This is the model class for table "department".
@@ -55,12 +57,12 @@ class Department extends \yii\db\ActiveRecord
         ];
     }
     public function getSpecialities(){
-        return $this->hasMany(\app\modules\directories\models\speciality\Speciality::className(), ['department_id' => 'id']);
+        return $this->hasMany(Speciality::className(), ['department_id' => 'id']);
     }
     public function getSpecialitiesListLinks(){
         $string="";
         foreach ($this->specialities as $speciality) {
-         $string.=Html::a($speciality->title,Url::to(['directories/speciality/view',$speciality->id])).'</br>';
+         $string.=Html::a($speciality->title,Url::to(['speciality/view','id'=>$speciality->id])).'</br>';
         }
         return $string;
     }
