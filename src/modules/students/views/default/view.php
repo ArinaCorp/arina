@@ -57,7 +57,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'updated_at',
                 'value' => date('H:m d.m.Y', $model->updated_at),
             ],
-
+            [
+                'label' => Yii::t('app','Group now'),
+                'type'=>'raw',
+                'value' => $model->getGroupLinksList(),
+            ],
         ],
     ]) ?>
 

@@ -35,6 +35,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute'=>'department_id',
                 'value'=>$model->department->title,
             ],
+            [
+                'label' => Yii::t('app','Qualifications'),
+                'format' =>'raw',
+                'value'=>$model->getSpecialityQualificationsLinks(),
+            ],
             'number',
             'accreditation_date',
         ],

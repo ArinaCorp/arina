@@ -6,6 +6,7 @@ use nullref\core\interfaces\IAdminController;
 use Yii;
 use app\modules\students\models\Group;
 use yii\data\ActiveDataProvider;
+use yii\data\ArrayDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -52,7 +53,12 @@ class GroupController extends Controller implements IAdminController
      */
     public function actionView($id)
     {
+        $dataProvider = new ArrayDataProvider([
+            'key'=>'id',
+            'allModels'=>$this->findModel($id)->getStudentsArray(),
+        ]);
         return $this->render('view', [
+            'dataProvider'=>$dataProvider,
             'model' => $this->findModel($id),
         ]);
     }

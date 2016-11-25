@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\modules\students\models\StudentGroup */
 
-$this->title = $model->id;
+$this->title = $model->student->getFullNameAndCode() . " " . $model->getType() . " " . $model->group->title;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Student Groups'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -35,11 +35,19 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
-            'string',
-            'type',
-            'group_id',
-            'student_id',
+            'date',
+            [
+                'attribute' => 'type',
+                'value' => $model->getType(),
+            ],
+            [
+                'attribute' => 'group_id',
+                'value' => $model->group->title,
+            ],
+            [
+                'attribute' => 'student_id',
+                'value' => $model->student->getFullNameAndCode(),
+            ],
             'comment',
             'funding_id',
         ],

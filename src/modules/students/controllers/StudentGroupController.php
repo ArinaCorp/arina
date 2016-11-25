@@ -5,10 +5,12 @@ namespace app\modules\students\controllers;
 use Yii;
 use app\modules\students\models\StudentGroup;
 use yii\data\ActiveDataProvider;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use nullref\core\interfaces\IAdminController;
+use yii\helpers\Json;
 
 /**
  * StudentGroupController implements the CRUD actions for StudentGroup model.
@@ -103,6 +105,41 @@ class StudentGroupController extends Controller implements IAdminController
 
         return $this->redirect(['index']);
     }
+
+
+    public function actionGetstudentslist()
+    {
+        if (isset($_POST['depdrop_parents'])) {
+            $parents = $_POST['depdrop_parents'];
+            if ($parents != null) {
+                $cat_id = $parents[0];
+                $param1 = null;
+                $param2 = null;
+                if (!empty($_POST['depdrop_all_params'])) {
+                    $params = $_POST['depdrop_all_params'];
+                    $param1 = $params['group-id']; // get the value of input-type-1
+                    $param2 = $params['type-id']; // get the value of input-type-2
+                }
+                switch ($param2) {
+                    case 0: {
+                        $out = StudentGroup::getStudentsListFromInclude($param1);
+                        break;
+                    }
+                    default: {
+                        $out = StudentGroup::getStudentsListFromExclude($param1);
+                        break;
+                    }
+                }
+                echo Json::encode(['output' => $out, 'selected' => 'Select..']);
+                $fp = fopen('results.json', 'w');
+                fwrite($fp, Json::encode(['output' => $out, 'selected' => 'Select..']));
+                fclose($fp);
+                return;
+            }
+        }
+        echo Json::encode(['output' => [], 'selected' => 'Select']);
+    }
+
 
     /**
      * Finds the StudentGroup model based on its primary key value.

@@ -4,7 +4,6 @@ namespace app\modules\employee\controllers;
 
 use yii\filters\VerbFilter;
 use yii\web\Controller;
-use app\modules\employee\models\EmployeeSearch;
 use app\modules\employee\models\Employee;
 use yii\web\NotFoundHttpException;
 use nullref\core\interfaces\IAdminController;
@@ -36,11 +35,9 @@ class DefaultController extends Controller implements IAdminController
      */
     public function actionIndex()
     {
-        $searchModel = new EmployeeSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = Employee::find()->all();
 
         return $this->render('index', [
-            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }

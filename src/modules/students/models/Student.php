@@ -138,6 +138,11 @@ class Student extends \yii\db\ActiveRecord
         return $this->gender ? Yii::t('app', 'Female') : Yii::t('app', 'Male');
     }
 
+    public function getFullNameAndCode()
+    {
+        return $this->getFullName() . ' ' . $this->student_code;
+    }
+
     public function getFullName()
     {
         return $this->last_name . ' ' . $this->first_name . ' ' . $this->middle_name;
@@ -180,7 +185,6 @@ class Student extends \yii\db\ActiveRecord
             if (is_null($student)) {
                 $student = new Student();
             }
-            var_dump($item);
             if (!is_null($item['last_name']['@attributes']['uk'])) $student->last_name = $item['last_name']['@attributes']['uk'];
             if (!is_null($item['first_name']['@attributes']['uk'])) $student->first_name = $item['first_name']['@attributes']['uk'];
             if (!is_null($item['middle_name']['@attributes']['uk'])) $student->middle_name = $item['middle_name']['@attributes']['uk'];
@@ -204,5 +208,51 @@ class Student extends \yii\db\ActiveRecord
             }
             $i++;
         }
+    }
+
+    public function getGroupArray($date = null)
+    {
+        if ($date == null) {
+            $date = date('d.m.y');
+        };
+        $listRecord = StudentGroup::find()->where(['student_id' => $this->id])->all();
+        $listGroup = array();
+        // sort($listRecord,1);
+
+        foreach ($listRecord as $item) {
+
+            if ($item->type == 0) {
+
+                if ($date < $item->date) continue;
+                $k = 1;
+                if (in_array($item->group_id, $listGroup)) continue;
+                foreach ($listRecord as $item2) {
+                    if ($item2->date > $date) continue;
+                    if ($item->group_id == $item2->group_id) {
+                        if ($item != $item2 && $item2->type == 1) {
+                            $k += 1;
+                        }
+                    }
+                }
+
+                if ($k % 2 != 0) {
+                    array_push($listGroup, $item->group_id);
+                }
+            }
+        }
+        return $listGroup;
+    }
+
+    public function getGroupLinksList()
+    {
+        $links = "";
+        $arr = $this->getGroupArray();
+        if (empty($arr)) return Yii::t('app', 'This student has not group');
+        foreach ($arr as $item) {
+            $group = Group::findOne(['id' => $item]);
+            $links .= Html::a($group->title, ['/students/group/view', 'id' => $group->id]);
+        }
+        return $links;
+
     }
 }
