@@ -6,6 +6,8 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use app\modules\directories\models\subject\Subject;
+use app\modules\directories\models\cyclic_commission\CyclicCommission;
+use yii\db\ActiveQuery;
 
 /**
  * @property integer $id
@@ -26,6 +28,7 @@ use app\modules\directories\models\subject\Subject;
  * @property bool $dual_practice
  *
  * @property Subject $subject
+ * @property CyclicCommission $cyclic_commission
  *
  */
 class WorkSubject extends ActiveRecord
@@ -105,11 +108,19 @@ class WorkSubject extends ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getSubject()
     {
         return $this->hasOne(Subject::className(), ['id' => 'subject_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getCyclicCommission()
+    {
+        return $this->hasOne(CyclicCommission::className(), ['id' => 'cyclic_commission_id']);
     }
 
 }

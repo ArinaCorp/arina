@@ -8,10 +8,29 @@ use app\modules\directories\models\subject\Subject;
 /* @var $this View
  * @var $model Subject
  * @var $form ActiveForm */
+/**
+ * @property integer $id
+ * @property integer $subject_id
+ * @property integer $plan_id
+ * @property array $total
+ * @property array $lectures
+ * @property array $labs
+ * @property array $practices
+ * @property array $weeks
+ * @property array $control
+ * @property integer $cyclic_commission_id
+ * @property string $certificate_name
+ * @property string $diploma_name
+ * @property integer $project_hours
+ * @property array $control_hours
+ * @property bool $dual_labs
+ * @property bool $dual_practice */
 
 ?>
 
 <div class="subject-form">
+
+
 
     <?php $form = ActiveForm::begin(); ?>
 
