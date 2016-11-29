@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model app\modules\directories\models\specialityqualification\SpecialityQualification */
+/* @var $model app\modules\directories\models\speciality_qualification\SpecialityQualification */
 
 $this->title = $model->title;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Speciality Qualifications'), 'url' => ['index']];
@@ -32,6 +32,10 @@ $this->params['breadcrumbs'][] = $this->title;
             'title',
             'years_count',
             'months_count',
+            [
+                'label'=>Yii::t('app','Count courses'),
+                'value'=>$model->getCountCourses(),
+            ]
         ],
     ]) ?>
 

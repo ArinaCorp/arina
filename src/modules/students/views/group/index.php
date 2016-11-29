@@ -28,12 +28,18 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
-            'speciality_qualifications_id',
-            'created_study_year_id',
-            'number_group',
+            //'speciality_qualifications_id',
+            //'created_study_year_id',
+            //'number_group',
             'title',
+            [
+                'label'=>Yii::t('app','System title'),
+                'value' => function ($model, $key, $index, $widget) {
+                    /* @var $model \app\modules\students\models\Group*/
+                    return $model->getSystemTitle();
+                },
+            ],
+
             // 'group_leader_id',
 
             ['class' => 'yii\grid\ActionColumn'],

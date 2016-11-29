@@ -43,10 +43,9 @@ class Qualification extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'title' => Yii::t('app', 'Title'),
-            'sort_order' => Yii::t('app', 'Short Title'),
+            'sort_order' => Yii::t('app', 'Short order'),
         ];
     }
-
     /**
      * @inheritdoc
      * @return QualificationQuery the active query used by this AR class.
@@ -55,12 +54,9 @@ class Qualification extends \yii\db\ActiveRecord
     {
         return new QualificationQuery(get_called_class());
     }
-
     public static function getList() {
         $data = Qualification::find()->all();
         $items=ArrayHelper::map($data,'id','title');
         return $items;
     }
-
-
 }

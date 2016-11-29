@@ -35,13 +35,52 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
-            'speciality_qualifications_id',
-            'created_study_year_id',
+            [
+                'label' => Yii::t('app', 'Speciality'),
+                'value' => $model->specialityQualification->speciality->title,
+            ],
+            [
+                'attribute' => 'speciality_qualifications_id',
+                'value' => $model->specialityQualification->title,
+            ],
+            [
+                'attribute' => 'created_study_year_id',
+                'value' => $model->studyYear->getFullName(),
+            ],
             'number_group',
+            [
+                'label' => Yii::t('app', 'System title'),
+                'value' => $model->getSystemTitle(),
+            ],
             'title',
             'group_leader_id',
         ],
     ]) ?>
+
+    <?= \yii\grid\GridView::widget([
+        'dataProvider' => $dataProvider,
+        'columns' => [
+            ['class' => 'yii\grid\SerialColumn'],
+            //'id',
+            'student_code',
+            //'sseed_id',
+            //'user_id',
+            'last_name',
+            'first_name',
+            'middle_name',
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{view}',
+                'buttons' => [
+                    'view' => function ($url, $model) {
+                        $customurl = Yii::$app->getUrlManager()->createUrl(['students/default/view', 'id' => $model['id']]); //$model->id для AR
+                        return \yii\helpers\Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $customurl,
+                            ['title' => Yii::t('yii', 'View'), 'data-pjax' => '0']);
+                    },
+                ],
+            ],
+        ],
+    ]);
+    ?>
 
 </div>

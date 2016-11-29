@@ -42,7 +42,7 @@ class Module extends BaseModule implements IAdminModule
                 ],
                 [
                     'label' => Yii::t('app', 'Migraton Students join Group'),
-                    'url' => ['/group'],
+                    'url' => ['/students/student-group'],
                     'icon' => 'list',
                 ],
             ]

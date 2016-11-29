@@ -36,7 +36,7 @@ use kartik\touchspin\TouchSpin;
 
     <?= $form->field($model,'qualification_id')->dropDownList(\app\modules\directories\models\qualification\Qualification::getList());?>
 
-    <?= $form->field($model, 'speciality_id')->dropDownList(\app\modules\directories\models\speciality_qualification\SpecialityQualification::getTreeList());?>
+    <?= $form->field($model, 'speciality_id')->dropDownList(\app\modules\directories\models\speciality\Speciality::getSpecialityTreeList());?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
