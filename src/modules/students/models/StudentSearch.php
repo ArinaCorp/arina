@@ -45,7 +45,7 @@ class StudentSearch extends Student
         $query = Student::find();
 
         // add conditions that should always apply here
-
+        $query->orderBy(['last_name' => SORT_ASC, 'first_name' => SORT_ASC, 'middle_name' => SORT_ASC]);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);

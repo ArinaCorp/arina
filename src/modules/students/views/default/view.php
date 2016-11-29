@@ -28,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </p>
     <div class="row">
         <div class="col-md-2 col-md-offset-5">
-            <?= $model->getPhoto();?>
+            <?= $model->getPhoto(); ?>
         </div>
     </div>
     <?= DetailView::widget([
@@ -36,7 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'student_code',
             'sseed_id',
-            
+
             'last_name',
             'first_name',
             'middle_name',
@@ -47,6 +47,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'birth_day',
             'passport_code',
             'passport_issued',
+            'passport_issued_date',
             'tax_id',
             [
                 'attribute' => 'created_at',
@@ -56,7 +57,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'updated_at',
                 'value' => date('H:m d.m.Y', $model->updated_at),
             ],
-
+            [
+                'label' => Yii::t('app', 'Group now'),
+                'format' => 'raw',
+                'value' => $model->getGroupLinksList(),
+            ],
         ],
     ]) ?>
 

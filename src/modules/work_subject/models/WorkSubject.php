@@ -1,16 +1,18 @@
 <?php
 
 namespace app\modules\work_subject\models;
+
 use Yii;
 use yii\behaviors\TimestampBehavior;
-use yii\console\controllers\HelpController;
-use yii\helpers\Html;
 use yii\db\ActiveRecord;
+use app\modules\directories\models\subject\Subject;
+use app\modules\directories\models\cyclic_commission\CyclicCommission;
+use yii\db\ActiveQuery;
 
 /**
  * @property integer $id
- * @property integer $plan_id
  * @property integer $subject_id
+ * @property integer $plan_id
  * @property array $total
  * @property array $lectures
  * @property array $labs
@@ -23,11 +25,14 @@ use yii\db\ActiveRecord;
  * @property integer $project_hours
  * @property array $control_hours
  * @property bool $dual_labs
- * @property bool $dual_practice */
-
+ * @property bool $dual_practice
+ *
+ * @property Subject $subject
+ * @property CyclicCommission $cyclic_commission
+ *
+ */
 class WorkSubject extends ActiveRecord
 {
-
     public function behaviors()
     {
         return [
@@ -58,16 +63,14 @@ class WorkSubject extends ActiveRecord
     /**
      * @inheritdoc
      */
-
     public static function tableName()
     {
-        return 'wp_subject';
+        return '{{%wp_subject}}';
     }
 
     /**
      * @inheritdoc
      */
-
     public function rules()
     {
         return [
@@ -82,7 +85,6 @@ class WorkSubject extends ActiveRecord
     /**
      * @inheritdoc
      */
-
     public function attributeLabels()
     {
         return [
@@ -105,5 +107,20 @@ class WorkSubject extends ActiveRecord
         ];
     }
 
+    /**
+     * @return ActiveQuery
+     */
+    public function getSubject()
+    {
+        return $this->hasOne(Subject::className(), ['id' => 'subject_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getCyclicCommission()
+    {
+        return $this->hasOne(CyclicCommission::className(), ['id' => 'cyclic_commission_id']);
+    }
 
 }

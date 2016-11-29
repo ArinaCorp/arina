@@ -22,14 +22,15 @@
         "nullref/yii2-core": "dev-master",
         "nullref/yii2-admin": "dev-master",
         "2amigos/yii2-date-time-picker-widget": "*",
-        "2amigos/yii2-date-picker-widget": "*",
+        "2amigos/yii2-date-picker-widget": "~1.0",
         "nex/yii2-datepicker": "*",
         "yiisoft/yii2-jui": "^2.0",
         "yii-dream-team/yii2-upload-behavior": "*",
         "kartik-v/yii2-widget-fileinput": "@dev",
         "kartik-v/yii2-widget-spinner": "@dev",
         "kartik-v/yii2-widget-touchspin": "*",
-        "yii2tech/ar-position": "^1.0"
+        "yii2tech/ar-position": "^1.0",
+        "kartik-v/yii2-widget-depdrop": "@dev"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

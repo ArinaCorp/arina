@@ -2,10 +2,10 @@
 
 namespace app\modules\directories\controllers;
 
+use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 use nullref\core\interfaces\IAdminController;
 use Yii;
-use app\modules\directories\models\specialityqualification\SpecialityQualification;
-use app\modules\directories\models\specialityqualification\SpecialityQualificationSearch;
+use app\modules\directories\models\speciality_qualification\SpecialityQualificationSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
