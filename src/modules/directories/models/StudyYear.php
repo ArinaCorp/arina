@@ -10,6 +10,7 @@ use Yii;
  * @property integer $id
  * @property integer $year_start
  */
+
 class StudyYear extends \yii\db\ActiveRecord
 {
     /**
