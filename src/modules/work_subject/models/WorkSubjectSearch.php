@@ -30,11 +30,10 @@ class WorkSubjectSearch extends WorkSubject
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
+
     /**
      * Creates data provider instance with search query applied
-     *
      * @param array $params
-     *
      * @return ActiveDataProvider
      */
     public function search($params)
@@ -56,21 +55,20 @@ class WorkSubjectSearch extends WorkSubject
             'plan_id' => $this->plan_id,
             'subject_id' => $this->subject_id,
             'cyclic_commission_id' => $this->cyclic_commission_id,
-            'certification_name' => $this->certificate_name,
-            'diploma_name' => $this->diploma_name,
+            'project_hours' => $this->project_hours,
             'dual_labs' => $this->dual_labs,
             'dual_practice' => $this->dual_practice,
         ]);
 
-        $query->andFilterWhere(['like', 'id', $this->id])
-            ->andFilterWhere(['like', 'plan_id', $this->plan_id])
-            ->andFilterWhere(['like', 'subject_id', $this->subject_id])
-            ->andFilterWhere(['like', 'cyclic_commission_id', $this->cyclic_commission_id])
+        $query->andFilterWhere(['like', 'total', $this->total])
+            ->andFilterWhere(['like', 'lectures', $this->lectures])
+            ->andFilterWhere(['like', 'labs', $this->labs])
+            ->andFilterWhere(['like', 'practices', $this->practices])
+            ->andFilterWhere(['like', 'weeks', $this->weeks])
+            ->andFilterWhere(['like', 'control', $this->control])
             ->andFilterWhere(['like', 'certificate_name', $this->certificate_name])
             ->andFilterWhere(['like', 'diploma_name', $this->diploma_name])
-            ->andFilterWhere(['like', 'dual_labs', $this->dual_labs])
-            ->andFilterWhere(['like', 'dual_practice', $this->dual_practice]);
-
+            ->andFilterWhere(['like', 'control_hours', $this->control_hours]);
         return $dataProvider;
     }
 }
