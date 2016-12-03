@@ -8,7 +8,7 @@ use yii\grid\GridView;
  * @var $model app\modules\employee\models\Employee
  * @var $form ActiveForm
  * @var $dataProvider yii\data\ActiveDataProvider
- * @var $searchModel \app\modules\employee\models\EmployeeSearch */
+ * @var $searchModel app\modules\employee\models\EmployeeSearch */
 
 $this->title = Yii::t('app', 'Employees');
 $this->params['breadcrumbs'][] = $this->title;
@@ -36,10 +36,18 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'title',
-            'code',
-            'short_name',
-            'practice',
+            'is_in_education',
+            'position_id',
+            'category_id',
+            'type',
+            'first_name',
+            'middle_name',
+            'last_name',
+            'gender',
+            'cyclic_commission_id',
+            'birth_date',
+            'passport',
+            'passport_issued_by',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

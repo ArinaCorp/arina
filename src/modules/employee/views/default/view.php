@@ -1,20 +1,20 @@
 <?php
 
-use app\modules\directories\models\subject\Subject;
+use app\modules\employee\models\Employee;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 use yii\web\View;
 
 /* @var $this View
- * @var $model Subject */
+ * @var $model Employee */
 
-$this->title = $model->title;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Subjects'), 'url' => ['index']];
+$this->title = $model->getFullName();
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Employees'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>
 
-<div class="subject-view">
+<div class="employee-view">
 
     <div class="row">
         <div class="col-lg-12">
@@ -39,11 +39,18 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
-            'title',
-            'code',
-            'short_name',
-            'practice',
+            'is_in_education',
+            'position_id',
+            'category_id',
+            'type',
+            'first_name',
+            'middle_name',
+            'last_name',
+            'gender',
+            'cyclic_commission_id',
+            'birth_date',
+            'passport',
+            'passport_issued_by',
         ],
     ]) ?>
 

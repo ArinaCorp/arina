@@ -2,18 +2,18 @@
 
 use yii\helpers\Html;
 use yii\web\View;
-use app\modules\directories\models\subject\Subject;
+use app\modules\employee\models\Employee;
 
 /* @var $this View
- * @var $model Subject */
+ * @var $model Employee */
 
-$this->title = Yii::t('app', 'Create Subject');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Subjects'), 'url' => ['index']];
+$this->title = Yii::t('app', 'Create Employee');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Employees'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>
 
-<div class="subject-create">
+<div class="employee-create">
 
     <div class="row">
         <div class="col-lg-12">

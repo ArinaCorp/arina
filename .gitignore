@@ -22,7 +22,6 @@ composer.phar
 composer.lock
 
 # Mac DS_Store Files
-.DS_Store
 
 # phpunit itself is not needed
 phpunit.phar
@@ -35,5 +34,14 @@ codecept.phar
 # dot.env
 .env
 
+#db
+src/config/db.php
+
+#gitigonre
+.gitignore
+
 #uploads directory
 web/uploads/*
+
+#apache log
+error.log

@@ -5,7 +5,6 @@ use nullref\core\traits\MigrationTrait;
 
 class m161203_071322_create_table_employee extends Migration
 {
-
     use MigrationTrait;
 
     public function up()

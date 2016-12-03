@@ -9,7 +9,6 @@ use yii\base\Module as BaseModule;
 /**
  * employee module definition class
  */
-
 class Module extends BaseModule implements IAdminModule
 {
     /**
