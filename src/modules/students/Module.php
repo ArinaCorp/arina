@@ -45,6 +45,11 @@ class Module extends BaseModule implements IAdminModule
                     'url' => ['/students/student-group'],
                     'icon' => 'list',
                 ],
+                [
+                    'label' => Yii::t('app', 'Family ties types'),
+                    'url' => ['/students/family-ties-types'],
+                    'icon' => 'list',
+                ]
             ]
         ];
     }
