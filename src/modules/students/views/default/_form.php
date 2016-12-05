@@ -4,6 +4,7 @@ use wbraganca\dynamicform\DynamicFormWidget;
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use app\modules\students\models\FamilyTiesType;
+use yii\widgets\MaskedInput;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\students\models\Student */
@@ -54,7 +55,7 @@ $this->registerJs($js);
     <?= $form->field($model, 'first_name')->textInput(['maxlength' => true, 'placeholder' => $model->getAttributeLabel('first_name')]) ?>
 
     <?= $form->field($model, 'middle_name')->textInput(['maxlength' => true, 'placeholder' => $model->getAttributeLabel('middle_name')]) ?>
-
+    
     <?= $form->field($model, 'gender')->dropDownList([0 => Yii::t('app', 'Male'), 1 => Yii::t('app', 'Female')], ['prompt' => Yii::t('app', 'Select gender')]); ?>
 
     <?= $form->field($model, 'birth_day')->widget(dosamigos\datepicker\DatePicker::className(), [
@@ -65,7 +66,7 @@ $this->registerJs($js);
         ]
     ]); ?>
 
-    <?= $form->field($model, 'passport_code')->widget(\yii\widgets\MaskedInput::className(), ['mask' => 'AA №999999']) ?>
+    <?= $form->field($model, 'passport_code')->widget(MaskedInput::className(), ['mask' => 'AA №999999']) ?>
 
     <?= $form->field($model, 'passport_issued')->textInput(['maxlength' => true, 'placeholder' => $model->getAttributeLabel('passport_issued')]) ?>
 
@@ -77,7 +78,7 @@ $this->registerJs($js);
         ]
     ]); ?>
 
-    <?= $form->field($model, 'birth_certificate')->widget(\yii\widgets\MaskedInput::className(), ['mask' => 'AA №999999']);
+    <?= $form->field($model, 'birth_certificate')->widget(MaskedInput::className(), ['mask' => 'AA №999999']);
     ?>
 
     <?= $form->field($model, 'tax_id')->textInput(['maxlength' => true]) ?>
@@ -115,7 +116,7 @@ $this->registerJs($js);
             <?php foreach ($modelsFamily as $index => $modelFamily): ?>
                 <div class="item panel panel-default"><!-- widgetBody -->
                     <div class="panel-heading">
-                        <span class="panel-title-address">Address: <?= ($index + 1) ?></span>
+                        <span class="panel-title-address"><?= Yii::t('app', 'Family tie') ?>: <?= ($index + 1) ?></span>
                         <button type="button" class="pull-right remove-item btn btn-danger btn-xs"><i
                                 class="fa fa-minus"></i></button>
                         <div class="clearfix"></div>
@@ -152,10 +153,10 @@ $this->registerJs($js);
 
                         <div class="row">
                             <div class="col-sm-4">
-                                <?= $form->field($modelFamily, "[{$index}]phone1")->textInput() ?>
+                                <?= $form->field($modelFamily, "[{$index}]phone1")->widget(MaskedInput::className(), ['mask' => '(999) 999-9999']); ?>
                             </div>
                             <div class="col-sm-4">
-                                <?= $form->field($modelFamily, "[{$index}]phone2")->textInput() ?>
+                                <?= $form->field($modelFamily, "[{$index}]phone2")->widget(MaskedInput::className(), ['mask' => '(999) 999-9999']); ?>
                             </div>
                             <div class="col-sm-4">
                                 <?= $form->field($modelFamily, "[{$index}]email")->textInput() ?>
