@@ -5,6 +5,7 @@ use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use app\modules\students\models\FamilyTiesType;
 use yii\widgets\MaskedInput;
+use app\modules\students\models\Exemption;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\students\models\Student */
@@ -43,7 +44,7 @@ $this->registerJs($js);
     ); ?>
     <p class="note"><?php echo Yii::t('app', 'Fields with <span class="required">*</span> are required.'); ?></p>
     <?php echo $form->errorSummary($model); ?>
-    <?= $form->field($model, 'student_code')->widget(\yii\widgets\MaskedInput::className(), ['mask' => 'AA №99999999'], ['placeholder' => $model->getAttributeLabel('birth_day')]);
+    <?= $form->field($model, 'student_code')->widget(MaskedInput::className(), ['mask' => 'AA №99999999'], ['placeholder' => $model->getAttributeLabel('birth_day')]);
     ?>
 
     <?= $form->field($model, 'photo')->fileInput();
@@ -55,7 +56,9 @@ $this->registerJs($js);
     <?= $form->field($model, 'first_name')->textInput(['maxlength' => true, 'placeholder' => $model->getAttributeLabel('first_name')]) ?>
 
     <?= $form->field($model, 'middle_name')->textInput(['maxlength' => true, 'placeholder' => $model->getAttributeLabel('middle_name')]) ?>
-    
+
+    <?= $form->field($model, 'exemptions')->checkboxList(Exemption::getList()); ?>
+
     <?= $form->field($model, 'gender')->dropDownList([0 => Yii::t('app', 'Male'), 1 => Yii::t('app', 'Female')], ['prompt' => Yii::t('app', 'Select gender')]); ?>
 
     <?= $form->field($model, 'birth_day')->widget(dosamigos\datepicker\DatePicker::className(), [

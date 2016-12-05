@@ -36,7 +36,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'student_code',
             'sseed_id',
-
             'last_name',
             'first_name',
             'middle_name',
@@ -64,5 +63,36 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ],
     ]) ?>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <i class="fa fa-users"></i> <?= Yii::t('app', 'Family') ?>
+            <div class="clearfix"></div>
+        </div>
+        <div class="panel-body container-items"><!-- widgetContainer -->
+            <?php foreach ($model->family as $index => $modelFamily): ?>
+                <div class="item panel panel-default"><!-- widgetBody -->
+                    <div class="panel-heading">
+                        <span class="panel-title-address"><?= Yii::t('app', 'Family tie') ?>: <?= ($index + 1) ?></span>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-body">
+                        <?= DetailView::widget([
+                            'model' => $modelFamily,
+                            'attributes' => [
+                                'last_name',
+                                'first_name',
+                                'middle_name',
+                                'phone1',
+                                'phone2',
+                                'email',
+                                'work_place',
+                                'work_position',
+                            ],
+                        ]) ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
 
 </div> 
