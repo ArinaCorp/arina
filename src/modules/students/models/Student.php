@@ -5,6 +5,7 @@ namespace app\modules\students\models;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\console\controllers\HelpController;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use app\modules\students\models\File;
 use yii\web\UploadedFile;
@@ -31,6 +32,8 @@ use yii\web\UploadedFile;
  * @property string $passport_issued
  * @property string $passport_issued_date
  *
+ *
+ * @property FamilyTie[] $family
  */
 class Student extends \yii\db\ActiveRecord
 {
@@ -255,4 +258,37 @@ class Student extends \yii\db\ActiveRecord
         return $links;
 
     }
+
+    public function getFamily()
+    {
+        return $this->hasMany(FamilyTie::className(), ['student_id' => 'id']);
+    }
+
+    public static function createMultiple($modelClass, $multipleModels = [], $pk = 'id')
+    {
+        $model = new $modelClass;
+        $formName = $model->formName();
+        $post = Yii::$app->request->post($formName);
+        $models = [];
+
+        if (!empty($multipleModels)) {
+            $keys = array_keys(ArrayHelper::map($multipleModels, $pk, $pk));
+            $multipleModels = array_combine($keys, $multipleModels);
+        }
+
+        if ($post && is_array($post)) {
+            foreach ($post as $i => $item) {
+                if (isset($item[$pk]) && !empty($item[$pk]) && isset($multipleModels[$item[$pk]])) {
+                    $models[] = $multipleModels[$item[$pk]];
+                } else {
+                    $models[] = new $modelClass;
+                }
+            }
+        }
+
+        unset($model, $formName, $post);
+
+        return $models;
+    }
+
 }

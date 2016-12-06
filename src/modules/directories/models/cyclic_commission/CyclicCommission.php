@@ -2,6 +2,7 @@
 
 namespace app\modules\directories\models\cyclic_commission;
 
+use app\modules\work_subject\models\WorkSubject;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
@@ -16,6 +17,7 @@ use app\modules\teacher\models\Teacher;
  * @property integer $head_id
  *
  * @property Teacher[] $teachers
+ * @property WorkSubject[] $work_subjects
  * @property Teacher $head
  */
 class CyclicCommission extends ActiveRecord
@@ -61,9 +63,17 @@ class CyclicCommission extends ActiveRecord
     /**
      * @return ActiveQuery
      */
+    public function getWorkSubjects()
+    {
+        return $this->hasMany(WorkSubject::className(), ['subject_id' => 'id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
     public function getHead()
     {
-        return $this->hasOne(Teacher::className(), ['head_id' => 'id']);
+        return $this->hasOne(Teacher::className(), ['id' => 'head_id']);
     }
 
     /**

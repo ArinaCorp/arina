@@ -44,9 +44,8 @@ class Employee extends ActiveRecord
         return [
             [['id', 'position_id', 'is_in_education', 'gender', 'type', 'cyclic_commission_id'], 'integer'],
             [['last_name', 'first_name', 'middle_name', 'position_id', 'is_in_education',
-                'gender', 'birth_date', 'passport', 'passport_issued_by','type'], 'required'],
+                'gender','passport','type'], 'required'],
             [['birth_date','cyclic_commission_id', 'passport', 'passport_issued_by'], 'safe'],
-
             [['passport', 'id'], 'unique'],
         ];
     }
@@ -58,10 +57,13 @@ class Employee extends ActiveRecord
     {
         return [
             'id' => Yii::t('employee', 'ID'),
+            'is_in_education' => Yii::t('employee', 'Do teach?'),
+            'position_id' => Yii::t('employee', 'Position ID'),
+            'category_id' => Yii::t('employee', 'Category iD'),
             'type' => Yii::t('employee', 'Type'),
-            'last_name' => Yii::t('employee', 'Last name'),
             'first_name' => Yii::t('employee', 'First name'),
             'middle_name' => Yii::t('employee', 'Middle name'),
+            'last_name' => Yii::t('employee', 'Last name'),
             'gender' => Yii::t('employee', 'Gender'),
             'cyclic_commission_id' => Yii::t('employee', 'Cyclic commission'),
             'birth_date' => Yii::t('employee', 'Birth date'),
@@ -90,10 +92,9 @@ class Employee extends ActiveRecord
     public static function getTypes()
     {
         return [
-            self::TYPE_NONE => Yii::t('employee', 'Ніхто'),
-            self::TYPE_OTHER => Yii::t('employee', 'Інший працівник'),
-            self::TYPE_TEACHER => Yii::t('employee', 'Викладач'),
-            //TODO: fix it
+            self::TYPE_NONE => Yii::t('employee', 'Nobody'),
+            self::TYPE_OTHER => Yii::t('employee', 'Another employee'),
+            self::TYPE_TEACHER => Yii::t('employee', 'Teacher'),
         ];
     }
 

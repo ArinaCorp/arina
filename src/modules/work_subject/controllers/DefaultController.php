@@ -11,7 +11,7 @@ use yii\web\NotFoundHttpException;
 use Yii;
 
 /**
- * Default controller for the `work subhect` module
+ * Default controller for the `work subject` module
  */
 class DefaultController extends Controller implements IAdminController
 {
@@ -30,7 +30,6 @@ class DefaultController extends Controller implements IAdminController
         ];
     }
 
-    //TODO: finish contoller
     public function actionIndex()
     {
         $searchModel = new WorkSubjectSearch();

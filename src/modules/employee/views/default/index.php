@@ -1,48 +1,56 @@
 <?php
 
 use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 use yii\grid\GridView;
-use yii\widgets\Pjax;
-/* @var $this yii\web\View */
-/* @var $searchModel app\modules\students\models\StudentSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
 
-/* @author VasyaKog */
+/** @var $this yii\web\View
+ * @var $model app\modules\employee\models\Employee
+ * @var $form ActiveForm
+ * @var $dataProvider yii\data\ActiveDataProvider
+ * @var $searchModel app\modules\employee\models\EmployeeSearch */
 
-$this->title = Yii::t('app', 'Students');
+$this->title = Yii::t('app', 'Employees');
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
-<div class="student-index">
+<div class="employee-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-    <?php  //echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <div class="col-lg-8">
-        <?= Html::a(Yii::t('app', 'Create Student'), ['create'], ['class' => 'btn btn-success']) ?>
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">
+                <?= Html::encode($this->title) ?>
+            </h1>
+        </div>
     </div>
-    <?php Pjax::begin(); ?>
+
+    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+
+    <p>
+        <?= Html::a(Yii::t('app', 'Create employee'), ['create'], ['class' => 'btn btn-success']) ?>
+    </p>
+
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-            //'id',
-            'student_code',
-            //'sseed_id',
-            //'user_id',
-            'last_name',
+
+            'is_in_education',
+            'position_id',
+            'category_id',
+            'type',
             'first_name',
             'middle_name',
-            // 'gender',
-            // 'birth_day',
-            // 'passport_code',
-            // 'tax_id',
-            // 'form_of_study_id',
-            // 'status',
-            // 'created_at',
-            // 'updated_at',
+            'last_name',
+            'gender',
+            'cyclic_commission_id',
+            'birth_date',
+            'passport',
+            'passport_issued_by',
+
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
-    <?php Pjax::end(); ?>
-</div> 
+
+</div>
