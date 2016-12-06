@@ -5,6 +5,7 @@ use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\students\models\Student */
+/* @var $modelsFamily \app\modules\students\models\FamilyTie[] */
 /* @author VasyaKog */
 
 $this->title = Yii::t('app', 'Create Student');
@@ -17,6 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $this->render('_form', [
         'model' => $model,
+        'modelsFamily' => $modelsFamily,
     ]) ?>
 
 </div> 

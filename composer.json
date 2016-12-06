@@ -30,7 +30,8 @@
         "kartik-v/yii2-widget-spinner": "@dev",
         "kartik-v/yii2-widget-touchspin": "*",
         "yii2tech/ar-position": "^1.0",
-        "kartik-v/yii2-widget-depdrop": "@dev"
+        "kartik-v/yii2-widget-depdrop": "@dev",
+        "wbraganca/yii2-dynamicform": "dev-master"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",
