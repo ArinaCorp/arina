@@ -72,11 +72,10 @@ class DefaultController extends Controller implements IAdminController
     {
         $model = new Student();
         $modelsFamily = [new FamilyTie()];
-        $default = Yii::$app->request->isPost ? ['exemptions' => []] : [];
         /**
          * @var $modelsFamily FamilyTie[]
          */
-        if ($model->loadWithRelations(array_merge($default, Yii::$app->request->post()))) {
+        if ($model->load(Yii::$app->request->post())) {
             $modelsFamily = Student::createMultiple(FamilyTie::classname());
             Model::loadMultiple($modelsFamily, Yii::$app->request->post());
             $valid = $model->validate();
@@ -126,7 +125,7 @@ class DefaultController extends Controller implements IAdminController
         /**
          * @var $modelsFamily FamilyTie[]
          */
-        if ($model->loadWithRelations(Yii::$app->request->post())) {
+        if ($model->load(Yii::$app->request->post())) {
             $oldIDs = ArrayHelper::map($modelsFamily, 'id', 'id');
             $modelsFamily = Student::createMultiple(FamilyTie::classname(), $modelsFamily);
             Model::loadMultiple($modelsFamily, Yii::$app->request->post());
