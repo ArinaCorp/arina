@@ -5,6 +5,7 @@ namespace app\modules\students;
 use nullref\core\interfaces\IAdminModule;
 use Yii;
 use yii\base\Module as BaseModule;
+
 /**
  * students module definition class
  */
@@ -48,6 +49,11 @@ class Module extends BaseModule implements IAdminModule
                 [
                     'label' => Yii::t('app', 'Family ties types'),
                     'url' => ['/students/family-ties-types'],
+                    'icon' => 'list',
+                ],
+                [
+                    'label' => Yii::t('app', 'Exemptions'),
+                    'url' => ['/students/exemptions'],
                     'icon' => 'list',
                 ]
             ]

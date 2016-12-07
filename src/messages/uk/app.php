@@ -72,4 +72,7 @@ return [
     'Title' => 'Назва',
     'include' => 'Зарахувати',
     'exclude' => 'Відрахувати',
+    'Exemptions' => 'Пільги',
+    'Create Exemption' => 'Створити пільгу',
+    'Update Exemption' => 'Оновити пільгу',
 ];

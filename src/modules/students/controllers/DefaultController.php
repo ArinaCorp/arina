@@ -122,9 +122,10 @@ class DefaultController extends Controller implements IAdminController
     {
         $model = $this->findModel($id);
         $modelsFamily = $model->family;
-
+        /**
+         * @var $modelsFamily FamilyTie[]
+         */
         if ($model->load(Yii::$app->request->post())) {
-
             $oldIDs = ArrayHelper::map($modelsFamily, 'id', 'id');
             $modelsFamily = Student::createMultiple(FamilyTie::classname(), $modelsFamily);
             Model::loadMultiple($modelsFamily, Yii::$app->request->post());

@@ -48,8 +48,9 @@ class FamilyTie extends \yii\db\ActiveRecord
         return [
             [['student_id', 'type_id', 'created_at', 'updated_at'], 'integer'],
             [['last_name', 'first_name', 'middle_name', 'type_id'], 'required'],
-            [['last_name', 'first_name', 'middle_name', 'work_place', 'work_position', 'phone1', 'phone2', 'email'], 'string', 'max' => 255],
+            [['last_name', 'first_name', 'middle_name', 'work_place', 'work_position', 'email'], 'string', 'max' => 255],
             [['email'], 'email'],
+            [['phone1', 'phone2'], 'integer'],
         ];
     }
 
