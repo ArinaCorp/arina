@@ -4,6 +4,7 @@ namespace app\modules\students\controllers;
 
 /* @author VasyaKog */
 use app\modules\students\models\FamilyTie;
+use app\modules\students\models\StudentsHistory;
 use yii\base\Exception;
 use yii\base\Model;
 use yii\filters\VerbFilter;
@@ -58,8 +59,12 @@ class DefaultController extends Controller implements IAdminController
      */
     public function actionView($id)
     {
+        /**
+         * @var $model Student
+         */
+        $model = $this->findModel($id);
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 

@@ -27,13 +27,13 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-            'year_start',
+            'fullName',
             [
-                'attribute'=>'year_end',
-                
+                'attribute' => 'active',
+                'format' => 'raw',
                 'value' => function ($model, $key, $index, $widget) {
-                    /* @var $model \app\modules\directories\models\StudyYear*/
-                    return $model->getYearEnd();
+                    /* @var $model \app\modules\directories\models\StudyYear */
+                    return Html::checkbox('active', $model->active, ['disabled' => 'disabled']);
                 },
             ],
             ['class' => 'yii\grid\ActionColumn'],

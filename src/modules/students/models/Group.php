@@ -19,10 +19,12 @@ use yii\helpers\ArrayHelper;
  * @property integer $group_leader_id
  *
  *
+ *
  * @property SpecialityQualification $specialityQualification
  * @property Student $groupLeader
  * @property StudyYear $studyYear;
  *
+ * @property boolean $active;
  */
 class Group extends \yii\db\ActiveRecord
 {
@@ -31,7 +33,7 @@ class Group extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'group';
+        return '{{%group}}';
     }
 
     /**
@@ -138,5 +140,44 @@ class Group extends \yii\db\ActiveRecord
             if (!in_array($this->id, $idsGroup)) array_push($result, $student);
         }
         return $result;
+    }
+
+    public static function getActiveGroups()
+    {
+        /**
+         * @var Group[] $groups ;
+         */
+        $groups = self::find()->all();
+        foreach ($groups as $key => $group) {
+            if ($group->active) {
+                unset($groups[$key]);
+            }
+        }
+        return $groups;
+    }
+
+    public static function getAllGroups()
+    {
+        return self::find()->all();
+    }
+
+    public static function getActiveGroupsList()
+    {
+        return ArrayHelper::map(self::getActiveGroups(), 'id', 'title');
+    }
+
+    public static function getAllGroupsList()
+    {
+        return ArrayHelper::map(self::getAllGroups(), 'id', 'title');
+    }
+
+    public function getActive()
+    {
+        return $this->specialityQualification->getCountCourses() < (StudyYear::getCurrent()->year_start - $this->studyYear->year_start);
+    }
+
+    public static function getTitleById($id)
+    {
+        return self::find()->where(['id' => $id])->one()->title;
     }
 }

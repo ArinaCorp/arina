@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "97151a31371374d56dd8857216defc55",
-    "content-hash": "f1e558906160bcd1e05bea69e9abbf27",
+    "hash": "981757bf771a4a3fa29114b8ec394084",
+    "content-hash": "a973288147ceac07c57cfec35708dbeb",
     "packages": [
         {
             "name": "2amigos/yii2-date-picker-widget",
@@ -1041,6 +1041,59 @@
             "time": "2016-10-18 06:35:15"
         },
         {
+            "name": "kartik-v/yii2-widget-select2",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kartik-v/yii2-widget-select2.git",
+                "reference": "7deb625a37f7f13a77a697a8367e2e44e2462d7e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kartik-v/yii2-widget-select2/zipball/7deb625a37f7f13a77a697a8367e2e44e2462d7e",
+                "reference": "7deb625a37f7f13a77a697a8367e2e44e2462d7e",
+                "shasum": ""
+            },
+            "require": {
+                "kartik-v/yii2-krajee-base": "~1.7"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "kartik\\select2\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Kartik Visweswaran",
+                    "email": "kartikv2@gmail.com",
+                    "homepage": "http://www.krajee.com/"
+                }
+            ],
+            "description": "Enhanced Yii2 wrapper for the Select2 jQuery plugin (sub repo split from yii2-widgets).",
+            "homepage": "https://github.com/kartik-v/yii2-widget-select2",
+            "keywords": [
+                "dropdown",
+                "extension",
+                "form",
+                "jquery",
+                "plugin",
+                "select2",
+                "widget",
+                "yii2"
+            ],
+            "time": "2016-11-17 09:07:14"
+        },
+        {
             "name": "kartik-v/yii2-widget-spinner",
             "version": "dev-master",
             "source": {
@@ -1468,7 +1521,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/12a6329c24d08fb97bcf10128365757f845dc140",
+                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/968cd5302dba8d60ddb64489069953fae2ff1a92",
                 "reference": "a6d30977565081bc9b177b627bff2e2ba905224c",
                 "shasum": ""
             },
@@ -2094,7 +2147,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/4671badd919af7f7637d347c09809c767808b2af",
+                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/729ec3c7c1563b4e28556c0299a62b2fa91f19d4",
                 "reference": "be89b62867f7ee9852bd7943f2d106f435af0ba7",
                 "shasum": ""
             },
@@ -2414,7 +2467,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/71c5ccec1b04649c26b7fa510b1cc6b811cb3fb9",
+                "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/fc733e76f4edc2dfe166e5f699e3af876125f080",
                 "reference": "f207b4a855fc971241d7084b923ff2e78096104b",
                 "shasum": ""
             },
@@ -2696,7 +2749,8 @@
         "kartik-v/yii2-widget-fileinput": 20,
         "kartik-v/yii2-widget-spinner": 20,
         "kartik-v/yii2-widget-depdrop": 20,
-        "wbraganca/yii2-dynamicform": 20
+        "wbraganca/yii2-dynamicform": 20,
+        "kartik-v/yii2-widget-select2": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
