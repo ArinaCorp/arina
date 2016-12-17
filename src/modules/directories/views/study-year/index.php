@@ -36,7 +36,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     return Html::checkbox('active', $model->active, ['disabled' => 'disabled']);
                 },
             ],
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{delete}',
+            ],
         ],
     ]); ?>
 </div>

@@ -68,6 +68,8 @@ class SpecialityQualification extends \yii\db\ActiveRecord
             'title' => Yii::t('app', 'Title'),
             'years_count' => Yii::t('app', 'Years Count'),
             'months_count' => Yii::t('app', 'Months Count'),
+            'qualification_id' => Yii::t('app', 'Qualification ID'),
+            'speciality_id' => Yii::t('app', 'Speciality ID'),
         ];
     }
 
@@ -161,8 +163,9 @@ class SpecialityQualification extends \yii\db\ActiveRecord
         }
         return $array;
     }
-    
-    public function getGroupsActiveList(){
-        return ArrayHelper::map($this->groupsActive,'id','title');
+
+    public function getGroupsActiveList()
+    {
+        return ArrayHelper::map($this->groupsActive, 'id', 'title');
     }
 }

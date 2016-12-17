@@ -58,10 +58,10 @@ class Audience extends ActiveRecord
     public static function getTypeList()
     {
         return [
-            self::TYPE_LECTURE => Yii::t('audience', 'Lecture'),
-            self::TYPE_LABORATORY => Yii::t('audience', 'Laboratory'),
-            self::TYPE_WORKSHOP => Yii::t('audience', 'Workshop'),
-            self::TYPE_GUM => Yii::t('audience', 'Gum'),
+            self::TYPE_LECTURE => Yii::t('app', 'Lecture'),
+            self::TYPE_LABORATORY => Yii::t('app', 'Laboratory'),
+            self::TYPE_WORKSHOP => Yii::t('app', 'Workshop'),
+            self::TYPE_GUM => Yii::t('app', 'Gum'),
         ];
     }
 
@@ -86,7 +86,7 @@ class Audience extends ActiveRecord
             'number' => Yii::t('app', 'Number'),
             'name' => Yii::t('app', 'Name'),
             'type' => Yii::t('app', 'Type'),
-            'id_teacher' => Yii::t('app', 'Id Teacher'),
+            'id_teacher' => Yii::t('app', 'Responsible'),
             'capacity' => Yii::t('app', 'Capacity'),
         ];
     }

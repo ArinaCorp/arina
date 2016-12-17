@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use kartik\select2\Select2;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\directories\models\department\Department */
@@ -12,10 +13,20 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
+    <div class="row">
 
-    <?= $form->field($model, 'head_id')->textInput() ?>
+        <div class="col-sm-6">
+            <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
+        </div>
 
+        <div class="col-sm-6">
+            <?= $form->field($model, 'head_id')->widget(Select2::className(),
+                [
+                    'data' => [],
+                ]) ?>
+        </div>
+        
+    </div>
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
