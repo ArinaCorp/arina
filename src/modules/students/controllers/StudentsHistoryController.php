@@ -2,7 +2,13 @@
 
 namespace app\modules\students\controllers;
 
+use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 use app\modules\students\models\Group;
+use app\modules\students\models\StudentsHistoryAll;
+use app\modules\students\models\StudentsHistoryBefore;
+use app\modules\students\models\StudentsHistoryCourse;
+use app\modules\students\models\StudentsHistoryGroup;
+use app\modules\students\models\StudentsHistoryPayment;
 use Yii;
 use app\modules\students\models\StudentsHistory;
 use app\modules\students\models\StudentsHistorySearch;
@@ -58,16 +64,16 @@ class StudentsHistoryController extends Controller implements IAdminController
     }
 
     /**
-     * Creates a new StudentsHistory model.
+     * Creates a new StudentsHistoryBefore model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new StudentsHistory();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $model = new StudentsHistoryBefore();
+        $model->date = date('d.m.Y');
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            return $this->redirect(['create-end', $model->attributes]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -75,24 +81,45 @@ class StudentsHistoryController extends Controller implements IAdminController
         }
     }
 
-    /**
-     * Updates an existing StudentsHistory model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionUpdate($id)
+    public function actionCreateEnd()
     {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        switch (Yii::$app->request->get()[1]['action_type']) {
+            case StudentsHistory::$TYPE_INCLUDE :
+            case StudentsHistory::$TYPE_RENEWAL :
+            case StudentsHistory::$TYPE_TRANSFER_SPECIALITY_QA : {
+                $model = new StudentsHistoryAll();
+                break;
+            }
+            case StudentsHistory::$TYPE_TRANSFER_COURSE : {
+                $model = new StudentsHistoryCourse();
+                break;
+            }
+            case StudentsHistory::$TYPE_TRANSFER_GROUP : {
+                $model = new StudentsHistoryGroup();
+                break;
+            }
+            case StudentsHistory::$TYPE_TRANSFER_FOUNDING : {
+                $model = new StudentsHistoryPayment();
+                break;
+            }
+            case StudentsHistory::$TYPE_EXCLUDE : {
+                $model = new StudentsHistory();
+                break;
+            }
+        }
+        $model->setAttributes(Yii::$app->request->get()[1], false);
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $model->save();
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+            return $this->render('create-end',
+                [
+                    'model' => $model,
+                ]
+            );
         }
     }
+
 
     /**
      * Deletes an existing StudentsHistory model.
@@ -100,7 +127,8 @@ class StudentsHistoryController extends Controller implements IAdminController
      * @param integer $id
      * @return mixed
      */
-    public function actionDelete($id)
+    public
+    function actionDelete($id)
     {
         $this->findModel($id)->delete();
 
@@ -114,7 +142,8 @@ class StudentsHistoryController extends Controller implements IAdminController
      * @return StudentsHistory the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
+    protected
+    function findModel($id)
     {
         if (($model = StudentsHistory::findOne($id)) !== null) {
             return $model;
@@ -123,17 +152,18 @@ class StudentsHistoryController extends Controller implements IAdminController
         }
     }
 
-    public function actionGetGroupsList()
+    public
+    function actionGetGroupsList()
     {
         if (isset($_POST['depdrop_parents'])) {
             $parents = $_POST['depdrop_parents'];
             if ($parents != null) {
                 if (!empty($_POST['depdrop_all_params'])) {
                     $params = $_POST['depdrop_all_params'];
-                    $category_id = $params['studentshistory-category_id']; // get the value of input-type-1
+                    $category_id = $params['studentshistorybefore-category_id']; // get the value of input-type-1
                     switch ($category_id) {
                         case StudentsHistory::$CATEGORY_NEW: {
-                            $out[] = ['id' => 1, 'name' => 'All'];
+                            $out[] = ['id' => 1, 'name' => Yii::t('app','All')];
                             break;
                         }
                         case StudentsHistory::$CATEGORY_ACTIVE: {
@@ -148,17 +178,17 @@ class StudentsHistoryController extends Controller implements IAdminController
                             break;
                         }
                     }
-                    echo Json::encode(['output' => $out, 'selected' => 'Select..']);
+                    echo Json::encode(['output' => $out, 'selected' => Yii::t('app', 'Select ...')]);
                     return;
                 }
             }
-            echo Json::encode(['output' => [], 'selected' => 'Select ..']);
+            echo Json::encode(['output' => [], 'selected' => Yii::t('app', 'Select ...')]);
             return;
         }
     }
 
-
-    public function actionGetStudentsList()
+    public
+    function actionGetStudentsList()
     {
         $out = [];
         if (isset($_POST['depdrop_parents'])) {
@@ -166,8 +196,8 @@ class StudentsHistoryController extends Controller implements IAdminController
             if ($parents != null) {
                 if (!empty($_POST['depdrop_all_params'])) {
                     $params = $_POST['depdrop_all_params'];
-                    $category_id = $params['studentshistory-category_id'];
-                    $group_id = $params['studentshistory-group_search_id'];
+                    $category_id = $params['studentshistorybefore-category_id'];
+                    $group_id = $params['studentshistorybefore-group_search_id'];
                     switch ($category_id) {
                         case StudentsHistory::$CATEGORY_NEW: {
                             $out = DepDropHelper::convertMap(StudentsHistory::getNewStudentList());
@@ -188,11 +218,12 @@ class StudentsHistoryController extends Controller implements IAdminController
                 }
             }
         }
-        echo Json::encode(['output' => $out, 'selected' => 'Select ..']);
+        echo Json::encode(['output' => $out, 'selected' => Yii::t('app', 'Select ...')]);
         return;
     }
 
-    public function actionGetStudentParents()
+    public
+    function actionGetStudentParents()
     {
         $out = [];
         if (isset($_POST['depdrop_parents'])) {
@@ -200,16 +231,17 @@ class StudentsHistoryController extends Controller implements IAdminController
             if ($parents != null) {
                 if (!empty($_POST['depdrop_all_params'])) {
                     $params = $_POST['depdrop_all_params'];
-                    $student_id = $params['studentshistory-student_id'];
+                    $student_id = $params['studentshistorybefore-student_id'];
                     $out = DepDropHelper::convertMap(StudentsHistory::getStudentParentsList($student_id));
                 }
             }
         }
-        echo Json::encode(['output' => $out, 'selected' => 'Select ..']);
+        echo Json::encode(['output' => $out, 'selected' => Yii::t('app', 'Select ...')]);
         return;
     }
 
-    public function actionGetPermittedActions()
+    public
+    function actionGetPermittedActions()
     {
         $out = [];
         if (isset($_POST['depdrop_parents'])) {
@@ -217,12 +249,48 @@ class StudentsHistoryController extends Controller implements IAdminController
             if ($parents != null) {
                 if (!empty($_POST['depdrop_all_params'])) {
                     $params = $_POST['depdrop_all_params'];
-                    $parent_id = $params['studentshistory-parent_id'];
+                    $parent_id = $params['studentshistorybefore-parent_id'];
                     $out = DepDropHelper::convertMap(StudentsHistory::getPermittedActionList($parent_id));
                 }
             }
         }
-        echo Json::encode(['output' => $out, 'selected' => 'Select ..']);
+        echo Json::encode(['output' => $out, 'selected' => Yii::t('app', 'Select ...')]);
+        return;
+    }
+
+    public
+    function actionGetGroupsListFromSpecialityQualification()
+    {
+        $out = [];
+        if (isset($_POST['depdrop_parents'])) {
+            $parents = $_POST['depdrop_parents'];
+            if ($parents != null) {
+                if (!empty($_POST['depdrop_all_params'])) {
+                    $params = $_POST['depdrop_all_params'];
+                    $speciality_qualification_id = $params['studentshistoryall-speciality_qualification_id'];
+                    $out = DepDropHelper::convertMap(SpecialityQualification::findOne(['id' => $speciality_qualification_id])->getGroupsActiveList());
+                }
+            }
+        }
+        echo Json::encode(['output' => $out, 'selected' => Yii::t('app', 'Select ...')]);
+        return;
+    }
+
+    public
+    function actionGetCoursesGroup()
+    {
+        $out = [];
+        if (isset($_POST['depdrop_parents'])) {
+            $parents = $_POST['depdrop_parents'];
+            if ($parents != null) {
+                if (!empty($_POST['depdrop_all_params'])) {
+                    $params = $_POST['depdrop_all_params'];
+                    $group_id = $params['studentshistoryall-group_id'];
+                    $out = DepDropHelper::convertMap(Group::findOne(['id' => $group_id])->getCoursesList());
+                }
+            }
+        }
+        echo Json::encode(['output' => $out, 'selected' => Yii::t('app', 'Select ...')]);
         return;
     }
 }

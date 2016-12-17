@@ -16,7 +16,7 @@ use yii\web\UploadedFile;
 /**
  * This is the model class for table "student".
  *
- * @property integer $id    
+ * @property integer $id
  * @property string $student_code
  * @property integer $sseed_id
  * @property integer $user_id
@@ -41,6 +41,8 @@ use yii\web\UploadedFile;
  */
 class Student extends \yii\db\ActiveRecord
 {
+
+    public $payment_type;
 
     public function behaviors()
     {
@@ -115,6 +117,8 @@ class Student extends \yii\db\ActiveRecord
             'gender' => Yii::t('app', 'Gender'),
             'birth_day' => Yii::t('app', 'Birth Day'),
             'passport_code' => Yii::t('app', 'Passport Code'),
+            'payment_type' => Yii::t('app', 'Payment Type'),
+            'paymentTypeLabel' => Yii::t('app', 'Payment Type'),
             'tax_id' => Yii::t('app', 'Tax Code'),
             'status' => Yii::t('app', 'Status'),
             'birth_certificate' => Yii::t('app', 'Birth Certificate'),
@@ -171,6 +175,11 @@ class Student extends \yii\db\ActiveRecord
         return $this->last_name . ' ' . mb_substr($this->first_name, 0, 1, 'UTF-8') . '.' . mb_substr($this->middle_name, 0, 1, 'UTF-8') . '.';
     }
 
+    public function getFullNameAndBirthDate()
+    {
+        return $this->fullName . " " . $this->birth_day;
+    }
+
     public function getLink()
     {
         return Html::a($this->getShortName(), ['student/default/view', 'id' => $this->id]);
@@ -182,6 +191,11 @@ class Student extends \yii\db\ActiveRecord
             return Html::img($this->getImageFileUrl('photo'), ['height' => 200, 'width' => 150]);
         }
         return Yii::t('app', 'Image not set');
+    }
+
+    public function getPaymentTypeLabel()
+    {
+        return StudentsHistory::getPayments()[$this->payment_type];
     }
 
     public static function importXml($file)
@@ -233,6 +247,7 @@ class Student extends \yii\db\ActiveRecord
         if (empty($groups)) return Yii::t('app', 'This student has not group');
         $links = "";
         foreach ($groups as $item) {
+            if ($links != "") $links .= "<br/>";
             $links .= Html::a($item->title, ['/students/group/view', 'id' => $item->id]);
         }
         return $links;

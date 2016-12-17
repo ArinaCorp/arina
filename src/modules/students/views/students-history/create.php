@@ -4,7 +4,7 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model app\modules\students\models\StudentsHistory */
+/* @var $model app\modules\students\models\StudentsHistoryBefore */
 
 $this->title = Yii::t('app', 'Create Students History');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Students Histories'), 'url' => ['index']];
@@ -24,7 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a(Yii::t('app', 'List'), ['index'], ['class' => 'btn btn-success']) ?>
     </p>
 
-    <?= $this->render('_form', [
+    <?= $this->render('_form_first', [
         'model' => $model,
     ]) ?>
 

@@ -4,13 +4,13 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model app\modules\students\models\StudentGroup */
+/* @var $model app\modules\students\models\StudentsHistoryBefore */
 
-$this->title = Yii::t('app', 'Create Student Group');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Student Groups'), 'url' => ['index']];
+$this->title = Yii::t('app', 'Create Students History');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Students Histories'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="student-group-create">
+<div class="students-history-create">
 
     <div class="row">
         <div class="col-lg-12">
@@ -24,7 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a(Yii::t('app', 'List'), ['index'], ['class' => 'btn btn-success']) ?>
     </p>
 
-    <?= $this->render('_form', [
+    <?= $this->render('_form_second', [
         'model' => $model,
     ]) ?>
 

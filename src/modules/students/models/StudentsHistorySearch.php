@@ -18,7 +18,7 @@ class StudentsHistorySearch extends StudentsHistory
     public function rules()
     {
         return [
-            [['id', 'student_id', 'speciality_qualification_id', 'type', 'funding', 'course', 'created_at', 'updated_at'], 'integer'],
+            [['id', 'student_id', 'speciality_qualification_id'], 'integer'],
             [['date', 'command'], 'safe'],
         ];
     }
@@ -63,8 +63,6 @@ class StudentsHistorySearch extends StudentsHistory
             'student_id' => $this->student_id,
             'speciality_qualification_id' => $this->speciality_qualification_id,
             'date' => $this->date,
-            'type' => $this->type,
-            'funding' => $this->funding,
             'course' => $this->course,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

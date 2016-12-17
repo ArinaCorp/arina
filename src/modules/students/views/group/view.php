@@ -49,11 +49,13 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'number_group',
             [
-                'label' => Yii::t('app', 'System title'),
-                'value' => $model->getSystemTitle(),
+                'attribute' => 'systemTitle',
             ],
             'title',
-            'group_leader_id',
+            [
+                'attribute' => 'group_leader_id',
+                'value' => $model->getGroupLeaderFullName(),
+            ],
         ],
     ]) ?>
 
@@ -68,6 +70,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'last_name',
             'first_name',
             'middle_name',
+            'paymentTypeLabel',
             [
                 'class' => 'yii\grid\ActionColumn',
                 'template' => '{view}',

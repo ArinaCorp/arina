@@ -4,6 +4,7 @@ namespace app\modules\students\models;
 
 use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 use Yii;
+use yii\db\ActiveQuery;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -30,6 +31,7 @@ class StudentsHistory extends \yii\db\ActiveRecord
     public $category_id;
     public $group_search_id;
     public $child;
+    public $isAnalized = false;
 
     public static $_HISTORY;
     public static $PAYMENT_STATE = 1;
@@ -67,9 +69,7 @@ class StudentsHistory extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['student_id', 'speciality_qualification_id', 'action_type', 'group_id', 'payment_type', 'course', 'created_at', 'updated_at'], 'integer'],
-            [['date'], 'safe'],
-            [['command'], 'string', 'max' => 128],
+            [['student_id', 'action_type', 'date', 'command'], 'required'],
         ];
     }
 
@@ -80,28 +80,43 @@ class StudentsHistory extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'student_id' => Yii::t('app', 'Student ID'),
             'speciality_qualification_id' => Yii::t('app', 'Speciality Qualification ID'),
-            'date' => Yii::t('app', 'Date'),
-            'type' => Yii::t('app', 'Type'),
-            'payment' => Yii::t('app', 'Funding'),
+            'payment_type' => Yii::t('app', 'Payment Type'),
             'course' => Yii::t('app', 'Course'),
             'command' => Yii::t('app', 'Command'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
+            'group_id' => Yii::t('app', 'Group ID'),
+            'student_id' => Yii::t('app', 'Student ID'),
+            'date' => Yii::t('app', 'Date'),
+            'action_type' => Yii::t('app', 'Action type'),
+            'category_id' => Yii::t('app', 'Category ID'),
+            'parent_id' => Yii::t('app', 'Parent ID'),
+            'group_search_id' => Yii::t('app', 'Group Search ID'),
+            'information' => Yii::t('app', 'Information'),
         ];
     }
 
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            $this->date = date('Y-m-d', strtotime($this->date));
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-    public static function getListTypes()
+    public static function getActionsTypes()
     {
         return [
             self::$TYPE_INCLUDE => Yii::t('app', 'Include'),
             self::$TYPE_EXCLUDE => Yii::t('app', 'Exclude'),
-            self::$TYPE_TRANSFER_FOUNDING => Yii::t('app', 'Transfer founding'),
+            self::$TYPE_TRANSFER_FOUNDING => Yii::t('app', 'Transfer payment'),
             self::$TYPE_TRANSFER_SPECIALITY_QA => Yii::t('app', 'Transfer speciality_qualification'),
             self::$TYPE_RENEWAL => Yii::t('app', 'Renewal'),
             self::$TYPE_TRANSFER_GROUP => Yii::t('app', 'Transfer group'),
+            self::$TYPE_TRANSFER_COURSE => Yii::t('app', 'Transfer course'),
         ];
     }
 
@@ -151,9 +166,28 @@ class StudentsHistory extends \yii\db\ActiveRecord
         return $records;
     }
 
-    private function buildTree()
+    /**
+     * @param $current StudentsHistory
+     * @return bool
+     */
+    public static function getFromHistory($current)
+    {
+        $history = self::getStudentHistory($current->student_id);
+        foreach ($history as $trees) {
+            while (!is_null($trees)) {
+                if ($trees->id == $current->id) return $trees;
+                $trees = $trees->child;
+            }
+        }
+
+    }
+
+
+    private
+    function buildTree()
     {
         $child = self::findOne(['parent_id' => $this->id]);
+        $this->isAnalized = true;
         if (!is_null($child)) {
             $child->data = self::mergeHistoriesData($this->data, $child->data);
             $this->child = $child->buildTree();
@@ -182,10 +216,19 @@ class StudentsHistory extends \yii\db\ActiveRecord
     {
         $students = Student::find()->all();
         /**
-         * @var $students
+         * @var $students Student[]
          */
         foreach ($students as $key => $student) {
-            if (!in_array($id, self::getGroupArray($student->id))) unset($students[$key]);
+            $ids = self::getGroupArray($student->id);
+            if (is_null($ids)) {
+                unset($students[$key]);
+                continue;
+            }
+            if (!in_array($id, $ids)) {
+                unset($students[$key]);
+                continue;
+            }
+            $student->payment_type = [$ids[$id]];
         }
         return $students;
     }
@@ -211,7 +254,8 @@ class StudentsHistory extends \yii\db\ActiveRecord
         return $parents;
     }
 
-    public static
+    public
+    static
     function getLastChild($story)
     {
         if (!is_null($story->child)) $story = self::getLastChild($story->child);
@@ -223,6 +267,7 @@ class StudentsHistory extends \yii\db\ActiveRecord
     function afterFind()
     {
         parent::afterFind(); // TODO: Change the autogenerated stub
+        $this->date = date('d.m.Y', strtotime($this->date));
         switch ($this->action_type) {
             case self::$TYPE_EXCLUDE : {
                 $this->data['current'] = [
@@ -233,16 +278,9 @@ class StudentsHistory extends \yii\db\ActiveRecord
                 ];
                 break;
             }
-            case self::$TYPE_INCLUDE : {
-                $this->data['current'] = [
-                    'speciality_qualification_id' => $this->speciality_qualification_id,
-                    'payment_type' => $this->payment_type,
-                    'group_id' => $this->group_id,
-                    'course' => $this->course,
-                ];
-                break;
-            }
-            case self::$TYPE_RENEWAL : {
+            case self::$TYPE_INCLUDE :
+            case self::$TYPE_RENEWAL :
+            case self::$TYPE_TRANSFER_SPECIALITY_QA : {
                 $this->data['current'] = [
                     'speciality_qualification_id' => $this->speciality_qualification_id,
                     'payment_type' => $this->payment_type,
@@ -269,15 +307,6 @@ class StudentsHistory extends \yii\db\ActiveRecord
                 ];
                 break;
             }
-            case self::$TYPE_TRANSFER_SPECIALITY_QA : {
-                $this->data['current'] = [
-                    'speciality_qualification_id' => $this->speciality_qualification_id,
-                    'payment_type' => $this->payment_type,
-                    'group_id' => $this->group_id,
-                    'course' => $this->course,
-                ];
-                break;
-            }
             default:
                 break;
         }
@@ -287,16 +316,18 @@ class StudentsHistory extends \yii\db\ActiveRecord
      * @param $id
      * @return array
      */
-    public static function getGroupArray($id)
+    public
+    static function getGroupArray($id)
     {
-        $array = [];
+        $array = null;
         foreach (self::getParents($id) as $item) {
-            $array[] = $item->data['group_id'];
+            $array[$item->data['current']['group_id']] = $item->data['current']['group_id'];
         }
         return $array;
     }
 
-    public static function getAlumnusGroupArray($id)
+    public
+    static function getAlumnusGroupArray($id)
     {
         $array = [];
         foreach (self::getParents($id) as $item) {
@@ -312,7 +343,8 @@ class StudentsHistory extends \yii\db\ActiveRecord
      * @param $object2 StudentsHistory
      * @return StudentsHistory
      */
-    public static function mergeHistoriesData($data1, $data2)
+    public
+    static function mergeHistoriesData($data1, $data2)
     {
         if (!is_null($data2['current'])) {
             foreach ($data2['current'] as $key => $value) {
@@ -331,7 +363,8 @@ class StudentsHistory extends \yii\db\ActiveRecord
     }
 
 
-    public static function getAlumnusStudentByGroup($id)
+    public
+    static function getAlumnusStudentByGroup($id)
     {
         /**
          * @var $students Student[]
@@ -344,12 +377,14 @@ class StudentsHistory extends \yii\db\ActiveRecord
         return $students;
     }
 
-    public static function getAlumnusStudentByGroupList($id)
+    public
+    static function getAlumnusStudentByGroupList($id)
     {
         return ArrayHelper::map(self::getAlumnusStudentByGroup($id), 'id', 'fullNameAndCode');
     }
 
-    public static function getStudentParents($id)
+    public
+    static function getStudentParents($id)
     {
         $data = [];
         $parents = self::getParents($id);
@@ -360,105 +395,120 @@ class StudentsHistory extends \yii\db\ActiveRecord
         return $data;
     }
 
-    public static function getStudentParentsList($id)
+    public
+    static function getInformationById($id)
+    {
+        $empty = StudentsHistory::findOne(['id' => $id]);
+        $history = self::getFromHistory($empty);
+
+    }
+
+    public
+    static function getStudentParentsList($id)
     {
         return ArrayHelper::map(self::getStudentParents($id), 'id', 'text');
     }
 
-    public function getInformation()
+    public
+    function getInformation()
     {
         $text = "";
-        switch ($this->action_type) {
+        if (!$this->isAnalized)
+            $current = self::getFromHistory($this);
+        else
+            $current = $this;
+        switch ($current->action_type) {
             case self::$TYPE_INCLUDE:
             case self::$TYPE_RENEWAL: {
                 $text =
                     Yii::t('app', 'Group') . ":" .
-                    Group::getTitleById($this->data['current']['group_id']) .
-                    " " .
+                    Group::getTitleById($current->data['current']['group_id']) .
+                    "<br/>" .
                     Yii::t('app', 'Payment') . ":" .
-                    self::getPaymentTitleById($this->data['current']['payment_type']) .
-                    " " .
+                    self::getPaymentTitleById($current->data['current']['payment_type']) .
+                    "<br/>" .
                     Yii::t('app', 'Course') . ":" .
-                    $this->data['current']['course'];
+                    $current->data['current']['course'];
                 break;
             }
             case self::$TYPE_EXCLUDE : {
                 $text =
                     Yii::t('app', 'Excluded') .
-                    " " .
+                    "<br/>" .
                     Yii::t('app', 'Group') . ":" .
-                    Group::getTitleById(array_pop($this->data['old']['group_id'])) .
-                    " " .
+                    Group::getTitleById(array_pop($current->data['old']['group_id'])) .
+                    "<br/>" .
                     Yii::t('app', 'Payment') . ":" .
-                    self::getPaymentTitleById(array_pop($this->data['old']['payment_type'])) .
-                    " " .
+                    self::getPaymentTitleById(array_pop($current->data['old']['payment_type'])) .
+                    "<br/>" .
                     Yii::t('app', 'Course') . ":" .
-                    array_pop($this->data['old']['course']);
+                    array_pop($current->data['old']['course']);
                 break;
             }
             case self::$TYPE_TRANSFER_GROUP : {
                 $text =
                     Yii::t('app', 'Group') . ":" .
-                    Group::getTitleById($this->data['current']['group_id']) .
-                    " " .
+                    Group::getTitleById($current->data['current']['group_id']) .
+                    "<br/>" .
                     Yii::t('app', 'Payment') . ":" .
-                    self::getPaymentTitleById(array_pop($this->data['old']['payment_type'])) .
-                    " " .
+                    self::getPaymentTitleById(array_pop($current->data['old']['payment_type'])) .
+                    "<br/>" .
                     Yii::t('app', 'Course') . ":" .
-                    array_pop($this->data['old']['course']);
+                    array_pop($current->data['old']['course']);
                 break;
             }
             case self::$TYPE_TRANSFER_COURSE : {
                 $text =
                     Yii::t('app', 'Group') . ":" .
-                    Group::getTitleById(array_pop($this->data['old']['group_id'])) .
-                    " " .
+                    Group::getTitleById(array_pop($current->data['old']['group_id'])) .
+                    "<br/>" .
                     Yii::t('app', 'Payment') . ":" .
-                    self::getPaymentTitleById(array_pop($this->data['old']['payment_type'])) .
-                    " " .
+                    self::getPaymentTitleById(array_pop($current->data['old']['payment_type'])) .
+                    "<br/>" .
                     Yii::t('app', 'Course') . ":" .
                     array_pop($this->data['current']['course']);
                 break;
             }
             case self::$TYPE_TRANSFER_FOUNDING : {
                 $text =
-                    Yii::t('app', 'Excluded') .
-                    " " .
                     Yii::t('app', 'Group') . ":" .
-                    Group::getTitleById(array_pop($this->data['old']['group_id'])) .
-                    " " .
+                    Group::getTitleById($current->data['current']['group_id']) .
+                    "<br/>" .
                     Yii::t('app', 'Payment') . ":" .
-                    self::getPaymentTitleById($this->data['current']['payment_type']) .
-                    " " .
+                    self::getPaymentTitleById($current->data['current']['payment_type']) .
+                    "<br/>" .
                     Yii::t('app', 'Course') . ":" .
-                    array_pop($this->data['old']['course']);
+                    $current->data['current']['course'];
                 break;
             }
             case self::$TYPE_TRANSFER_SPECIALITY_QA: {
                 $text =
                     Yii::t('app', 'Group') . ":" .
-                    Group::getTitleById($this->data['current']['group_id']) .
-                    " " .
+                    Group::getTitleById($current->data['current']['group_id']) .
+                    "<br/>" .
                     Yii::t('app', 'Payment') . ":" .
-                    self::getPaymentTitleById($this->data['current']['payment_type']) .
-                    " " .
+                    self::getPaymentTitleById($current->data['current']['payment_type']) .
+                    "<br/>" .
                     Yii::t('app', 'Course') . ":" .
-                    $this->data['current']['course'];
+                    $current->data['current']['course'];
                 break;
             }
         }
         return $text;
     }
 
-    public static function getPaymentTitleById($id)
+    public
+    static function getPaymentTitleById($id)
     {
         return self::getPayments()[$id];
     }
 
-    public static function getPermittedActionList($action_type)
+    public
+    static function getPermittedActionList($action_id)
     {
+        $parent = self::findOne(['id' => $action_id]);
         $array = [];
-        switch ($action_type) {
+        switch ($parent->action_type) {
             case self::$TYPE_INCLUDE:
             case self::$TYPE_RENEWAL:
             case self::$TYPE_TRANSFER_FOUNDING:
@@ -477,7 +527,6 @@ class StudentsHistory extends \yii\db\ActiveRecord
             case self::$TYPE_EXCLUDE: {
                 $array = [
                     self::$TYPE_RENEWAL => Yii::t('app', 'Renewal'),
-                    self::$TYPE_INCLUDE => Yii::t('app', 'Include'),
                 ];
                 break;
             }
@@ -489,5 +538,53 @@ class StudentsHistory extends \yii\db\ActiveRecord
             }
         }
         return $array;
+    }
+
+    public
+    function getCurrentGroup()
+    {
+        $parents = self::getParents($this->student_id);
+        foreach ($parents as $parent) {
+            if ($parent->id == $this->id) {
+                return Group::findOne(['id' => $parent->data['current']['group_id']]);
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @param $id
+     * @return bool|Group
+     */
+    public
+    static function getCurrentGroupById($id)
+    {
+
+        return self::findOne(['id' => $id])->getCurrentGroup();
+    }
+
+    public
+    function validateSpeciality($attribute, $params)
+    {
+        switch ($this->action_type) {
+            case StudentsHistory::$TYPE_INCLUDE :
+            case StudentsHistory::$TYPE_RENEWAL :
+            case StudentsHistory::$TYPE_TRANSFER_SPECIALITY_QA : {
+                if (empty($this->$attribute)) {
+                    $this->addError($attribute, Yii::t('app', 'This field is required'));
+                    return false;
+                }
+                break;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * @return ActiveQuery;
+     */
+    public static function find()
+    {
+        return parent::find()->orderBy(['id'=>SORT_DESC]); // TODO: Change the autogenerated stub
     }
 }

@@ -2,23 +2,24 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use app\modules\students\models\Student;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\modules\students\models\StudentsHistorySearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Students Histories');
+$this->title = Yii::t('app', 'Students History');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="students-history-index">
 
-<div class="row">
-    <div class="col-lg-12">
-        <h1 class="page-header">
-            <?= Html::encode($this->title) ?>
-        </h1>
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">
+                <?= Html::encode($this->title) ?>
+            </h1>
+        </div>
     </div>
-</div>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
@@ -31,20 +32,21 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
-            'student_id',
-            'speciality_qualification_id',
+            [
+                'attribute' => 'student_id',
+                'value' => function ($model) {
+                    return Student::findOne(['id' => $model->student_id])->fullNameAndBirthDate;
+                }
+            ],
             'date',
-            'type',
-            // 'funding',
-            // 'course',
-            // 'command',
-            // 'created_at',
-            // 'updated_at',
-
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
+            [
+                'attribute' => 'information',
+                'format' => 'raw',
+            ],
+            ['class' => 'yii\grid\ActionColumn',
+                'template' => '{view} {delete}',
+            ],
+        ]
     ]); ?>
 
 </div>
