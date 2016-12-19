@@ -3,19 +3,17 @@
 namespace app\modules\students\controllers;
 
 use Yii;
-use app\modules\students\models\StudentGroup;
-use yii\data\ActiveDataProvider;
-use yii\helpers\ArrayHelper;
+use app\modules\students\models\FamilyTiesType;
+use app\modules\students\models\FamilyTiesTypeSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use nullref\core\interfaces\IAdminController;
-use yii\helpers\Json;
 
 /**
- * StudentGroupController implements the CRUD actions for StudentGroup model.
+ * FamilyTiesTypesController implements the CRUD actions for FamilyTiesType model.
  */
-class StudentGroupController extends Controller implements IAdminController
+class FamilyTiesTypesController extends Controller implements IAdminController
 {
     public function behaviors()
     {
@@ -30,22 +28,22 @@ class StudentGroupController extends Controller implements IAdminController
     }
 
     /**
-     * Lists all StudentGroup models.
+     * Lists all FamilyTiesType models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => StudentGroup::find(),
-        ]);
+        $searchModel = new FamilyTiesTypeSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
+            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
 
     /**
-     * Displays a single StudentGroup model.
+     * Displays a single FamilyTiesType model.
      * @param integer $id
      * @return mixed
      */
@@ -57,13 +55,13 @@ class StudentGroupController extends Controller implements IAdminController
     }
 
     /**
-     * Creates a new StudentGroup model.
+     * Creates a new FamilyTiesType model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new StudentGroup();
+        $model = new FamilyTiesType();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -75,7 +73,7 @@ class StudentGroupController extends Controller implements IAdminController
     }
 
     /**
-     * Updates an existing StudentGroup model.
+     * Updates an existing FamilyTiesType model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -94,7 +92,7 @@ class StudentGroupController extends Controller implements IAdminController
     }
 
     /**
-     * Deletes an existing StudentGroup model.
+     * Deletes an existing FamilyTiesType model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -106,51 +104,16 @@ class StudentGroupController extends Controller implements IAdminController
         return $this->redirect(['index']);
     }
 
-
-    public function actionGetstudentslist()
-    {
-        if (isset($_POST['depdrop_parents'])) {
-            $parents = $_POST['depdrop_parents'];
-            if ($parents != null) {
-                $cat_id = $parents[0];
-                $param1 = null;
-                $param2 = null;
-                if (!empty($_POST['depdrop_all_params'])) {
-                    $params = $_POST['depdrop_all_params'];
-                    $param1 = $params['group-id']; // get the value of input-type-1
-                    $param2 = $params['type-id']; // get the value of input-type-2
-                }
-                switch ($param2) {
-                    case 0: {
-                        $out = StudentGroup::getStudentsListFromInclude($param1);
-                        break;
-                    }
-                    default: {
-                        $out = StudentGroup::getStudentsListFromExclude($param1);
-                        break;
-                    }
-                }
-                echo Json::encode(['output' => $out, 'selected' => 'Select..']);
-                $fp = fopen('results.json', 'w');
-                fwrite($fp, Json::encode(['output' => $out, 'selected' => 'Select..']));
-                fclose($fp);
-                return;
-            }
-        }
-        echo Json::encode(['output' => [], 'selected' => 'Select']);
-    }
-
-
     /**
-     * Finds the StudentGroup model based on its primary key value.
+     * Finds the FamilyTiesType model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return StudentGroup the loaded model
+     * @return FamilyTiesType the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = StudentGroup::findOne($id)) !== null) {
+        if (($model = FamilyTiesType::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

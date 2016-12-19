@@ -1,8 +1,14 @@
 <?php
 
 namespace app\modules\students\controllers;
+
 /* @author VasyaKog */
+use app\modules\students\models\FamilyTie;
+use app\modules\students\models\StudentsHistory;
+use yii\base\Exception;
+use yii\base\Model;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use app\modules\students\models\StudentSearch;
 use app\modules\students\models\Student;
@@ -53,8 +59,12 @@ class DefaultController extends Controller implements IAdminController
      */
     public function actionView($id)
     {
+        /**
+         * @var $model Student
+         */
+        $model = $this->findModel($id);
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 
@@ -66,15 +76,46 @@ class DefaultController extends Controller implements IAdminController
     public function actionCreate()
     {
         $model = new Student();
+        $modelsFamily = [new FamilyTie()];
+        /**
+         * @var $modelsFamily FamilyTie[]
+         */
+        if ($model->load(Yii::$app->request->post())) {
+            $modelsFamily = Student::createMultiple(FamilyTie::classname());
+            Model::loadMultiple($modelsFamily, Yii::$app->request->post());
+            $valid = $model->validate();
+            $valid = Model::validateMultiple($modelsFamily) && $valid;
+            if ($valid) {
+                $transaction = \Yii::$app->db->beginTransaction();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                try {
+                    if ($flag = $model->save(false)) {
+                        foreach ($modelsFamily as $modelFamily) {
+                            $modelFamily->student_id = $model->id;
+                            if (!($flag = $modelFamily->save(false))) {
+                                $transaction->rollBack();
+                                break;
+                            }
+                        }
+                    }
+
+                    if ($flag) {
+                        $transaction->commit();
+                        return $this->redirect(['view', 'id' => $model->id]);
+                    }
+                } catch (Exception $e) {
+                    $transaction->rollBack();
+                }
+            }
             return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
         }
+
+        return $this->render('create', [
+            'model' => $model,
+            'modelsFamily' => (empty($modelsFamily)) ? [new FamilyTie()] : $modelsFamily
+        ]);
     }
+
 
     /**
      * Updates an existing Student model.
@@ -82,18 +123,55 @@ class DefaultController extends Controller implements IAdminController
      * @param integer $id
      * @return mixed
      */
-    public function actionUpdate($id)
+    public
+    function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $modelsFamily = $model->family;
+        /**
+         * @var $modelsFamily FamilyTie[]
+         */
+        if ($model->load(Yii::$app->request->post())) {
+            $oldIDs = ArrayHelper::map($modelsFamily, 'id', 'id');
+            $modelsFamily = Student::createMultiple(FamilyTie::classname(), $modelsFamily);
+            Model::loadMultiple($modelsFamily, Yii::$app->request->post());
+            $deletedIDs = array_diff($oldIDs, array_filter(ArrayHelper::map($modelsFamily, 'id', 'id')));
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+            // validate all models
+            $valid = $model->validate();
+            $valid = Model::validateMultiple($modelsFamily) && $valid;
+
+            if ($valid) {
+                $transaction = \Yii::$app->db->beginTransaction();
+                try {
+                    if ($flag = $model->save(false)) {
+                        if (!empty($deletedIDs)) {
+                            FamilyTie::deleteAll(['id' => $deletedIDs]);
+                        }
+                        foreach ($modelsFamily as $modelFamily) {
+                            $modelFamily->student_id = $model->id;
+                            if (!($flag = $modelFamily->save(false))) {
+                                $transaction->rollBack();
+                                break;
+                            }
+                        }
+                    }
+                    if ($flag) {
+                        $transaction->commit();
+                        return $this->redirect(['view', 'id' => $model->id]);
+                    }
+                } catch (Exception $e) {
+                    $transaction->rollBack();
+                }
+            }
         }
+
+        return $this->render('update', [
+            'model' => $model,
+            'modelsFamily' => (empty($modelsFamily)) ? [new FamilyTie()] : $modelsFamily
+        ]);
     }
+
 
     /**
      * Deletes an existing Student model.
@@ -101,7 +179,8 @@ class DefaultController extends Controller implements IAdminController
      * @param integer $id
      * @return mixed
      */
-    public function actionDelete($id)
+    public
+    function actionDelete($id)
     {
         $this->findModel($id)->delete();
 
@@ -115,7 +194,8 @@ class DefaultController extends Controller implements IAdminController
      * @return Student the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
+    protected
+    function findModel($id)
     {
         if (($model = Student::findOne($id)) !== null) {
             return $model;

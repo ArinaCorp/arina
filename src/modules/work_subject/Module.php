@@ -34,5 +34,4 @@ class Module extends BaseModule implements IAdminModule
             ]
         ];
     }
-
 }

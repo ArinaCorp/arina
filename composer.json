@@ -30,7 +30,11 @@
         "kartik-v/yii2-widget-spinner": "@dev",
         "kartik-v/yii2-widget-touchspin": "*",
         "yii2tech/ar-position": "^1.0",
-        "kartik-v/yii2-widget-depdrop": "@dev"
+        "kartik-v/yii2-widget-depdrop": "@dev",
+        "wbraganca/yii2-dynamicform": "dev-master",
+        "voskobovich/yii2-linker-behavior": "^4.0",
+        "kartik-v/yii2-widget-select2": "@dev",
+        "kartik-v/yii2-widget-datepicker": "@dev"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

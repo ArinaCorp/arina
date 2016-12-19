@@ -19,10 +19,12 @@ use yii\helpers\ArrayHelper;
  * @property integer $group_leader_id
  *
  *
+ *
  * @property SpecialityQualification $specialityQualification
  * @property Student $groupLeader
  * @property StudyYear $studyYear;
  *
+ * @property boolean $active;
  */
 class Group extends \yii\db\ActiveRecord
 {
@@ -31,7 +33,7 @@ class Group extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'group';
+        return '{{%group}}';
     }
 
     /**
@@ -57,6 +59,7 @@ class Group extends \yii\db\ActiveRecord
             'number_group' => Yii::t('app', 'Number Group'),
             'title' => Yii::t('app', 'Title'),
             'group_leader_id' => Yii::t('app', 'Group Leader ID'),
+            'systemTitle' => Yii::t('app', 'System title'),
         ];
     }
 
@@ -107,15 +110,22 @@ class Group extends \yii\db\ActiveRecord
          * @var $students Student[];
          */
         $result = [];
-        $students = Student::find()->orderBy(['last_name' => SORT_ASC, 'first_name' => SORT_ASC, 'middle_name' => SORT_ASC])->all();
+        $students = Student::find()->all();
         foreach ($students as $student) {
             $idsGroup = $student->getGroupArray();
-            if (in_array($this->id, $idsGroup)) array_push($result, $student);
+            if (!is_null($idsGroup)) {
+                if (in_array($this->id, $idsGroup)) {
+                    $student->payment_type = $idsGroup[$this->id];
+                    array_push($result, $student);
+                };
+            }
         }
+
         return $result;
     }
 
-    public function getStudentsList($data = null)
+    public
+    function getStudentsList($data = null)
     {
         $array = $this->getStudentsArray($data);
         $result = [];
@@ -125,7 +135,8 @@ class Group extends \yii\db\ActiveRecord
         return $result;
     }
 
-    public function getNotStudentsArray($data = null)
+    public
+    function getNotStudentsArray($data = null)
     {
         /**
          * @var $result Student[];
@@ -138,5 +149,89 @@ class Group extends \yii\db\ActiveRecord
             if (!in_array($this->id, $idsGroup)) array_push($result, $student);
         }
         return $result;
+    }
+
+    public
+    static function getActiveGroups()
+    {
+        /**
+         * @var Group[] $groups
+         */
+        $groups = self::find()->all();
+        foreach ($groups as $key => $group) {
+            if ($group->active) {
+                unset($groups[$key]);
+            }
+        }
+        return $groups;
+    }
+
+    public
+    static function getAllGroups()
+    {
+        return self::find()->all();
+    }
+
+    public
+    static function getActiveGroupsList()
+    {
+        return ArrayHelper::map(self::getActiveGroups(), 'id', 'title');
+    }
+
+    public
+    static function getAllGroupsList()
+    {
+        return ArrayHelper::map(self::getAllGroups(), 'id', 'title');
+    }
+
+    public
+    function getActive()
+    {
+        return $this->specialityQualification->getCountCourses() < (StudyYear::getCurrent()->year_start - $this->studyYear->year_start);
+    }
+
+    public
+    function getCoursesList()
+    {
+        $count = $this->specialityQualification->getCountCourses();
+        $data = [];
+        for ($i = 0; $i < $count; $i++) {
+            $data[$i + 1] = $i + 1;
+        }
+        return $data;
+    }
+
+    public
+    static function getTitleById($id)
+    {
+        return self::find()->where(['id' => $id])->one()->title;
+    }
+
+    public
+    static function getRelatedGroupById($id)
+    {
+        $current = Group::findOne(['id' => $id]);
+        $all = Group::find()->where(
+            [
+                'created_study_year_id' => $current->created_study_year_id,
+                'speciality_qualification_id' => $current->speciality_qualifications_id,
+            ])->all();
+        foreach ($all as $key => $item) {
+            if ($item->id == $id) unset($all[$key]);
+        }
+        return $all;
+    }
+
+
+    public
+    static function getRelatedGroupListById($id)
+    {
+        return ArrayHelper::map(self::getRelatedGroupById($id), 'id', 'title');
+    }
+
+    public
+    function getGroupLeaderFullName()
+    {
+        return (is_null($this->group_leader_id)) ? Yii::t('app', 'No select') : $this->groupLeader->getFullName();
     }
 }

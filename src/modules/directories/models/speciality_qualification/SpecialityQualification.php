@@ -7,6 +7,7 @@ use Yii;
 use app\modules\directories\models\speciality\Speciality;
 use app\modules\directories\models\qualification\Qualification;
 use app\modules\directories\models\department\Department;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "speciality_qualification".
@@ -14,7 +15,7 @@ use app\modules\directories\models\department\Department;
  * @property integer $id
  * @property string $title
  * @property integer $years_count
- * @property integer $months_count  
+ * @property integer $months_count
  * @property integer $qualification_id
  * @property integer $speciality_id
  *
@@ -67,6 +68,8 @@ class SpecialityQualification extends \yii\db\ActiveRecord
             'title' => Yii::t('app', 'Title'),
             'years_count' => Yii::t('app', 'Years Count'),
             'months_count' => Yii::t('app', 'Months Count'),
+            'qualification_id' => Yii::t('app', 'Qualification ID'),
+            'speciality_id' => Yii::t('app', 'Speciality ID'),
         ];
     }
 
@@ -109,7 +112,7 @@ class SpecialityQualification extends \yii\db\ActiveRecord
         return $this->hasMany(SubjectRelation::className(), ['speciality_qualification_id' => 'id']);
     }
 
-    public  function compare($f1, $f2)
+    public function compare($f1, $f2)
     {
         /**
          * @var $f1 SpecialityQualification
@@ -132,7 +135,7 @@ class SpecialityQualification extends \yii\db\ActiveRecord
         // uasort – сортирует массив, используя пользовательскую функцию mySort
 
         $qualifications = $currentSpeciality->specialityQualifications;
-        usort($qualifications, [$this ,'compare']);
+        usort($qualifications, [$this, 'compare']);
         foreach ($qualifications as $qualification) {
             /**
              * @var $qualification SpecialityQualification
@@ -142,7 +145,27 @@ class SpecialityQualification extends \yii\db\ActiveRecord
         }
         return false;
     }
-    public function getGroups(){
-        return $this->hasMany(Group::className(),['speciality_qualifications_id' => 'id']);
+
+    public function getGroups()
+    {
+        return $this->hasMany(Group::className(), ['speciality_qualifications_id' => 'id']);
+    }
+
+    public function getGroupsActive()
+    {
+
+        $array = $this->groups;
+        /**
+         * @var Group[] $array
+         */
+        foreach ($array as $key => $item) {
+            if ($item->active) unset($array[$key]);
+        }
+        return $array;
+    }
+
+    public function getGroupsActiveList()
+    {
+        return ArrayHelper::map($this->groupsActive, 'id', 'title');
     }
 }

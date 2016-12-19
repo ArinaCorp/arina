@@ -9,16 +9,18 @@ use yii\widgets\ActiveForm;
 ?>
 
 <div class="study-year-form">
-    
-    
+
+
     <?php $form = ActiveForm::begin(); ?>
 
     <?= $form->field($model, 'year_start')->textInput() ?>
 
-    <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-    </div>
+    <?= $form->field($model, 'active')->checkbox(); ?>
 
-    <?php ActiveForm::end(); ?>
+    <div class="form-group" >
+    <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+</div>
+
+<?php ActiveForm::end(); ?>
 
 </div>

@@ -40,6 +40,19 @@ class StudyYearController extends Controller implements IAdminController
         $dataProvider = new ActiveDataProvider([
             'query' => StudyYear::find(),
         ]);
+        $dataProvider->setSort([
+            'attributes' => [
+                'fullName' => [
+                    'asc' => [
+                        'year_start' => SORT_ASC,
+                    ],
+                    'desc' => [
+                        'year_start' => SORT_DESC,
+                    ],
+                ],
+                'active',
+            ],
+        ]);
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,

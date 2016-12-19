@@ -4,13 +4,13 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model app\modules\students\models\StudentGroup */
+/* @var $model app\modules\students\models\FamilyTiesType */
 
-$this->title = $model->student->getFullNameAndCode() . " " . $model->getType() . " " . $model->group->title;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Student Groups'), 'url' => ['index']];
+$this->title = $model->title;
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Family Ties Types'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="student-group-view">
+<div class="family-ties-type-view">
 
     <div class="row">
         <div class="col-lg-12">
@@ -35,21 +35,16 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'date',
+            'id',
+            'title',
             [
-                'attribute' => 'type',
-                'value' => $model->getType(),
+                'attribute' => 'created_at',
+                'value' => date('H:m d.m.y', $model->created_at),
             ],
             [
-                'attribute' => 'group_id',
-                'value' => $model->group->title,
+                'attribute' => 'updated_at',
+                'value' => date('H:m d.m.Y', $model->updated_at),
             ],
-            [
-                'attribute' => 'student_id',
-                'value' => $model->student->getFullNameAndCode(),
-            ],
-            'comment',
-            'funding_id',
         ],
     ]) ?>
 
