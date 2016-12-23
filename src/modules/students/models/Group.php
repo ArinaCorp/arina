@@ -7,6 +7,8 @@ use app\modules\directories\models\speciality_qualification\SpecialityQualificat
 use app\modules\directories\models\StudyYear;
 use Yii;
 use yii\helpers\ArrayHelper;
+use PHPExcel;
+use PHPExcel_IOFactory;
 
 /**
  * This is the model class for table "group".
@@ -114,7 +116,7 @@ class Group extends \yii\db\ActiveRecord
         foreach ($students as $student) {
             $idsGroup = $student->getGroupArray();
             if (!is_null($idsGroup)) {
-                if (in_array($this->id, $idsGroup)) {
+                if (array_key_exists($this->id, $idsGroup)) {
                     $student->payment_type = $idsGroup[$this->id];
                     array_push($result, $student);
                 };
@@ -233,5 +235,36 @@ class Group extends \yii\db\ActiveRecord
     function getGroupLeaderFullName()
     {
         return (is_null($this->group_leader_id)) ? Yii::t('app', 'No select') : $this->groupLeader->getFullName();
+    }
+
+    public function getDocument()
+    {
+
+        $tmpfname = Yii::getAlias('@webroot') . "/templates/group.xls";
+        $excelReader = PHPExcel_IOFactory::createReaderForFile($tmpfname);;
+        $excelObj = $excelReader->load($tmpfname);
+        $excelObj->setActiveSheetIndex(0);
+        $excelObj->getActiveSheet()->SetCellValue('B2', $this->title);
+        /**
+         * @var Student[] $students
+         */
+        $students = $this->getStudentsArray();
+        if (!is_null($students)) {
+            $startRow = 4;
+            $current = $startRow;
+            $i = 1;
+            foreach ($students as $student) {
+                $excelObj->getActiveSheet()->SetCellValue('A' . $current, $i);
+                $excelObj->getActiveSheet()->SetCellValue('B' . $current, $student->getFullName());
+                $i++;
+                $current++;
+            }
+        }
+        header('Content-Type: application/vnd.ms-excel');
+        $filename = "Group_" . $this->title . "_" . date("d-m-Y-His") . ".xls";
+        header('Content-Disposition: attachment;filename=' . $filename . ' ');
+        header('Cache-Control: max-age=0');
+        $objWriter = PHPExcel_IOFactory::createWriter($excelObj, 'Excel2007');
+        $objWriter->save('php://output');
     }
 }

@@ -2,6 +2,7 @@
 /* @author VasyaKog */
 namespace app\modules\students\models;
 
+use app\modules\directories\models\subject\Subject;
 use nullref\useful\behaviors\RelatedBehavior;
 use voskobovich\linker\LinkerBehavior;
 use Yii;
@@ -241,6 +242,38 @@ class Student extends \yii\db\ActiveRecord
         }
     }
 
+    public static function importExcel($file)
+    {
+        $excelFile = UploadedFile::getInstance($file, 'file');
+        $objPHPExcel = \PHPExcel_IOFactory::load($excelFile->tempName);
+        $i = 2;
+        while ($objPHPExcel->getActiveSheet()->getCell('A' . $i) != "") {
+            $student = new Student();
+            $student->last_name = $objPHPExcel->getActiveSheet()->getCell('A' . $i)->getValue();
+            $student->first_name = $objPHPExcel->getActiveSheet()->getCell('B' . $i)->getValue();
+            $student->middle_name = $objPHPExcel->getActiveSheet()->getCell('C' . $i)->getValue();
+            $student->gender = mb_substr($student->middle_name, mb_strlen($student->middle_name, 'UTF-8') - 1, 1, 'UTF-8') == 'ч' ? 0 : 1;
+            $student->birth_day = $objPHPExcel->getActiveSheet()->getCell('D' . $i)->getValue();
+            if ($student->save()) {
+                $group = Group::findOne(['title' => $objPHPExcel->getActiveSheet()->getCell('I' . $i)->getValue()]);
+                if ($group) {
+                    $history = new StudentsHistory();
+                    $history->student_id = $student->id;
+                    $history->speciality_qualification_id = $group->speciality_qualifications_id;
+                    $history->date = $objPHPExcel->getActiveSheet()->getCell('E' . $i)->getValue();
+                    $history->action_type = StudentsHistory::$TYPE_INCLUDE;
+                    $history->command = "Imported";
+                    $history->course = 1;
+                    $history->payment_type = ($objPHPExcel->getActiveSheet()->getCell('F' . $i)->getValue() == "Контракт") ? StudentsHistory::$PAYMENT_CONTRACT : StudentsHistory::$PAYMENT_STATE;
+                    $history->group_id = $group->id;
+                    $history->date;
+                    $history->save();
+                }
+            }
+            $i++;
+        }
+    }
+
     public function getGroupLinksList()
     {
         $groups = $this->groups;
@@ -248,7 +281,7 @@ class Student extends \yii\db\ActiveRecord
         $links = "";
         foreach ($groups as $item) {
             if ($links != "") $links .= "<br/>";
-            $links .= Html::a($item->title, ['/students/group/view', 'id' => $item->id]);
+            $links .= Html::a($item->title . " " . StudentsHistory::getPaymentTitleById($this->getGroupArray()[$item->id]), ['/students/group/view', 'id' => $item->id]);
         }
         return $links;
 
@@ -272,7 +305,7 @@ class Student extends \yii\db\ActiveRecord
 
     public function getGroups()
     {
-        return Group::find()->where(['id' => $this->getGroupArray()])->all();
+        return Group::find()->where(['id' => array_keys($this->getGroupArray())])->all();
     }
 
     public function getAlumnusGroup()

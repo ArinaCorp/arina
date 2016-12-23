@@ -110,7 +110,7 @@ class StudentsHistoryController extends Controller implements IAdminController
         $model->setAttributes(Yii::$app->request->get()[1], false);
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             $model->save();
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         } else {
             return $this->render('create-end',
                 [
@@ -163,7 +163,7 @@ class StudentsHistoryController extends Controller implements IAdminController
                     $category_id = $params['studentshistorybefore-category_id']; // get the value of input-type-1
                     switch ($category_id) {
                         case StudentsHistory::$CATEGORY_NEW: {
-                            $out[] = ['id' => 1, 'name' => Yii::t('app','All')];
+                            $out[] = ['id' => 1, 'name' => Yii::t('app', 'All')];
                             break;
                         }
                         case StudentsHistory::$CATEGORY_ACTIVE: {

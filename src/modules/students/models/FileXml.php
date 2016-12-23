@@ -7,7 +7,7 @@ namespace app\modules\students\models;
 use nullref\core\models\Model;
 use \Yii;
 
-class File extends \yii\base\Model
+class FileXml extends \yii\base\Model
 {
     
     public $file;
