@@ -57,7 +57,7 @@ class Subject extends ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'title' => Yii::t('app', 'Title'),
             'code' => Yii::t('app', 'Code'),
-            'short_name' => Yii::t('app', 'Short name'),
+            'short_name' => Yii::t('app', 'Short title'),
             'practice' => Yii::t('app', 'Practice'),
         ];
     }

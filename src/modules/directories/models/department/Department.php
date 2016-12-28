@@ -6,6 +6,7 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use app\modules\directories\models\speciality\Speciality;
+use Yii;
 
 /**
  * This is the model class for table "department".
@@ -51,9 +52,9 @@ class Department extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'title' => 'Title',
-            'head_id' => 'Head ID',
+            'id' => Yii::t('app', 'ID'),
+            'title' => Yii::t('app', 'Title'),
+            'head_id' => Yii::t('app', 'Head ID'),
         ];
     }
     public function getSpecialities(){

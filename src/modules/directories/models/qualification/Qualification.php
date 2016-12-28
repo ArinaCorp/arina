@@ -43,7 +43,7 @@ class Qualification extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'title' => Yii::t('app', 'Title'),
-            'sort_order' => Yii::t('app', 'Short order'),
+            'sort_order' => Yii::t('app', 'Sort order'),
         ];
     }
     /**

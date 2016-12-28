@@ -9,6 +9,7 @@ use app\modules\directories\models\speciality_qualification\SpecialityQualificat
 use app\modules\directories\models\qualification\Qualification;
 use yii\helpers\Html;
 use yii\helpers\Url;
+use Yii;
 
 /**
  * This is the model class for table "speciality".
@@ -91,11 +92,11 @@ class Speciality extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'title' => 'Title',
-            'department' => 'Department',
-            'number' => 'Number',
-            'accreditation_date' => 'Accreditation Date',
+            'id' => Yii::t('app', 'ID'),
+            'title' => Yii::t('app', 'Title'),
+            'department' => Yii::t('app', 'Department'),
+            'number' => Yii::t('app', 'Number'),
+            'accreditation_date' => Yii::t('app', 'Accreditation Date'),
         ];
     }
 
