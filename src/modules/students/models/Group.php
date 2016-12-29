@@ -245,20 +245,44 @@ class Group extends \yii\db\ActiveRecord
         $excelObj = $excelReader->load($tmpfname);
         $excelObj->setActiveSheetIndex(0);
         $excelObj->getActiveSheet()->SetCellValue('B2', $this->title);
+        $excelObj->getActiveSheet()->SetCellValue('B3', StudyYear::getCurrent()->fullName . " навчального року");
         /**
          * @var Student[] $students
          */
         $students = $this->getStudentsArray();
         if (!is_null($students)) {
-            $startRow = 4;
+            $startRow = 7;
             $current = $startRow;
             $i = 1;
             foreach ($students as $student) {
-                $excelObj->getActiveSheet()->SetCellValue('A' . $current, $i);
-                $excelObj->getActiveSheet()->SetCellValue('B' . $current, $student->getFullName());
+                $excelObj->getActiveSheet()->mergeCells("C" . $current . ":G" . $current);
+                $excelObj->getActiveSheet()->insertNewRowBefore($current + 1);
+                $excelObj->getActiveSheet()->setCellValue('B' . $current, $i);
+                $excelObj->getActiveSheet()->setCellValue('C' . $current, $student->getFullName());
+                $excelObj->getActiveSheet()->setCellValue('H' . $current, $student->getPaymentTypeLabel());
                 $i++;
                 $current++;
             }
+            $excelObj->getActiveSheet()->removeRow($current);
+            $excelObj->getActiveSheet()->removeRow($current);
+//            $excelObj->getActiveSheet()
+//                ->getCell('C' . $current - 1)
+//                ->getStyle()
+//                ->getBorders()
+//                ->getBottom()
+//                ->setBorderStyle(\PHPExcel_Style_Border::BORDER_NONE);
+//            $excelObj->getActiveSheet()
+//                ->getCell('B' . $current - 1)
+//                ->getStyle()
+//                ->getBorders()
+//                ->getBottom()
+//                ->setBorderStyle(\PHPExcel_Style_Border::BORDER_NONE);
+//            $excelObj->getActiveSheet()
+//                ->getCell('H' . $current - 1)
+//                ->getStyle()
+//                ->getBorders()
+//                ->getBottom()
+//                ->setBorderStyle(\PHPExcel_Style_Border::BORDER_NONE);
         }
         header('Content-Type: application/vnd.ms-excel');
         $filename = "Group_" . $this->title . "_" . date("d-m-Y-His") . ".xls";
