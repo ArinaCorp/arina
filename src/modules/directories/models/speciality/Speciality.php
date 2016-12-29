@@ -92,11 +92,13 @@ class Speciality extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'ID'),
+            'id' => 'ID',
             'title' => Yii::t('app', 'Title'),
-            'department' => Yii::t('app', 'Department'),
+            'short_title' => Yii::t('app', 'Short Title'),
+            'department_id' => Yii::t('app', 'Department ID'),
             'number' => Yii::t('app', 'Number'),
             'accreditation_date' => Yii::t('app', 'Accreditation Date'),
+            'qualifications' => Yii::t('app', 'Qualifications'),
         ];
     }
 
@@ -125,13 +127,14 @@ class Speciality extends \yii\db\ActiveRecord
         $this->accreditation_date = date('d.m.Y', strtotime($this->accreditation_date));
     }
 
-    public function getSpecialityQualificationsLinks(){
+    public function getSpecialityQualificationsLinks()
+    {
         $list = "";
-        foreach ($this->specialityQualifications as $specialityQualification){
+        foreach ($this->specialityQualifications as $specialityQualification) {
             /**
              * @var $specialityQualification SpecialityQualification
              */
-            $list.=Html::a($specialityQualification->title,Url::to(['/admin/directories/speciality-qualification','id'=>$specialityQualification->id])).'<br/>';
+            $list .= Html::a($specialityQualification->title, Url::to(['/admin/directories/speciality-qualification', 'id' => $specialityQualification->id])) . '<br/>';
         }
         return $list;
     }

@@ -22,6 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?= Html::a(Yii::t('app', 'List'), ['index'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('app', 'Get Excel document'), ['document', 'id' => $model->id], ['class' => 'btn btn-info']) ?>
         <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
@@ -49,11 +50,13 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'number_group',
             [
-                'label' => Yii::t('app', 'System title'),
-                'value' => $model->getSystemTitle(),
+                'attribute' => 'systemTitle',
             ],
             'title',
-            'group_leader_id',
+            [
+                'attribute' => 'group_leader_id',
+                'value' => $model->getGroupLeaderFullName(),
+            ],
         ],
     ]) ?>
 
@@ -68,6 +71,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'last_name',
             'first_name',
             'middle_name',
+            'paymentTypeLabel',
             [
                 'class' => 'yii\grid\ActionColumn',
                 'template' => '{view}',

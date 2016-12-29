@@ -11,7 +11,7 @@ use yii\helpers\Html;
 
 /* @author VasyaKog */
 
-$this->title = Yii::t('app', 'Import Students');
+$this->title = Yii::t('app', 'Import Students from XML');
 $this->params['breadcrumbs'][] = Yii::t('app', 'Students');
 $this->params['breadcrumbs'][] = $this->title;
 ?>

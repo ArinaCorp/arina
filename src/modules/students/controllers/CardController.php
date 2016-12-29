@@ -1,22 +1,24 @@
 <?php
 
 namespace app\modules\students\controllers;
-
-use Yii;
-use app\modules\students\models\StudentGroup;
-use yii\data\ActiveDataProvider;
-use yii\helpers\ArrayHelper;
-use yii\web\Controller;
-use yii\web\NotFoundHttpException;
+/* @author VasyaKog */
 use yii\filters\VerbFilter;
+use yii\web\Controller;
+use app\modules\students\models\StudentSearch;
+use app\modules\students\models\Student;
+use yii\web\NotFoundHttpException;
+
 use nullref\core\interfaces\IAdminController;
-use yii\helpers\Json;
+use Yii;
 
 /**
- * StudentGroupController implements the CRUD actions for StudentGroup model.
+ * Default controller for the `students` module
  */
-class StudentGroupController extends Controller implements IAdminController
+class CardController extends Controller implements IAdminController
 {
+    /**
+     * @inheritdoc
+     */
     public function behaviors()
     {
         return [
@@ -30,22 +32,22 @@ class StudentGroupController extends Controller implements IAdminController
     }
 
     /**
-     * Lists all StudentGroup models.
+     * Lists all Student models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => StudentGroup::find(),
-        ]);
+        $searchModel = new StudentSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
+            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
 
     /**
-     * Displays a single StudentGroup model.
+     * Displays a single Student model.
      * @param integer $id
      * @return mixed
      */
@@ -57,13 +59,13 @@ class StudentGroupController extends Controller implements IAdminController
     }
 
     /**
-     * Creates a new StudentGroup model.
+     * Creates a new Student model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new StudentGroup();
+        $model = new Student();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -75,7 +77,7 @@ class StudentGroupController extends Controller implements IAdminController
     }
 
     /**
-     * Updates an existing StudentGroup model.
+     * Updates an existing Student model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -94,7 +96,7 @@ class StudentGroupController extends Controller implements IAdminController
     }
 
     /**
-     * Deletes an existing StudentGroup model.
+     * Deletes an existing Student model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -106,51 +108,16 @@ class StudentGroupController extends Controller implements IAdminController
         return $this->redirect(['index']);
     }
 
-
-    public function actionGetstudentslist()
-    {
-        if (isset($_POST['depdrop_parents'])) {
-            $parents = $_POST['depdrop_parents'];
-            if ($parents != null) {
-                $cat_id = $parents[0];
-                $param1 = null;
-                $param2 = null;
-                if (!empty($_POST['depdrop_all_params'])) {
-                    $params = $_POST['depdrop_all_params'];
-                    $param1 = $params['group-id']; // get the value of input-type-1
-                    $param2 = $params['type-id']; // get the value of input-type-2
-                }
-                switch ($param2) {
-                    case 0: {
-                        $out = StudentGroup::getStudentsListFromInclude($param1);
-                        break;
-                    }
-                    default: {
-                        $out = StudentGroup::getStudentsListFromExclude($param1);
-                        break;
-                    }
-                }
-                echo Json::encode(['output' => $out, 'selected' => 'Select..']);
-                $fp = fopen('results.json', 'w');
-                fwrite($fp, Json::encode(['output' => $out, 'selected' => 'Select..']));
-                fclose($fp);
-                return;
-            }
-        }
-        echo Json::encode(['output' => [], 'selected' => 'Select']);
-    }
-
-
     /**
-     * Finds the StudentGroup model based on its primary key value.
+     * Finds the Student model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return StudentGroup the loaded model
+     * @return Student the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = StudentGroup::findOne($id)) !== null) {
+        if (($model = Student::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

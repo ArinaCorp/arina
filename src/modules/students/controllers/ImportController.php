@@ -2,7 +2,8 @@
 
 namespace app\modules\students\controllers;
 
-use app\modules\students\models\File;
+use app\modules\students\models\FileExcel;
+use app\modules\students\models\FileXml;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use app\modules\students\models\Student;
@@ -30,7 +31,7 @@ class ImportController extends Controller implements IAdminController
 
     public function actionIndex()
     {
-        $model = new File();
+        $model = new FileXml();
         if (Yii::$app->request->isPost) {
             $model->load(Yii::$app->request->post());
             $result = Student::importXml($model);
@@ -42,6 +43,25 @@ class ImportController extends Controller implements IAdminController
             );
         }
         return $this->render('index',
+            [
+                'model' => $model
+            ]);
+    }
+
+    public function actionExcel()
+    {
+        $model = new FileExcel();
+        if (Yii::$app->request->isPost) {
+            $model->load(Yii::$app->request->post());
+            $result = Student::importExcel($model);
+            return $this->render(
+                'result',
+                [
+                    'result' => $result
+                ]
+            );
+        }
+        return $this->render('excel',
             [
                 'model' => $model
             ]);

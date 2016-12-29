@@ -4,6 +4,7 @@ namespace app\modules\students\controllers;
 
 /* @author VasyaKog */
 use app\modules\students\models\FamilyTie;
+use app\modules\students\models\StudentsHistory;
 use yii\base\Exception;
 use yii\base\Model;
 use yii\filters\VerbFilter;
@@ -58,8 +59,12 @@ class DefaultController extends Controller implements IAdminController
      */
     public function actionView($id)
     {
+        /**
+         * @var $model Student
+         */
+        $model = $this->findModel($id);
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 
@@ -111,6 +116,7 @@ class DefaultController extends Controller implements IAdminController
         ]);
     }
 
+
     /**
      * Updates an existing Student model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -122,9 +128,10 @@ class DefaultController extends Controller implements IAdminController
     {
         $model = $this->findModel($id);
         $modelsFamily = $model->family;
-
+        /**
+         * @var $modelsFamily FamilyTie[]
+         */
         if ($model->load(Yii::$app->request->post())) {
-
             $oldIDs = ArrayHelper::map($modelsFamily, 'id', 'id');
             $modelsFamily = Student::createMultiple(FamilyTie::classname(), $modelsFamily);
             Model::loadMultiple($modelsFamily, Yii::$app->request->post());

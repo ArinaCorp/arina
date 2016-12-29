@@ -54,11 +54,12 @@ class GroupController extends Controller implements IAdminController
     public function actionView($id)
     {
         $dataProvider = new ArrayDataProvider([
-            'key'=>'id',
-            'allModels'=>$this->findModel($id)->getStudentsArray(),
+            'allModels' => $this->findModel($id)->getStudentsArray(),
         ]);
+
+
         return $this->render('view', [
-            'dataProvider'=>$dataProvider,
+            'dataProvider' => $dataProvider,
             'model' => $this->findModel($id),
         ]);
     }
@@ -111,6 +112,13 @@ class GroupController extends Controller implements IAdminController
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+
+    public function actionDocument($id)
+    {
+        $model = $this->findModel($id);
+        $model->getDocument();
     }
 
     /**

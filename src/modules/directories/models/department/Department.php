@@ -52,9 +52,10 @@ class Department extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'ID'),
-            'title' => Yii::t('app', 'Title'),
-            'head_id' => Yii::t('app', 'Head ID'),
+            'id' => Yii::t('app','ID'),
+            'title' => Yii::t('app','Title'),
+            'head_id' => Yii::t('app','Head ID'),
+            'specialities' => Yii::t('app','Specialities'),
         ];
     }
     public function getSpecialities(){

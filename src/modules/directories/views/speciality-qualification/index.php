@@ -19,7 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
             </h1>
         </div>
     </div>
-    
+
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
@@ -30,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-            
+
             'title',
             'years_count',
             'months_count',

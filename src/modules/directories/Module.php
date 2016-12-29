@@ -34,22 +34,22 @@ class Module extends BaseModule implements IAdminModule
                     'icon' => 'book',
                 ],
                 [
-                    'label' => Yii::t('app', 'Department'),
+                    'label' => Yii::t('app', 'Departments'),
                     'url' => ['/directories/department'],
                     'icon' => 'sticky-note',
                 ],
                 [
-                    'label' => Yii::t('app', 'Speciality'),
+                    'label' => Yii::t('app', 'Specialities'),
                     'url' => ['/directories/speciality'],
                     'icon' => 'archive',
                 ],
                 [
-                    'label' => Yii::t('app', 'Qualification'),
+                    'label' => Yii::t('app', 'Qualifications'),
                     'url' => ['/directories/qualification'],
                     'icon' => 'file-text',
                 ],
                 [
-                    'label' => Yii::t('app', 'SpecialityQualification'),
+                    'label' => Yii::t('app', 'Speciality Qualifications'),
                     'url' => ['/directories/speciality-qualification'],
                     'icon' => 'graduation-cap',
                 ],
