@@ -54,9 +54,11 @@ class Qualification extends \yii\db\ActiveRecord
     {
         return new QualificationQuery(get_called_class());
     }
-    public static function getList() {
+    public static function getList()
+    {
         $data = Qualification::find()->all();
-        $items=ArrayHelper::map($data,'id','title');
+        $items = ArrayHelper::map($data,'id','title');
         return $items;
+
     }
 }

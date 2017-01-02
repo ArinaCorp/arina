@@ -165,4 +165,6 @@ return [
     'Responsible' => 'Відповідальний',
     'Select responsible' => 'Оберіть відповідального',
     'Update Audience' => 'Оновити аудиторію',
+    'Yes' => 'Так',
+    'No' => 'Ні',
 ];

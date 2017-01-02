@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\grid\GridView;
+use app\modules\directories\models\position\Position;
 
 /** @var $this yii\web\View
  * @var $model app\modules\employee\models\Employee
@@ -37,17 +38,22 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             'is_in_education',
-            'position_id',
-            'category_id',
-            'type',
+            [
+                'attribute' => 'position_id',
+                'value' => function ($model) {
+                    return Position::findOne(['id' => $model->position_id])->title;
+                }
+            ],
+            //'category_id',
+            //'type',
+            'last_name',
             'first_name',
             'middle_name',
-            'last_name',
-            'gender',
+            //'gender',
             'cyclic_commission_id',
-            'birth_date',
-            'passport',
-            'passport_issued_by',
+            //'birth_date',
+            //'passport',
+            //'passport_issued_by',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],
