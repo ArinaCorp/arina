@@ -41,7 +41,10 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'is_in_education',
+            [
+                'attribute' => 'is_in_education',
+                'value' => $model->getIsInEducationName(),
+            ],
             [
                 'attribute' => 'position_id',
                 'value' => function ($model) {
@@ -58,7 +61,10 @@ $this->params['breadcrumbs'][] = $this->title;
             'first_name',
             'middle_name',
             'last_name',
-            'gender',
+            [
+                'attribute' => 'gender',
+                'value' => $model->getGenderName(),
+            ],
             'cyclic_commission_id',
             'birth_date',
             'passport',

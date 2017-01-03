@@ -37,7 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'is_in_education',
+            //'is_in_education'
             [
                 'attribute' => 'position_id',
                 'value' => function ($model) {

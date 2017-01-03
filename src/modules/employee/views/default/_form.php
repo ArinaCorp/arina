@@ -22,10 +22,10 @@ use app\modules\directories\models\qualification\Qualification;
     <?php $form = ActiveForm::begin(); ?>
 
     <div class="row">
-        <div class="col-sm-3">
+        <div class="col-sm-4">
     <?= $form->field($model, 'is_in_education')->dropDownList(
         [0 => Yii::t('app', 'Yes'), 1 => Yii::t('app', 'No')],
-        ['prompt' => Yii::t('app', 'Select is in education')]
+        ['prompt' => Yii::t('app', 'Select')]
     ); ?>
         </div>
         <div class="col-sm-3">
@@ -44,8 +44,8 @@ use app\modules\directories\models\qualification\Qualification;
                 'placeholder' => Yii::t('app', 'Select qualification')
             ]]) ?>
         </div>
-        <div class="col-sm-3">
-        <?= $form->field($model, 'gender')->dropDownList([0 => Yii::t('app', 'Male'), 1 => Yii::t('app', 'Female')], ['prompt' => Yii::t('app', 'Select gender')]); ?>
+        <div class="col-sm-2">
+        <?= $form->field($model, 'gender')->dropDownList([0 => Yii::t('app', 'Male'), 1 => Yii::t('app', 'Female')], ['prompt' => Yii::t('app', 'Select gender')]) ?>
         </div>
     </div>
 
@@ -78,9 +78,11 @@ use app\modules\directories\models\qualification\Qualification;
     <?= $form->field($model, 'passport')->widget(MaskedInput::className(), ['mask' => 'AA №999999']) ?>
         </div>
         <div class="col-sm-3">
-    <?= $form->field($model, 'passport_issued_by')->textInput(['maxlength' => true, 'placeholder' => $model->getAttributeLabel('passport_issued_by')]) ?>
+    <?= $form->field($model, 'passport_issued_by')->textInput(['maxlength' => true, 'placeholder' => $model->getAttributeLabel('passport_issued_by')])
+    //$form->field($model, 'type')->dropDownList($model->getTypes(), ['prompt' => Yii::t('app', 'Select type')])?>
         </div>
     </div>
+
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

@@ -44,7 +44,7 @@ class Employee extends ActiveRecord
         return [
             [['id', 'position_id', 'category_id', 'is_in_education', 'gender', 'type', 'cyclic_commission_id'], 'integer'],
             [['last_name', 'first_name', 'middle_name', 'position_id', 'category_id', 'is_in_education',
-                'gender', 'passport', 'type', 'birth_date', 'passport_issued_by', 'cyclic_commission_id'], 'required'],
+                'gender', 'passport', 'birth_date', 'passport_issued_by', 'cyclic_commission_id'], 'required'],
             [['birth_date','cyclic_commission_id', 'passport', 'passport_issued_by'], 'safe'],
             [['passport', 'id'], 'unique'],
         ];
@@ -58,8 +58,8 @@ class Employee extends ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'is_in_education' => Yii::t('app', 'Do teach?'),
-            'position_id' => Yii::t('app', 'Position ID'),
-            'category_id' => Yii::t('app', 'Category iD'),
+            'position_id' => Yii::t('app', 'Position'),
+            'category_id' => Yii::t('app', 'Category'),
             'type' => Yii::t('app', 'Type'),
             'first_name' => Yii::t('app', 'First Name'),
             'middle_name' => Yii::t('app', 'Middle Name'),
@@ -96,6 +96,16 @@ class Employee extends ActiveRecord
             self::TYPE_OTHER => Yii::t('employee', 'Another employee'),
             self::TYPE_TEACHER => Yii::t('employee', 'Teacher'),
         ];
+    }
+
+    public function getGenderName()
+    {
+        return $this->gender ? Yii::t('app', 'Female') : Yii::t('app', 'Male');
+    }
+    
+    public function getIsInEducationName()
+    {
+        return $this->is_in_education ? Yii::t('app', 'Not take part in education') : Yii::t('app', 'Take part in education');
     }
 
 }

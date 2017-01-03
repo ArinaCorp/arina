@@ -7,7 +7,7 @@ use app\modules\employee\models\Employee;
 /* @var $this View
  * @var $model Employee */
 
-$this->title = Yii::t('app', 'Create Employee');
+$this->title = Yii::t('app', 'Create employee');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Employees'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 

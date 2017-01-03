@@ -7,7 +7,7 @@ use app\modules\employee\models\Employee;
 /* @var $this View
  * @var $model Employee */
 
-$this->title = Yii::t('app', 'Update {modelClass}: ', [
+$this->title = Yii::t('app', 'Update employee:', [
         'modelClass' => 'Employee',
     ]) . ' ' . $model->getFullName();
 
