@@ -14,14 +14,25 @@ use app\modules\students\models\Exemption;
 /* @author VasyaKog */
 
 $js = '
-jQuery(".dynamicform_wrapper").on("afterInsert", function(e, item) {
-    jQuery(".dynamicform_wrapper .panel-title-address").each(function(index) {
+jQuery(".dynamicform_phones").on("afterInsert", function(e, item) {
+    jQuery(".dynamicform_phones .panel-title-address").each(function(index) {
+        jQuery(this).html("' . Yii::t('app', 'Phones') . ': " + (index + 1))
+    });
+});
+
+jQuery(".dynamicform_phones").on("afterDelete", function(e) {
+    jQuery(".dynamicform_phones .panel-title-address").each(function(index) {
+        jQuery(this).html("' . Yii::t('app', 'Phones') . ': " + (index + 1))
+    });
+});
+jQuery(".dynamicform_family").on("afterInsert", function(e, item) {
+    jQuery(".dynamicform_family .panel-title-address").each(function(index) {
         jQuery(this).html("' . Yii::t('app', 'Family tie') . ': " + (index + 1))
     });
 });
 
-jQuery(".dynamicform_wrapper").on("afterDelete", function(e) {
-    jQuery(".dynamicform_wrapper .panel-title-address").each(function(index) {
+jQuery(".dynamicform_family").on("afterDelete", function(e) {
+    jQuery(".dynamicform_family .panel-title-address").each(function(index) {
         jQuery(this).html("' . Yii::t('app', 'Family tie') . ': " + (index + 1))
     });
 });
@@ -35,7 +46,7 @@ $this->registerJs($js);
     <?php \yii\widgets\Pjax::begin(); ?>
     <?php $form = ActiveForm::begin(
         [
-            'id' => 'dynamic-form',
+            'id' => 'student-form',
             'options' => [
                 'enctype' => 'multipart/form-data',
             ],
@@ -116,7 +127,62 @@ $this->registerJs($js);
         </div>
     </div>
     <?php DynamicFormWidget::begin([
-        'widgetContainer' => 'dynamicform_wrapper', // required: only alphanumeric characters plus "_" [A-Za-z0-9_]
+        'widgetContainer' => 'dynamicform_phones', // required: only alphanumeric characters plus "_" [A-Za-z0-9_]
+        'widgetBody' => '.container-items', // required: css class selector
+        'widgetItem' => '.item', // required: css class
+        'limit' => 12, // the maximum times, an element can be cloned (default 999)
+        'min' => 0, // 0 or 1 (default 1)
+        'insertButton' => '.add-item', // css class
+        'deleteButton' => '.remove-item', // css class
+        'model' => $modelsPhones[0],
+        'formId' => 'student-form',
+        'formFields' => [
+            'phone',
+            'comment',
+        ],
+    ]); ?>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <i class="fa fa-users"></i> <?= Yii::t('app', 'Phones') ?>
+            <button type="button" class="pull-right add-item btn btn-success btn-xs"><i
+                    class="fa fa-plus"></i> <?= Yii::t('app', 'Add phones') ?></button>
+            <div class="clearfix"></div>
+        </div>
+        <div class="panel-body container-items"><!-- widgetContainer -->
+            <?php foreach ($modelsPhones as $index => $modelPhone): ?>
+                <div class="item panel panel-default"><!-- widgetBody -->
+                    <div class="panel-heading">
+                            <span class="panel-title-address"><?= Yii::t('app', 'Family tie') ?>
+                                : <?= ($index + 1) ?></span>
+                        <button type="button" class="pull-right remove-item btn btn-danger btn-xs"><i
+                                class="fa fa-minus"></i></button>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-body">
+                        <?php
+                        // necessary for update action.
+                        if (!$modelPhone->isNewRecord) {
+                            echo Html::activeHiddenInput($modelPhone, "[{$index}]id");
+                        }
+                        ?>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <?= $form->field($modelPhone, "[{$index}]phone")->textInput() ?>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <?= $form->field($modelPhone, "[{$index}]comment")->textInput() ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+    <?php DynamicFormWidget::end(); ?>
+    <?php DynamicFormWidget::begin([
+        'widgetContainer' => 'dynamicform_family', // required: only alphanumeric characters plus "_" [A-Za-z0-9_]
         'widgetBody' => '.container-items', // required: css class selector
         'widgetItem' => '.item', // required: css class
         'limit' => 12, // the maximum times, an element can be cloned (default 999)
@@ -124,7 +190,7 @@ $this->registerJs($js);
         'insertButton' => '.add-item', // css class
         'deleteButton' => '.remove-item', // css class
         'model' => $modelsFamily[0],
-        'formId' => 'dynamic-form',
+        'formId' => 'student-form',
         'formFields' => [
             'last_name',
             'first_name',

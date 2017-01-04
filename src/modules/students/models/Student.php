@@ -292,6 +292,11 @@ class Student extends \yii\db\ActiveRecord
         return $this->hasMany(FamilyTie::className(), ['student_id' => 'id']);
     }
 
+    public function getPhones()
+    {
+        return $this->hasMany(StudentsPhones::className(), ['student_id' => 'id']);
+    }
+
     public function getGroupArray()
     {
         return StudentsHistory::getGroupArray($this->id);

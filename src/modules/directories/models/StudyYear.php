@@ -11,7 +11,6 @@ use Yii;
  * @property integer $year_start
  * @property integer $active
  */
-
 class StudyYear extends \yii\db\ActiveRecord
 {
     /**
