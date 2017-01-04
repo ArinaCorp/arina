@@ -4,6 +4,8 @@ use app\modules\employee\models\Employee;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 use yii\web\View;
+use app\modules\directories\models\position\Position;
+use app\modules\directories\models\qualification\Qualification;
 
 /* @var $this View
  * @var $model Employee */
@@ -39,14 +41,30 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'is_in_education',
-            'position_id',
-            'category_id',
+            [
+                'attribute' => 'is_in_education',
+                'value' => $model->getIsInEducationName(),
+            ],
+            [
+                'attribute' => 'position_id',
+                'value' => function ($model) {
+                    return Position::findOne(['id' => $model->position_id])->title;
+                }
+            ],
+            [
+                'attribute' => 'category_id',
+                'value' => function ($model) {
+                    return Qualification::findOne(['id' => $model->category_id])->title;
+                }
+            ],
             'type',
             'first_name',
             'middle_name',
             'last_name',
-            'gender',
+            [
+                'attribute' => 'gender',
+                'value' => $model->getGenderName(),
+            ],
             'cyclic_commission_id',
             'birth_date',
             'passport',
