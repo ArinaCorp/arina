@@ -16,10 +16,10 @@ class EmployeeSearch extends Employee
     public function rules()
     {
         return [
-            [['id', 'position_id', 'is_in_education', 'gender', 'type', 'cyclic_commission_id'], 'integer'],
+            [['id', 'type', 'cyclic_commission_id'], 'integer'],
+
             [['last_name', 'first_name', 'middle_name', 'position_id', 'is_in_education',
-                'gender','passport','type'], 'required'],
-            [['birth_date','cyclic_commission_id', 'passport', 'passport_issued_by'], 'safe'],
+                'gender','passport','type', 'birth_date','cyclic_commission_id', 'passport', 'passport_issued_by'], 'safe'],
             [['passport', 'id'], 'unique'],
         ];
     }

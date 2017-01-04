@@ -42,9 +42,9 @@ class Employee extends ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'position_id', 'is_in_education', 'gender', 'type', 'cyclic_commission_id'], 'integer'],
-            [['last_name', 'first_name', 'middle_name', 'position_id', 'is_in_education',
-                'gender','passport','type'], 'required'],
+            [['id', 'position_id', 'category_id', 'is_in_education', 'gender', 'type', 'cyclic_commission_id'], 'integer'],
+            [['last_name', 'first_name', 'middle_name', 'position_id', 'category_id', 'is_in_education',
+                'gender', 'passport', 'birth_date', 'passport_issued_by', 'cyclic_commission_id'], 'required'],
             [['birth_date','cyclic_commission_id', 'passport', 'passport_issued_by'], 'safe'],
             [['passport', 'id'], 'unique'],
         ];
@@ -56,19 +56,19 @@ class Employee extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('employee', 'ID'),
-            'is_in_education' => Yii::t('employee', 'Do teach?'),
-            'position_id' => Yii::t('employee', 'Position ID'),
-            'category_id' => Yii::t('employee', 'Category iD'),
-            'type' => Yii::t('employee', 'Type'),
-            'first_name' => Yii::t('employee', 'First name'),
-            'middle_name' => Yii::t('employee', 'Middle name'),
-            'last_name' => Yii::t('employee', 'Last name'),
-            'gender' => Yii::t('employee', 'Gender'),
-            'cyclic_commission_id' => Yii::t('employee', 'Cyclic commission'),
-            'birth_date' => Yii::t('employee', 'Birth date'),
-            'passport' => Yii::t('employee', 'Passport'),
-            'passport_issued_by' => Yii::t('employee', 'Passport issued by'),
+            'id' => Yii::t('app', 'ID'),
+            'is_in_education' => Yii::t('app', 'Do teach?'),
+            'position_id' => Yii::t('app', 'Position'),
+            'category_id' => Yii::t('app', 'Category'),
+            'type' => Yii::t('app', 'Type'),
+            'first_name' => Yii::t('app', 'First Name'),
+            'middle_name' => Yii::t('app', 'Middle Name'),
+            'last_name' => Yii::t('app', 'Last Name'),
+            'gender' => Yii::t('app', 'Gender'),
+            'cyclic_commission_id' => Yii::t('app', 'Cyclic commission'),
+            'birth_date' => Yii::t('app', 'Birth Day'),
+            'passport' => Yii::t('app', 'Passport Code'),
+            'passport_issued_by' => Yii::t('app', 'Passport issued'),
         ];
     }
 
@@ -96,6 +96,16 @@ class Employee extends ActiveRecord
             self::TYPE_OTHER => Yii::t('employee', 'Another employee'),
             self::TYPE_TEACHER => Yii::t('employee', 'Teacher'),
         ];
+    }
+
+    public function getGenderName()
+    {
+        return $this->gender ? Yii::t('app', 'Female') : Yii::t('app', 'Male');
+    }
+    
+    public function getIsInEducationName()
+    {
+        return $this->is_in_education ? Yii::t('app', 'Not take part in education') : Yii::t('app', 'Take part in education');
     }
 
 }

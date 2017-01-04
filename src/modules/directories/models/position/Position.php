@@ -3,6 +3,7 @@
 namespace app\modules\directories\models\position;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 use yii\db\ActiveRecord;
 use \yii\db\ActiveQuery;
 use app\modules\employee\models\Employee;
@@ -68,6 +69,13 @@ class Position extends ActiveRecord
     public function getEmployee()
     {
         return $this->hasMany(Employee::className(), ['position_id' => 'id']);
+    }
+
+    public static function getList()
+    {
+        $departments = Position::find()->all();
+        $items = ArrayHelper::map($departments,'id','title');
+        return $items;
     }
 
 }
