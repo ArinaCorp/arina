@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\work_subject\models;
+namespace app\modules\plans\models\work_subject;
 
 use yii\db\ActiveQuery;
 

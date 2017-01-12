@@ -11,9 +11,9 @@ use yii\web\NotFoundHttpException;
 use Yii;
 
 /**
- * Default controller for the `work subject` module
+ * Default controller for the `work subject`
  */
-class DefaultController extends Controller implements IAdminController
+class WorkSubjectController extends Controller implements IAdminController
 {
     /**
      * @inheritdoc
