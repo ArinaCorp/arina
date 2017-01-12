@@ -14,8 +14,8 @@ class Module extends BaseModule implements IAdminModule
     /**
      * @inheritdoc
      */
-    public $controllerNamespace = 'app\modules\work_subject\controllers';
-    public $modelsNamespace = 'app\modules\work_subject\models';
+    public $controllerNamespace = 'app\modules\plans\controllers';
+    public $modelsNamespace = 'app\modules\plans\models';
 
     /**
      * @inheritdoc
@@ -23,12 +23,12 @@ class Module extends BaseModule implements IAdminModule
     public static function getAdminMenu()
     {
         return [
-            'label' => Yii::t('app', 'Work subject'),
+            'label' => Yii::t('app', 'Plans'),
             'icon' => 'users',
             'items' => [
                 [
                     'label' => Yii::t('app', 'List'),
-                    'url' => ['/work_subject'],
+                    'url' => ['/plans'],
                     'icon' => 'list',
                 ],
             ]

@@ -1,13 +1,15 @@
 <?php
 
-namespace app\modules\work_subject\models;
+namespace app\modules\plans\models\work_subject;
 
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
+use yii\db\ActiveQuery;
+
 use app\modules\directories\models\subject\Subject;
 use app\modules\directories\models\cyclic_commission\CyclicCommission;
-use yii\db\ActiveQuery;
+use app\modules\plans\models\work_plan\WorkPlan;
 
 /**
  * @property integer $id
@@ -27,9 +29,10 @@ use yii\db\ActiveQuery;
  * @property bool $dual_labs
  * @property bool $dual_practice
  *
+ * The followings are the available model relations:
+ * @property WorkPlan $plan
  * @property Subject $subject
- * @property CyclicCommission $cyclic_commission
- *
+ * @property CyclicCommission $cycleCommission
  */
 class WorkSubject extends ActiveRecord
 {
