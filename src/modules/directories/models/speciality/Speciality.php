@@ -2,13 +2,17 @@
 
 namespace app\modules\directories\models\speciality;
 
+use yii\db\ActiveQuery;
+use yii\helpers\Html;
+use yii\helpers\Url;
+use yii\db\ActiveRecord;
 
-use yii\helpers\ArrayHelper;
 use app\modules\directories\models\department\Department;
 use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 use app\modules\directories\models\qualification\Qualification;
-use yii\helpers\Html;
-use yii\helpers\Url;
+use app\modules\students\models\Group;
+use app\modules\plans\models\study_plan\StudyPlan;
+use app\modules\plans\models\work_plan\WorkPlan;
 
 /**
  * This is the model class for table "speciality".
@@ -21,15 +25,18 @@ use yii\helpers\Url;
  *
  * @property Department $department
  * @property $specialityQualifications SpecialityQualification[]
+ * @property Group[] $groups
+ * @property StudyPlan[] $studyPlans
+ * @property WorkPlan[] $workPlans
  */
-class Speciality extends \yii\db\ActiveRecord
+class Speciality extends ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'speciality';
+        return '{{%speciality}}';
     }
 
     /**
@@ -50,7 +57,7 @@ class Speciality extends \yii\db\ActiveRecord
      */
 
     /**
-     * @return int
+     * @return ActiveQuery
      */
     public function getDepartment()
     {
