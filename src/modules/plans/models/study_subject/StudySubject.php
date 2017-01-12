@@ -2,6 +2,11 @@
 
 namespace app\modules\plans\models\study_subject;
 
+use yii\db\ActiveRecord;
+
+use app\modules\directories\models\subject\Subject;
+use app\modules\plans\models\study_plan\StudyPlan;
+
 /**
  * @author Serhiy Vinichuk <serhiyvinichuk@gmail.com>
  * @copyright ХПК 2014
@@ -33,7 +38,7 @@ class StudySubject extends ActiveRecord
     /**
      * @return string the associated database table name
      */
-    public function tableName()
+    public static function tableName()
     {
         return 'sp_subject';
     }

@@ -1,11 +1,16 @@
 <?php
 
-namespace app\modules\students\models;
+namespace app\modules\plans\models\study_plan;
 
 use Yii;
 use yii\db\ActiveRecord;
+use yii\data\ActiveDataProvider;
+use yii\helpers\ArrayHelper;
+
 use app\modules\directories\models\speciality\Speciality;
 use app\modules\plans\models\study_subject\StudySubject;
+use app\modules\directories\models\department\Department;
+use app\modules\directories\models\subject\Subject;
 
 /**
  * This is the model class for table "sp_plan".
@@ -24,15 +29,21 @@ use app\modules\plans\models\study_subject\StudySubject;
  */
 class StudyPlan extends ActiveRecord
 {
+
     /**
-     * Returns the static model of the specified AR class.
-     * Please note that you should have this exact method in all your CActiveRecord descendants!
-     * @param string $className active record class name.
-     * @return StudyPlan the static model class
+     * @return array relational rules.
      */
-    public static function model($className = __CLASS__)
+    public function relations()
     {
-        return parent::model($className);
+        return array(
+            'subjects' => array(self::HAS_MANY, 'StudySubject', 'plan_id'),
+            'speciality' => array(self::BELONGS_TO, 'Speciality', 'speciality_id'),
+        );
+    }
+
+    public function getSpeciality()
+    {
+        return $this->hasOne(Speciality::className(), ['id' => 'speciality_id'])
     }
 
     /**
@@ -41,25 +52,25 @@ class StudyPlan extends ActiveRecord
      */
     public static function getList($id)
     {
-        if (isset($id)){
-            /** @var Department $department */
-            $department = Department::model()->findByAttributes(array('head_id'=>$id));
-            if (isset($department)){
-                $list = array();
+        /** @var Department $department */
+        if (isset($id)) {
+            $department = Department::find()->where(['head_id'=>$id])->all();
+            if (isset($department)) {
+                $list = [];
                 foreach($department->specialities as $speciality){
-                    $list[$speciality->title] = CHtml::listData($speciality->studyPlans, 'id','title');
+                    $list[$speciality->title] = ArrayHelper::map($speciality->studyPlans, 'id','title');
                 }
                 return $list;
             }
-            return array();
+            return [];
         } else {
-            return CHtml::listData(self::model()->findAll(),'id', 'title');
+            return ArrayHelper::map(StudyPlan::find()->all(),'id', 'title');
         }
     }
 
     public function getUnusedSubjects()
     {
-        $usedSubjects = CHtml::listData($this->subjects, 'subject_id', 'id');
+        $usedSubjects = ArrayHelper::map($this->subjects, 'subject_id', 'id');
         $allSubjects = Subject::getListForSpeciality($this->speciality_id);
         $result = array();
         foreach ($allSubjects as $cycle => $subject) {
@@ -79,31 +90,9 @@ class StudyPlan extends ActiveRecord
     /**
      * @return string the associated database table name
      */
-    public function tableName()
+    public static function tableName()
     {
-        return 'sp_plan';
-    }
-
-    /**
-     * @param null $config
-     * @return CActiveDataProvider
-     */
-    public function getProvider($config = null)
-    {
-        if (Yii::app()->user->checkAccess('dephead') && !Yii::app()->user->checkAccess('admin')) {
-            $headId = Yii::app()->getUser()->identityId;
-            if ($config === null) {
-                $config = array('criteria' => array());
-            } elseif ($config['criteria'] === null) {
-                $config['criteria'] = array();
-            }
-            $criteria = new CDbCriteria($config['criteria']);
-            $criteria->with = array('speciality'=>array('with'=>array('department')));
-            $criteria->addCondition('department.head_id = :head_id');
-            $criteria->params[':head_id'] = $headId;
-            $config['criteria'] = $criteria;
-        }
-        return parent::getProvider($config);
+        return '{{%study_plan}}';
     }
 
     /**
@@ -111,25 +100,16 @@ class StudyPlan extends ActiveRecord
      */
     public function rules()
     {
-        return array(
-            array('speciality_id', 'required'),
-            array('semesters', 'required', 'message' => 'Натисніть кнопку "Генерувати" та перевірте правильність даних'),
-            array('speciality_id', 'numerical', 'integerOnly' => true),
-            array('created', 'default', 'value' => date('Y-m-d', time()), 'on' => 'insert'),
-            array('id, speciality_id', 'safe', 'on' => 'search'),
-        );
+        return [
+            ['speciality_id', 'required'],
+            ['semesters', 'required', 'message' => 'Натисніть кнопку "Генерувати" та перевірте правильність даних'],
+            ['speciality_id', 'numerical', 'integerOnly' => true],
+            ['created', 'default', 'value' => date('Y-m-d', time()), 'on' => 'insert'],
+            ['id, speciality_id', 'safe', 'on' => 'search'],
+        ];
     }
 
-    /**
-     * @return array relational rules.
-     */
-    public function relations()
-    {
-        return array(
-            'subjects' => array(self::HAS_MANY, 'StudySubject', 'plan_id'),
-            'speciality' => array(self::BELONGS_TO, 'Speciality', 'speciality_id'),
-        );
-    }
+    //here
 
     /**
      * Group subject by cycles
