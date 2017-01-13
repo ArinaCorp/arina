@@ -2,45 +2,45 @@
 
 namespace app\modules\plans\models\study_subject;
 
+use Yii;
+use yii\db\ActiveQuery;
+use yii\data\ActiveDataProvider;
 use yii\db\ActiveRecord;
 
 use app\modules\directories\models\subject\Subject;
 use app\modules\plans\models\study_plan\StudyPlan;
 
 /**
- * @author Serhiy Vinichuk <serhiyvinichuk@gmail.com>
- * @copyright ХПК 2014
+ * This is the model class for table "study_subject".
  *
- * This is the model class for table "sp_subject".
- *
- * The followings are the available columns in table 'sp_subject':
+ * The followings are the available columns in table 'study_subject':
  * @property integer $id
  * @property integer $plan_id
  * @property integer $subject_id
  * @property integer $total
  * @property integer $lectures
- * @property integer $labs
- * @property integer $practs
+ * @property integer $lab_works
+ * @property integer $practices
  * @property integer $practice_weeks
  * @property array $weeks
  * @property array $control
- * @property bool $dual_labs
+ * @property bool $dual_lab_work
  * @property bool $dual_practice
  * @property string $diploma_name
  * @property string $certificate_name
  *
- * @property StudyPlan $plan
+ * The followings are the available model relations:
+ * @property StudyPlan $study_plan
  * @property Subject $subject
  */
 class StudySubject extends ActiveRecord
 {
-
     /**
      * @return string the associated database table name
      */
     public static function tableName()
     {
-        return 'sp_subject';
+        return '{{%study_subject}}';
     }
 
     /**
@@ -48,53 +48,61 @@ class StudySubject extends ActiveRecord
      */
     public function rules()
     {
-        return array(
-            array('plan_id, subject_id, total', 'required', 'message' => 'Вкажіть {attribute}'),
-            array('weeks', 'check_weeks'),
-            array('total', 'check_hours'),
-            array('practice_weeks', 'check_practice'),
-            array('lectures', 'check_classes'),
-            array('subject_id', 'check_subject', 'on' => 'insert'),
-            array('lectures, labs, practs', 'default', 'value' => 0, 'on' => 'insert'),
-            array('plan_id, subject_id, total, lectures, labs, practs', 'numerical', 'integerOnly' => true),
-            array('plan_id, subject_id, total, lectures, labs, practs, weeks, control, practice_weeks, dual_labs, dual_practice, diploma_name, certificate_name', 'safe'),
-            array('id, plan_id, subject_id, total, lectures, labs, practs, subject', 'safe', 'on' => 'search'),
-        );
+        return [
+            ['plan_id, subject_id, total', 'required', 'message' => Yii::t('Plans', 'Specify').'{attribute}'],
+            ['weeks', 'check_weeks'],
+            ['total', 'check_hours'],
+            ['practice_weeks', 'check_practice'],
+            ['lectures', 'check_classes'],
+            ['subject_id', 'check_subject', 'on' => 'insert'],
+            ['lectures, lab_works, practices', 'default', 'value' => 0, 'on' => 'insert'],
+            ['plan_id, subject_id, total, lectures, lab_works, practices', 'numerical', 'integerOnly' => true],
+            ['plan_id, subject_id, total, lectures, lab_works, practices, weeks, control, practice_weeks, dual_lab_work, dual_practice, diploma_name, certificate_name', 'safe'],
+            ['id, plan_id, subject_id, total, lectures, lab_works, practices, subject', 'safe', 'on' => 'search'],
+        ];
     }
 
     public function getTitle()
     {
-        return (!(empty($this->diploma_name) && empty($this->certificate_name)) ? '* ' : '') . $this->subject->title . (($this->dual_labs || $this->dual_practice) ? ' *' : '');
+        return (!(empty($this->diploma_name) && empty($this->certificate_name)) ? '* ' : '') . $this->subject->title . (($this->dual_lab_work || $this->dual_practice) ? ' *' : '');
     }
 
     /**
-     * @return array relational rules.
+     * @return ActiveQuery
      */
-    public function relations()
+    public function getStudyPlan()
     {
-        return array(
-            'plan' => array(self::BELONGS_TO, 'StudyPlan', 'plan_id'),
-            'subject' => array(self::BELONGS_TO, 'Subject', 'subject_id'),
-        );
+        return $this->hasOne(StudyPlan::className(), ['id' => 'plan_id']);
     }
 
+    /**
+     * @return ActiveQuery
+     */
+    public function getSubject()
+    {
+        return $this->hasOne(Subject::className(), ['id' => 'subject_id']);
+    }
+
+    /**
+     * @return array
+     */
     public function behaviors()
     {
-        return array(
-            'StrBehavior' => array(
+        return [
+            'StrBehavior' => [
                 'class' => 'application.behaviors.StrBehavior',
-                'fields' => array(
+                'fields' => [
                     'weeks',
 
-                ),
-            ),
-            'JSONBehavior' => array(
+                ],
+            ],
+            'JSONBehavior' => [
                 'class' => 'application.behaviors.JSONBehavior',
-                'fields' => array(
+                'fields' => [
                     'control',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
     }
 
     /**
@@ -102,66 +110,71 @@ class StudySubject extends ActiveRecord
      */
     public function attributeLabels()
     {
-        return array(
-            'id' => 'ID',
-            'plan_id' => 'Plan',
-            'subject_id' => Yii::t('terms', 'Subject'),
-            'total' => 'Загальна кількість',
-            'lectures' => 'Лекції',
-            'labs' => 'Лабораторні',
-            'practs' => 'Практичні, семінарські',
-            'classes' => 'Всього аудиторних',
-            'selfwork' => 'Самостійна робота',
-            'testSemesters' => 'Залік',
-            'examSemesters' => 'Екзамен',
-            'workSemesters' => 'Курсова робота',
-            'projectSemesters' => 'Курсовий проект',
-            'practice_weeks' => 'Кількість тижнів для практики',
-            'diploma_name' => 'Назва в дипломі',
-            'certificate_name' => 'Назва в атестаті',
-            'dual_labs' => 'Роздвоєння лабораторних',
-            'dual_practice' => 'Роздвоєння практичних',
-        );
+        return [
+            'id' => Yii::t('Plans', 'ID'),
+            'plan_id' => Yii::t('Plans', 'Plan'),
+            'subject_id' => Yii::t('Plans', 'Subject'),
+            'total' => Yii::t('Plans', 'Total'),
+            'lectures' => Yii::t('Plans', 'Lectures'),
+            'lab_works' => Yii::t('Plans', 'Laboratory works'),
+            'practices' => Yii::t('Plans', 'Practice works'),
+            'classes' => Yii::t('Plans', 'Class works'),
+            'practice_weeks' => Yii::t('Plans', 'Practice weeks'),
+            'diploma_name' => Yii::t('Plans', 'Diploma name'),
+            'certificate_name' => Yii::t('Plans', 'Certificate name'),
+            'dual_lab_work' => Yii::t('Plans', 'Dual laboratory works'),
+            'dual_practice' => Yii::t('Plans', 'Dual practice works'),
+            'self_work' => Yii::t('Plans', 'Self work'),
+            'credit' => Yii::t('Plans', 'Credit'),
+            'exam' => Yii::t('Plans', 'Exam'),
+            'work_semester' => Yii::t('Plans', 'Work semester'),
+            'project_semester' => Yii::t('Plans', 'Project semester'),
+        ];
     }
 
     /**
-     * Retrieves a list of models based on the current search/filter conditions.
-     *
-     * Typical usecase:
-     * - Initialize the model fields with values from filter form.
-     * - Execute this method to get CActiveDataProvider instance which will filter
-     * models according to data in model fields.
-     * - Pass data provider to CGridView, CListView or any similar widget.
-     *
-     * @return CActiveDataProvider the data provider that can return the models
-     * based on the search/filter conditions.
+     * Creates data provider instance with search query applied
+     * @param array $params
+     * @return ActiveDataProvider
      */
-    public function search()
+    public function search($params)
     {
-        $criteria = new CDbCriteria;
-        $criteria->compare('id', $this->id);
-        $criteria->compare('plan_id', $this->plan_id);
-        $criteria->compare('subject_id', $this->subject_id);
-        $criteria->with('subject');
-        $criteria->compare('subject.title', $this->subject_id, true);
+        $query = StudySubject::find();
 
-        $sort = new CSort();
-        $sort->attributes = array(
-            'subject_id' => array(
-                'asc' => 'subject.title ASC',
-                'desc' => 'subject.title DESC',
-            ),
-        );
-        return new CActiveDataProvider($this, array(
-            'criteria' => $criteria,
-            'sort' => $sort,
-        ));
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        $this->load($params);
+
+        if (!$this->validate()) {
+            return $dataProvider;
+        }
+
+        $query->andFilterWhere([
+            'id' => $this->id,
+            'plan_id' => $this->plan_id,
+            'subject_id' => $this->subject_id,
+            'total' => $this->total,
+            'lectures' => $this->lectures,
+            'lab_works' => $this->lab_works,
+            'practices' => $this->practices,
+            'practice_weeks' => $this->practice_weeks,
+            'dual_lab_work' => $this->dual_lab_work,
+            'dual_practice' => $this->dual_practice,
+        ]);
+
+        $query->andFilterWhere(['like', 'weeks', $this->weeks])
+            ->andFilterWhere(['like', 'control', $this->control])
+            ->andFilterWhere(['like', 'diploma_name', $this->diploma_name])
+            ->andFilterWhere(['like', 'certificate_name', $this->certificate_name]);
+        return $dataProvider;
     }
 
     /**
      * @return int
      */
-    public function getSelfwork()
+    public function getSelfWork()
     {
         return $this->total - $this->getClasses();
     }
@@ -171,16 +184,15 @@ class StudySubject extends ActiveRecord
      */
     public function getClasses()
     {
-        return $this->lectures + $this->practs + $this->labs;
+        return $this->lectures + $this->practices + $this->lab_works;
     }
 
     /**
-     * Повертає список семестрів, в яких проводиться залік
      * @return string
      */
     public function getTestSemesters()
     {
-        $semesters = array();
+        $semesters = [];
         foreach ($this->control as $semester => $control) {
             if (!empty($control[0])) {
                 $semesters[] = $semester + 1;
@@ -191,7 +203,6 @@ class StudySubject extends ActiveRecord
     }
 
     /**
-     * Повертає список семестрів, в яких проводиться екзамен
      * @return string
      */
     public function getExamSemesters()
@@ -202,22 +213,21 @@ class StudySubject extends ActiveRecord
                 $semesters[] = $semester + 1;
             }
             if (!empty($control[2])) {
-                $semesters[] = ($semester + 1) . ' ДПА';
+                $semesters[] = ($semester + 1) . Yii::t('Plans', 'State final examination');
             }
             if (!empty($control[3])) {
-                $semesters[] = ($semester + 1) . ' ДА';
+                $semesters[] = ($semester + 1) . Yii::t('Plans', 'State examination');
             }
         }
         return implode(', ', $semesters);
     }
 
     /**
-     * Повертає список семестрів, в яких є курсова робота
      * @return string
      */
     public function getWorkSemesters()
     {
-        $semesters = array();
+        $semesters = [];
         foreach ($this->control as $semester => $control) {
             if (!empty($control[4])) {
                 $semesters[] = $semester + 1;
@@ -227,12 +237,11 @@ class StudySubject extends ActiveRecord
     }
 
     /**
-     * Повертає список семестрів, в яких є курсовий проект
      * @return string
      */
     public function getProjectSemesters()
     {
-        $semesters = array();
+        $semesters = [];
         foreach ($this->control as $semester => $control) {
             if (!empty($control[5])) {
                 $semesters[] = $semester + 1;
@@ -250,21 +259,21 @@ class StudySubject extends ActiveRecord
         return isset($this->weeks[$semester]) ? $this->weeks[$semester] : '';
     }
 
-    public function check_hours()
+    public function checkHours()
     {
         if (!$this->hasErrors()) {
-            if ($this->total < ($this->lectures + $this->labs + $this->practs)) {
-                $this->addError('total', 'Аудиторних годин більше ніж загальна кількість');
+            if ($this->total < ($this->lectures + $this->lab_works + $this->practices)) {
+                $this->addError('total', Yii::t('Plans', 'Classroom hours more than the total number'));
             }
         }
     }
 
-    public function check_practice()
+    public function checkPractice()
     {
         if (!$this->hasErrors()) {
             if ($this->subject->practice) {
                 if (empty($this->practice_weeks)) {
-                    $this->addError('practice_weeks', 'Вкажіть кількість тижнів');
+                    $this->addError('practice_weeks', Yii::t('Plans','Specify the number of weeks'));
                 }
                 $valid = false;
                 foreach ($this->control as $item) {
@@ -274,28 +283,28 @@ class StudySubject extends ActiveRecord
                     }
                 }
                 if (!$valid) {
-                    $this->addError('weeks', 'Вкажіть семестер практики');
+                    $this->addError('weeks', Yii::t('Plans', 'Add a semester of practice'));
                 }
             }
         }
     }
 
-    public function check_classes()
+    public function checkClasses()
     {
         if (!$this->hasErrors()) {
             $sum = 0;
             foreach ($this->weeks as $semester => $weekly) {
                 if (!empty($weekly)) {
-                    $sum += $weekly * $this->plan->semesters[$semester];
+                    $sum += $weekly * $this->study_plan->semesters[$semester];
                 }
             }
             if (!$this->subject->practice && ($sum < $this->getClasses())) {
-                $this->addError('lectures', 'Невистачає годин на тиждень для вичитки');
+                $this->addError('lectures', Yii::t('Plans', 'Not enough hours a week for proofreading'));
             }
         }
     }
 
-    public function check_weeks()
+    public function checkWeeks()
     {
         if (!$this->hasErrors()) {
             $valid = false;
@@ -305,33 +314,9 @@ class StudySubject extends ActiveRecord
                 }
             }
             if (!$valid && !$this->subject->practice) {
-                $this->addError('weeks', 'Вкажіть кількість годин на тиждень у відповідних семестрах');
+                $this->addError('weeks', Yii::t('Plans', 'Specify the number of hours per week in the corresponding semester'));
             }
         }
     }
 
-    public function check_subject()
-    {
-        if (!$this->hasErrors()) {
-            $criteria = new CDbCriteria();
-            $criteria->condition = 'plan_id = :plan';
-            $criteria->params[':plan'] = $this->plan_id;
-            $criteria->addCondition('subject_id = :subject');
-            $criteria->params[':subject'] = $this->subject_id;
-            if (StudySubject::model()->exists($criteria)) {
-                $this->addError('subject_id', 'Запис про цей предмет уже додано до цього навчального плану');
-            }
-        }
-    }
-
-    /**
-     * Returns the static model of the specified AR class.
-     * Please note that you should have this exact method in all your CActiveRecord descendants!
-     * @param string $className active record class name.
-     * @return StudySubject the static model class
-     */
-    public static function model($className = __CLASS__)
-    {
-        return parent::model($className);
-    }
 }

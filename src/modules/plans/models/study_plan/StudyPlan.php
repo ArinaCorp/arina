@@ -4,6 +4,7 @@ namespace app\modules\plans\models\study_plan;
 
 use Yii;
 use yii\db\ActiveRecord;
+use yii\db\ActiveQuery;
 use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
 
@@ -13,39 +14,22 @@ use app\modules\directories\models\department\Department;
 use app\modules\directories\models\subject\Subject;
 
 /**
- * This is the model class for table "sp_plan".
+ * This is the model class for table "study_plan".
  *
  * The followings are the available columns in table 'sp_plan':
  * @property integer $id
  * @property integer $speciality_id
  * @property array $semesters
- * @property array $graph
+ * @property array $graphs
  * @property integer $created
  * @property integer $updated
  *
  * The followings are the available model relations:
- * @property StudySubject[] $subjects
+ * @property StudySubject[] $study_subjects
  * @property Speciality $speciality
  */
 class StudyPlan extends ActiveRecord
 {
-
-    /**
-     * @return array relational rules.
-     */
-    public function relations()
-    {
-        return array(
-            'subjects' => array(self::HAS_MANY, 'StudySubject', 'plan_id'),
-            'speciality' => array(self::BELONGS_TO, 'Speciality', 'speciality_id'),
-        );
-    }
-
-    public function getSpeciality()
-    {
-        return $this->hasOne(Speciality::className(), ['id' => 'speciality_id'])
-    }
-
     /**
      * @param $id
      * @return array
@@ -68,9 +52,12 @@ class StudyPlan extends ActiveRecord
         }
     }
 
+    /**
+     * @return array
+     */
     public function getUnusedSubjects()
     {
-        $usedSubjects = ArrayHelper::map($this->subjects, 'subject_id', 'id');
+        $usedSubjects = ArrayHelper::map($this->study_subjects, 'subject_id', 'id');
         $allSubjects = Subject::getListForSpeciality($this->speciality_id);
         $result = array();
         foreach ($allSubjects as $cycle => $subject) {
@@ -102,14 +89,28 @@ class StudyPlan extends ActiveRecord
     {
         return [
             ['speciality_id', 'required'],
-            ['semesters', 'required', 'message' => 'Натисніть кнопку "Генерувати" та перевірте правильність даних'],
+            ['semesters', 'required', 'message' => Yii::t('Plans', 'Натисніть кнопку "Генерувати" та перевірте правильність даних')],
             ['speciality_id', 'numerical', 'integerOnly' => true],
             ['created', 'default', 'value' => date('Y-m-d', time()), 'on' => 'insert'],
             ['id, speciality_id', 'safe', 'on' => 'search'],
         ];
     }
 
-    //here
+    /**
+     * @return ActiveQuery
+     */
+    public function getSpeciality()
+    {
+        return $this->hasOne(Speciality::className(), ['id' => 'speciality_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getStudySubject()
+    {
+        return $this->hasMany(StudySubject::className(), ['speciality_id' => 'id']) ->via('study_subjects');
+    }
 
     /**
      * Group subject by cycles
@@ -118,7 +119,7 @@ class StudyPlan extends ActiveRecord
     public function getSubjectsByCycles()
     {
         $list = array();
-        foreach ($this->subjects as $item) {
+        foreach ($this->study_subjects as $item) {
             $cycle = $item->subject->getCycle($this->speciality_id);
             $name = $cycle->id .' '. $cycle->title;
             if (isset($list[$name])) {
@@ -136,24 +137,20 @@ class StudyPlan extends ActiveRecord
     public function behaviors()
     {
         return array(
-            'JSONBehavior' => array(
+            'JSONBehavior' => [
                 'class' => 'application.behaviors.JSONBehavior',
-                'fields' => array(
-                    'graph'
-                ),
-            ),
-            'StrBehavior' => array(
+                'fields' => ['graphs'],
+            ],
+            'StrBehavior' => [
                 'class' => 'application.behaviors.StrBehavior',
-                'fields' => array(
-                    'semesters',
-                ),
-            ),
-            'CTimestampBehavior' => array(
+                'fields' => ['semesters'],
+            ],
+            'CTimestampBehavior' => [
                 'class' => 'zii.behaviors.CTimestampBehavior',
                 'createAttribute' => 'created',
                 'updateAttribute' => 'updated',
                 'setUpdateOnCreate' => true,
-            ),
+            ],
         );
     }
 
@@ -162,51 +159,55 @@ class StudyPlan extends ActiveRecord
      */
     public function attributeLabels()
     {
-        return array(
-            'id' => 'ID',
-            'year_id' => Yii::t('terms', 'Study year'),
-            'speciality_id' => Yii::t('terms', 'Speciality'),
-            'created' => Yii::t('terms', 'Date of creation'),
-            'updated' => Yii::t('terms', 'Date of update'),
-        );
+        return [
+            'id' => Yii::t('App', 'ID'),
+            'year_id' => Yii::t('Plans', 'Study year'),
+            'speciality_id' => Yii::t('Plans', 'Speciality'),
+            'semesters' => Yii::t('Plans', 'Semesters'),
+            'graphs' => Yii::t('Plans', 'Graphs'),
+            'created' => Yii::t('Plans', 'Date of creation'),
+            'updated' => Yii::t('Plans', 'Date of update'),
+        ];
     }
 
     /**
-     * Retrieves a list of models based on the current search/filter conditions.
-     *
-     * Typical usecase:
-     * - Initialize the model fields with values from filter form.
-     * - Execute this method to get CActiveDataProvider instance which will filter
-     * models according to data in model fields.
-     * - Pass data provider to CGridView, CListView or any similar widget.
-     *
-     * @return CActiveDataProvider the data provider that can return the models
-     * based on the search/filter conditions.
+     * Creates data provider instance with search query applied
+     * @param array $params
+     * @return ActiveDataProvider
      */
-    public function search()
+    public function search($params)
     {
-        $criteria = new CDbCriteria;
+        $query = StudyPlan::find();
 
-        $criteria->compare('id', $this->id);
-        $criteria->compare('speciality_id', $this->speciality_id);
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
 
-        return new CActiveDataProvider($this, array(
-            'criteria' => $criteria,
-        ));
+        $this->load($params);
+
+        if (!$this->validate()) {
+            return $dataProvider;
+        }
+
+        $query->andFilterWhere([
+            'id' => $this->id,
+            'speciality_id' => $this->speciality_id,
+            'created' => $this->created,
+            'updated' => $this->updated,
+        ]);
+
+        $query->andFilterWhere(['like', 'semesters', $this->semesters])
+            ->andFilterWhere(['like', 'graphs', $this->graphs]);
+        return $dataProvider;
     }
 
     /**
      * Get dataProvider for study plan subjects
-     * @return CActiveDataProvider
+     * @return ActiveRecord[]
      */
     public function getPlanSubjectProvider()
     {
-        return new CActiveDataProvider(StudySubject::model(), array(
-            'criteria' => array(
-                'condition' => 'plan_id = :plan_id',
-                'params' => array(':plan_id' => $this->id),
-            )
-        ));
+        return StudySubject::find()->where(['plan_id' => 'id'])->all();
     }
 
     /**
