@@ -2,11 +2,12 @@
 
 namespace app\modules\students\models;
 
-use app\modules\directories\models\speciality\Speciality;
+use Yii;
+use yii\db\ActiveRecord;
+use yii\db\ActiveQuery;
+
 use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 use app\modules\directories\models\StudyYear;
-use Yii;
-use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "group".
@@ -24,14 +25,14 @@ use yii\helpers\ArrayHelper;
  * @property StudyYear $studyYear;
  *
  */
-class Group extends \yii\db\ActiveRecord
+class Group extends ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'group';
+        return '{{%group}}';
     }
 
     /**
@@ -60,47 +61,68 @@ class Group extends \yii\db\ActiveRecord
         ];
     }
 
+    /**
+     * @return ActiveQuery
+     */
     public function getSpecialityQualification()
     {
         return $this->hasOne(SpecialityQualification::className(), ['id' => 'speciality_qualifications_id']);
     }
 
+    /**
+     * @return ActiveQuery
+     */
     public function getStudyYear()
     {
         return $this->hasOne(StudyYear::className(), ['id' => 'created_study_year_id']);
     }
 
+    /**
+     * @return ActiveQuery
+     */
     public function getGroupLeader()
     {
         return $this->hasOne(Student::className(), ['id' => 'group_leader_id']);
     }
 
+    /**
+     * @return int
+     */
     public function getSystemYearPrefix()
     {
         return $this->studyYear->year_start % 100 - $this->specialityQualification->getOffsetYears();
     }
 
+    /**
+     * @return string
+     */
     public function getSystemTitle()
     {
         return $this->specialityQualification->speciality->short_title . '-' . $this->getSystemYearPrefix() . $this->number_group;
     }
 
+    /**
+     * @return array
+     */
     public static function getTreeList()
     {
         $list = [];
-        $specialityQulifications = SpecialityQualification::find()->all();
+        $specialityQualifications = SpecialityQualification::find()->all();
         /**
-         * @var SpecialityQualification[] $specialityQulifications
+         * @var SpecialityQualification[] $specialityQualifications
          */
-        foreach ($specialityQulifications as $specialityQulification) {
-            foreach ($specialityQulification->groups as $group) {
-                $list[$specialityQulification->title][$group->id] = $group->title;
+        foreach ($specialityQualifications as $specialityQualification) {
+            foreach ($specialityQualification->groups as $group) {
+                $list[$specialityQualification->title][$group->id] = $group->title;
             }
         }
         return $list;
     }
 
-    public function getStudentsArray($data = null)
+    /**
+     * @return Student[]
+     */
+    public function getStudentsArray()
     {
         /**
          * @var $result Student[];
@@ -115,9 +137,12 @@ class Group extends \yii\db\ActiveRecord
         return $result;
     }
 
-    public function getStudentsList($data = null)
+    /**
+     * @return array
+     */
+    public function getStudentsList()
     {
-        $array = $this->getStudentsArray($data);
+        $array = $this->getStudentsArray();
         $result = [];
         foreach ($array as $item) {
             $result[$item->id] = $item->getFullNameAndCode();
@@ -125,7 +150,10 @@ class Group extends \yii\db\ActiveRecord
         return $result;
     }
 
-    public function getNotStudentsArray($data = null)
+    /**
+     * @return Student[]
+     */
+    public function getNotStudentsArray()
     {
         /**
          * @var $result Student[];
@@ -138,5 +166,23 @@ class Group extends \yii\db\ActiveRecord
             if (!in_array($this->id, $idsGroup)) array_push($result, $student);
         }
         return $result;
+    }
+
+    /**
+     * @param null $yearId
+     * @return int
+     */
+    public function getCourse($yearId = null)
+    {
+        $year = null;
+        if (isset($yearId)) {
+            $year = StudyYear::findOne(['id' => $yearId]);
+        }
+        if (!isset($year)) {
+            $year = StudyYear::getCurrentYear();
+        }
+        $last_year = mb_substr($this->title, 3, 2, 'UTF-8');
+        $value = $year->getYearEnd() - 2000 - $last_year;
+        return $value;
     }
 }

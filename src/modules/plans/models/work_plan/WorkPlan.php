@@ -2,62 +2,75 @@
 
 namespace app\modules\plans\models\work_plan;
 
+use Yii;
+use yii\db\ActiveRecord;
+use yii\db\ActiveQuery;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
+
+use app\modules\plans\models\study_subject\StudySubject;
+use app\modules\directories\models\StudyYear;
+use app\modules\directories\models\speciality\Speciality;
+use app\modules\plans\models\work_subject\WorkSubject;
+use app\modules\plans\models\study_plan\StudyPlan;
+use app\modules\directories\models\department\Department;
+use yii\web\HttpException;
+
 /**
- * @author Serhiy Vinichuk <serhiyvinichuk@gmail.com>
- * @copyright ХПК 2014
+ * This is the model class for table "work_plan".
  *
- * This is the model class for table "wp_plan".
- *
- * The followings are the available columns in table 'wp_plan':
+ * The followings are the available columns in table 'work_plan':
  * @property integer $id
  * @property integer $speciality_id
  * @property array $semesters
- * @property array $graph
+ * @property array $graphs
  * @property integer $created
  * @property integer $updated
- * @property integer $year_id
+ * @property integer $study_year_id
  *
  * The followings are the available model relations:
- * @property StudyYear $year
- * @property WorkSubject[] $subjects
+ * @property StudyYear $study_year
+ * @property WorkSubject[] $work_subjects
  * @property Speciality $speciality
  */
 class WorkPlan extends ActiveRecord
 {
+    /**
+     * Allowable difference between the hours of study and work plan
+     */
+    const HOURS_DIFF = 5;
+    public $study_plan_origin;
+    public $work_plan_origin;
+
+    /**
+     * @return integer
+     */
     public function getCourseAmount()
     {
         /** @var StudyPlan $studyPlan */
-        $studyPlan = StudyPlan::model()->findByAttributes(array(
-            'speciality_id' => $this->speciality_id));
-        if ($studyPlan) {
-            return count($studyPlan->graph);
-        } else {
+        $studyPlan = StudyPlan::find()->where(['speciality_id' => $this->speciality_id]);
+        if ($studyPlan)
+            return count($studyPlan->graphs);
+        else
             return 0;
-        }
     }
-
-    /** Допустима різниця між годинами в навчальному та робочому плані */
-    const HOURS_DIFF = 5;
-    public $plan_origin;
-    public $work_origin;
 
     /**
      * @return string the associated database table name
      */
-    public function tableName()
+    public static function tableName()
     {
-        return 'wp_plan';
+        return '{{%work_plan}}';
     }
 
     /**
-     * Group subject by cycles
      * @param $course
      * @return array
      */
     public function getSubjectsByCycles($course)
     {
         $list = array();
-        foreach ($this->subjects as $item) {
+        foreach ($this->work_subjects as $item) {
             if ($item->presentIn($course)){
                 $cycle = $item->subject->getCycle($this->speciality_id);
                 $name = $cycle->id .' '. $cycle->title;
@@ -78,31 +91,45 @@ class WorkPlan extends ActiveRecord
     public static function getList($id)
     {
         if (isset($id)) {
-            /** @var Department $department */
-            $department = Department::model()->findByAttributes(array('head_id' => $id));
+            /**
+             * @var Department $department
+             */
+            $department = Department::find()->where(['head_id' => $id])->all();
             if (isset($department)) {
-                $list = array();
+                $list = [];
                 foreach ($department->specialities as $speciality) {
-                    $list[$speciality->title] = CHtml::listData($speciality->studyPlans, 'id', 'title');
+                    $list[$speciality->title] = ArrayHelper::map($speciality->studyPlans, 'id', 'title');
                 }
                 return $list;
             }
-            return array();
+            return [];
         } else {
-            return CHtml::listData(self::model()->findAll(), 'id', 'title');
+            return ArrayHelper::map(self::find()->all(), 'id', 'title');
         }
     }
 
     /**
-     * @return array relational rules.
+     * @return ActiveQuery
      */
-    public function relations()
+    public function getSpeciality()
     {
-        return array(
-            'subjects' => array(self::HAS_MANY, 'WorkSubject', 'plan_id'),
-            'speciality' => array(self::BELONGS_TO, 'Speciality', 'speciality_id'),
-            'year' => array(self::BELONGS_TO, 'StudyYear', 'year_id'),
-        );
+        return $this->hasOne(Speciality::className(), ['id' => 'speciality_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getStudyYear()
+    {
+        return $this->hasOne(StudyYear::className(), ['id' => 'study_year_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getWorkSubjects()
+    {
+        return $this->hasMany(StudySubject::className(), ['work_plan_id' => 'id']) ->via('work_subjects');
     }
 
     /**
@@ -110,42 +137,42 @@ class WorkPlan extends ActiveRecord
      */
     public function attributeLabels()
     {
-        return array(
+        return [
             'id' => 'ID',
-            'year_id' => Yii::t('terms', 'Study year'),
-            'speciality_id' => Yii::t('terms', 'Speciality'),
-            'created' => Yii::t('terms', 'Date of creation'),
-            'updated' => Yii::t('terms', 'Date of update'),
-            'plan_origin' => 'Навчальний план для основи',
-            'work_origin' => 'Робочий план для основи',
-        );
+            'study_year_id' => Yii::t('Plans', 'Study year'),
+            'speciality_id' => Yii::t('Plans', 'Speciality'),
+            'created' => Yii::t('Plans', 'Date of creation'),
+            'updated' => Yii::t('Plans', 'Date of update'),
+            'study_plan_origin' => Yii::t('Plans', 'The study plan for the base'),
+            'work_plan_origin' => Yii::t('Plans', 'The work plan for the base'),
+        ];
     }
 
     public function rules()
     {
-        return array(
-            array('speciality_id, year_id', 'required'),
-            array(
-                'semesters',
-                'required',
-                'message' => 'Натисніть кнопку "Генерувати" та перевірте правильність даних',
-                'on' => 'graph',
-            ),
-            array('speciality_id, year_id', 'uniqueRecord', 'on' => 'insert'),
-            array('speciality_id', 'numerical', 'integerOnly' => true),
-            array('created', 'default', 'value' => date('Y-m-d', time()), 'on' => 'insert'),
-            array('id, speciality_id', 'safe', 'on' => 'search'),
-            array('plan_origin, work_origin', 'check_origin', 'on' => 'insert'),
-        );
+        return [
+            ['speciality_id, study_year_id', 'required'],
+            [
+                'semesters', 'required',
+                'message' => Yii::t('Plans', 'Click "Generate" and check the data'), 'on' => 'graphs'
+            ],
+            ['speciality_id', 'study_study_year_id', 'uniqueRecord', 'on' => 'insert'],
+            ['speciality_id', 'numerical', 'integerOnly' => true],
+            ['created', 'default', 'value' => date('Y-m-d', time()), 'on' => 'insert'],
+            ['id', 'speciality_id', 'safe', 'on' => 'search'],
+            ['study_plan_origin', 'work_plan_origin', 'check_origin', 'on' => 'insert'],
+        ];
     }
 
     public function uniqueRecord()
     {
         if (!$this->hasErrors()) {
-            $record = self::model()->find('(speciality_id =:speciality_id) AND ( year_id = :year_id)',
-                array(':speciality_id' => $this->speciality_id, ':year_id' => $this->year_id));
+            $record = self::find()->where([
+                'speciality_id' => $this->speciality_id,
+                'study_year_id' => $this->study_year_id
+            ]);
             if (isset($record)) {
-                $this->addError('year_id', 'Для даного навчального року вже створений робочий план');
+                $this->addError('study_year_id', Yii::t('Plans', 'For this study year work plan has been created'));
             }
         }
     }
@@ -155,40 +182,42 @@ class WorkPlan extends ActiveRecord
      */
     public function getTitle()
     {
-        return $this->speciality->title . ' - ' . $this->year->title;
+        return $this->speciality->title . ' - ' . $this->study_year->getFullName();
     }
-
-    public function check_origin()
+    public function checkOrigin()
     {
         if (!$this->hasErrors()) {
-            if (empty($this->plan_origin) && (empty($this->work_origin))) {
-                $this->addError('plan_origin, work_origin', 'Вкажіть план основу');
+            if (empty($this->study_plan_origin) && (empty($this->work_plan_origin))) {
+                $this->addError('study_plan_origin, work_plan_origin', Yii::t('Plans', 'Choose the plan basis'));
             }
         }
     }
 
+    /**
+     * @return array
+     */
     public function behaviors()
     {
-        return array(
-            'JSONBehavior' => array(
+        return [
+            'JSONBehavior' => [
                 'class' => 'application.behaviors.JSONBehavior',
-                'fields' => array(
-                    'graph'
-                ),
-            ),
-            'StrBehavior' => array(
+                'fields' => [
+                    'graphs'
+                ],
+            ],
+            'StrBehavior' => [
                 'class' => 'application.behaviors.StrBehavior',
-                'fields' => array(
+                'fields' => [
                     'semesters',
-                ),
-            ),
-            'CTimestampBehavior' => array(
+                ],
+            ],
+            'CTimestampBehavior' => [
                 'class' => 'zii.behaviors.CTimestampBehavior',
                 'createAttribute' => 'created',
                 'updateAttribute' => 'updated',
                 'setUpdateOnCreate' => true,
-            ),
-        );
+            ],
+        ];
     }
 
     /**
@@ -197,80 +226,75 @@ class WorkPlan extends ActiveRecord
     public function checkSubjects()
     {
         $warnings = array();
-        foreach ($this->subjects as $subject) {
-            if (abs(array_sum($subject->total) - (isset($subject->control_hours['total'])?$subject->control_hours['total']:0)) > self::HOURS_DIFF) {
+        foreach ($this->work_subjects as $subject) {
+            if (abs(array_sum($subject->total) - (isset($subject->control_hours['total']) ?
+                        $subject->control_hours['total'] : 0)) > self::HOURS_DIFF) {
                 if (isset($subject->subject))
-                    $warnings[] = 'Предмет "' . $subject->subject->title . '" за загальною кількістю годин відрізняється від навчального плану більше ніж на ' . self::HOURS_DIFF . ' годин';
+                    $warnings[] = Yii::t('Plans', 'Subject') . $subject->subject->title .
+                        Yii::t('Plans', 'The total number of hours is different from the curriculum more than on') .
+                        self::HOURS_DIFF . Yii::t('Plans', 'Hours');
             }
         }
-        return implode(CHtml::tag('br'), $warnings);
+        return implode(Html::tag('br'), $warnings);
     }
 
-    protected function afterSave()
+    /**
+     * @param bool $insert
+     * @param array $attributes
+     */
+    public function afterSave($insert=false, $attributes=[])
     {
-        if (!empty($this->work_origin)) {
-            $this->copyWorkPlan(WorkPlan::model()->findByPk($this->work_origin));
-            $this->work_origin = null;
+        if (!empty($this->work_plan_origin)) {
+            $this->copyWorkPlan(WorkPlan::findOne(['id'=>$this->work_plan_origin]));
+            $this->work_plan_origin = null;
             $this->setIsNewRecord(false);
             $this->save(false);
-        } elseif (!empty($this->plan_origin)) {
-            $this->copyFromStudyPlan(StudyPlan::model()->findByPk($this->plan_origin));
-            $this->plan_origin = null;
+        } elseif (!empty($this->study_plan_origin)) {
+            $this->copyFromStudyPlan(StudyPlan::findOne(['id' => $this->study_plan_origin]));
+            $this->study_plan_origin = null;
             $this->setIsNewRecord(false);
             $this->save(false);
         }
     }
 
     /**
-     * Копіює предмети з плану-основи
      * @param WorkPlan $origin
      */
     protected function copyWorkPlan($origin)
     {
-        $this->graph = $origin->graph;
-        foreach ($origin->subjects as $subject) {
+        $this->graphs = $origin->graphs;
+        foreach ($origin->work_subjects as $subject) {
             $model = new WorkSubject();
             $model->attributes = $subject->attributes;
-            $model->plan_id = $this->id;
+            $model->work_plan_id = $this->id;
             $model->save(false);
         }
     }
 
     /**
-     * Returns the static model of the specified AR class.
-     * Please note that you should have this exact method in all your CActiveRecord descendants!
-     * @param string $className active record class name.
-     * @return StudyPlan the static model class
-     */
-    public static function model($className = __CLASS__)
-    {
-        return parent::model($className);
-    }
-
-    /**
      * @param StudyPlan $origin
      */
-    protected function copyFromStudyPlan(StudyPlan $origin)
+    protected function copyFromStudyPlan($origin)
     {
-        $groups = $this->speciality->getGroupsByStudyYear($this->year_id);
-        $graph = array();
+        $groups = $this->speciality->getGroupsByStudyYear($this->study_year_id);
+        $graphs = [];
         foreach ($groups as $course) {
-            if (isset($origin->graph[$course - 1])) {
-                $graph[] = $origin->graph[$course - 1];
+            if (isset($origin->graphs[$course - 1])) {
+                $graph[] = $origin->graphs[$course - 1];
             }
         }
-        $this->graph = $graph;
-        foreach ($origin->subjects as $subject) {
+        $this->graphs = $graphs;
+        foreach ($origin->study_subjects as $subject) {
             $model = new WorkSubject();
-            $model->plan_id = $this->id;
+            $model->work_plan_id = $this->id;
             $model->subject_id = $subject->subject_id;
-            $model->dual_labs = $subject->dual_labs;
+            $model->dual_lab_work = $subject->dual_lab_work;
             $model->dual_practice = $subject->dual_practice;
             $control_hours = array();
             $control_hours['total'] = $subject->total;
             $control_hours['lectures'] = $subject->lectures;
-            $control_hours['labs'] = $subject->labs;
-            $control_hours['practs'] = $subject->practs;
+            $control_hours['lab_works'] = $subject->lab_works;
+            $control_hours['practices'] = $subject->practices;
             $model->control_hours = $control_hours;
             $model->weeks = $subject->weeks;
             $model->control = $subject->control;
@@ -278,12 +302,17 @@ class WorkPlan extends ActiveRecord
         }
     }
 
-    protected function beforeSave()
+    /**
+     * @param bool $insert
+     * @return bool
+     * @throws HttpException
+     */
+    public function beforeSave($insert=false)
     {
-        if ($this->getScenario() == 'graph') {
-            if (count($this->semesters) < 8) throw new CException("Немає відповідних груп для плану");
+        if ($this->getScenario() == 'graphs') {
+            if (count($this->semesters) < 8) throw new HttpException(Yii::t('Plans', 'No matching groups to plan'));
         }
-        return parent::beforeSave();
+        return parent::beforeSave(false);
     }
 
 
