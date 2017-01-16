@@ -89,7 +89,7 @@ class StudyPlan extends ActiveRecord
     {
         return [
             ['speciality_id', 'required'],
-            ['semesters', 'required', 'message' => Yii::t('Plans', 'Натисніть кнопку "Генерувати" та перевірте правильність даних')],
+            ['semesters', 'required', 'message' => Yii::t('Plans', 'Click "Generate" and check the data')],
             ['speciality_id', 'numerical', 'integerOnly' => true],
             ['created', 'default', 'value' => date('Y-m-d', time()), 'on' => 'insert'],
             ['id, speciality_id', 'safe', 'on' => 'search'],

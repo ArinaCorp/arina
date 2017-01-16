@@ -11,7 +11,7 @@ use app\modules\directories\models\subject\Subject;
 
 ?>
 
-<div class="subject-form">
+<div class="work-subject-form">
 
 
 
