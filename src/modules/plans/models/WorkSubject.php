@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\plans\models\work_subject;
+namespace app\modules\plans\models;
 
 use Yii;
 use yii\behaviors\TimestampBehavior;
@@ -11,7 +11,6 @@ use yii\data\ActiveDataProvider;
 
 use app\modules\directories\models\subject\Subject;
 use app\modules\directories\models\cyclic_commission\CyclicCommission;
-use app\modules\plans\models\work_plan\WorkPlan;
 use app\modules\directories\models\StudyYear;
 
 /**

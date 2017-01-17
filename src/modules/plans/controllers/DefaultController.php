@@ -3,9 +3,10 @@
 namespace app\modules\plans\controllers;
 
 use Yii;
-use yii\base\Controller;
+use yii\web\Controller;
+use nullref\core\interfaces\IAdminController;
 
-class DefaultController extends Controller
+class DefaultController extends Controller implements IAdminController
 {
     public $name = 'Plans';
 

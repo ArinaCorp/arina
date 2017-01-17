@@ -3,12 +3,13 @@
 namespace app\modules\plans\controllers;
 
 use Yii;
-use yii\base\Controller;
+use yii\web\Controller;
+use nullref\core\interfaces\IAdminController;
 
-use app\modules\plans\models\study_plan\StudyPlan;
-use app\modules\plans\models\study_subject\StudySubject;
+use app\modules\plans\models\StudyPlan;
+use app\modules\plans\models\StudySubject;
 
-class StudyPlanController extends Controller
+class StudyPlanController extends Controller implements IAdminController
 {
     public $name = 'Study plan';
 

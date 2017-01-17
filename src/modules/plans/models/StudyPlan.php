@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\plans\models\study_plan;
+namespace app\modules\plans\models;
 
 use Yii;
 use yii\db\ActiveRecord;
@@ -9,7 +9,6 @@ use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
 
 use app\modules\directories\models\speciality\Speciality;
-use app\modules\plans\models\study_subject\StudySubject;
 use app\modules\directories\models\department\Department;
 use app\modules\directories\models\subject\Subject;
 
@@ -25,7 +24,7 @@ use app\modules\directories\models\subject\Subject;
  * @property integer $updated
  *
  * The followings are the available model relations:
- * @property StudySubject[] $study_subjects
+ * @property StudySubject[] $   study_subjects
  * @property Speciality $speciality
  */
 class StudyPlan extends ActiveRecord
