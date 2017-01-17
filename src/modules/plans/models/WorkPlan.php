@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\plans\models\work_plan;
+namespace app\modules\plans\models;
 
 use Yii;
 use yii\db\ActiveRecord;
@@ -8,11 +8,8 @@ use yii\db\ActiveQuery;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 
-use app\modules\plans\models\study_subject\StudySubject;
 use app\modules\directories\models\StudyYear;
 use app\modules\directories\models\speciality\Speciality;
-use app\modules\plans\models\work_subject\WorkSubject;
-use app\modules\plans\models\study_plan\StudyPlan;
 use app\modules\directories\models\department\Department;
 use yii\web\HttpException;
 

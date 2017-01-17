@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\plans\models\study_subject;
+namespace app\modules\plans\models;
 
 use Yii;
 use yii\db\ActiveQuery;
@@ -8,7 +8,6 @@ use yii\data\ActiveDataProvider;
 use yii\db\ActiveRecord;
 
 use app\modules\directories\models\subject\Subject;
-use app\modules\plans\models\study_plan\StudyPlan;
 
 /**
  * This is the model class for table "study_subject".
@@ -49,16 +48,17 @@ class StudySubject extends ActiveRecord
     public function rules()
     {
         return [
-            ['plan_id, subject_id, total', 'required', 'message' => Yii::t('Plans', 'Specify').'{attribute}'],
-            ['weeks', 'check_weeks'],
-            ['total', 'check_hours'],
-            ['practice_weeks', 'check_practice'],
-            ['lectures', 'check_classes'],
-            ['subject_id', 'check_subject', 'on' => 'insert'],
-            ['lectures, lab_works, practices', 'default', 'value' => 0, 'on' => 'insert'],
-            ['plan_id, subject_id, total, lectures, lab_works, practices', 'numerical', 'integerOnly' => true],
-            ['plan_id, subject_id, total, lectures, lab_works, practices, weeks, control, practice_weeks, dual_lab_work, dual_practice, diploma_name, certificate_name', 'safe'],
-            ['id, plan_id, subject_id, total, lectures, lab_works, practices, subject', 'safe', 'on' => 'search'],
+            [['plan_id', 'subject_id', 'total'], 'required', 'message' => Yii::t('Plans', 'Specify').'{attribute}'],
+            [['weeks'], 'checkWeeks'],
+            [['total'], 'checkHours'],
+            [['practice_weeks'], 'checkPractice'],
+            [['lectures'], 'checkClasses'],
+            [['subject_id'], 'checkSubject', 'on' => 'insert'],
+            [['lectures', 'lab_works', 'practices'], 'default', 'value' => 0, 'on' => 'insert'],
+            [['plan_id, subject_id, total, lectures, lab_works, practices'], 'integer', 'integerOnly' => true],
+            [['plan_id, subject_id, total, lectures, lab_works, practices, weeks, control, practice_weeks,
+             dual_lab_work, dual_practice, diploma_name, certificate_name'], 'safe'],
+            [['id, plan_id, subject_id, total, lectures, lab_works, practices, subject'], 'safe', 'on' => 'search'],
         ];
     }
 
@@ -86,7 +86,7 @@ class StudySubject extends ActiveRecord
     /**
      * @return array
      */
-    public function behaviors()
+    /*public function behaviors()
     {
         return [
             'StrBehavior' => [
@@ -103,7 +103,7 @@ class StudySubject extends ActiveRecord
                 ],
             ],
         ];
-    }
+    }/*
 
     /**
      * @return array customized attribute labels (name=>label)
@@ -315,6 +315,15 @@ class StudySubject extends ActiveRecord
             }
             if (!$valid && !$this->subject->practice) {
                 $this->addError('weeks', Yii::t('Plans', 'Specify the number of hours per week in the corresponding semester'));
+            }
+        }
+    }
+
+    public function checkSubject()
+    {
+        if (!$this->hasErrors()) {
+            if (StudyPlan::find()->where(['id' => $this->subject_id])->exists($criteria)) {
+                $this->addError('subject_id', Yii::t('Plans','Record about this subject exists in this study plan'));
             }
         }
     }
