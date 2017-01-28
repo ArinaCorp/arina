@@ -18,7 +18,8 @@ class StudySubjectSearch extends StudySubject
     public function rules()
     {
         return [
-            [['id', 'plan_id', 'subject_id', 'total', 'lectures', 'lab_works', 'practices', 'practice_weeks', 'dual_lab_work', 'dual_practice'], 'integer'],
+            [['id', 'plan_id', 'subject_id', 'total', 'lectures', 'lab_works', 'practices',
+                'practice_weeks', 'dual_lab_work', 'dual_practice'], 'integer'],
             [['weeks', 'control', 'certificate_name', 'diploma_name'], 'safe'],
         ];
     }

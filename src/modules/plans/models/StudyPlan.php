@@ -20,7 +20,7 @@ use app\modules\directories\models\subject\Subject;
  * @property integer $speciality_id
  * @property array $semesters
  * @property array $graphs
- * @property integer $created
+ * @property integer $12created
  * @property integer $updated
  *
  * The followings are the available model relations:
