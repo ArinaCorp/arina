@@ -145,6 +145,9 @@ class WorkPlan extends ActiveRecord
         ];
     }
 
+    /**
+     * @return array
+     */
     public function rules()
     {
         return [
@@ -181,6 +184,7 @@ class WorkPlan extends ActiveRecord
     {
         return $this->speciality->title . ' - ' . $this->study_year->getFullName();
     }
+
     public function checkOrigin()
     {
         if (!$this->hasErrors()) {

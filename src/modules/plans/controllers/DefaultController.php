@@ -2,22 +2,37 @@
 
 namespace app\modules\plans\controllers;
 
-use Yii;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use nullref\core\interfaces\IAdminController;
 
+/**
+ * Default controller for the `plans` module
+ */
 class DefaultController extends Controller implements IAdminController
 {
     public $name = 'Plans';
 
-    public function actionIndex()
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
     {
-        $this->render('index');
+        return [
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['POST'],
+                ],
+            ],
+        ];
     }
 
-    public function actionResetGraph()
+    /**
+     * @return string
+     */
+    public function actionIndex()
     {
-        unset(Yii::$app->session['weeks']);
-        unset(Yii::$app->session['graph']);
+        return $this->render('index');
     }
 }

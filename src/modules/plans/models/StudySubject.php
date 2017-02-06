@@ -319,13 +319,14 @@ class StudySubject extends ActiveRecord
         }
     }
 
-    public function checkSubject()
+    /*public function checkSubject()
     {
         if (!$this->hasErrors()) {
             if (StudyPlan::find()->where(['id' => $this->subject_id])->exists($criteria)) {
                 $this->addError('subject_id', Yii::t('plans','Record about this subject exists in this study plan'));
             }
         }
-    }
+    }*/
+
 
 }
