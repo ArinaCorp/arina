@@ -48,6 +48,9 @@ class WorkSubject extends ActiveRecord
     const CONTROL_WORK = 4;
     const CONTROL_PROJECT = 5;
 
+    /**
+     * @return array
+     */
     public function behaviors()
     {
         return [
