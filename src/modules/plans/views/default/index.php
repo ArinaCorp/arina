@@ -1,43 +1,29 @@
 <?php
 
-use yii\helpers\Url;
 use yii\web\View;
+use yii\helpers\Html;
 
 /**
- * @var View  $this
+ * @var $this View
  */
-$this->title = Yii::t('base', 'Plans');
+
+$this->title = Yii::t('app', 'Plans');
 $this->params['breadcrumbs'][] = $this->title;
-$this->menu = [
-    [
-        'label' => 'Створити навчальний план',
-        'url' => Url::to(['plans/create']),
 
-'type' => 'primary',
-    ],
-    [
-        'label' => 'Переглянути навчальні плани',
-        'url' => $this->createUrl('plan/index'),
-        'type' => 'info',
-    ],
-    [
-        'label' => 'Створити робочий план',
-        'url' => $this->createUrl('work/create'),
-        'type' => 'primary',
-    ],
-    [
-        'label' => 'Переглянути робочі навчальні плани',
-        'url' => $this->createUrl('work/index'),
-        'type' => 'info',
-    ],
-    [
-        'label' => 'Переглянути робОЧЫ ПЛАТЫН ',
-        'get' => 'retunr uofe ',
-        'echo type use' => 'what th e fuck a re uwriting right now dude u have mental illness',
-        'alight'=>'ill get around about this who cares what the fuck are uspeaksign',
-        'i do bro'=>'let this will be our little secret all right 
-        ',
-    ]
-];
 ?>
+<div class="subject-index">
 
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">
+                <?= Html::encode($this->title) ?>
+            </h1>
+        </div>
+    </div>
+
+
+    <p>
+        <?= Html::a(Yii::t('app', 'Create work subject'), ['create'], ['class' => 'btn btn-success']) ?>
+    </p>
+
+</div>
