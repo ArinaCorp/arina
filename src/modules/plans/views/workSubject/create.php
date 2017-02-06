@@ -7,7 +7,7 @@ use app\modules\directories\models\subject\Subject;
 /* @var $this View
  * @var $model Subject */
 
-$this->title = Yii::t('app', 'Create Subject');
+$this->title = Yii::t('plans', 'Create Subject');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Subjects'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
