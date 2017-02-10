@@ -172,12 +172,13 @@ return [
     'Select position' => 'Оберіть посаду',
     'Category' => 'Кваліфікація',
     'Cyclic commission' => 'Циклова комісія',
-    'Employee' => 'Працівники',
     'Employees' => 'Працівники',
     'Create employee' => 'Додати працівника',
     'Update employee:' => 'Оновити працівника:',
     'Take part in education' => 'Бере участь у навч. процесі',
     'Not take part in education' => 'Не бере участі у навч. процесі',
+    'Cyclic Commissions' => 'Циклові комісії',
+    'Create Cyclic Commission' => 'Створити циклову комісію',
 
 
 ];

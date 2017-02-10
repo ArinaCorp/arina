@@ -6,6 +6,7 @@ use yii\widgets\DetailView;
 use yii\web\View;
 use app\modules\directories\models\position\Position;
 use app\modules\directories\models\qualification\Qualification;
+use app\modules\employee\models\cyclic_commission\CyclicCommission;
 
 /* @var $this View
  * @var $model Employee */
@@ -65,7 +66,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'gender',
                 'value' => $model->getGenderName(),
             ],
-            'cyclic_commission_id',
+            [
+                'attribute' => 'cyclic_commission_id',
+                'value' => function ($model) {
+                    return CyclicCommission::findOne(['id' => $model->cyclic_commission_id])->title;
+                }
+            ],
             'birth_date',
             'passport',
             'passport_issued_by',

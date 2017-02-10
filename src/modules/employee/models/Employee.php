@@ -43,8 +43,8 @@ class Employee extends ActiveRecord
     {
         return [
             [['id', 'position_id', 'category_id', 'is_in_education', 'gender', 'type', 'cyclic_commission_id'], 'integer'],
-            [['last_name', 'first_name', 'middle_name', 'position_id', 'category_id', 'is_in_education',
-                'gender', 'passport', 'birth_date', 'passport_issued_by', 'cyclic_commission_id'], 'required'],
+            [['last_name', 'first_name', 'middle_name', 'position_id', 'is_in_education',
+                'gender', 'passport', 'birth_date', 'passport_issued_by'], 'required'],
             [['birth_date','cyclic_commission_id', 'passport', 'passport_issued_by'], 'safe'],
             [['passport', 'id'], 'unique'],
         ];

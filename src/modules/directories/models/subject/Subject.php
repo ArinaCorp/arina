@@ -2,9 +2,11 @@
 
 namespace app\modules\directories\models\subject;
 
-use app\modules\directories\models\relation\SubjectRelation;
 use Yii;
 use yii\db\ActiveRecord;
+
+use app\modules\directories\models\relation\SubjectRelation;
+use app\modules\directories\models\relation\SubjectCycle;
 
 /**
  * This is the model class for table "subject".
@@ -65,6 +67,35 @@ class Subject extends ActiveRecord
     public function getSubjectRelation()
     {
         return $this->hasMany(SubjectRelation::className(), ['subject_id' => 'id']);
+    }
+
+    /**
+     * @param integer $id speciality id
+     * @return array for dropDownList
+     */
+    public static function getListForSpeciality($id)
+    {
+        $list = [];
+        $relations = SubjectRelation::find()->where(['speciality_id' => $id])->all();
+        foreach ($relations as $relation) {
+            /**@var $relation SubjectRelation */
+            if (!isset($list[$relation->subject_cycle->title])) {
+                $list[$relation->subject_cycle->title] = array();
+            }
+            $list[$relation->subject_cycle->title][$relation->subject_id] = $relation->subject->title;
+        }
+        return $list;
+    }
+
+    /**
+     * @param $specialityId
+     * @return SubjectCycle
+     */
+    public function getCycle($specialityId)
+    {
+        /**@var $relation SubjectRelation */
+        $relation = SubjectRelation::find()->where(['speciality_id' => $specialityId, 'subject_id' => $this->id]);
+        return $relation->subject_cycle;
     }
 
 }

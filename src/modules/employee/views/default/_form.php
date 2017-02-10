@@ -9,6 +9,7 @@ use kartik\select2\Select2;
 use kartik\date\DatePicker;
 use app\modules\directories\models\position\Position;
 use app\modules\directories\models\qualification\Qualification;
+use app\modules\employee\models\cyclic_commission\CyclicCommission;
 
 /* @var $this View
  * @var $model Employee
@@ -63,8 +64,14 @@ use app\modules\directories\models\qualification\Qualification;
 
     <div class="row">
         <div class="col-sm-3">
-    <?= $form->field($model, 'cyclic_commission_id')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'cyclic_commission_id')->widget(Select2::className(), [
+        'data' => CyclicCommission::getList(),
+        'options' =>
+            [
+                'placeholder' => Yii::t('app', 'Select cyclic commission')
+            ]]) ?>
         </div>
+        
         <div class="col-sm-3">
     <?= $form->field($model, 'birth_date')->widget(DatePicker::className(), [
         'language' => Yii::$app->language,
