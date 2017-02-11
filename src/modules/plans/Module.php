@@ -27,8 +27,26 @@ class Module extends BaseModule implements IAdminModule
             'icon' => 'users',
             'items' => [
                 [
-                    'label' => Yii::t('Plans', 'Plans'),
-                    'url' => ['/plans'],
+                    'label' => Yii::t('Plans', 'View study plans'),
+                    'url' => ['/studyPlans/index'],
+                    'icon' => 'list',
+                ],
+
+                [
+                    'label' => Yii::t('Plans', 'Create study plan'),
+                    'url' => ['/studyPlans/create'],
+                    'icon' => 'list',
+                ],
+
+                [
+                    'label' => Yii::t('Plans', 'View work plans'),
+                    'url' => ['/workPlans/index'],
+                    'icon' => 'list',
+                ],
+
+                [
+                    'label' => Yii::t('Plans', 'Create work plan'),
+                    'url' => ['/workPlans/create'],
                     'icon' => 'list',
                 ],
             ]

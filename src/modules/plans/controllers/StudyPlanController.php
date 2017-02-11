@@ -4,6 +4,7 @@ namespace app\modules\plans\controllers;
 
 use Yii;
 use yii\web\Controller;
+use yii\helpers\Url;
 use nullref\core\interfaces\IAdminController;
 
 use app\modules\plans\models\StudyPlan;
@@ -34,13 +35,13 @@ class StudyPlanController extends Controller implements IAdminController
             }
             if ($model->save()) {
                 if (!empty($_POST['origin'])) {
-                    $this->copyPlan(StudyPlan::model()->loadContent($_POST['origin']), $model);
+                    $this->copyPlan(StudyPlan::findOne($_POST['origin']), $model);
                 }
-                $this->redirect($this->createUrl('subjects', array('id' => $model->id)));
+                $this->redirect(Url::to('subjects', ['id' => $model->id]));
             }
         }
 
-        $this->render('create', array('model' => $model));
+        $this->render('create', ['model' => $model]);
     }
 
     /**
@@ -49,7 +50,7 @@ class StudyPlanController extends Controller implements IAdminController
      */
     public function copyPlan($origin, $newPlan)
     {
-        foreach ($origin->subjects as $subject) {
+        foreach ($origin->study_subjects as $subject) {
             $model = new StudySubject();
             $model->attributes = $subject->attributes;
             $model->plan_id = $newPlan->id;
@@ -59,7 +60,7 @@ class StudyPlanController extends Controller implements IAdminController
 
     public function actionExecuteGraph()
     {
-        $semesters = array();
+        $semesters = [];
         if (isset($_POST['graph'])) {
             $g = $_POST['graph'];
             foreach ($g as $i => $v) {
@@ -94,7 +95,7 @@ class StudyPlanController extends Controller implements IAdminController
         }
         Yii::$app->session['weeks'] = $weeks;
         Yii::$app->session['graph'] = $_POST['graph'];
-        $this->renderPartial('semestersPlan', array('data' => $semesters));
+        $this->renderPartial('semestersPlan', ['data' => $semesters]);
     }
 
     public function actionSubjects($id)
@@ -109,96 +110,62 @@ class StudyPlanController extends Controller implements IAdminController
                 $model->plan_id = $id;
             }
         }
-        $this->render('subjects', array('model' => $model));
+        $this->render('subjects', ['model' => $model]);
     }
 
     public function actionView($id)
     {
-        $model = StudyPlan::model()->loadContent($id);
-
-        $this->render('view', array('model' => $model));
+        $model = StudyPlan::findOne($id);
+        $this->render('view', ['model' => $model]);
     }
 
     public function actionUpdate($id)
     {
-        $model = StudyPlan::model()->loadContent($id);
-        /*  if (!Yii::app()->user->checkAccess('manageStudyPlan',
-                  array(
-                      'id' => $model->speciality->department->head_id,
-                      'type' => User::TYPE_TEACHER,
-                  )
-              )
-          )
-          {
-              throw new CHttpException(403, Yii::t('yii', 'You are not authorized to perform this action.'));
-          }*/
+        $model = StudyPlan::findOne($id);
         if (isset($_POST['StudyPlan'])) {
             $model->attributes = $_POST['StudyPlan'];
-            if (isset(Yii::app()->session['weeks'])) {
-                $model->semesters = Yii::app()->session['weeks'];
-                unset(Yii::app()->session['weeks']);
+            if (isset(Yii::$app->session['weeks'])) {
+                $model->semesters = Yii::$app->session['weeks'];
+                unset(Yii::$app->session['weeks']);
             }
-            if (isset(Yii::app()->session['graph'])) {
-                $model->graph = Yii::app()->session['graph'];
-                unset(Yii::app()->session['graph']);
+            if (isset(Yii::$app->session['graph'])) {
+                $model->graphs = Yii::$app->session['graph'];
+                unset(Yii::$app->session['graph']);
             }
             if ($model->save()) {
-                $this->redirect(array('index'));
+                $this->redirect(['index']);
             }
         }
 
-        $this->render('update', array('model' => $model));
+        $this->render('update', ['model' => $model]);
 
     }
 
     public function actionEditSubject($id)
     {
         /** @var StudySubject $model */
-        $model = StudySubject::model()->loadContent($id);
+        $model = StudySubject::findOne($id);
 
         if (isset($_POST['StudySubject'])) {
             $model->setAttributes($_POST['StudySubject'], false);
             if ($model->save()) {
-                $this->redirect($this->createUrl('view', array('id' => $model->plan_id)));
+                $this->redirect(Url::to('view', ['id' => $model->plan_id]));
             }
         }
 
-        $this->render('edit_subject', array('model' => $model));
+        $this->render('edit_subject', ['model' => $model]);
     }
 
     public function actionDeleteSubject($id)
     {
-        StudySubject::model()->loadContent($id)->delete();
-
-        if (!isset($_GET['ajax'])) {
-            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('index'));
-        }
-    }
-
-    public function actionMakeExcel($id)
-    {
-        /**@var $excel ExcelMaker */
-        $excel = Yii::app()->getComponent('excel');
-        $plan = StudyPlan::model()->loadContent($id);
-        $excel->getDocument($plan, 'studyPlan');
+        StudySubject::findOne($id)->delete();
+        $this->redirect(['index']);
     }
 
     public function actionDelete($id)
     {
-        $model = StudyPlan::model()->loadContent($id);
-        if (!Yii::app()->user->checkAccess('manageStudyPlan',
-            array(
-                'id' => $model->speciality->department->head_id,
-                'type' => User::ROLE_ADMIN,
-            )
-        )
-        )
-        {
-            throw new CHttpException(403, Yii::t('yii', 'You are not authorized to perform this action.'));
-        }
+        $model = StudyPlan::findOne($id);
         $model->delete();
-        if (!isset($_GET['ajax'])) {
-            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('index'));
-        }
+        $this->redirect(['index']);
     }
 }
