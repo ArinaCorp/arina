@@ -5,6 +5,8 @@ namespace app\modules\directories\models\department;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\db\ActiveQuery;
+
 use app\modules\directories\models\speciality\Speciality;
 use Yii;
 
@@ -39,6 +41,9 @@ class Department extends \yii\db\ActiveRecord
         ];
     }
 
+    /**
+     * @return array
+     */
     public static function getList()
     {
         $departments = Department::find()->all();
@@ -58,9 +63,17 @@ class Department extends \yii\db\ActiveRecord
             'specialities' => Yii::t('app','Specialities'),
         ];
     }
+
+    /**
+     * @return ActiveQuery
+     */
     public function getSpecialities(){
         return $this->hasMany(Speciality::className(), ['department_id' => 'id']);
     }
+
+    /**
+     * @return string
+     */
     public function getSpecialitiesListLinks(){
         $string="";
         foreach ($this->specialities as $speciality) {

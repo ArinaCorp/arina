@@ -1,5 +1,5 @@
 serve:
-	yii serve --docroot=@webroot
+	php yii serve --docroot=@webroot
 run:
 	make serve
 fix-permissions:
