@@ -39,7 +39,8 @@ class StudentsPhones extends \yii\db\ActiveRecord
     {
         return [
             [['student_id', 'created_at', 'updated_at'], 'integer'],
-            [['phone'], 'string'],
+            [['phone', 'comment'], 'string'],
+            [['phone'], 'required'],
         ];
     }
 
@@ -57,5 +58,5 @@ class StudentsPhones extends \yii\db\ActiveRecord
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
     }
-    
+
 }

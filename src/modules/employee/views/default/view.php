@@ -8,7 +8,8 @@ use app\modules\directories\models\position\Position;
 use app\modules\directories\models\qualification\Qualification;
 
 /* @var $this View
- * @var $model Employee */
+ * @var $model Employee
+ */
 
 $this->title = $model->getFullName();
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Employees'), 'url' => ['index']];
@@ -47,15 +48,11 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute' => 'position_id',
-                'value' => function ($model) {
-                    return Position::findOne(['id' => $model->position_id])->title;
-                }
+                'value' => Position::findOne(['id' => $model->position_id])->title,
             ],
             [
                 'attribute' => 'category_id',
-                'value' => function ($model) {
-                    return Qualification::findOne(['id' => $model->category_id])->title;
-                }
+                'value' => Qualification::findOne(['id' => $model->category_id])->title,
             ],
             'type',
             'first_name',

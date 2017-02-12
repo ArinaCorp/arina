@@ -81,6 +81,7 @@ class DefaultController extends Controller implements IAdminController
         $modelsPhones = [new StudentsPhones()];
         /**
          * @var $modelsFamily FamilyTie[]
+         * @var $modelsPhones StudentsPhones[]
          */
         if ($model->load(Yii::$app->request->post())) {
             $modelsFamily = Student::createMultiple(FamilyTie::classname());
@@ -100,15 +101,14 @@ class DefaultController extends Controller implements IAdminController
                                 break;
                             }
                         }
-                        foreach ($modelsPhones as $modelsPhone) {
-                            $modelsPhone->student_id = $model->id;
-                            if (!($flag = $modelsPhone->save(false))) {
+                        foreach ($modelsPhones as $modelPhone) {
+                            $modelPhone->student_id = $model->id;
+                            if (!($flag = $modelPhone->save(false))) {
                                 $transaction->rollBack();
                                 break;
                             }
                         }
                     }
-
                     if ($flag) {
                         $transaction->commit();
                         return $this->redirect(['view', 'id' => $model->id]);
@@ -147,9 +147,11 @@ class DefaultController extends Controller implements IAdminController
             $familyOldIDs = ArrayHelper::map($modelsFamily, 'id', 'id');
             $phonesOldIDs = ArrayHelper::map($modelsPhones, 'id', 'id');
             $modelsFamily = Student::createMultiple(FamilyTie::classname(), $modelsFamily);
+            $modelsPhones = Student::createMultiple(StudentsPhones::className(), $modelsPhones);
             Model::loadMultiple($modelsFamily, Yii::$app->request->post());
+            Model::loadMultiple($modelsPhones, Yii::$app->request->post());
             $familyDeletedIDs = array_diff($familyOldIDs, array_filter(ArrayHelper::map($modelsFamily, 'id', 'id')));
-            $phonesDeletedIDs = array_diff($phonesOldIDs, array_filter(ArrayHelper::map($modelsFamily, 'id', 'id')));
+            $phonesDeletedIDs = array_diff($phonesOldIDs, array_filter(ArrayHelper::map($modelsPhones, 'id', 'id')));
             // validate all models
             $valid = $model->validate();
             $valid = Model::validateMultiple($modelsFamily) && Model::validateMultiple($modelsPhones) && $valid;
@@ -169,11 +171,11 @@ class DefaultController extends Controller implements IAdminController
                             }
                         }
                         if (!empty($phonesDeletedIDs)) {
-                            FamilyTie::deleteAll(['id' => $phonesDeletedIDs]);
+                            StudentsPhones::deleteAll(['id' => $phonesDeletedIDs]);
                         }
-                        foreach ($modelsFamily as $modelFamily) {
-                            $modelFamily->student_id = $model->id;
-                            if (!($flag = $modelFamily->save(false))) {
+                        foreach ($modelsPhones as $modelPhone) {
+                            $modelPhone->student_id = $model->id;
+                            if (!($flag = $modelPhone->save(false))) {
                                 $transaction->rollBack();
                                 break;
                             }

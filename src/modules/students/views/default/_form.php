@@ -141,7 +141,7 @@ $this->registerJs($js);
             'comment',
         ],
     ]); ?>
-    <div class="panel panel-default">
+    <div class="panel panel-default phones">
         <div class="panel-heading">
             <i class="fa fa-users"></i> <?= Yii::t('app', 'Phones') ?>
             <button type="button" class="pull-right add-item btn btn-success btn-xs"><i
@@ -152,7 +152,7 @@ $this->registerJs($js);
             <?php foreach ($modelsPhones as $index => $modelPhone): ?>
                 <div class="item panel panel-default"><!-- widgetBody -->
                     <div class="panel-heading">
-                            <span class="panel-title-address"><?= Yii::t('app', 'Family tie') ?>
+                            <span class="panel-title-address"><?= Yii::t('app', 'Phone') ?>
                                 : <?= ($index + 1) ?></span>
                         <button type="button" class="pull-right remove-item btn btn-danger btn-xs"><i
                                 class="fa fa-minus"></i></button>
@@ -202,7 +202,7 @@ $this->registerJs($js);
             'email',
         ],
     ]); ?>
-    <div class="panel panel-default">
+    <div class="panel panel-default family">
         <div class="panel-heading">
             <i class="fa fa-users"></i> <?= Yii::t('app', 'Family') ?>
             <button type="button" class="pull-right add-item btn btn-success btn-xs"><i

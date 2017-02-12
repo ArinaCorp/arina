@@ -39,6 +39,7 @@ use yii\web\UploadedFile;
  *
  * @property FamilyTie[] $family
  * @property Exemption[] $exemptions
+ * @property StudentsPhones[] $phones
  */
 class Student extends \yii\db\ActiveRecord
 {
