@@ -2,27 +2,44 @@
 
 namespace app\modules\plans\controllers;
 
+use app\modules\plans\models\StudyPlanSearch;
 use Yii;
 use yii\web\Controller;
-use yii\helpers\Url;
+use yii\filters\VerbFilter;
 use nullref\core\interfaces\IAdminController;
+use yii\helpers\Url;
 
 use app\modules\plans\models\StudyPlan;
 use app\modules\plans\models\StudySubject;
 
 class StudyPlanController extends Controller implements IAdminController
 {
-    public $name = 'Study plan';
-
+    /**
+     * @return string
+     */
     public function actionIndex()
     {
-        $this->render('index');
+        $searchModel = new StudyPlanSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
     }
 
     public function actionCreate()
     {
-        $model = new StudyPlan('create');
-        if (isset($_POST['StudyPlan'])) {
+        $model = new StudyPlan();
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        } else {
+            return $this->render('create', [
+                'model' => $model,
+            ]);
+        }
+
+        /*if (isset($_POST['StudyPlan'])) {
             $model->attributes = $_POST['StudyPlan'];
             $model->created = date('Y-m-d', time());
             if (isset(Yii::$app->session['weeks'])) {
@@ -39,9 +56,7 @@ class StudyPlanController extends Controller implements IAdminController
                 }
                 $this->redirect(Url::to('subjects', ['id' => $model->id]));
             }
-        }
-
-        $this->render('create', ['model' => $model]);
+        }*/
     }
 
     /**

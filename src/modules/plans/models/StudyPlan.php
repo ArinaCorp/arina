@@ -30,6 +30,51 @@ use app\modules\directories\models\subject\Subject;
 class StudyPlan extends ActiveRecord
 {
     /**
+     * @return array
+     */
+    public function behaviors()
+    {
+        return [
+            /*'JSONBehavior' => [
+                'class' => 'application.behaviors.JSONBehavior',
+                'fields' => ['graphs'],
+            ],
+            'StrBehavior' => [
+                'class' => 'application.behaviors.StrBehavior',
+                'fields' => ['semesters'],
+            ],
+            'CTimestampBehavior' => [
+                'class' => 'zii.behaviors.CTimestampBehavior',
+                'createAttribute' => 'created',
+                'updateAttribute' => 'updated',
+                'setUpdateOnCreate' => true,
+            ],*/
+        ];
+    }
+
+    /**
+     * @return string the associated database table name
+     */
+    public static function tableName()
+    {
+        return '{{%study_plan}}';
+    }
+
+    /**
+     * @return array validation rules for model attributes.
+     */
+    public function rules()
+    {
+        return [
+            /*[['speciality_id'], 'required'],
+            [['semesters'], 'required', 'message' => Yii::t('plans', 'Click "Generate" and check the data')],
+            [['speciality_id'], 'integer' => true],
+            [['created'], 'default', 'value' => date('Y-m-d', time()), 'on' => 'insert'],
+            [['id, speciality_id'], 'safe', 'on' => 'search'],*/
+        ];
+    }
+
+    /**
      * @param $id
      * @return array
      */
@@ -74,28 +119,6 @@ class StudyPlan extends ActiveRecord
     }
 
     /**
-     * @return string the associated database table name
-     */
-    public static function tableName()
-    {
-        return '{{%study_plan}}';
-    }
-
-    /**
-     * @return array validation rules for model attributes.
-     */
-    public function rules()
-    {
-        return [
-            ['speciality_id', 'required'],
-            ['semesters', 'required', 'message' => Yii::t('plans', 'Click "Generate" and check the data')],
-            ['speciality_id', 'numerical', 'integerOnly' => true],
-            ['created', 'default', 'value' => date('Y-m-d', time()), 'on' => 'insert'],
-            ['id, speciality_id', 'safe', 'on' => 'search'],
-        ];
-    }
-
-    /**
      * @return ActiveQuery
      */
     public function getSpeciality()
@@ -130,28 +153,7 @@ class StudyPlan extends ActiveRecord
         return $list;
     }
 
-    /**
-     * @return array
-     */
-    public function behaviors()
-    {
-        return array(
-            'JSONBehavior' => [
-                'class' => 'application.behaviors.JSONBehavior',
-                'fields' => ['graphs'],
-            ],
-            'StrBehavior' => [
-                'class' => 'application.behaviors.StrBehavior',
-                'fields' => ['semesters'],
-            ],
-            'CTimestampBehavior' => [
-                'class' => 'zii.behaviors.CTimestampBehavior',
-                'createAttribute' => 'created',
-                'updateAttribute' => 'updated',
-                'setUpdateOnCreate' => true,
-            ],
-        );
-    }
+
 
     /**
      * @return array customized attribute labels (name=>label)

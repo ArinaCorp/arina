@@ -1,8 +1,14 @@
 <?php
+
+use yii\web\View;
+use yii\bootstrap\ActiveForm;
+
+use app\modules\plans\models\StudySubject;
+
 /**
- * @var PlanController $this
+ * @var $this View
  * @var StudySubject $model
- * @var TbActiveForm $form
+ * @var ActiveForm $form
  */
 ?>
     <style>
@@ -44,11 +50,11 @@
             width: 100%;
         }
     </style>
-<?php $form = $this->beginWidget(BoosterHelper::FORM, array(
-    'htmlOptions' => array(
+<?php $form = ActiveForm::begin( [
+    'htmlOptions' => [
         'class' => 'well row',
-    )
-)); ?>
+    ]
+]); ?>
     <h3>Редагування предмету <?php echo $model->subject->title; ?></h3>
 <?php echo $form->errorSummary($model); ?>
     <div class="span3">

@@ -23,9 +23,24 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
     <div class="row">
+        <div class="col-lg-2">
+            <p>
+                <?= Html::a(Yii::t('plans', 'View study plans'), ['/plans/study-plan'], ['class' => 'btn btn-success']) ?>
+            </p>
+        </div>
         <div class="col-lg-3">
             <p>
-                <?= Html::a(Yii::t('plans', 'Create study plan'), ['create-sp'], ['class' => 'btn btn-success']) ?>
+                <?= Html::a(Yii::t('plans', 'Create study plan'), ['/plans/study-plan/create'], ['class' => 'btn btn-success']) ?>
+            </p>
+        </div>
+        <div class="col-lg-2">
+            <p>
+                <?= Html::a(Yii::t('plans', 'View work plans'), ['/plans/work-plan'], ['class' => 'btn btn-success']) ?>
+            </p>
+        </div>
+        <div class="col-lg-2">
+            <p>
+                <?= Html::a(Yii::t('plans', 'Create work plan'), ['/plans/work-plan/create'], ['class' => 'btn btn-success']) ?>
             </p>
         </div>
     </div>
