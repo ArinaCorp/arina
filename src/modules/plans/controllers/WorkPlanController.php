@@ -5,12 +5,13 @@ namespace app\modules\plans\controllers;
 use Yii;
 use yii\web\Controller;
 use yii\helpers\Url;
+use nullref\core\interfaces\IAdminController;
 use yii\web\NotFoundHttpException;
 
 use app\modules\plans\models\WorkPlan;
 use app\modules\plans\models\WorkSubject;
 
-class WorkController extends Controller
+class WorkPlanController extends Controller implements IAdminController
 {
     public $name = 'Work plan';
 

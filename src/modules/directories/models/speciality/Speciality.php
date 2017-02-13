@@ -11,8 +11,8 @@ use app\modules\directories\models\department\Department;
 use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 use app\modules\directories\models\qualification\Qualification;
 use app\modules\students\models\Group;
-use app\modules\plans\models\study_plan\StudyPlan;
-use app\modules\plans\models\work_plan\WorkPlan;
+use app\modules\plans\models\StudyPlan;
+use app\modules\plans\models\WorkPlan;
 
 /**
  * This is the model class for table "speciality".

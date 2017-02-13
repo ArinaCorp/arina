@@ -1,7 +1,6 @@
 <?php
 /**
  *
- * @var PlanController $this
  * @var array $data
  */
 ?>
