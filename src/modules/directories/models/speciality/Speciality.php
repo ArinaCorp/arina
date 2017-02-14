@@ -25,7 +25,7 @@ use app\modules\plans\models\WorkPlan;
  *
  * The followings are the available model relations:
  * @property Department $department
- * @property $specialityQualifications SpecialityQualification[]
+ * @property SpecialityQualification[] $specialityQualifications
  * @property Group[] $groups
  * @property StudyPlan[] $studyPlans
  * @property WorkPlan[] $workPlans

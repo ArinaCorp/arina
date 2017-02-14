@@ -140,20 +140,18 @@ class StudyPlan extends ActiveRecord
      */
     public function getSubjectsByCycles()
     {
-        $list = array();
+        $list = [];
         foreach ($this->study_subjects as $item) {
             $cycle = $item->subject->getCycle($this->speciality_id);
             $name = $cycle->id .' '. $cycle->title;
             if (isset($list[$name])) {
                 $list[$name][] = $item;
             } else {
-                $list[$name] = array($item);
+                $list[$name] = [$item];
             }
         }
         return $list;
     }
-
-
 
     /**
      * @return array customized attribute labels (name=>label)
@@ -203,12 +201,11 @@ class StudyPlan extends ActiveRecord
     }
 
     /**
-     * Get dataProvider for study plan subjects
-     * @return ActiveRecord[]
+     * @return static[]
      */
-    public function getPlanSubjectProvider()
+    public static function getPlanSubjectProvider()
     {
-        return StudySubject::find()->where(['plan_id' => 'id'])->all();
+        return StudySubject::findAll(['plan_id' => 'id']);
     }
 
     /**
@@ -217,6 +214,7 @@ class StudyPlan extends ActiveRecord
      */
     public function getTitle()
     {
-        return $this->speciality->title . ' - ' . date('H:i d.m.Y', $this->updated);
+        return 'spec';
+        //return $this->speciality->title . ' - ' . date('H:i d.m.Y', $this->updated);
     }
 }

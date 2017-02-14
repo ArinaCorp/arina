@@ -20,8 +20,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <h2>Створення нового навчального плану</h2>
-
     <?= $this->render('_form', [
         'model' => $model,
     ]) ?>

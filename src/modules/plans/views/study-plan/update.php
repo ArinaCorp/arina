@@ -1,6 +1,7 @@
 <?php
 
 use yii\web\View;
+use yii\bootstrap\Html;
 
 use app\modules\plans\models\StudyPlan;
 use app\modules\plans\widgets\SubjectTable;
@@ -18,13 +19,14 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="study-plan-update">
-    <h3>
-        <?=Yii::t('plans', 'Editing')?>
-    </h3>
+    <h1><?= Html::encode($this->title) ?></h1>
 
     <?= $this->render('_form', [
         'model' => $model,
     ]) ?>
 
-    <?= SubjectTable::widget(['subjectDataProvider' => $model->getPlanSubjectProvider()]) ?>
+    <?= Html::a(Yii::t('plans', 'Edit subjects'), ['subjects', ['id' => $model->id]], ['class' => 'btn btn-default']) ?>
+
+    <?= Html::a(Yii::t('base', 'Return'), ['index'], ['class' => 'btn btn-danger']) ?>
+
 </div>

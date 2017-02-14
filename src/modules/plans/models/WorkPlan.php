@@ -40,6 +40,52 @@ class WorkPlan extends ActiveRecord
     public $work_plan_origin;
 
     /**
+     * @return array
+     */
+    public function behaviors()
+    {
+        return [
+            /*'JSONBehavior' => [
+                'class' => 'application.behaviors.JSONBehavior',
+                'fields' => [
+                    'graphs'
+                ],
+            ],
+            'StrBehavior' => [
+                'class' => 'application.behaviors.StrBehavior',
+                'fields' => [
+                    'semesters',
+                ],
+            ],
+            'CTimestampBehavior' => [
+                'class' => 'zii.behaviors.CTimestampBehavior',
+                'createAttribute' => 'created',
+                'updateAttribute' => 'updated',
+                'setUpdateOnCreate' => true,
+            ],*/
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function rules()
+    {
+        return [
+            /*['speciality_id, study_year_id', 'required'],
+            [
+                'semesters', 'required',
+                'message' => Yii::t('plans', 'Click "Generate" and check the data'), 'on' => 'graphs'
+            ],
+            ['speciality_id', 'study_study_year_id', 'uniqueRecord', 'on' => 'insert'],
+            ['speciality_id', 'numerical', 'integerOnly' => true],
+            ['created', 'default', 'value' => date('Y-m-d', time()), 'on' => 'insert'],
+            ['id', 'speciality_id', 'safe', 'on' => 'search'],
+            ['study_plan_origin', 'work_plan_origin', 'check_origin', 'on' => 'insert'],*/
+        ];
+    }
+
+    /**
      * @return integer
      */
     public function getCourseAmount()
@@ -66,7 +112,7 @@ class WorkPlan extends ActiveRecord
      */
     public function getSubjectsByCycles($course)
     {
-        $list = array();
+        $list = [];
         foreach ($this->work_subjects as $item) {
             if ($item->presentIn($course)){
                 $cycle = $item->subject->getCycle($this->speciality_id);
@@ -145,25 +191,6 @@ class WorkPlan extends ActiveRecord
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function rules()
-    {
-        return [
-            ['speciality_id, study_year_id', 'required'],
-            [
-                'semesters', 'required',
-                'message' => Yii::t('plans', 'Click "Generate" and check the data'), 'on' => 'graphs'
-            ],
-            ['speciality_id', 'study_study_year_id', 'uniqueRecord', 'on' => 'insert'],
-            ['speciality_id', 'numerical', 'integerOnly' => true],
-            ['created', 'default', 'value' => date('Y-m-d', time()), 'on' => 'insert'],
-            ['id', 'speciality_id', 'safe', 'on' => 'search'],
-            ['study_plan_origin', 'work_plan_origin', 'check_origin', 'on' => 'insert'],
-        ];
-    }
-
     public function uniqueRecord()
     {
         if (!$this->hasErrors()) {
@@ -192,33 +219,6 @@ class WorkPlan extends ActiveRecord
                 $this->addError('study_plan_origin, work_plan_origin', Yii::t('plans', 'Choose the plan basis'));
             }
         }
-    }
-
-    /**
-     * @return array
-     */
-    public function behaviors()
-    {
-        return [
-            'JSONBehavior' => [
-                'class' => 'application.behaviors.JSONBehavior',
-                'fields' => [
-                    'graphs'
-                ],
-            ],
-            'StrBehavior' => [
-                'class' => 'application.behaviors.StrBehavior',
-                'fields' => [
-                    'semesters',
-                ],
-            ],
-            'CTimestampBehavior' => [
-                'class' => 'zii.behaviors.CTimestampBehavior',
-                'createAttribute' => 'created',
-                'updateAttribute' => 'updated',
-                'setUpdateOnCreate' => true,
-            ],
-        ];
     }
 
     /**
@@ -291,7 +291,7 @@ class WorkPlan extends ActiveRecord
             $model->subject_id = $subject->subject_id;
             $model->dual_lab_work = $subject->dual_lab_work;
             $model->dual_practice = $subject->dual_practice;
-            $control_hours = array();
+            $control_hours = [];
             $control_hours['total'] = $subject->total;
             $control_hours['lectures'] = $subject->lectures;
             $control_hours['lab_works'] = $subject->lab_works;

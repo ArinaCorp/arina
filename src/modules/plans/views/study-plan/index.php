@@ -12,14 +12,12 @@ use app\modules\plans\models\StudyPlanSearch;
  * @var $dataProvider ActiveDataProvider
  */
 
-
 $this->title = Yii::t('plans', 'Study plans');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="study-plans-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-
 
     <div class="col-lg-8">
         <?= Html::a(Yii::t('app', 'Create study plan'), ['create'], ['class' => 'btn btn-success']) ?>
@@ -29,10 +27,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-            'id',
+            ['header' => 'speciality.title', 'value' => 'speciality_id'],
             'created',
             'updated',
             ['class' => 'yii\grid\ActionColumn'],

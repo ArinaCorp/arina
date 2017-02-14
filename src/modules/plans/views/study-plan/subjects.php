@@ -1,13 +1,23 @@
 <?php
+
+use yii\web\View;
+use yii\bootstrap\ActiveForm;
+use yii\widgets\Pjax;
+
+use app\modules\plans\models\StudySubject;
+
 /**
- * @var PlanController $this
- * @var StudySubject $model
- * @var TbActiveForm $form
+ * @var $this View
+ * @var $model StudySubject
+ * @var $form ActiveForm
  */
-$this->breadcrumbs = array(
-    Yii::t('base', 'Study plans') => $this->createUrl('main/index'),
-    $model->plan->speciality->title => $this->createUrl('plan/view', array('id' => $model->plan->id)),
-);
+
+$this->title = Yii::t('plans', 'Edit study plan');
+
+$this->params['breadcrumbs'][] = ['label' => Yii::t('plans', 'Study plans'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => $model->study_plan->speciality->title, 'url' => ['plans/study-plan/view', ['id' => $model->study_plan->id]]];
+$this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <style>
     .input,
@@ -43,12 +53,13 @@ $this->breadcrumbs = array(
     .span5 input[type="number"] {
         width: 170px;
     }
-
-    #StudySubject_subject_id {
-        width: 100%;
-    }
 </style>
-<?php $form = $this->beginWidget(BoosterHelper::FORM, array('htmlOptions' => array('class' => 'well',))); ?>
+<?php Pjax::begin(); ?>
+
+<?php $form = ActiveForm::begin(
+    ['htmlOptions' => ['class' => 'well',]]
+); ?>
+
 <h3>Додання предметів</h3>
 <?php echo $form->errorSummary($model); ?>
 <div class="span3">
