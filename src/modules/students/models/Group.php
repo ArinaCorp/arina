@@ -2,10 +2,12 @@
 
 namespace app\modules\students\models;
 
-use app\modules\directories\models\speciality\Speciality;
+use Yii;
+use yii\db\ActiveRecord;
+use yii\db\ActiveQuery;
+
 use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 use app\modules\directories\models\StudyYear;
-use Yii;
 use yii\helpers\ArrayHelper;
 use PHPExcel;
 use PHPExcel_IOFactory;
@@ -28,7 +30,7 @@ use PHPExcel_IOFactory;
  *
  * @property boolean $active;
  */
-class Group extends \yii\db\ActiveRecord
+class Group extends ActiveRecord
 {
     /**
      * @inheritdoc
@@ -65,47 +67,68 @@ class Group extends \yii\db\ActiveRecord
         ];
     }
 
+    /**
+     * @return ActiveQuery
+     */
     public function getSpecialityQualification()
     {
         return $this->hasOne(SpecialityQualification::className(), ['id' => 'speciality_qualifications_id']);
     }
 
+    /**
+     * @return ActiveQuery
+     */
     public function getStudyYear()
     {
         return $this->hasOne(StudyYear::className(), ['id' => 'created_study_year_id']);
     }
 
+    /**
+     * @return ActiveQuery
+     */
     public function getGroupLeader()
     {
         return $this->hasOne(Student::className(), ['id' => 'group_leader_id']);
     }
 
+    /**
+     * @return int
+     */
     public function getSystemYearPrefix()
     {
         return $this->studyYear->year_start % 100 - $this->specialityQualification->getOffsetYears();
     }
 
+    /**
+     * @return string
+     */
     public function getSystemTitle()
     {
         return $this->specialityQualification->speciality->short_title . '-' . $this->getSystemYearPrefix() . $this->number_group;
     }
 
+    /**
+     * @return array
+     */
     public static function getTreeList()
     {
         $list = [];
-        $specialityQulifications = SpecialityQualification::find()->all();
+        $specialityQualifications = SpecialityQualification::find()->all();
         /**
-         * @var SpecialityQualification[] $specialityQulifications
+         * @var SpecialityQualification[] $specialityQualifications
          */
-        foreach ($specialityQulifications as $specialityQulification) {
-            foreach ($specialityQulification->groups as $group) {
-                $list[$specialityQulification->title][$group->id] = $group->title;
+        foreach ($specialityQualifications as $specialityQualification) {
+            foreach ($specialityQualification->groups as $group) {
+                $list[$specialityQualification->title][$group->id] = $group->title;
             }
         }
         return $list;
     }
 
-    public function getStudentsArray($data = null)
+    /**
+     * @return Student[]
+     */
+    public function getStudentsArray()
     {
         /**
          * @var $result Student[];
@@ -126,10 +149,12 @@ class Group extends \yii\db\ActiveRecord
         return $result;
     }
 
-    public
-    function getStudentsList($data = null)
+    /**
+     * @return array
+     */
+    public function getStudentsList()
     {
-        $array = $this->getStudentsArray($data);
+        $array = $this->getStudentsArray();
         $result = [];
         foreach ($array as $item) {
             $result[$item->id] = $item->getFullNameAndCode();
@@ -137,8 +162,10 @@ class Group extends \yii\db\ActiveRecord
         return $result;
     }
 
-    public
-    function getNotStudentsArray($data = null)
+    /**
+     * @return Student[]
+     */
+    public function getNotStudentsArray()
     {
         /**
          * @var $result Student[];
@@ -245,20 +272,44 @@ class Group extends \yii\db\ActiveRecord
         $excelObj = $excelReader->load($tmpfname);
         $excelObj->setActiveSheetIndex(0);
         $excelObj->getActiveSheet()->SetCellValue('B2', $this->title);
+        $excelObj->getActiveSheet()->SetCellValue('B3', StudyYear::getCurrent()->fullName . " навчального року");
         /**
          * @var Student[] $students
          */
         $students = $this->getStudentsArray();
         if (!is_null($students)) {
-            $startRow = 4;
+            $startRow = 7;
             $current = $startRow;
             $i = 1;
             foreach ($students as $student) {
-                $excelObj->getActiveSheet()->SetCellValue('A' . $current, $i);
-                $excelObj->getActiveSheet()->SetCellValue('B' . $current, $student->getFullName());
+                $excelObj->getActiveSheet()->mergeCells("C" . $current . ":G" . $current);
+                $excelObj->getActiveSheet()->insertNewRowBefore($current + 1);
+                $excelObj->getActiveSheet()->setCellValue('B' . $current, $i);
+                $excelObj->getActiveSheet()->setCellValue('C' . $current, $student->getFullName());
+                $excelObj->getActiveSheet()->setCellValue('H' . $current, $student->getPaymentTypeLabel());
                 $i++;
                 $current++;
             }
+            $excelObj->getActiveSheet()->removeRow($current);
+            $excelObj->getActiveSheet()->removeRow($current);
+//            $excelObj->getActiveSheet()
+//                ->getCell('C' . $current - 1)
+//                ->getStyle()
+//                ->getBorders()
+//                ->getBottom()
+//                ->setBorderStyle(\PHPExcel_Style_Border::BORDER_NONE);
+//            $excelObj->getActiveSheet()
+//                ->getCell('B' . $current - 1)
+//                ->getStyle()
+//                ->getBorders()
+//                ->getBottom()
+//                ->setBorderStyle(\PHPExcel_Style_Border::BORDER_NONE);
+//            $excelObj->getActiveSheet()
+//                ->getCell('H' . $current - 1)
+//                ->getStyle()
+//                ->getBorders()
+//                ->getBottom()
+//                ->setBorderStyle(\PHPExcel_Style_Border::BORDER_NONE);
         }
         header('Content-Type: application/vnd.ms-excel');
         $filename = "Group_" . $this->title . "_" . date("d-m-Y-His") . ".xls";
@@ -266,5 +317,23 @@ class Group extends \yii\db\ActiveRecord
         header('Cache-Control: max-age=0');
         $objWriter = PHPExcel_IOFactory::createWriter($excelObj, 'Excel2007');
         $objWriter->save('php://output');
+    }
+
+    /**
+     * @param null $yearId
+     * @return int
+     */
+    public function getCourse($yearId = null)
+    {
+        $year = null;
+        if (isset($yearId)) {
+            $year = StudyYear::findOne(['id' => $yearId]);
+        }
+        if (!isset($year)) {
+            $year = StudyYear::getCurrentYear();
+        }
+        $last_year = mb_substr($this->title, 3, 2, 'UTF-8');
+        $value = $year->getYearEnd() - 2000 - $last_year;
+        return $value;
     }
 }

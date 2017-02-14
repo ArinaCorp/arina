@@ -48,7 +48,7 @@ class StudySubject extends ActiveRecord
     public function rules()
     {
         return [
-            [['plan_id', 'subject_id', 'total'], 'required', 'message' => Yii::t('Plans', 'Specify').'{attribute}'],
+            [['plan_id', 'subject_id', 'total'], 'required', 'message' => Yii::t('plans', 'Specify').'{attribute}'],
             [['weeks'], 'checkWeeks'],
             [['total'], 'checkHours'],
             [['practice_weeks'], 'checkPractice'],
@@ -111,24 +111,24 @@ class StudySubject extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('Plans', 'ID'),
-            'plan_id' => Yii::t('Plans', 'Plan'),
-            'subject_id' => Yii::t('Plans', 'Subject'),
-            'total' => Yii::t('Plans', 'Total'),
-            'lectures' => Yii::t('Plans', 'Lectures'),
-            'lab_works' => Yii::t('Plans', 'Laboratory works'),
-            'practices' => Yii::t('Plans', 'Practice works'),
-            'classes' => Yii::t('Plans', 'Class works'),
-            'practice_weeks' => Yii::t('Plans', 'Practice weeks'),
-            'diploma_name' => Yii::t('Plans', 'Diploma name'),
-            'certificate_name' => Yii::t('Plans', 'Certificate name'),
-            'dual_lab_work' => Yii::t('Plans', 'Dual laboratory works'),
-            'dual_practice' => Yii::t('Plans', 'Dual practice works'),
-            'self_work' => Yii::t('Plans', 'Self work'),
-            'credit' => Yii::t('Plans', 'Credit'),
-            'exam' => Yii::t('Plans', 'Exam'),
-            'work_semester' => Yii::t('Plans', 'Work semester'),
-            'project_semester' => Yii::t('Plans', 'Project semester'),
+            'id' => Yii::t('plans', 'ID'),
+            'plan_id' => Yii::t('plans', 'Plan'),
+            'subject_id' => Yii::t('plans', 'Subject'),
+            'total' => Yii::t('plans', 'Total'),
+            'lectures' => Yii::t('plans', 'Lectures'),
+            'lab_works' => Yii::t('plans', 'Laboratory works'),
+            'practices' => Yii::t('plans', 'Practice works'),
+            'classes' => Yii::t('plans', 'Class works'),
+            'practice_weeks' => Yii::t('plans', 'Practice weeks'),
+            'diploma_name' => Yii::t('plans', 'Diploma name'),
+            'certificate_name' => Yii::t('plans', 'Certificate name'),
+            'dual_lab_work' => Yii::t('plans', 'Dual laboratory works'),
+            'dual_practice' => Yii::t('plans', 'Dual practice works'),
+            'self_work' => Yii::t('plans', 'Self work'),
+            'credit' => Yii::t('plans', 'Credit'),
+            'exam' => Yii::t('plans', 'Exam'),
+            'work_semester' => Yii::t('plans', 'Work semester'),
+            'project_semester' => Yii::t('plans', 'Project semester'),
         ];
     }
 
@@ -213,10 +213,10 @@ class StudySubject extends ActiveRecord
                 $semesters[] = $semester + 1;
             }
             if (!empty($control[2])) {
-                $semesters[] = ($semester + 1) . Yii::t('Plans', 'State final examination');
+                $semesters[] = ($semester + 1) . Yii::t('plans', 'State final examination');
             }
             if (!empty($control[3])) {
-                $semesters[] = ($semester + 1) . Yii::t('Plans', 'State examination');
+                $semesters[] = ($semester + 1) . Yii::t('plans', 'State examination');
             }
         }
         return implode(', ', $semesters);
@@ -263,7 +263,7 @@ class StudySubject extends ActiveRecord
     {
         if (!$this->hasErrors()) {
             if ($this->total < ($this->lectures + $this->lab_works + $this->practices)) {
-                $this->addError('total', Yii::t('Plans', 'Classroom hours more than the total number'));
+                $this->addError('total', Yii::t('plans', 'Classroom hours more than the total number'));
             }
         }
     }
@@ -273,7 +273,7 @@ class StudySubject extends ActiveRecord
         if (!$this->hasErrors()) {
             if ($this->subject->practice) {
                 if (empty($this->practice_weeks)) {
-                    $this->addError('practice_weeks', Yii::t('Plans','Specify the number of weeks'));
+                    $this->addError('practice_weeks', Yii::t('plans','Specify the number of weeks'));
                 }
                 $valid = false;
                 foreach ($this->control as $item) {
@@ -283,7 +283,7 @@ class StudySubject extends ActiveRecord
                     }
                 }
                 if (!$valid) {
-                    $this->addError('weeks', Yii::t('Plans', 'Add a semester of practice'));
+                    $this->addError('weeks', Yii::t('plans', 'Add a semester of practice'));
                 }
             }
         }
@@ -299,7 +299,7 @@ class StudySubject extends ActiveRecord
                 }
             }
             if (!$this->subject->practice && ($sum < $this->getClasses())) {
-                $this->addError('lectures', Yii::t('Plans', 'Not enough hours a week for proofreading'));
+                $this->addError('lectures', Yii::t('plans', 'Not enough hours a week for proofreading'));
             }
         }
     }
@@ -314,18 +314,19 @@ class StudySubject extends ActiveRecord
                 }
             }
             if (!$valid && !$this->subject->practice) {
-                $this->addError('weeks', Yii::t('Plans', 'Specify the number of hours per week in the corresponding semester'));
+                $this->addError('weeks', Yii::t('plans', 'Specify the number of hours per week in the corresponding semester'));
             }
         }
     }
 
-    public function checkSubject()
+    /*public function checkSubject()
     {
         if (!$this->hasErrors()) {
             if (StudyPlan::find()->where(['id' => $this->subject_id])->exists($criteria)) {
-                $this->addError('subject_id', Yii::t('Plans','Record about this subject exists in this study plan'));
+                $this->addError('subject_id', Yii::t('plans','Record about this subject exists in this study plan'));
             }
         }
-    }
+    }*/
+
 
 }

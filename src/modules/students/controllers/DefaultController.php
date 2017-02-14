@@ -5,6 +5,7 @@ namespace app\modules\students\controllers;
 /* @author VasyaKog */
 use app\modules\students\models\FamilyTie;
 use app\modules\students\models\StudentsHistory;
+use app\modules\students\models\StudentsPhones;
 use yii\base\Exception;
 use yii\base\Model;
 use yii\filters\VerbFilter;
@@ -77,17 +78,20 @@ class DefaultController extends Controller implements IAdminController
     {
         $model = new Student();
         $modelsFamily = [new FamilyTie()];
+        $modelsPhones = [new StudentsPhones()];
         /**
          * @var $modelsFamily FamilyTie[]
+         * @var $modelsPhones StudentsPhones[]
          */
         if ($model->load(Yii::$app->request->post())) {
             $modelsFamily = Student::createMultiple(FamilyTie::classname());
+            $modelsPhones = Student::createMultiple(StudentsPhones::className());
+            Model::loadMultiple($modelsPhones, Yii::$app->request->post());
             Model::loadMultiple($modelsFamily, Yii::$app->request->post());
             $valid = $model->validate();
-            $valid = Model::validateMultiple($modelsFamily) && $valid;
+            $valid = Model::validateMultiple($modelsFamily) && Model::validateMultiple($modelsPhones) && $valid;
             if ($valid) {
                 $transaction = \Yii::$app->db->beginTransaction();
-
                 try {
                     if ($flag = $model->save(false)) {
                         foreach ($modelsFamily as $modelFamily) {
@@ -97,8 +101,14 @@ class DefaultController extends Controller implements IAdminController
                                 break;
                             }
                         }
+                        foreach ($modelsPhones as $modelPhone) {
+                            $modelPhone->student_id = $model->id;
+                            if (!($flag = $modelPhone->save(false))) {
+                                $transaction->rollBack();
+                                break;
+                            }
+                        }
                     }
-
                     if ($flag) {
                         $transaction->commit();
                         return $this->redirect(['view', 'id' => $model->id]);
@@ -112,7 +122,8 @@ class DefaultController extends Controller implements IAdminController
 
         return $this->render('create', [
             'model' => $model,
-            'modelsFamily' => (empty($modelsFamily)) ? [new FamilyTie()] : $modelsFamily
+            'modelsFamily' => (empty($modelsFamily)) ? [new FamilyTie()] : $modelsFamily,
+            'modelsPhones' => (empty($modelsPhones)) ? [new StudentsPhones()] : $modelsPhones,
         ]);
     }
 
@@ -128,29 +139,43 @@ class DefaultController extends Controller implements IAdminController
     {
         $model = $this->findModel($id);
         $modelsFamily = $model->family;
+        $modelsPhones = $model->phones;
         /**
          * @var $modelsFamily FamilyTie[]
          */
         if ($model->load(Yii::$app->request->post())) {
-            $oldIDs = ArrayHelper::map($modelsFamily, 'id', 'id');
+            $familyOldIDs = ArrayHelper::map($modelsFamily, 'id', 'id');
+            $phonesOldIDs = ArrayHelper::map($modelsPhones, 'id', 'id');
             $modelsFamily = Student::createMultiple(FamilyTie::classname(), $modelsFamily);
+            $modelsPhones = Student::createMultiple(StudentsPhones::className(), $modelsPhones);
             Model::loadMultiple($modelsFamily, Yii::$app->request->post());
-            $deletedIDs = array_diff($oldIDs, array_filter(ArrayHelper::map($modelsFamily, 'id', 'id')));
-
+            Model::loadMultiple($modelsPhones, Yii::$app->request->post());
+            $familyDeletedIDs = array_diff($familyOldIDs, array_filter(ArrayHelper::map($modelsFamily, 'id', 'id')));
+            $phonesDeletedIDs = array_diff($phonesOldIDs, array_filter(ArrayHelper::map($modelsPhones, 'id', 'id')));
             // validate all models
             $valid = $model->validate();
-            $valid = Model::validateMultiple($modelsFamily) && $valid;
+            $valid = Model::validateMultiple($modelsFamily) && Model::validateMultiple($modelsPhones) && $valid;
 
             if ($valid) {
                 $transaction = \Yii::$app->db->beginTransaction();
                 try {
                     if ($flag = $model->save(false)) {
-                        if (!empty($deletedIDs)) {
-                            FamilyTie::deleteAll(['id' => $deletedIDs]);
+                        if (!empty($familyDeletedIDs)) {
+                            FamilyTie::deleteAll(['id' => $familyDeletedIDs]);
                         }
                         foreach ($modelsFamily as $modelFamily) {
                             $modelFamily->student_id = $model->id;
                             if (!($flag = $modelFamily->save(false))) {
+                                $transaction->rollBack();
+                                break;
+                            }
+                        }
+                        if (!empty($phonesDeletedIDs)) {
+                            StudentsPhones::deleteAll(['id' => $phonesDeletedIDs]);
+                        }
+                        foreach ($modelsPhones as $modelPhone) {
+                            $modelPhone->student_id = $model->id;
+                            if (!($flag = $modelPhone->save(false))) {
                                 $transaction->rollBack();
                                 break;
                             }
@@ -168,7 +193,8 @@ class DefaultController extends Controller implements IAdminController
 
         return $this->render('update', [
             'model' => $model,
-            'modelsFamily' => (empty($modelsFamily)) ? [new FamilyTie()] : $modelsFamily
+            'modelsFamily' => (empty($modelsFamily)) ? [new FamilyTie()] : $modelsFamily,
+            'modelsPhones' => (empty($modelsPhones)) ? [new StudentsPhones()] : $modelsPhones,
         ]);
     }
 

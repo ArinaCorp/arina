@@ -15,16 +15,16 @@ use app\modules\directories\models\subject\Subject;
 /**
  * This is the model class for table "study_plan".
  *
- * The followings are the available columns in table 'sp_plan':
+ * The followings are the available columns in table 'study_plan':
  * @property integer $id
  * @property integer $speciality_id
  * @property array $semesters
  * @property array $graphs
- * @property integer $12created
+ * @property integer $created
  * @property integer $updated
  *
  * The followings are the available model relations:
- * @property StudySubject[] $   study_subjects
+ * @property StudySubject[] $study_subjects
  * @property Speciality $speciality
  */
 class StudyPlan extends ActiveRecord
@@ -88,7 +88,7 @@ class StudyPlan extends ActiveRecord
     {
         return [
             ['speciality_id', 'required'],
-            ['semesters', 'required', 'message' => Yii::t('Plans', 'Click "Generate" and check the data')],
+            ['semesters', 'required', 'message' => Yii::t('plans', 'Click "Generate" and check the data')],
             ['speciality_id', 'numerical', 'integerOnly' => true],
             ['created', 'default', 'value' => date('Y-m-d', time()), 'on' => 'insert'],
             ['id, speciality_id', 'safe', 'on' => 'search'],
@@ -160,12 +160,12 @@ class StudyPlan extends ActiveRecord
     {
         return [
             'id' => Yii::t('App', 'ID'),
-            'year_id' => Yii::t('Plans', 'Study year'),
-            'speciality_id' => Yii::t('Plans', 'Speciality'),
-            'semesters' => Yii::t('Plans', 'Semesters'),
-            'graphs' => Yii::t('Plans', 'Graphs'),
-            'created' => Yii::t('Plans', 'Date of creation'),
-            'updated' => Yii::t('Plans', 'Date of update'),
+            'year_id' => Yii::t('plans', 'Study year'),
+            'speciality_id' => Yii::t('plans', 'Speciality'),
+            'semesters' => Yii::t('plans', 'Semesters'),
+            'graphs' => Yii::t('plans', 'Graphs'),
+            'created' => Yii::t('plans', 'Date of creation'),
+            'updated' => Yii::t('plans', 'Date of update'),
         ];
     }
 
