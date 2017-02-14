@@ -1,23 +1,31 @@
 <?php
+
+use yii\bootstrap\Html;
+use yii\web\View;
+use yii\helpers\Url;
+
+use app\modules\plans\models\StudyPlan;
+use app\modules\plans\widgets\Graph;
+use app\modules\plans\widgets\SubjectTable;
 /**
- * @var PlanController $this
- * @var StudyPlan $model
+ * @var $this View
+ * @var $model StudyPlan
  */
-$this->breadcrumbs = array(
-    Yii::t('base', 'Study plans') => $this->createUrl('index'),
-    $model->speciality->title,
-);
+
+$this->title = 'View';//$model->speciality->title;
+
+$this->params['breadcrumbs'][] = ['label' => Yii::t('plans', 'Study plans'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="row well">
-    <h3><?php echo $model->speciality->title; ?></h3>
 
-    <p>Дата створення: <?php echo date('d.m.Y', $model->created); ?></p>
-    <?php echo CHtml::link('Експортувати', $this->createUrl('makeExcel', array('id' => $model->id)), array('class' => 'btn btn-primary')); ?>
-    <?php echo CHtml::link('Редагувати предмети', $this->createUrl('subjects', array('id' => $model->id)), array('class' => 'btn btn-primary')); ?>
+    <?php echo Html::a('Експортувати', Url::to('plans/study-plan/makeExcel', ['id' => $model->id]), ['class' => 'btn btn-primary']); ?>
+    <?php echo Html::a('Редагувати предмети', Url::to('subjects', ['id' => $model->id]), ['class' => 'btn btn-primary']); ?>
     <br/>
-    <?php $this->widget('studyPlan.widgets.Graph', array('model' => $model, 'field' => '', 'readOnly' => true, 'graph' => $model->graph)); ?>
+    <?= Graph::widget(['model' => $model, 'field' => '', 'readOnly' => true, 'graph' => $model->graphs]) ?>
+    <?php
+    var_dump($model->getPlanSubjectProvider());
+    ?>
+    SubjectTable::widget(['subjectDataProvider' => $model->getPlanSubjectProvider()]); ?>
     <br/>
-<?php $this->widget('studyPlan.widgets.SubjectTable', array(
-    'subjectDataProvider' => $model->getPlanSubjectProvider()
-));

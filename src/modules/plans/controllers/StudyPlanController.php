@@ -4,8 +4,9 @@ namespace app\modules\plans\controllers;
 
 use app\modules\plans\models\StudyPlanSearch;
 use Yii;
+use yii\web\Response;
 use yii\web\Controller;
-use yii\filters\VerbFilter;
+use yii\web\NotFoundHttpException;
 use nullref\core\interfaces\IAdminController;
 use yii\helpers\Url;
 
@@ -28,9 +29,30 @@ class StudyPlanController extends Controller implements IAdminController
         ]);
     }
 
+    /**
+     * @return string|Response
+     */
     public function actionCreate()
     {
         $model = new StudyPlan();
+        $model->created = date('Y-m-d', time());
+
+        if (isset(Yii::$app->session['weeks'])) {
+            $model->semesters = Yii::$app->session['weeks'];
+            unset(Yii::$app->session['weeks']);
+        }
+
+        if (isset(Yii::$app->session['graph'])) {
+            $model->graphs = Yii::$app->session['graph'];
+            unset(Yii::$app->session['graph']);
+        }
+
+        if ($model->save()) {
+            if (!empty($_POST['origin'])) {
+                $this->copyPlan(StudyPlan::findOne($_POST['origin']), $model);
+            }
+        }
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
@@ -38,25 +60,6 @@ class StudyPlanController extends Controller implements IAdminController
                 'model' => $model,
             ]);
         }
-
-        /*if (isset($_POST['StudyPlan'])) {
-            $model->attributes = $_POST['StudyPlan'];
-            $model->created = date('Y-m-d', time());
-            if (isset(Yii::$app->session['weeks'])) {
-                $model->semesters = Yii::$app->session['weeks'];
-                unset(Yii::$app->session['weeks']);
-            }
-            if (isset(Yii::$app->session['graph'])) {
-                $model->graphs = Yii::$app->session['graph'];
-                unset(Yii::$app->session['graph']);
-            }
-            if ($model->save()) {
-                if (!empty($_POST['origin'])) {
-                    $this->copyPlan(StudyPlan::findOne($_POST['origin']), $model);
-                }
-                $this->redirect(Url::to('subjects', ['id' => $model->id]));
-            }
-        }*/
     }
 
     /**
@@ -113,6 +116,10 @@ class StudyPlanController extends Controller implements IAdminController
         $this->renderPartial('semestersPlan', ['data' => $semesters]);
     }
 
+    /**
+     * @param $id
+     * @return string
+     */
     public function actionSubjects($id)
     {
         $model = new StudySubject();
@@ -125,37 +132,40 @@ class StudyPlanController extends Controller implements IAdminController
                 $model->plan_id = $id;
             }
         }
-        $this->render('subjects', ['model' => $model]);
+        return $this->render('subjects', ['model' => $model]);
     }
 
+    /**
+     * @param $id
+     * @return string
+     */
     public function actionView($id)
     {
         $model = StudyPlan::findOne($id);
-        $this->render('view', ['model' => $model]);
+        return $this->render('view', ['model' => $model]);
     }
 
+    /**
+     * @param $id
+     * @return string
+     */
     public function actionUpdate($id)
     {
-        $model = StudyPlan::findOne($id);
-        if (isset($_POST['StudyPlan'])) {
-            $model->attributes = $_POST['StudyPlan'];
-            if (isset(Yii::$app->session['weeks'])) {
-                $model->semesters = Yii::$app->session['weeks'];
-                unset(Yii::$app->session['weeks']);
-            }
-            if (isset(Yii::$app->session['graph'])) {
-                $model->graphs = Yii::$app->session['graph'];
-                unset(Yii::$app->session['graph']);
-            }
-            if ($model->save()) {
-                $this->redirect(['index']);
-            }
-        }
+        $model = $this->findModel($id);
 
-        $this->render('update', ['model' => $model]);
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        } else {
+            return $this->render('update', [
+                'model' => $model,
+            ]);
+        }
 
     }
 
+    /**
+     * @param $id
+     */
     public function actionEditSubject($id)
     {
         /** @var StudySubject $model */
@@ -171,16 +181,37 @@ class StudyPlanController extends Controller implements IAdminController
         $this->render('edit_subject', ['model' => $model]);
     }
 
+    /**
+     * @param $id
+     * @return Response
+     */
     public function actionDeleteSubject($id)
     {
         StudySubject::findOne($id)->delete();
-        $this->redirect(['index']);
+        return $this->redirect(['index']);
     }
 
+    /**
+     * @param $id
+     * @return Response
+     */
     public function actionDelete($id)
     {
-        $model = StudyPlan::findOne($id);
-        $model->delete();
-        $this->redirect(['index']);
+        StudyPlan::findOne($id)->delete();
+        return $this->redirect(['index']);
+    }
+
+    /**
+     * @param integer $id
+     * @return StudyPlan
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModel($id)
+    {
+        if (($model = StudyPlan::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
     }
 }

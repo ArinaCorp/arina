@@ -161,7 +161,6 @@ use app\modules\plans\widgets\Graph;
                 });
                 var data = $('<form>').append(myInputs).serialize();
 
-                var url = "";
 
                 var posting = $.post(url, data).done(done);
                 e.preventDefault(e);*/

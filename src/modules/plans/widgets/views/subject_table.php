@@ -1,17 +1,29 @@
 <?php
 
-use yii\data\ActiveDataProvider;
-
+use yii\db\ActiveRecord;
+use yii\grid\GridView;
 use app\modules\plans\widgets\SubjectTable;
 
 /**
- * @var SubjectTable $this
- * @var ActiveDataProvider $dataProvider
+ * @var $this SubjectTable
+ * @var $dataProvider ActiveRecord
  */
 $semesterColumns = array();
 for ($i = 0; $i < 8; $i++)
     $semesterColumns[] = array('header' => $i + 1, 'value' => '$data->weeks[' . $i . ']');
+?>
 
+<?= GridView::widget([
+    'dataProvider' => $dataProvider,
+    'columns' => [
+        ['class' => 'yii\grid\SerialColumn'],
+        'id',
+        ['class' => 'yii\grid\ActionColumn'],
+    ],
+]);
+?>
+
+<?/*
 $this->widget('bootstrap.widgets.TbExtendedGridView', array(
     'dataProvider' => $dataProvider,
     'responsiveTable' => true,
@@ -27,7 +39,6 @@ $this->widget('bootstrap.widgets.TbExtendedGridView', array(
             array('name' => 'lectures'),
             array('name' => 'labs'),
             array('name' => 'practices'),
-            array('name' => 'selfwork'),
             array('name' => 'testSemesters'),
             array('name' => 'examSemesters'),
             array('name' => 'workSemesters'),

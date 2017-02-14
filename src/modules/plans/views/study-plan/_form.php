@@ -24,21 +24,25 @@ use app\modules\plans\widgets\Graph;
 
     <?php echo $form->errorSummary($model); ?>
 
-    <?php echo Html::label(Yii::t('plans', 'Choose speciality'), 'origin', array('class' => 'control-label')); ?>
+    <?php echo Html::label(Yii::t('plans', 'Choose speciality'), 'origin', ['class' => 'control-label']); ?>
 
     <?= Html::activeDropDownList($model, 'id', ArrayHelper::map(Speciality::find()->all(), 'id', 'title'))?>
 
     <?php if ($model->isNewRecord): ?>
-        <div class="control-group">
-            <?php echo Html::label(Yii::t('plans', 'Base plan'), 'origin', array('class' => 'control-label')); ?>
-
-            <?php echo Html::dropDownList('origin', '', ArrayHelper::map(StudyPlan::find()->all(),
-                'id', 'speciality_id'), ['empty' => '','class'=>'span6']); ?>
-
-        </div>
     <?php endif; ?>
+    <div class="control-group">
+        <?php echo Html::label(Yii::t('plans', 'Base plan'), 'origin', ['class' => 'control-label']); ?>
+
+        <?php echo Html::dropDownList('origin', '', ArrayHelper::map(StudyPlan::find()->all(),
+            'id', 'speciality_id'), ['empty' => 'Choose plan','class'=>'span6']); ?>
+
+    </div>
 
     <?= Graph::widget(['model' => $model, 'field' => '', 'graph' => $model->graphs]) ?>
+
+    <?= $this->render('_form_buttons', [
+        'model' => $model,
+    ]) ?>
 
     <?php ActiveForm::end(); ?>
 

@@ -6,7 +6,7 @@ use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
-use app\modules\plans\models\work_plan\WorkPlan;
+use app\modules\plans\models\WorkPlan;
 
 /**
  * This is the model class for table "study_years".
