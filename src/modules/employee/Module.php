@@ -23,12 +23,17 @@ class Module extends BaseModule implements IAdminModule
     public static function getAdminMenu()
     {
         return [
-            'label' => Yii::t('app', 'Employee'),
+            'label' => Yii::t('app', 'Employees'),
             'icon' => 'users',
             'items' => [
                 [
                     'label' => Yii::t('app', 'List'),
                     'url' => ['/employee'],
+                    'icon' => 'list',
+                ],
+                [
+                    'label' => Yii::t('app', 'Cyclic Commissions'),
+                    'url' => ['/employee/cyclic-commission'],
                     'icon' => 'list',
                 ],
             ]
