@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\grid\GridView;
 use app\modules\directories\models\position\Position;
+use app\modules\employee\models\cyclic_commission\CyclicCommission;
 
 /** @var $this yii\web\View
  * @var $model app\modules\employee\models\Employee
@@ -50,7 +51,12 @@ $this->params['breadcrumbs'][] = $this->title;
             'first_name',
             'middle_name',
             //'gender',
-            'cyclic_commission_id',
+            [
+                'attribute' => 'cyclic_commission_id',
+                'value' => function ($model) {
+                    return CyclicCommission::findOne(['id' => $model->cyclic_commission_id])->title;
+                }
+            ],
             //'birth_date',
             //'passport',
             //'passport_issued_by',
