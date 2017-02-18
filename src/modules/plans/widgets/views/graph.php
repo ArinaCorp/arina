@@ -178,7 +178,7 @@ use app\modules\plans\widgets\Graph;
         <li><?php echo Yii::t('plan', 'DP - diploma design'); ?></li>
         <li><?php echo Yii::t('plan', 'DA - state certification'); ?></li>
     </ul>
-    <button class="btn btn-info" id="generate"><?php echo Yii::t('base', 'Generate'); ?></button>
+    <button class="btn btn-success" id="NO_SCRIPT"><?php echo Yii::t('base', 'Generate'); ?></button>
 
     <div class="result">
     </div>
