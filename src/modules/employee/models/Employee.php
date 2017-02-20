@@ -4,6 +4,7 @@ namespace app\modules\employee\models;
 
 use Yii;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "employee".
@@ -45,7 +46,7 @@ class Employee extends ActiveRecord
             [['id', 'position_id', 'category_id', 'is_in_education', 'gender', 'type', 'cyclic_commission_id'], 'integer'],
             [['last_name', 'first_name', 'middle_name', 'position_id', 'is_in_education',
                 'gender', 'passport', 'birth_date', 'passport_issued_by'], 'required'],
-            [['birth_date','cyclic_commission_id', 'passport', 'passport_issued_by'], 'safe'],
+            [['birth_date', 'cyclic_commission_id', 'passport', 'passport_issued_by'], 'safe'],
             [['passport', 'id'], 'unique'],
         ];
     }
@@ -102,10 +103,22 @@ class Employee extends ActiveRecord
     {
         return $this->gender ? Yii::t('app', 'Female') : Yii::t('app', 'Male');
     }
-    
+
     public function getIsInEducationName()
     {
         return $this->is_in_education ? Yii::t('app', 'Not take part in education') : Yii::t('app', 'Take part in education');
     }
 
+    public static function getAllTeacher()
+    {
+        $query = self::find();
+        $query->andWhere(['is_in_education' => 0]);
+        $query->addOrderBy(['first_name' => SORT_ASC, 'middle_name' => SORT_ASC, 'last_name' => SORT_ASC]);
+        return $query->all();
+    }
+
+    public static function getAllTeacherList()
+    {
+        return ArrayHelper::map(self::getAllTeacher(), 'id', 'fullName');
+    }
 }

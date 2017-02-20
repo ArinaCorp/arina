@@ -272,7 +272,7 @@ class Group extends ActiveRecord
         $excelObj = $excelReader->load($tmpfname);
         $excelObj->setActiveSheetIndex(0);
         $excelObj->getActiveSheet()->SetCellValue('B2', $this->title);
-        $excelObj->getActiveSheet()->SetCellValue('B3', StudyYear::getCurrent()->fullName . " навчального року");
+      //  $excelObj->getActiveSheet()->SetCellValue('B3', StudyYear::getCurrent()->fullName . " навчального року");
         /**
          * @var Student[] $students
          */

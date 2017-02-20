@@ -3,6 +3,7 @@
 namespace app\modules\students\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "curator_group".
@@ -64,5 +65,30 @@ class CuratorGroup extends \yii\db\ActiveRecord
             0 => Yii::t('app', 'De accepted'),
             1 => Yii::t('app', 'Accepted'),
         ];
+    }
+
+    public static function getGroupsByTeacher($teacher_id)
+    {
+        $query = self::find();
+        $groups_id = ArrayHelper::index(Group::getActiveGroups(),'id');
+        $query->andWhere(['group_id'=>$groups_id]);
+        $listRecord = $query->all();
+        foreach ($listRecord as $item){
+            if($item->type==1) {
+                $k=0;
+                if(in_array($item->group_id,$listGroup)) continue;
+                foreach($listRecord as $item2){
+                    if($item->group_id==$item2->group_id) {
+                        if ($item != $item2 && $item2->type == 0) {
+                            $k+=1;
+                        }
+                    }
+                }
+                if($k%2==0){
+                    array_push($listGroup,$item->group_id)  ;
+                }
+            }
+        }
+
     }
 }

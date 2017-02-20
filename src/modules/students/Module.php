@@ -55,6 +55,11 @@ class Module extends BaseModule implements IAdminModule
                     'label' => Yii::t('app', 'Exemptions'),
                     'url' => ['/students/exemptions'],
                     'icon' => 'list',
+                ],
+                [
+                    'label' => Yii::t('app', 'Curator groups'),
+                    'url' => ['/students/curator-groups'],
+                    'icon' => 'list',
                 ]
             ]
         ];
