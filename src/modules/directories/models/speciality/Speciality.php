@@ -7,6 +7,7 @@ use yii\db\ActiveQuery;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\db\ActiveRecord;
+use Yii;
 
 use app\modules\directories\models\department\Department;
 use app\modules\directories\models\speciality_qualification\SpecialityQualification;

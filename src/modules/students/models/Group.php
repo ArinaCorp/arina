@@ -216,7 +216,7 @@ class Group extends ActiveRecord
     public
     function getActive()
     {
-        return $this->specialityQualification->getCountCourses() < (StudyYear::getCurrent()->year_start - $this->studyYear->year_start);
+        return $this->specialityQualification->getCountCourses() < (StudyYear::getCurrentYear()->year_start - $this->studyYear->year_start);
     }
 
     public

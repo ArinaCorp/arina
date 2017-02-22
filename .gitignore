@@ -19,7 +19,7 @@ vendor
 composer.phar
 
 # composer install
-composer.lock
+/composer.lock
 
 # Mac DS_Store Files
 
