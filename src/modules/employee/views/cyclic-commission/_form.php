@@ -2,6 +2,8 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use kartik\select2\Select2;
+use app\modules\employee\models\Employee;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\employee\models\cyclic_commission\CyclicCommission */
@@ -14,7 +16,12 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'head_id')->textInput() ?>
+    <?= $form->field($model, 'head_id')->widget(Select2::className(), [
+        'data' => Employee::getList(),
+        'options' =>
+            [
+                'placeholder' => Yii::t('app', 'Select head')
+            ]]) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

@@ -72,4 +72,8 @@ class CyclicCommission extends \yii\db\ActiveRecord
         $items = ArrayHelper::map($data,'id','title');
         return $items;
     }
+
+    public function getHead(){
+        return $this->hasOne(Employee::className(),['id'=>'head_id']);
+    }
 }

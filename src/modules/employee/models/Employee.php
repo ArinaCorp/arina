@@ -4,6 +4,7 @@ namespace app\modules\employee\models;
 
 use Yii;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "employee".
@@ -107,5 +108,14 @@ class Employee extends ActiveRecord
     {
         return $this->is_in_education ? Yii::t('app', 'Not take part in education') : Yii::t('app', 'Take part in education');
     }
+
+    public static function getList()
+    {
+        $data = Employee::find()->all();
+        $items = ArrayHelper::map($data,'id','nameWithInitials');
+        return $items;
+    }
+    
+    
 
 }
