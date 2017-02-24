@@ -66,6 +66,10 @@ class CyclicCommission extends \yii\db\ActiveRecord
         }
     }
 
+    public function getHead(){
+        return $this->hasOne(Employee::className(),['id'=>'head_id']);
+    }
+
     public static function getList()
     {
         $data = CyclicCommission::find()->all();
@@ -73,7 +77,5 @@ class CyclicCommission extends \yii\db\ActiveRecord
         return $items;
     }
 
-    public function getHead(){
-        return $this->hasOne(Employee::className(),['id'=>'head_id']);
-    }
+
 }

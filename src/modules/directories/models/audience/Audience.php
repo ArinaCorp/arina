@@ -4,6 +4,7 @@ namespace app\modules\directories\models\audience;
 
 use Yii;
 use yii\db\ActiveRecord;
+use app\modules\employee\models\Employee;
 
 /**
  * This is the model class for table "{{%directories_audience}}".
@@ -15,6 +16,7 @@ use yii\db\ActiveRecord;
  * @property integer $capacity
  * @property integer $id_teacher
  * @property string $typeTitle
+ * @property Employee $teacher
  */
 class Audience extends ActiveRecord
 {
@@ -89,5 +91,18 @@ class Audience extends ActiveRecord
             'id_teacher' => Yii::t('app', 'Responsible'),
             'capacity' => Yii::t('app', 'Capacity'),
         ];
+    }
+
+    public function getTeacherName()
+    {
+        if (isset($this->teacher)) {
+            return $this->teacher->getFullName();
+        } else {
+            return Yii::t('base', 'Not selected');
+        }
+    }
+
+    public function getTeacher(){
+        return $this->hasOne(Employee::className(),['id'=>'id_teacher']);
     }
 }

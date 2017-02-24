@@ -47,9 +47,10 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             //'category_id',
             //'type',
-            'last_name',
-            'first_name',
-            'middle_name',
+            'fullName',
+            //'last_name',
+            //'first_name',
+            //'middle_name',
             //'gender',
             [
                 'attribute' => 'cyclic_commission_id',

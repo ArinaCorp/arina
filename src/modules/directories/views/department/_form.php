@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\select2\Select2;
+use app\modules\employee\models\Employee;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\directories\models\department\Department */
@@ -20,10 +21,13 @@ use kartik\select2\Select2;
         </div>
 
         <div class="col-sm-6">
-            <?= $form->field($model, 'head_id')->widget(Select2::className(),
-                [
-                    'data' => [],
-                ]) ?>
+            <?= $form->field($model, 'head_id')->widget(Select2::className(), [
+                'data' => Employee::getList(),
+                'options' =>
+                    [
+                        'placeholder' => Yii::t('app', 'Select head'),
+                    ],
+            ]) ?>
         </div>
         
     </div>

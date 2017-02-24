@@ -4,6 +4,7 @@ use app\modules\directories\models\audience\Audience;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\select2\Select2;
+use app\modules\employee\models\Employee;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\directories\models\audience\Audience */
@@ -35,7 +36,7 @@ use kartik\select2\Select2;
 
 
     <?= $form->field($model, 'id_teacher')->widget(Select2::className(), [
-        'data' => [],
+        'data' => Employee::getList(),
         'options' =>
             [
                 'placeholder' => Yii::t('app', 'Select responsible'),

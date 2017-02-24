@@ -55,7 +55,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'category_id',
                 'value' => Qualification::findOne(['id' => $model->category_id])->title,
             ],
-            'type',
+            //'type',
             'first_name',
             'middle_name',
             'last_name',

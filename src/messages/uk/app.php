@@ -129,6 +129,7 @@ return [
     'Excluded' => 'Відрахований',
     'Information' => 'Інформація',
     'Head ID' => 'Голова',
+    'HeadID' => 'Зав. Відділенням',
     'Specialities' => 'Спеціальності',
     'Departments' => 'Відділення',
     'Create Department' => 'Створити відділення',
