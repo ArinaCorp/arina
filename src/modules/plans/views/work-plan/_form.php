@@ -25,20 +25,24 @@ use app\modules\directories\models\StudyYear;
 
     <?php echo $form->errorSummary($model); ?>
 
-    <?= Html::activeDropDownList($model, 'id', ArrayHelper::map(Speciality::find()->all(), 'id', 'title'),
-        ['empty' => 'Оберіть спеціальність', 'class'=>'span5'])?>
+    <?= Yii::t('plans','Choose speciality'),Html::activeDropDownList($model, 'id',
+        ArrayHelper::map(Speciality::find()->all(), 'id', 'title'), ['class'=>'span5'])?>
+    <br/>
 
-    <?= Html::activeDropDownList($model, 'study_year_id', ArrayHelper::map(StudyYear::find()->all(), 'id', 'title'),
-        ['empty' => '', 'class'=>'span5'])?>
+    <?= Yii::t('plans','Choose study year'),Html::activeDropDownList($model, 'study_year_id',
+        ArrayHelper::map(StudyYear::find()->all(), 'id', 'year_start'), ['class'=>'span5'])?>
+    <br/>
 
     <?php if ($model->isNewRecord): ?>
+
+        <?= Html::activeDropDownList($model, 'study_plan_origin',
+            ArrayHelper::map(StudyPlan::find()->all(), 'id', 'title'), ['class'=>'span5'])?>
+        <br/>
+
+        <?= Html::activeDropDownList($model, 'work_plan_origin',
+            ArrayHelper::map(WorkPlan::find()->all(), 'id', 'title'), ['class'=>'span5'])?>
+
     <?php endif; ?>
-
-    <?= Html::activeDropDownList($model, 'study_plan_origin', ArrayHelper::map(StudyPlan::find()->all(), 'id', 'title'),
-        ['empty' => '', 'class'=>'span5'])?>
-
-    <?= Html::activeDropDownList($model, 'work_plan_origin', ArrayHelper::map(WorkPlan::find()->all(), 'id', 'title'),
-        ['empty' => '', 'class'=>'span5'])?>
 
     <?= $this->render('_form_buttons', [
         'model' => $model,

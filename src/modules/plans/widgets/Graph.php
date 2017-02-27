@@ -22,13 +22,13 @@ class Graph extends Widget
     public $specialityId;
     /** @var $studyYearId int for work plan */
     public $studyYearId;
-    public $studyPlanProcessLink = '/studyPlan/plan/executeGraph';
-    public $workPlanProcessLink = '/studyPlan/work/executeGraph';
+    public $studyPlanProcessLink = '/studyPlan/executeGraph';
+    public $workPlanProcessLink = '/workPlan/executeGraph';
 
     protected $list;
     protected $map;
     protected $graphProcessLink;
-    protected $rows = array();
+    protected $rows = [];
 
     public function init()
     {

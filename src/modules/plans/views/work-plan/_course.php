@@ -1,6 +1,12 @@
 <?php
+
+use yii\helpers\Url;
+use yii\web\View;
+use yii\helpers\Html;
+use app\modules\plans\models\WorkPlan;
+
 /**
- * @var WorkController $this
+ * @var View $this
  * @var integer $course
  * @var WorkPlan $model
  */
@@ -56,9 +62,9 @@ switch ($course) {
         'total' => 0,
         'classes' => 0,
         'lectures' => 0,
-        'labs' => 0,
-        'practs' => 0,
-        'selfwork' => 0,
+        'lab_works' => 0,
+        'practices' => 0,
+        'self_work' => 0,
         'weeks' => 0,
         'project' => 0,
     ); ?>
@@ -66,22 +72,22 @@ switch ($course) {
         'total' => 0,
         'classes' => 0,
         'lectures' => 0,
-        'labs' => 0,
-        'practs' => 0,
-        'selfwork' => 0,
+        'lab_works' => 0,
+        'practices' => 0,
+        'self_work' => 0,
         'weeks' => 0,
         'project' => 0,
     ); ?>
-    <?php foreach ($model->subjects as $subject): ?>
+    <?php foreach ($model->work_subjects as $subject): ?>
         <?php if ($subject->presentIn($course)): ?>
             <tr>
-                <td><?php echo CHtml::link(
+                <td><?php echo Html::button(
                         'редагувати',
-                        $this->createUrl('editSubject', array('id' => $subject->id))
+                        Url::to('editSubject', array('id' => $subject->id))
                     ); ?>
-                    <?php echo CHtml::link(
+                    <?php echo Html::button(
                         'видалити',
-                        $this->createUrl('deleteSubject', array('id' => $subject->id))
+                        Url::to('deleteSubject', array('id' => $subject->id))
                     ) ?></td>
                 <td><?php echo isset($subject->subject) ? $subject->subject->title : $subject->subject_id; ?>:
                     <b>(<?php echo array_sum(isset($subject->subject) ? $subject->total : array()); ?> годин)</b>
@@ -93,12 +99,12 @@ switch ($course) {
                     $fallHours['classes'] += $subject->getClasses($fall); ?></td>
                 <td><?php echo $subject->lectures[$fall];
                     $fallHours['lectures'] += $subject->lectures[$fall]; ?></td>
-                <td><?php echo $subject->practs[$fall];
-                    $fallHours['practs'] += $subject->practs[$fall]; ?></td>
-                <td><?php echo $subject->labs[$fall];
-                    $fallHours['labs'] += $subject->labs[$fall]; ?></td>
+                <td><?php echo $subject->practices[$fall];
+                    $fallHours['practices'] += $subject->practices[$fall]; ?></td>
+                <td><?php echo $subject->lab_works[$fall];
+                    $fallHours['lab_works'] += $subject->lab_works[$fall]; ?></td>
                 <td><?php echo $subject->getSelfWork($fall);
-                    $fallHours['selfwork'] += $subject->getSelfwork($fall); ?></td>
+                    $fallHours['self_work'] += $subject->getSelfWork($fall); ?></td>
                 <td><?php echo ($subject->control[$fall][4] || $subject->control[$fall][5]) ? $subject->project_hours : '';
                     $fallHours['project'] += $subject->project_hours; ?></td>
                 <td><?php echo $subject->weeks[$fall];
@@ -110,24 +116,24 @@ switch ($course) {
                     $springHours['classes'] += $subject->getClasses($spring); ?></td>
                 <td><?php echo $subject->lectures[$spring];
                     $springHours['lectures'] += $subject->lectures[$spring]; ?></td>
-                <td><?php echo $subject->practs[$spring];
-                    $springHours['practs'] += $subject->practs[$spring]; ?></td>
-                <td><?php echo $subject->labs[$spring];
-                    $springHours['labs'] += $subject->labs[$spring]; ?></td>
+                <td><?php echo $subject->practices[$spring];
+                    $springHours['practices'] += $subject->practices[$spring]; ?></td>
+                <td><?php echo $subject->lab_works[$spring];
+                    $springHours['lab_works'] += $subject->lab_works[$spring]; ?></td>
                 <td><?php echo $subject->getSelfWork($spring);
-                    $springHours['selfwork'] += $subject->getSelfwork($spring); ?></td>
+                    $springHours['self_work'] += $subject->getSelfWork($spring); ?></td>
                 <td><?php echo ($subject->control[$spring][4] || $subject->control[$spring][5]) ? $subject->project_hours : '';
                     $springHours['project'] += $subject->project_hours; ?></td>
                 <td><?php echo $subject->weeks[$spring];
                     $springHours['weeks'] += $subject->weeks[$spring]; ?></td>
 
-                <td><?php echo CHtml::link(
+                <td><?php echo Html::button(
                         'редагувати',
-                        $this->createUrl('editSubject', array('id' => $subject->id))
+                        Url::to('editSubject', array('id' => $subject->id))
                     ); ?>
-                    <?php echo CHtml::link(
+                    <?php echo Html::button(
                         'видалити',
-                        $this->createUrl('deleteSubject', array('id' => $subject->id))
+                        Url::to('deleteSubject', array('id' => $subject->id))
                     ) ?></td>
             </tr>
         <?php endif; ?>
@@ -138,18 +144,18 @@ switch ($course) {
         <td><b><?php echo $fallHours['total']; ?></b></td>
         <td><b><?php echo $fallHours['classes']; ?></b></td>
         <td><b><?php echo $fallHours['lectures']; ?></b></td>
-        <td><b><?php echo $fallHours['practs']; ?></b></td>
-        <td><b><?php echo $fallHours['labs']; ?></b></td>
-        <td><b><?php echo $fallHours['selfwork']; ?></b></td>
+        <td><b><?php echo $fallHours['practices']; ?></b></td>
+        <td><b><?php echo $fallHours['lab_works']; ?></b></td>
+        <td><b><?php echo $fallHours['self_work']; ?></b></td>
         <td><b><?php echo $fallHours['project']; ?></b></td>
         <td><b><?php echo $fallHours['weeks']; ?></b></td>
 
         <td><b><?php echo $springHours['total']; ?></b></td>
         <td><b><?php echo $springHours['classes']; ?></b></td>
         <td><b><?php echo $springHours['lectures']; ?></b></td>
-        <td><b><?php echo $springHours['practs']; ?></b></td>
-        <td><b><?php echo $springHours['labs']; ?></b></td>
-        <td><b><?php echo $springHours['selfwork']; ?></b></td>
+        <td><b><?php echo $springHours['practices']; ?></b></td>
+        <td><b><?php echo $springHours['lab_works']; ?></b></td>
+        <td><b><?php echo $springHours['self_work']; ?></b></td>
         <td><b><?php echo $springHours['project']; ?></b></td>
         <td><b><?php echo $springHours['weeks']; ?></b></td>
 

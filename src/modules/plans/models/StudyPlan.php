@@ -214,7 +214,7 @@ class StudyPlan extends ActiveRecord
      */
     public function getTitle()
     {
-        return 'spec';
-        //return $this->speciality->title . ' - ' . date('H:i d.m.Y', $this->updated);
+        $spec = Speciality::findOne(['id' => $this->speciality_id]);
+        return $spec->title . ' - ' . date('H:i d.m.Y', $this->updated);
     }
 }

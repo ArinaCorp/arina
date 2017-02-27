@@ -3,6 +3,7 @@
 use yii\web\View;
 use yii\bootstrap\ActiveForm;
 use yii\widgets\Pjax;
+use yii\bootstrap\Html;
 
 use app\modules\plans\models\StudySubject;
 
@@ -15,7 +16,7 @@ use app\modules\plans\models\StudySubject;
 $this->title = Yii::t('plans', 'Edit study plan');
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('plans', 'Study plans'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->study_plan->speciality->title, 'url' => ['plans/study-plan/view', ['id' => $model->study_plan->id]]];
+//$this->params['breadcrumbs'][] = ['label' => $model->study_plan->speciality->title, 'url' => ['plans/study-plan/view', ['id' => $model->plan_id]]];
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>
@@ -74,10 +75,10 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 <div class="span3">
     <?php echo $form->numberFieldRow($model, 'total'); ?>
-    <?php echo CHtml::label('Тижневі', 'classes_weeks'); ?>
-    <?php echo CHtml::numberField('classes_weeks', '', array('placeholder' => 'Тижневі', 'readonly' => true)); ?>
-    <?php echo CHtml::label('Аудиторні', 'classes'); ?>
-    <?php echo CHtml::numberField('classes', '', array('placeholder' => 'Аудиторні', 'readonly' => true)); ?>
+    <?php echo Html::label('Тижневі', 'classes_weeks'); ?>
+    <?php echo Html::numberField('classes_weeks', '', array('placeholder' => 'Тижневі', 'readonly' => true)); ?>
+    <?php echo Html::label('Аудиторні', 'classes'); ?>
+    <?php echo Html::numberField('classes', '', array('placeholder' => 'Аудиторні', 'readonly' => true)); ?>
     <?php echo $form->numberFieldRow($model, 'lectures'); ?>
     <?php echo $form->numberFieldRow($model, 'labs'); ?>
     <?php echo $form->checkBoxRow($model, 'dual_labs'); ?>

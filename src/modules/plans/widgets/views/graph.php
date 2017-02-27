@@ -77,17 +77,17 @@ use app\modules\plans\widgets\Graph;
         $j = 0;
         foreach ($rows as $key => $name): ?>
             <tr class="line">
-                <td><span><?php echo $key; ?></span>
+                <td><span><?= $key; ?></span>
                     <input
-                        name="<?php echo "groups[$name][$j]"; ?>" data-state="<?php echo $key; ?>" type="hidden"/>
+                        name="<?= "groups[$name][$j]"; ?>" data-state="<?= $key; ?>" type="hidden"/>
                 </td>
                 <?php for ($i = 0; $i < $amount; $i++): ?>
                     <td>
                         <input
-                            name="<?php echo "graph[$j][$i]"; ?>"
+                            name="<?= "graph[$j][$i]"; ?>"
                             type="button" class="btn"
-                            value="<?php echo Yii::t('plan', $map[$j][$i]); ?>"
-                            data-state="<?php echo $map[$j][$i]; ?>"/>
+                            value="<?= Yii::t('plan', $map[$j][$i]); ?>"
+                            data-state="<?= $map[$j][$i]; ?>"/>
                     </td>
                 <?php endfor; ?>
             </tr>
@@ -98,17 +98,17 @@ use app\modules\plans\widgets\Graph;
     </table>
 <?php if (!$readOnly): ?>
     <script>
-        var t = "<?php echo Yii::t('plans','T'); ?>";
-        var s = "<?php echo Yii::t('plans','S'); ?>";
-        var p = "<?php echo Yii::t('plans','P'); ?>";
-        var h = "<?php echo Yii::t('plans','H'); ?>";
-        var dp = "<?php echo Yii::t('plans','DP'); ?>";
-        var da = "<?php echo Yii::t('plans','DA'); ?>";
+        var t = "<?= Yii::t('plans','T'); ?>";
+        var s = "<?= Yii::t('plans','S'); ?>";
+        var p = "<?= Yii::t('plans','P'); ?>";
+        var h = "<?= Yii::t('plans','H'); ?>";
+        var dp = "<?= Yii::t('plans','DP'); ?>";
+        var da = "<?= Yii::t('plans','DA'); ?>";
         var empty = " ";
         $(function () {
             var loader = $('img.load').hide();
             $('tr.line').find('input').click(function () {
-                $.get("<?php echo Url::to("/studyPlan/main/resetGraph");?>").done(function () {
+                $.get("<?= Url::to("/studyPlan/main/resetGraph");?>").done(function () {
                     $("div.result").empty();
                 });
                 var obj = $(this);
@@ -144,7 +144,7 @@ use app\modules\plans\widgets\Graph;
                 }
             });
             $('#generate').click(function (e) {
-                /*$("div.result").fadeOut();
+                $("div.result").fadeOut();
                 loader.show();
                 var done = function (html) {
                     loader.fadeOut();
@@ -163,7 +163,7 @@ use app\modules\plans\widgets\Graph;
 
 
                 var posting = $.post(url, data).done(done);
-                e.preventDefault(e);*/
+                e.preventDefault(e);
             });
         });
     </script>
@@ -171,14 +171,14 @@ use app\modules\plans\widgets\Graph;
     ПОЗНАЧЕННЯ:
 </span>
     <ul>
-        <li><?php echo Yii::t('plan', 'T - theoretical training'); ?></li>
-        <li><?php echo Yii::t('plan', 'S - examination session'); ?></li>
-        <li><?php echo Yii::t('plan', 'P - practice'); ?></li>
-        <li><?php echo Yii::t('plan', 'H - vacation (holidays)'); ?></li>
-        <li><?php echo Yii::t('plan', 'DP - diploma design'); ?></li>
-        <li><?php echo Yii::t('plan', 'DA - state certification'); ?></li>
+        <li><?= Yii::t('plan', 'T - theoretical training'); ?></li>
+        <li><?= Yii::t('plan', 'S - examination session'); ?></li>
+        <li><?= Yii::t('plan', 'P - practice'); ?></li>
+        <li><?= Yii::t('plan', 'H - vacation (holidays)'); ?></li>
+        <li><?= Yii::t('plan', 'DP - diploma design'); ?></li>
+        <li><?= Yii::t('plan', 'DA - state certification'); ?></li>
     </ul>
-    <button class="btn btn-success" id="NO_SCRIPT"><?php echo Yii::t('base', 'Generate'); ?></button>
+    <button class="btn btn-success" id="generate"><?= Yii::t('base', 'Generate'); ?></button>
 
     <div class="result">
     </div>

@@ -25,7 +25,30 @@ $this->params['breadcrumbs'][] = $this->title;
     <br/>
     <?= Graph::widget(['model' => $model, 'field' => '', 'readOnly' => true, 'graph' => $model->graphs]) ?>
     <?php
-    var_dump($model->getPlanSubjectProvider());
+
+
     ?>
-    SubjectTable::widget(['subjectDataProvider' => $model->getPlanSubjectProvider()]); ?>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/><br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/><br/><br/>
+    
+
+    <?= ""/*SubjectTable::widget(['subjectDataProvider' => $model->getPlanSubjectProvider()]);*/  ?>
     <br/>
