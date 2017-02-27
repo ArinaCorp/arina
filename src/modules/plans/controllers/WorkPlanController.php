@@ -32,12 +32,21 @@ class WorkPlanController extends Controller implements IAdminController
     }
 
     /**
-     * @return string
+     * @return string|Response
      */
     public function actionCreate()
     {
         $model = new WorkPlan();
-        $model->created = date('Y-m-d', time());
+
+        if (isset($_POST['WorkPlan'])) {
+            $model->attributes = $_POST['WorkPlan'];
+            $model->updated = $model->created = date('Y-m-d', time());
+
+            if ($model->save()) {
+                return $this->redirect(Url::to('graph', ['id' => $model->id]));
+            }
+        }
+
         return $this->render('create', ['model' => $model]);
     }
 
@@ -59,7 +68,7 @@ class WorkPlanController extends Controller implements IAdminController
                 unset(Yii::$app->session['graph']);
             }
             if ($model->save()) {
-                $this->redirect(Url::to('subjects', ['id' => $model->id]));
+                return $this->redirect(Url::to('subjects', ['id' => $model->id]));
             }
         }
         return $this->render('graph', ['model' => $model]);
@@ -94,7 +103,7 @@ class WorkPlanController extends Controller implements IAdminController
                 unset(Yii::$app->session['graph']);
             }
             if ($model->save()) {
-                $this->redirect(['index']);
+                return $this->redirect(['index']);
             }
         }
 
@@ -134,7 +143,7 @@ class WorkPlanController extends Controller implements IAdminController
         if (isset($_POST['WorkSubject'])) {
             $model->attributes = $_POST['WorkSubject'];
             if ($model->save())
-                $this->redirect(Url::to('subjects', ['id' => $id]));
+                return $this->redirect(Url::to('subjects', ['id' => $id]));
         }
 
         return $this->render('subject_form', ['model' => $model, 'plan' => WorkPlan::findOne($id)]);

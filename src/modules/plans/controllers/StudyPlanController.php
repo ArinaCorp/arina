@@ -35,31 +35,27 @@ class StudyPlanController extends Controller implements IAdminController
     public function actionCreate()
     {
         $model = new StudyPlan();
-        $model->created = date('Y-m-d', time());
 
-        if (isset(Yii::$app->session['weeks'])) {
-            $model->semesters = Yii::$app->session['weeks'];
-            unset(Yii::$app->session['weeks']);
-        }
-
-        if (isset(Yii::$app->session['graph'])) {
-            $model->graphs = Yii::$app->session['graph'];
-            unset(Yii::$app->session['graph']);
-        }
-
-        if ($model->save()) {
-            if (!empty($_POST['origin'])) {
-                $this->copyPlan(StudyPlan::findOne($_POST['origin']), $model);
+        if (isset($_POST['StudyPlan'])) {
+            $model->attributes = $_POST['StudyPlan'];
+            $model->created = date('Y-m-d', time());
+            if (isset(Yii::$app->session['weeks'])) {
+                $model->semesters = Yii::$app->session['weeks'];
+                unset(Yii::$app->session['weeks']);
+            }
+            if (isset(Yii::$app->session['graph'])) {
+                $model->graphs = Yii::$app->session['graph'];
+                unset(Yii::$app->session['graph']);
+            }
+            if ($model->save()) {
+                if (!empty($_POST['origin'])) {
+                    return $this->copyPlan(StudyPlan::findOne(['id' => $_POST['origin']]), $model);
+                }
+                return $this->redirect(Url::to('subjects', ['id' => $model->id]));
             }
         }
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
+        return $this->render('create', array('model' => $model));
     }
 
     /**
@@ -68,7 +64,8 @@ class StudyPlanController extends Controller implements IAdminController
      */
     public function copyPlan($origin, $newPlan)
     {
-        foreach ($origin->study_subjects as $subject) {
+        $subjects = StudySubject::findAll(['plan_id' => $origin->id]);
+        foreach ($subjects as $subject) {
             $model = new StudySubject();
             $model->attributes = $subject->attributes;
             $model->plan_id = $newPlan->id;

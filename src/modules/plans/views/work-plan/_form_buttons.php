@@ -19,11 +19,11 @@ use app\modules\plans\models\StudyPlan;
     <?php $form = ActiveForm::begin(); ?>
 
     <?= Html::a($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Save'),
-        ['/plans/study-plan'], ['class' => 'btn btn-primary']) ?>
+        ['/plans/work-plan'], ['class' => 'btn btn-primary']) ?>
 
-    <?= Html::a(Yii::t('base', 'Cancel'), ['/plans/study-plan'], ['class' => 'btn btn-danger']) ?>
+    <?= Html::a(Yii::t('app', 'Cancel'), ['/plans/work-plan'], ['class' => 'btn btn-danger']) ?>
 
-    <?= Html::a(Yii::t('plans', 'Return'), ['/plans/study-plan'], ['class' => 'btn btn-info']) ?>
+    <?= Html::a(Yii::t('app', 'Return'), ['/plans/work-plan'], ['class' => 'btn btn-info']) ?>
 
     <?php ActiveForm::end(); ?>
 

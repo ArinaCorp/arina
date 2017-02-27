@@ -209,7 +209,8 @@ class WorkPlan extends ActiveRecord
      */
     public function getTitle()
     {
-        return $this->speciality->title . ' - ' . $this->study_year->getFullName();
+        $year = StudyYear::findOne(['id' => $this->study_year_id]);
+        return $this->speciality->title . ' - ' . $year->getFullName();
     }
 
     public function checkOrigin()
