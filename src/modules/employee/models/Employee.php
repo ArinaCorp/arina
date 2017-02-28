@@ -21,6 +21,8 @@ use yii\helpers\ArrayHelper;
  * @property string $birth_date
  * @property string $passport
  * @property string $passport_issued_by
+ * @property string $passport_issued_date
+ * @property string $start_date
  */
 class Employee extends ActiveRecord
 {
@@ -45,7 +47,7 @@ class Employee extends ActiveRecord
         return [
             [['id', 'position_id', 'category_id', 'is_in_education', 'gender', 'type', 'cyclic_commission_id'], 'integer'],
             [['last_name', 'first_name', 'middle_name', 'position_id', 'is_in_education',
-                'gender', 'passport', 'birth_date', 'passport_issued_by'], 'required'],
+                'gender', 'passport', 'birth_date', 'passport_issued_by', 'start_date', 'passport_issued_date'], 'required'],
             [['birth_date','cyclic_commission_id', 'passport', 'passport_issued_by'], 'safe'],
             [['passport', 'id'], 'unique'],
         ];
@@ -70,6 +72,8 @@ class Employee extends ActiveRecord
             'birth_date' => Yii::t('app', 'Birth Day'),
             'passport' => Yii::t('app', 'Passport Code'),
             'passport_issued_by' => Yii::t('app', 'Passport issued'),
+            'passport_issued_date' => Yii::t('app', 'Passport issued date'),
+            'start_date' => Yii::t('app', 'Start date'),
         ];
     }
 
@@ -106,7 +110,7 @@ class Employee extends ActiveRecord
     
     public function getIsInEducationName()
     {
-        return $this->is_in_education ? Yii::t('app', 'Not take part in education') : Yii::t('app', 'Take part in education');
+        return $this->is_in_education ? Yii::t('app', 'Take part in education') : Yii::t('app', 'Not take part in education');
     }
 
     public static function getList()

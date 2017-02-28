@@ -56,6 +56,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => Qualification::findOne(['id' => $model->category_id])->title,
             ],
             //'type',
+            'start_date',
             'first_name',
             'middle_name',
             'last_name',
@@ -72,6 +73,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'birth_date',
             'passport',
             'passport_issued_by',
+            'passport_issued_date',
         ],
     ]) ?>
 
