@@ -5,10 +5,6 @@ return array_merge(require(__DIR__ . '/installed_modules.php'), [
         'class' => 'nullref\core\Module'
     ],
 
-    'gridview' =>  [
-        'class' => '\kartik\grid\Module'
-    ],
-
     'admin' => [
         'class' => 'nullref\admin\Module'
     ],
