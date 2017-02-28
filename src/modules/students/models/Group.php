@@ -98,7 +98,7 @@ class Group extends ActiveRecord
      */
     public function getSystemTitle()
     {
-        return $this->specialityQualification->speciality->short_title . '-' . $this->getSystemYearPrefix() . $this->number_group;
+       //return $this->specialityQualification->speciality->short_title . '-' . $this->getSystemYearPrefix() . $this->number_group;
     }
 
     /**
