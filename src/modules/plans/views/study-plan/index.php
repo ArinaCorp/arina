@@ -5,6 +5,8 @@ use yii\web\View;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
 use yii\data\ActiveDataProvider;
+
+use app\modules\directories\models\speciality\Speciality;
 use app\modules\plans\models\StudyPlanSearch;
 
 /* @var $this View
@@ -22,6 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="col-lg-8">
         <?= Html::a(Yii::t('app', 'Create study plan'), ['create'], ['class' => 'btn btn-success']) ?>
     </div>
+    <br/><br/>
 
     <?php Pjax::begin(); ?>
 
@@ -29,10 +32,18 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-            ['header' => 'speciality.title', 'value' => 'speciality_id'],
-            'created',
+            [
+                'contentOptions'=>[ 'style'=>'width: 550px'],
+                'attribute' => 'speciality_id',
+                'value' => function ($model) {
+                    return Speciality::findOne(['id' => $model->speciality_id])->title;
+                }
+            ],
             'updated',
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'contentOptions'=>[ 'style'=>'width: 80px'],
+            ],
         ],
     ]);
     ?>

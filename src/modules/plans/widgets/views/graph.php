@@ -2,6 +2,7 @@
 
 use yii\helpers\Url;
 
+use yii\helpers\Html;
 use app\modules\plans\widgets\Graph;
 
 /**
@@ -108,7 +109,7 @@ use app\modules\plans\widgets\Graph;
         $(function () {
             var loader = $('img.load').hide();
             $('tr.line').find('input').click(function () {
-                $.get("<?= Url::to("/studyPlan/main/resetGraph");?>").done(function () {
+                $.get("<?= Url::to("/plans/study-plan/reset-graph");?>").done(function () {
                     $("div.result").empty();
                 });
                 var obj = $(this);
@@ -160,25 +161,25 @@ use app\modules\plans\widgets\Graph;
                     v.val(v.attr('data-state'));
                 });
                 var data = $('<form>').append(myInputs).serialize();
-
-
                 var posting = $.post(url, data).done(done);
+                console.log(data);
                 e.preventDefault(e);
             });
         });
     </script>
     <span>
-    ПОЗНАЧЕННЯ:
+    <?= Yii::t('plans', 'Guide'); ?>
 </span>
     <ul>
-        <li><?= Yii::t('plan', 'T - theoretical training'); ?></li>
-        <li><?= Yii::t('plan', 'S - examination session'); ?></li>
-        <li><?= Yii::t('plan', 'P - practice'); ?></li>
-        <li><?= Yii::t('plan', 'H - vacation (holidays)'); ?></li>
-        <li><?= Yii::t('plan', 'DP - diploma design'); ?></li>
-        <li><?= Yii::t('plan', 'DA - state certification'); ?></li>
+        <li><?= Yii::t('plans', 'T - theoretical training'); ?> </li>
+        <li><?= Yii::t('plans', 'S - examination session'); ?>  </li>
+        <li><?= Yii::t('plans', 'P - practice'); ?>             </li>
+        <li><?= Yii::t('plans', 'H - vacation (holidays)'); ?>  </li>
+        <li><?= Yii::t('plans', 'DP - diploma design'); ?>      </li>
+        <li><?= Yii::t('plans', 'DA - state certification'); ?> </li>
     </ul>
-    <button class="btn btn-success" id="generate"><?= Yii::t('base', 'Generate'); ?></button>
+
+    <?= Html::button(Yii::t('app', 'Generate'), [ 'class' => 'btn btn-primary', 'id' => 'generate' ]); ?>
 
     <div class="result">
     </div>

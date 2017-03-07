@@ -7,6 +7,8 @@ use yii\db\ActiveRecord;
 use yii\db\ActiveQuery;
 use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
+use nullref\useful\behaviors\JsonBehavior;
+use yii\behaviors\TimestampBehavior;
 
 use app\modules\directories\models\speciality\Speciality;
 use app\modules\directories\models\department\Department;
@@ -19,7 +21,7 @@ use app\modules\directories\models\subject\Subject;
  * @property integer $id
  * @property integer $speciality_id
  * @property array $semesters
- * @property array $graphs
+ * @property array $graph
  * @property integer $created
  * @property integer $updated
  *
@@ -35,20 +37,17 @@ class StudyPlan extends ActiveRecord
     public function behaviors()
     {
         return [
-            /*'JSONBehavior' => [
-                'class' => 'application.behaviors.JSONBehavior',
-                'fields' => ['graphs'],
+            'JsonBehavior' => [
+                'class' => JsonBehavior::className(),
+                'fields' => ['graph', 'semesters'],
             ],
-            'StrBehavior' => [
-                'class' => 'application.behaviors.StrBehavior',
-                'fields' => ['semesters'],
-            ],
-            'CTimestampBehavior' => [
-                'class' => 'zii.behaviors.CTimestampBehavior',
-                'createAttribute' => 'created',
-                'updateAttribute' => 'updated',
-                'setUpdateOnCreate' => true,
-            ],*/
+            'TimestampBehavior' => [
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created', 'updated'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updated'],
+                ],
+            ]
         ];
     }
 
@@ -66,11 +65,12 @@ class StudyPlan extends ActiveRecord
     public function rules()
     {
         return [
-            /*[['speciality_id'], 'required'],
+            [['speciality_id'], 'required'],
             [['semesters'], 'required', 'message' => Yii::t('plans', 'Click "Generate" and check the data')],
-            [['speciality_id'], 'integer' => true],
+            [['id', 'speciality_id'], 'integer'],
             [['created'], 'default', 'value' => date('Y-m-d', time()), 'on' => 'insert'],
-            [['id, speciality_id'], 'safe', 'on' => 'search'],*/
+            [['id, speciality_id'], 'safe', 'on' => 'search'],
+            [['id'], 'unique']
         ];
     }
 
@@ -78,7 +78,7 @@ class StudyPlan extends ActiveRecord
      * @param $id
      * @return array
      */
-    public static function getList($id)
+    public static function getList($id = NULL)
     {
         /** @var Department $department */
         if (isset($id)) {
@@ -105,7 +105,7 @@ class StudyPlan extends ActiveRecord
         $allSubjects = Subject::getListForSpeciality($this->speciality_id);
         $result = array();
         foreach ($allSubjects as $cycle => $subject) {
-            $result[$cycle] = array();
+            $result[$cycle] = [];
             foreach ($subject as $id => $name) {
                 if (!isset($usedSubjects[$id])) {
                     $result[$cycle][$id] = $name;
@@ -163,7 +163,7 @@ class StudyPlan extends ActiveRecord
             'year_id' => Yii::t('plans', 'Study year'),
             'speciality_id' => Yii::t('plans', 'Speciality'),
             'semesters' => Yii::t('plans', 'Semesters'),
-            'graphs' => Yii::t('plans', 'Graphs'),
+            'graph' => Yii::t('plans', 'Graph'),
             'created' => Yii::t('plans', 'Date of creation'),
             'updated' => Yii::t('plans', 'Date of update'),
         ];
@@ -196,7 +196,7 @@ class StudyPlan extends ActiveRecord
         ]);
 
         $query->andFilterWhere(['like', 'semesters', $this->semesters])
-            ->andFilterWhere(['like', 'graphs', $this->graphs]);
+            ->andFilterWhere(['like', 'graph', $this->graph]);
         return $dataProvider;
     }
 
@@ -214,7 +214,6 @@ class StudyPlan extends ActiveRecord
      */
     public function getTitle()
     {
-        $spec = Speciality::findOne(['id' => $this->speciality_id]);
-        return $spec->title . ' - ' . date('H:i d.m.Y', $this->updated);
+        return $this->speciality->title . ' - ' . date('H:i d.m.Y', $this->updated);
     }
 }

@@ -44,18 +44,18 @@ class StudyPlanController extends Controller implements IAdminController
                 unset(Yii::$app->session['weeks']);
             }
             if (isset(Yii::$app->session['graph'])) {
-                $model->graphs = Yii::$app->session['graph'];
+                $model->graph = Yii::$app->session['graph'];
                 unset(Yii::$app->session['graph']);
             }
             if ($model->save()) {
                 if (!empty($_POST['origin'])) {
                     return $this->copyPlan(StudyPlan::findOne(['id' => $_POST['origin']]), $model);
                 }
-                return $this->redirect(Url::to('subjects', ['id' => $model->id]));
+                return $this->redirect(['subjects', 'id' => $model->id]);
             }
         }
 
-        return $this->render('create', array('model' => $model));
+        return $this->render('create', ['model' => $model]);
     }
 
     /**

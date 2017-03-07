@@ -14,14 +14,14 @@ class StudyPlanSearch extends StudyPlan
     public function rules()
     {
         return [
-            /*[['speciality_id'], 'required'],
+            [['speciality_id'], 'required'],
             [['semesters'], 'required', 'message' => Yii::t('plans', 'Click "Generate" and check the data')],
-            [['speciality_id'], 'integer' => true],
+            [['id', 'speciality_id'], 'integer'],
             [['created'], 'default', 'value' => date('Y-m-d', time()), 'on' => 'insert'],
-            [['id, speciality_id'], 'safe', 'on' => 'search'],*/
+            [['id, speciality_id'], 'safe', 'on' => 'search'],
+            [['id'], 'unique']
         ];
     }
-
     /**
      * @inheritdoc
      */

@@ -6,6 +6,7 @@ use yii\db\ActiveQuery;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 use app\modules\directories\models\department\Department;
 use app\modules\directories\models\speciality_qualification\SpecialityQualification;
@@ -165,5 +166,14 @@ class Speciality extends ActiveRecord
         }
         array_multisort($list);
         return $list;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getList()
+    {
+        return ArrayHelper::map(Speciality::find()->all(), 'id', 'title');
+
     }
 }
