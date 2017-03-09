@@ -4,8 +4,10 @@ use yii\web\View;
 use yii\bootstrap\ActiveForm;
 use yii\widgets\Pjax;
 use yii\bootstrap\Html;
+use kartik\select2\Select2;
 
 use app\modules\plans\models\StudySubject;
+use app\modules\plans\models\StudyPlan;
 
 /**
  * @var $this View
@@ -55,137 +57,29 @@ $this->params['breadcrumbs'][] = $this->title;
         width: 170px;
     }
 </style>
+
 <?php Pjax::begin(); ?>
 
 <?php $form = ActiveForm::begin(
-    ['htmlOptions' => ['class' => 'well',]]
+    [
+        'id' => 'dynamic-form',
+        'options' => [
+            'enctype' => 'multipart/form-data',
+        ],
+
+    ]
 ); ?>
 
 <h3>Додання предметів</h3>
-<?php echo $form->errorSummary($model); ?>
+<?= $form->errorSummary($model); ?>
+
 <div class="span3">
-    <?php echo $form->listBox(
-        $model,
-        'subject_id',
-        $model->plan->getUnusedSubjects(),
-        array('size' => 25)
-    ); ?>
-    <?php echo $form->telFieldRow($model, 'diploma_name'); ?>
-    <?php echo $form->telFieldRow($model, 'certificate_name'); ?>
+    <?php var_dump(StudyPlan::findOne(['id' => $model->id]));?>
+    <?= $form->field($model, 'speciality_id')->widget(Select2::className(), [
+        'data' => StudyPlan::findOne(['id' => $model->id])->getUnusedSubjects(),
+        'options' =>
+            [
+                'placeholder' => Yii::t('plans', 'Select subject')
+            ]
+    ]);?>
 </div>
-<div class="span3">
-    <?php echo $form->numberFieldRow($model, 'total'); ?>
-    <?php echo Html::label('Тижневі', 'classes_weeks'); ?>
-    <?php echo Html::numberField('classes_weeks', '', array('placeholder' => 'Тижневі', 'readonly' => true)); ?>
-    <?php echo Html::label('Аудиторні', 'classes'); ?>
-    <?php echo Html::numberField('classes', '', array('placeholder' => 'Аудиторні', 'readonly' => true)); ?>
-    <?php echo $form->numberFieldRow($model, 'lectures'); ?>
-    <?php echo $form->numberFieldRow($model, 'labs'); ?>
-    <?php echo $form->checkBoxRow($model, 'dual_labs'); ?>
-    <?php echo $form->numberFieldRow($model, 'practs'); ?>
-    <?php echo $form->checkBoxRow($model, 'dual_practice'); ?>
-    <?php echo $form->numberFieldRow($model, 'practice_weeks'); ?>
-</div>
-<div class="span5">
-    <?php foreach ($model->plan->semesters as $semester => $weeks): ?>
-        <div class="input">
-            <?php echo CHtml::label(
-                $semester + 1 . '-й семестр: ' . $weeks . ' тижнів',
-                'StudySubject_weeks_' . $semester, array('style' => 'font-weight: bold')
-            ); ?>
-            <?php echo $form->numberField($model, "weeks[$semester]", array('placeholder' => 'годин на тиждень')); ?>
-        </div>
-        <div class="options">
-            <div class="item">
-                <?php echo $form->checkBox($model, "control[$semester][0]"); ?>
-                <?php echo CHtml::label(Yii::t('terms', 'Test'), "StudySubject_control_{$semester}_0"); ?>
-                <?php echo $form->checkBox($model, "control[$semester][1]"); ?>
-                <?php echo CHtml::label(Yii::t('terms', 'Exam'), "StudySubject_control_{$semester}_1"); ?>
-            </div>
-            <div class="item">
-                <?php echo $form->checkBox($model, "control[$semester][2]"); ?>
-                <?php echo CHtml::label(Yii::t('terms', 'DPA'), "StudySubject_control_{$semester}_2"); ?>
-                <?php echo $form->checkBox($model, "control[$semester][3]"); ?>
-                <?php echo CHtml::label(Yii::t('plan', 'DA'), "StudySubject_control_{$semester}_3"); ?>
-            </div>
-            <div class="item last">
-                <?php echo $form->checkBox($model, "control[$semester][4]"); ?>
-                <?php echo CHtml::label(Yii::t('terms', 'Course work'), "StudySubject_control_{$semester}_4"); ?>
-                <?php echo $form->checkBox($model, "control[$semester][5]"); ?>
-                <?php echo CHtml::label(Yii::t('terms', 'Course project'), "StudySubject_control_{$semester}_5"); ?>
-            </div>
-        </div>
-        <div class="clearfix"></div>
-    <?php endforeach; ?>
-</div>
-<div style="clear: both"></div>
-<div class="form-actions" style="width: 200px; margin: 0 auto">
-    <?php echo CHtml::submitButton('Додати', array('class' => 'btn btn-primary')); ?>
-    <?php echo CHtml::button('Очистити', array('type' => 'reset', 'class' => 'btn btn-danger')); ?>
-</div>
-<?php $this->endWidget(); ?>
-<?php echo CHtml::link('Завершити', $this->createUrl('index'), array('class' => 'btn btn-info btn-large')); ?>
-
-<?php $this->widget(
-    'studyPlan.widgets.SubjectTable',
-    array(
-        'subjectDataProvider' => $model->plan->getPlanSubjectProvider()
-    )
-);
-?>
-
-<?php echo CHtml::link('Завершити', $this->createUrl('index'), array('class' => 'btn btn-info btn-large')); ?>
-
-<script>
-    var weeks = [
-        <?php echo implode(', ', $model->plan->semesters); ?>
-    ];
-
-
-    function calcClassesWeeks() {
-        var classes_weeks = 0;
-        for (i = 0; i < 8; i++) {
-            var e = "#StudySubject_weeks_" + i;
-            if ($(e).val())
-                classes_weeks += weeks[i] * parseInt($(e).val());
-        }
-        $("#classes_weeks").val(classes_weeks);
-    }
-
-    var flag = false;
-
-    $(function () {
-        var selector = $('#StudySubject_lectures, #StudySubject_labs, #StudySubject_practs');
-
-        function calcClasses() {
-            selector.change(function () {
-                var amount = 0;
-                selector.each(function (i, e) {
-                        var val = $(e).val();
-                        if (val) amount += parseInt(val);
-                    }
-                );
-                $('#classes').val(amount);
-            })
-        }
-        calcClasses();
-        calcClassesWeeks();
-
-        $("input[id^='StudySubject_weeks_']").change(function () {
-            calcClassesWeeks();
-        });
-
-
-        $("input[type='submit']").click(function () {
-            flag = true;
-        });
-
-        window.addEventListener("beforeunload", function (event) {
-            var confirmationMessage = 'Якщо ви не натиснули "Додати" дані не збережуться';
-            if (!flag) {
-                (event || window.event).returnValue = confirmationMessage;     //Firefox, IE
-                return confirmationMessage;                                    //Chrome, Opera, Safari
-            }
-        });
-    });
-</script>

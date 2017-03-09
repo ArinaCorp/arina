@@ -6,6 +6,7 @@ use Yii;
 use yii\db\ActiveQuery;
 use yii\data\ActiveDataProvider;
 use yii\db\ActiveRecord;
+use nullref\useful\behaviors\JsonBehavior;
 
 use app\modules\directories\models\subject\Subject;
 
@@ -40,6 +41,19 @@ class StudySubject extends ActiveRecord
     public static function tableName()
     {
         return '{{%study_subject}}';
+    }
+
+    /**
+     * @return array
+     */
+    public function behaviors()
+    {
+        return [
+            'JsonBehavior' => [
+                'class' => JsonBehavior::className(),
+                'fields' => ['weeks', 'control'],
+            ],
+        ];
     }
 
     /**
@@ -82,28 +96,6 @@ class StudySubject extends ActiveRecord
     {
         return $this->hasOne(Subject::className(), ['id' => 'subject_id']);
     }
-
-    /**
-     * @return array
-     */
-    /*public function behaviors()
-    {
-        return [
-            'StrBehavior' => [
-                'class' => 'application.behaviors.StrBehavior',
-                'fields' => [
-                    'weeks',
-
-                ],
-            ],
-            'JSONBehavior' => [
-                'class' => 'application.behaviors.JSONBehavior',
-                'fields' => [
-                    'control',
-                ],
-            ],
-        ];
-    }/*
 
     /**
      * @return array customized attribute labels (name=>label)
@@ -319,14 +311,14 @@ class StudySubject extends ActiveRecord
         }
     }
 
-    /*public function checkSubject()
+    public function checkSubject()
     {
         if (!$this->hasErrors()) {
-            if (StudyPlan::find()->where(['id' => $this->subject_id])->exists($criteria)) {
-                $this->addError('subject_id', Yii::t('plans','Record about this subject exists in this study plan'));
+            if (StudyPlan::find()->where(['id' => $this->subject_id])) {
+                $this->addError('subject_id', Yii::t('plans', 'Record about this subject exists in this study plan'));
             }
         }
-    }*/
+    }
 
 
 }

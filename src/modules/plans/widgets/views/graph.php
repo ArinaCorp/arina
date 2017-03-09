@@ -14,6 +14,12 @@ use app\modules\plans\widgets\Graph;
  * @var array $map
  */
 ?>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+    <script>
+        $(document).ready(function () {
+            console.log('loaded');
+        });
+    </script>
     <style>
         div.result {
             margin-top: 15px;
@@ -145,6 +151,7 @@ use app\modules\plans\widgets\Graph;
                 }
             });
             $('#generate').click(function (e) {
+
                 $("div.result").fadeOut();
                 loader.show();
                 var done = function (html) {
@@ -161,9 +168,12 @@ use app\modules\plans\widgets\Graph;
                     v.val(v.attr('data-state'));
                 });
                 var data = $('<form>').append(myInputs).serialize();
+                var url = "<?= Url::to($graphProcessLink);?>";
                 var posting = $.post(url, data).done(done);
+
                 console.log(data);
                 e.preventDefault(e);
+                console.log('clicked');
             });
         });
     </script>

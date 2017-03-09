@@ -41,13 +41,13 @@ class StudyPlan extends ActiveRecord
                 'class' => JsonBehavior::className(),
                 'fields' => ['graph', 'semesters'],
             ],
-            'TimestampBehavior' => [
+            /*'TimestampBehavior' => [
                 'class' => TimestampBehavior::className(),
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => ['created', 'updated'],
                     ActiveRecord::EVENT_BEFORE_UPDATE => ['updated'],
                 ],
-            ]
+            ]*/
         ];
     }
 
@@ -66,9 +66,9 @@ class StudyPlan extends ActiveRecord
     {
         return [
             [['speciality_id'], 'required'],
-            [['semesters'], 'required', 'message' => Yii::t('plans', 'Click "Generate" and check the data')],
+            //[['semesters'], 'required', 'message' => Yii::t('plans', 'Click "Generate" and check the data')],
             [['id', 'speciality_id'], 'integer'],
-            [['created'], 'default', 'value' => date('Y-m-d', time()), 'on' => 'insert'],
+            [['created', 'updated'], 'safe'],
             [['id, speciality_id'], 'safe', 'on' => 'search'],
             [['id'], 'unique']
         ];
@@ -103,7 +103,7 @@ class StudyPlan extends ActiveRecord
     {
         $usedSubjects = ArrayHelper::map($this->study_subjects, 'subject_id', 'id');
         $allSubjects = Subject::getListForSpeciality($this->speciality_id);
-        $result = array();
+        $result = [];
         foreach ($allSubjects as $cycle => $subject) {
             $result[$cycle] = [];
             foreach ($subject as $id => $name) {

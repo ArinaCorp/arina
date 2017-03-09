@@ -36,7 +36,7 @@ class StudyPlanController extends Controller implements IAdminController
     {
         $model = new StudyPlan();
 
-        if (isset($_POST['StudyPlan'])) {
+        if ($model->load(Yii::$app->request->post())) {
             $model->attributes = $_POST['StudyPlan'];
             $model->created = date('Y-m-d', time());
             if (isset(Yii::$app->session['weeks'])) {
@@ -67,7 +67,7 @@ class StudyPlanController extends Controller implements IAdminController
         $subjects = StudySubject::findAll(['plan_id' => $origin->id]);
         foreach ($subjects as $subject) {
             $model = new StudySubject();
-            $model->attributes = $subject->attributes;
+            $model->attributesf = $subject->attributes;
             $model->plan_id = $newPlan->id;
             $model->save(false);
         }
@@ -110,7 +110,7 @@ class StudyPlanController extends Controller implements IAdminController
         }
         Yii::$app->session['weeks'] = $weeks;
         Yii::$app->session['graph'] = $_POST['graph'];
-        $this->renderPartial('semestersPlan', ['data' => $semesters]);
+        $this->renderPartial('semesters_plan', ['data' => $semesters]);
     }
 
     /**
@@ -153,11 +153,8 @@ class StudyPlanController extends Controller implements IAdminController
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+            return $this->render('update', ['model' => $model]);
         }
-
     }
 
     /**

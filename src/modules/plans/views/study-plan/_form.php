@@ -35,7 +35,7 @@ use app\modules\plans\widgets\Graph;
 
     <div class="row">
         <div class="col-sm-6">
-            <?= $form->field($model, 'speciality')->widget(Select2::className(), [
+            <?= $form->field($model, 'speciality_id')->widget(Select2::className(), [
                 'data' => Speciality::getList(),
                 'options' =>
                     [
@@ -50,7 +50,8 @@ use app\modules\plans\widgets\Graph;
             <?= Select2::widget(
                 [
                     'data' => StudyPlan::getList(),
-                    'name' => 'copy_plan',
+                    'id' => 'origin',
+                    'name' => 'origin',
                     'options' =>
                         [
                             'placeholder' => Yii::t('app', 'Select copy plan')

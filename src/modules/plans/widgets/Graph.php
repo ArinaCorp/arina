@@ -23,8 +23,8 @@ class Graph extends Widget
     public $specialityId;
     /** @var $studyYearId int for work plan */
     public $studyYearId;
-    public $studyPlanProcessLink = '/study-plan/execute-graph';
-    public $workPlanProcessLink = '/work-plan/execute-graph';
+    public $studyPlanProcessLink = '/study-plan/execute';
+    public $workPlanProcessLink = '/work-plan/execute';
 
     protected $list;
     protected $map;

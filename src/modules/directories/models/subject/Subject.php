@@ -80,7 +80,7 @@ class Subject extends ActiveRecord
         foreach ($relations as $relation) {
             /**@var $relation SubjectRelation */
             if (!isset($list[$relation->subject_cycle->title])) {
-                $list[$relation->subject_cycle->title] = array();
+                $list[$relation->subject_cycle->title] = [];
             }
             $list[$relation->subject_cycle->title][$relation->subject_id] = $relation->subject->title;
         }
