@@ -23,6 +23,8 @@ use yii\helpers\ArrayHelper;
  * @property string $passport_issued_by
  * @property string $passport_issued_date
  * @property string $start_date
+ * 
+ * @property EmployeeEducation[] $education
  */
 class Employee extends ActiveRecord
 {
@@ -118,6 +120,34 @@ class Employee extends ActiveRecord
         $data = Employee::find()->all();
         $items = ArrayHelper::map($data,'id','nameWithInitials');
         return $items;
+    }
+
+    public function getEducation()
+    {
+        return $this->hasMany(EmployeeEducation::className(), ['employee_id' => 'id']);
+    }
+
+    public static function createMultiple($modelClass, $multipleModels = [], $pk = 'id')
+    {
+        $model = new $modelClass;
+        $formName = $model->formName();
+        $post = Yii::$app->request->post($formName);
+        $models = [];
+
+        if (!empty($multipleModels)) {
+            $keys = array_keys(ArrayHelper::map($multipleModels, $pk, $pk));
+            $multipleModels = array_combine($keys, $multipleModels);
+        }
+
+        if ($post && is_array($post)) {
+            foreach ($post as $i => $item) {
+                if (isset($item[$pk]) && !empty($item[$pk]) && isset($multipleModels[$item[$pk]])) {
+                    $models[] = $multipleModels[$item[$pk]];
+                } else {
+                    $models[] = new $modelClass;
+                }
+            }
+        }
     }
     
     

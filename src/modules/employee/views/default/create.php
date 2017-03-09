@@ -6,6 +6,7 @@ use app\modules\employee\models\Employee;
 
 /* @var $this View
  * @var $model Employee */
+/* @var $modelsEducation \app\modules\employee\models\EmployeeEducation[] */
 
 $this->title = Yii::t('app', 'Create employee');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Employees'), 'url' => ['index']];
@@ -29,6 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $this->render('_form', [
         'model' => $model,
+        'modelsEducation' => $modelsEducation,
     ]) ?>
 
 </div>

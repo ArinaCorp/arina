@@ -2,9 +2,12 @@
 
 namespace app\modules\employee\controllers;
 
+use app\modules\employee\models\EmployeeEducation;
 use app\modules\employee\models\EmployeeSearch;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
+use yii\base\Model;
+use yii\base\Exception;
 use app\modules\employee\models\Employee;
 use yii\web\NotFoundHttpException;
 use nullref\core\interfaces\IAdminController;
@@ -65,14 +68,43 @@ class DefaultController extends Controller implements IAdminController
     public function actionCreate()
     {
         $model = new Employee();
+        $modelsEducation = [new EmployeeEducation()];
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        /**
+         * @var $modelsEducation EmployeeEducation[]
+         */
+
+        if ($model->load(Yii::$app->request->post())) {
+            $modelsEducation = Employee::createMultiple(EmployeeEducation::className());
+            Model::loadMultiple($modelsEducation, Yii::$app->request->post());
+            $valid = $model->validate();
+            $valid = Model::validateMultiple($modelsEducation) && $valid;
+            if ($valid) {
+                $transaction = \Yii::$app->db->beginTransaction();
+                try {
+                    if ($flag = $model->save(false)) {
+                        foreach ($modelsEducation as $modelEducation) {
+                            $modelEducation->employee_id = $model->id;
+                            if (!($flag = $modelEducation->save(false))) {
+                                $transaction->rollBack();
+                                break;
+                            }
+                        }
+                    }
+                    if ($flag) {
+                        $transaction->commit();
+                        return $this->redirect(['view', 'id' => $model->id]);
+                    }
+                } catch (Exception $e) {
+                    $transaction->rollBack();
+                }
+            }
             return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
         }
+        return $this->render('create', [
+            'model' => $model,
+            'modelsEducation' => (empty($modelsEducation)) ? [new EmployeeEducation()] : $modelsEducation,
+        ]);
     }
 
     /**

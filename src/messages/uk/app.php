@@ -180,6 +180,9 @@ return [
     'Not take part in education' => 'Не бере участі у навч. процесі',
     'Cyclic Commissions' => 'Циклові комісії',
     'Create Cyclic Commission' => 'Створити циклову комісію',
+    'Start date' => 'Дата прийому на роботу',
+    'Select cyclic commission' => 'Виберіть циклову комісію',
+    '' => '',
 
 
 ];

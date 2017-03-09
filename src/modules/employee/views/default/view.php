@@ -77,4 +77,34 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]) ?>
 
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <i class="fa fa-users"></i> <?= Yii::t('app', 'Education') ?>
+            <div class="clearfix"></div>
+        </div>
+        <div class="panel-body container-items"><!-- widgetContainer -->
+            <?php foreach ($model->education as $index => $modelEducation): ?>
+                <div class="item panel panel-default"><!-- widgetBody -->
+                    <div class="panel-heading">
+                        <span class="panel-title-address"><?= Yii::t('app', 'Education') ?>: <?= ($index + 1) ?></span>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-body">
+                        <?= DetailView::widget([
+                            'model' => $modelEducation,
+                            'attributes' => [
+                                'name_of_institution',
+                                'document',
+                                'graduation_year',
+                                'speciality',
+                                'qualification',
+                                'education_form',
+                            ],
+                        ]) ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+
 </div>
