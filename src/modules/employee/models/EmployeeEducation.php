@@ -41,6 +41,7 @@ class EmployeeEducation extends \yii\db\ActiveRecord
     {
         return [
             [['employee_id', 'graduation_year'], 'integer'],
+            [['name_of_institution', 'document', 'education_form', 'type_id'], 'required'],
             [['name_of_institution', 'document', 'education_form'], 'string', 'max' => 64],
             [['speciality', 'qualification'], 'string', 'max' => 11],
         ];

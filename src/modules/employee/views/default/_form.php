@@ -48,6 +48,8 @@ $this->registerJs($js);
         ]
     ); ?>
 
+    <?php echo $form->errorSummary($model); ?>
+    
     <div class="row">
         <div class="col-sm-4">
             <?= $form->field($model, 'is_in_education')
@@ -226,5 +228,6 @@ $this->registerJs($js);
     </div>
 
     <?php ActiveForm::end(); ?>
+    <?php \yii\widgets\Pjax::end(); ?>
 
 </div>

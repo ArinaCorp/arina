@@ -8,6 +8,7 @@ use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\base\Model;
 use yii\base\Exception;
+use yii\helpers\ArrayHelper;
 use app\modules\employee\models\Employee;
 use yii\web\NotFoundHttpException;
 use nullref\core\interfaces\IAdminController;
@@ -116,14 +117,48 @@ class DefaultController extends Controller implements IAdminController
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $modelsEducation = $model->education;
+        /**
+         * @var $modelsEducation EmployeeEducation[]
+         */
+        if ($model->load(Yii::$app->request->post())) {
+            $educationOldIDs = ArrayHelper::map($modelsEducation, 'id', 'id');
+            $modelsEducation = Employee::createMultiple(EmployeeEducation::className(), $modelsEducation);
+            Model::loadMultiple($modelsEducation, Yii::$app->request->post());
+            $educationDeletedIDs = array_diff($educationOldIDs, array_filter(ArrayHelper::map($modelsEducation, 'id', 'id')));
+            // validate all models
+            $valid = $model->validate();
+            $valid = Model::validateMultiple($modelsEducation) && $valid;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+            if ($valid) {
+                $transaction = \Yii::$app->db->beginTransaction();
+                try {
+                    if ($flag = $model->save(false)) {
+                        if (!empty($familyDeletedIDs)) {
+                            EmployeeEducation::deleteAll(['id' => $educationDeletedIDs]);
+                        }
+                        foreach ($modelsEducation as $modelEducation) {
+                            $modelEducation->employee_id = $model->id;
+                            if (!($flag = $modelEducation->save(false))) {
+                                $transaction->rollBack();
+                                break;
+                            }
+                        }
+                    }
+                    if ($flag) {
+                        $transaction->commit();
+                        return $this->redirect(['view', 'id' => $model->id]);
+                    }
+                } catch (Exception $e) {
+                    $transaction->rollBack();
+                }
+            }
         }
+
+        return $this->render('update', [
+            'model' => $model,
+            'modelsEducation' => (empty($modelsEducation)) ? [new EmployeeEducation()] : $modelsEducation,
+        ]);
     }
 
     /**
@@ -137,6 +172,12 @@ class DefaultController extends Controller implements IAdminController
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    public function actionDocument($id)
+    {
+        $model = $this->findModel($id);
+        $model->getDocument();
     }
 
     /**

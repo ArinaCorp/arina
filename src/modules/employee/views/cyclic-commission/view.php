@@ -34,4 +34,27 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]) ?>
 
+    <?= \yii\grid\GridView::widget([
+        'dataProvider' => $dataProvider,
+        'columns' => [
+            ['class' => 'yii\grid\SerialColumn'],
+            'position',
+            'last_name',
+            'first_name',
+            'middle_name',
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{view}',
+                'buttons' => [
+                    'view' => function ($url, $model) {
+                        $customurl = Yii::$app->getUrlManager()->createUrl(['employee/default/view', 'id' => $model['id']]); //$model->id для AR
+                        return \yii\helpers\Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $customurl,
+                            ['title' => Yii::t('yii', 'View'), 'data-pjax' => '0']);
+                    },
+                ],
+            ],
+        ],
+    ]);
+    ?>
+
 </div>

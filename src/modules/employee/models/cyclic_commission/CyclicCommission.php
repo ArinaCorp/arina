@@ -77,5 +77,29 @@ class CyclicCommission extends \yii\db\ActiveRecord
         return $items;
     }
 
+    /**
+     * @return Employee[]
+     */
+    public function getEmployeeArray()
+    {
+        /**
+         * @var $result Employee[];
+         * @var $employees Employee[];
+         */
+        $result = [];
+        $employees = Employee::find()->all();
+        foreach ($employees as $employee) {
+            $idsCyclicCommission = $employee->getCyclicCommissionArray();
+            if (!is_null($idsCyclicCommission)) {
+                if (array_key_exists($this->id, $idsCyclicCommission)) {
+                    $employee->position_id = $idsCyclicCommission[$this->id];
+                    array_push($result, $employee);
+                };
+            }
+        }
+
+        return $result;
+    }
+
 
 }
