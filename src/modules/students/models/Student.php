@@ -184,7 +184,7 @@ class Student extends \yii\db\ActiveRecord
 
     public function getLink()
     {
-        return Html::a($this->getShortName(), ['student/default/view', 'id' => $this->id]);
+        return Html::a($this->getFullName(), ['student/default/view', 'id' => $this->id]);
     }
 
     public function getPhoto()

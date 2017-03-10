@@ -11,13 +11,13 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="group-index">
 
-<div class="row">
-    <div class="col-lg-12">
-        <h1 class="page-header">
-            <?= Html::encode($this->title) ?>
-        </h1>
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">
+                <?= Html::encode($this->title) ?>
+            </h1>
+        </div>
     </div>
-</div>
 
 
     <p>
@@ -33,16 +33,27 @@ $this->params['breadcrumbs'][] = $this->title;
             //'number_group',
             'title',
             [
-                'label'=>Yii::t('app','System title'),
+                'label' => Yii::t('app', 'System title'),
                 'value' => function ($model, $key, $index, $widget) {
-                    /* @var $model \app\modules\students\models\Group*/
+                    /* @var $model \app\modules\students\models\Group */
                     return $model->getSystemTitle();
                 },
             ],
 
             // 'group_leader_id',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{view} {document} {update} {delete}',
+                'buttons'=>[
+                    'document' => function ($url, $model) {
+                        return Html::a('<span class="glyphicon glyphicon-list"></span>', $url, [
+                            'title' => Yii::t('app', 'List'),
+                        ]);
+                    },
+
+                ]
+            ],
         ],
     ]); ?>
 

@@ -2,7 +2,10 @@
 
 namespace app\modules\students\models;
 
+use app\modules\employee\models\Employee;
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "curator_group".
@@ -17,6 +20,17 @@ use Yii;
  */
 class CuratorGroup extends \yii\db\ActiveRecord
 {
+    const TYPE_ACCEPTED = 1;
+    const TYPE_DE_ACCEPTED = 2;
+
+
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::className(),
+        ];
+    }
+
     /**
      * @inheritdoc
      */
@@ -33,7 +47,7 @@ class CuratorGroup extends \yii\db\ActiveRecord
         return [
             [['group_id', 'teacher_id', 'type', 'created_at', 'updated_at'], 'integer'],
             [['date'], 'safe'],
-            [['group_id', 'teacher_id', 'type', 'date'], 'required']
+            [['group_id', 'teacher_id', 'type'], 'required']
         ];
     }
 
@@ -53,16 +67,26 @@ class CuratorGroup extends \yii\db\ActiveRecord
         ];
     }
 
-    public function getType()
-    {
-        return ($this->type) ? Yii::t('app', 'Accepted') : Yii::t('app', 'De accepted');
-    }
+//    public function getType()
+//    {
+//        return ($this->type) ? Yii::t('app', 'Accepted') : Yii::t('app', 'De accepted');
+//    }
 
     public static function getTypesList()
     {
         return [
-            0 => Yii::t('app', 'De accepted'),
-            1 => Yii::t('app', 'Accepted'),
+            self::TYPE_DE_ACCEPTED => Yii::t('app', 'De accepted'),
+            self::TYPE_ACCEPTED => Yii::t('app', 'Accepted'),
         ];
+    }
+
+    public function getTeacher()
+    {
+        return $this->hasOne(Employee::className(), ['id' => 'teacher_id']);
+    }
+
+    public function getGroup()
+    {
+        return $this->hasOne(Group::className(), ['id' => 'group_id']);
     }
 }

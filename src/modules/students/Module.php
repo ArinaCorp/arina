@@ -29,32 +29,37 @@ class Module extends BaseModule implements IAdminModule
                 [
                     'label' => Yii::t('app', 'Groups'),
                     'url' => ['/students/group'],
-                    'icon' => 'list',
+                    'icon' => 'street-view',
                 ],
                 [
                     'label' => Yii::t('app', 'List'),
                     'url' => ['/students'],
-                    'icon' => 'list',
+                    'icon' => 'address-book',
                 ],
                 [
                     'label' => Yii::t('app', 'Students history'),
                     'url' => ['/students/students-history'],
-                    'icon' => 'list',
+                    'icon' => 'random',
                 ],
                 [
                     'label' => Yii::t('app', 'Import Students from XML'),
                     'url' => ['/students/import'],
-                    'icon' => 'list',
+                    'icon' => 'download',
                 ],
                 [
                     'label' => Yii::t('app', 'Family ties types'),
                     'url' => ['/students/family-ties-types'],
-                    'icon' => 'list',
+                    'icon' => '',
                 ],
                 [
                     'label' => Yii::t('app', 'Exemptions'),
                     'url' => ['/students/exemptions'],
-                    'icon' => 'list',
+                    'icon' => 'universal-access',
+                ],
+                [
+                    'label' => Yii::t('app', 'Curator Groups'),
+                    'url' => ['/students/curator-groups'],
+                    'icon' => 'sort',
                 ]
             ]
         ];
