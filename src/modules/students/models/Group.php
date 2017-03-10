@@ -2,7 +2,9 @@
 
 namespace app\modules\students\models;
 
+use app\modules\employee\models\Employee;
 use Yii;
+use yii\bootstrap\Html;
 use yii\db\ActiveRecord;
 use yii\db\ActiveQuery;
 
@@ -11,6 +13,7 @@ use app\modules\directories\models\StudyYear;
 use yii\helpers\ArrayHelper;
 use PHPExcel;
 use PHPExcel_IOFactory;
+use yii\helpers\Url;
 
 /**
  * This is the model class for table "group".
@@ -64,6 +67,7 @@ class Group extends ActiveRecord
             'title' => Yii::t('app', 'Title'),
             'group_leader_id' => Yii::t('app', 'Group Leader ID'),
             'systemTitle' => Yii::t('app', 'System title'),
+            'curator_id' => Yii::t('app', 'Curator ID')
         ];
     }
 
@@ -261,7 +265,20 @@ class Group extends ActiveRecord
     public
     function getGroupLeaderFullName()
     {
-        return (is_null($this->group_leader_id)) ? Yii::t('app', 'No select') : $this->groupLeader->getFullName();
+        return (is_null($this->group_leader_id)) ? Yii::t('app', 'Not assigned') : $this->groupLeader->getFullName();
+    }
+
+    public
+    function getCuratorFullName()
+    {
+        return ($this->getCuratorId() === false) ? Yii::t('app', 'Not assigned') : $this->getCurator()->getFullName();
+    }
+
+    public
+    function getGroupLeaderLink()
+    {
+        if (!$this->groupLeader) return Yii::t('app', 'Not assigned');
+        return $this->groupLeader->getLink();
     }
 
     public function getDocument()
@@ -272,7 +289,7 @@ class Group extends ActiveRecord
         $excelObj = $excelReader->load($tmpfname);
         $excelObj->setActiveSheetIndex(0);
         $excelObj->getActiveSheet()->SetCellValue('B2', $this->title);
-      //  $excelObj->getActiveSheet()->SetCellValue('B3', StudyYear::getCurrent()->fullName . " навчального року");
+        $excelObj->getActiveSheet()->SetCellValue('B3', StudyYear::getCurrentYear()->fullName . " навчального року");
         /**
          * @var Student[] $students
          */
@@ -292,6 +309,11 @@ class Group extends ActiveRecord
             }
             $excelObj->getActiveSheet()->removeRow($current);
             $excelObj->getActiveSheet()->removeRow($current);
+            $current += 1;
+            $excelObj->getActiveSheet()->setCellValue('F' . $current, $this->getCuratorFullName());
+            $current += 2;
+              $excelObj->getActiveSheet()->setCellValue('F' . $current, $this->getGroupLeaderFullName());
+
 //            $excelObj->getActiveSheet()
 //                ->getCell('C' . $current - 1)
 //                ->getStyle()
@@ -335,5 +357,41 @@ class Group extends ActiveRecord
         $last_year = mb_substr($this->title, 3, 2, 'UTF-8');
         $value = $year->getYearEnd() - 2000 - $last_year;
         return $value;
+    }
+
+    public function getCuratorId()
+    {
+        $teachers = Employee::getAllTeacher();
+        if ($teachers) {
+            foreach ($teachers as $teacher) {
+                /**
+                 * @var $teacher Employee;
+                 */
+                if (in_array($this->id, $teacher->getGroupArray())) {
+                    return $teacher->id;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @return array|null|Employee
+     */
+
+    public function getCurator()
+    {
+        return Employee::find()->where(['id' => $this->getCuratorId()])->one();
+    }
+
+    public function getCuratorLink()
+    {
+        if ($this->getCuratorId() === false) return Yii::t('app', 'Not assigned');
+        return $this->getCurator()->getLink();
+    }
+
+    public function getTitleAndLink()
+    {
+        return Html::a($this->title, Url::to(['/students/group/view', 'id' => $this->id]));
     }
 }

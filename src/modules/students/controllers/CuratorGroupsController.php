@@ -2,6 +2,9 @@
 
 namespace app\modules\students\controllers;
 
+use app\components\DepDropHelper;
+use app\modules\employee\models\Employee;
+use app\modules\students\models\Group;
 use Yii;
 use app\modules\students\models\CuratorGroup;
 use app\modules\students\models\CuratorGroupSearch;
@@ -121,36 +124,60 @@ class CuratorGroupsController extends Controller implements IAdminController
         }
     }
 
-    public function actionGetGroupList()
+    public function actionGetTeachersList()
     {
         if (isset($_POST['depdrop_parents'])) {
             $parents = $_POST['depdrop_parents'];
             if ($parents != null) {
                 if (!empty($_POST['depdrop_all_params'])) {
                     $params = $_POST['depdrop_all_params'];
-                    $teacher_id = $params['curatorgroup-teacher_id']; // get the value of input-type-1
+                    $group_id = $params['curatorgroup-group_id']; // get the value of input-type-1
                     $type = $params['curatorgroup-type']; // get the value of input-type-1
-                    if ($teacher_id && $type) {
+                    if ($group_id && $type) {
                         switch ($type) {
-                            case 0: {
-                                $out = [];
+                            case '2': {
+                                $curator = Group::findOne(['id' => $group_id])->getCurator();
+                                /**
+                                 * @var $curator Employee;
+                                 */
+                                echo Json::encode(['output' => [['id' => $curator->id, 'name' => $curator->getFullName()]], 'selected' => ['id' => $curator->id, 'name' => $curator->getFullName()]]);
                                 break;
                             }
-                            case 1: {
-                                $out = [];
+                            case '1': {
+                                $out = DepDropHelper::convertMap(Employee::getAllTeacherList());
+                                echo Json::encode(['output' => $out, 'selected' => Yii::t('app', 'Select teacher')]);
                                 break;
                             }
                             default: {
                                 break;
                             }
                         }
+                        return;
                     }
-                    echo Json::encode(['output' => $out, 'selected' => Yii::t('app', 'Select group')]);
-                    return;
                 }
             }
             echo Json::encode(['output' => [], 'selected' => Yii::t('app', 'Select ...')]);
             return;
         }
+    }
+
+    public function actionGetTypesList()
+    {
+        if (isset($_POST['depdrop_parents'])) {
+            $parents = $_POST['depdrop_parents'];
+            if ($parents != null) {
+                if (!empty($_POST['depdrop_all_params'])) {
+                    $params = $_POST['depdrop_all_params'];
+                    $group_id = $params['curatorgroup-group_id']; // get the value of input-type-1
+                    $group = Group::findOne(['id' => $group_id]);
+                    if ($group->getCuratorId() === false) {
+                        echo Json::encode(['output' => [['id' => CuratorGroup::TYPE_ACCEPTED, 'name' => CuratorGroup::getTypesList()[CuratorGroup::TYPE_ACCEPTED]]], 'selected' => ['id' => CuratorGroup::TYPE_ACCEPTED, 'name' => CuratorGroup::getTypesList()[CuratorGroup::TYPE_ACCEPTED]]]);
+                    } else {
+                        echo Json::encode(['output' => [['id' => CuratorGroup::TYPE_DE_ACCEPTED, 'name' => CuratorGroup::getTypesList()[CuratorGroup::TYPE_DE_ACCEPTED]]], 'selected' => ['id' => CuratorGroup::TYPE_DE_ACCEPTED, 'name' => CuratorGroup::getTypesList()[CuratorGroup::TYPE_DE_ACCEPTED]]]);
+                    }
+                }
+            }
+        }
+        return;
     }
 }

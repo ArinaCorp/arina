@@ -19,8 +19,8 @@ use yii\helpers\Url;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'teacher_id')->widget(Select2::className(), [
-        'data' => Employee::getAllTeacherList(),
+    <?= $form->field($model, 'group_id')->widget(Select2::className(), [
+        'data' => Group::getActiveGroupsList(),
         'options' => [
             'placeholder' => Yii::t('app', 'Select teacher'),
         ],
@@ -30,40 +30,28 @@ use yii\helpers\Url;
             ]
     ]); ?>
 
-    <?= $form->field($model, 'type')->widget(Select2::className(),
-        [
-            'data' => CuratorGroup::getTypesList(),
-            'pluginOptions' =>
-                [
-                    'allowClear' => true
-                ],
-            'options' => [
-                'placeholder' => Yii::t('app', 'Select teacher'),
-            ],
-        ]) ?>
-
-    <?= $form->field($model, 'group_id')->widget(DepDrop::className(), [
-        'name' => 'group',
+    <?= $form->field($model, 'type')->widget(DepDrop::className(), [
+        'name' => 'teacher',
         'data' => [],
         'options' => ['placeholder' => Yii::t('app', 'Select group')],
         'type' => DepDrop::TYPE_SELECT2,
         'select2Options' => ['pluginOptions' => ['allowClear' => true]],
         'pluginOptions' => [
-            'depends' => ['curatorgroup-teacher_id', 'curatorgroup-type'],
-            'url' => Url::to(['get-group-list']),
+            'depends' => ['curatorgroup-group_id'],
+            'url' => Url::to(['get-types-list']),
             'loadingText' => Yii::t('app', 'Loading ...'),
         ]
-    ]); ?>
+    ]) ?>
 
-
-
-    <?= $form->field($model, 'date')->widget(DatePicker::className(), [
-        'type' => DatePicker::TYPE_COMPONENT_APPEND,
-        //'readonly' => true,
-        //'disabled' => true,
-        'pluginOptions' => [
-            'format' => 'dd.mm.yyyy',
-        ],
+    <?= $form->field($model, 'teacher_id')->widget(DepDrop::className(), ['name' => 'teacher',
+        'data' => [],
+        'options' => ['placeholder' => Yii::t('app', 'Select group')],
+        'type' => DepDrop::TYPE_SELECT2,
+        'select2Options' => ['pluginOptions' => ['allowClear' => true]],
+        'pluginOptions' => ['depends' => ['curatorgroup-group_id', 'curatorgroup-type'],
+            'url' => Url::to(['get-teachers-list']),
+            'loadingText' => Yii::t('app', 'Loading ...'),
+        ]
     ]); ?>
 
     <div class="form-group">

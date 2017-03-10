@@ -2,9 +2,13 @@
 
 namespace app\modules\employee\models;
 
+use app\modules\students\models\CuratorGroup;
+use app\modules\students\models\Group;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
+use yii\helpers\Url;
 
 /**
  * This is the model class for table "employee".
@@ -120,5 +124,40 @@ class Employee extends ActiveRecord
     public static function getAllTeacherList()
     {
         return ArrayHelper::map(self::getAllTeacher(), 'id', 'fullName');
+    }
+
+    public function getGroupArray()
+    {
+        /**
+         * @var $listRecord CuratorGroup[];
+         */
+        $listRecord = CuratorGroup::find()->andWhere(['teacher_id' => $this->id])->orderBy('id ASC')->all();
+        $listGroup = [];
+//        var_dump($listRecord);
+        foreach ($listRecord as $item) {
+            switch ($item->type) {
+                case 1: {
+                    array_push($listGroup, $item->group_id);
+                    break;
+                }
+                case 2: {
+                    if (($key = array_search($item->group_id, $listGroup)) !== false) {
+                        unset($listGroup[$key]);
+                    }
+
+                }
+            }
+        }
+        return $listGroup;
+    }
+
+    public function getGroups()
+    {
+        return Group::find()->where(['id' => $this->getGroupArray()])->all();
+    }
+
+    public function getLink()
+    {
+        return Html::a($this->getFullName(), Url::to(['/employee/default/view', 'id' => $this->id]));
     }
 }

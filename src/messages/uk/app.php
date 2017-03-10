@@ -179,6 +179,10 @@ return [
     'Not take part in education' => 'Не бере участі у навч. процесі',
     'Cyclic Commissions' => 'Циклові комісії',
     'Create Cyclic Commission' => 'Створити циклову комісію',
-
-
+    'Curator Groups' => 'Група - куратор',
+    'Teacher ID' => 'Викладач',
+    'Create Curator Group' => 'Створити запис історії',
+    'Accepted' => 'Призначити',
+    'Curator ID' => 'Куратор',
+    'Get list group Excel document' => 'Отримати список групи в Excel',
 ];

@@ -2,7 +2,9 @@
 
 namespace app\modules\students\models;
 
+use app\modules\employee\models\Employee;
 use Yii;
+use yii\behaviors\TimestampBehavior;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -18,6 +20,17 @@ use yii\helpers\ArrayHelper;
  */
 class CuratorGroup extends \yii\db\ActiveRecord
 {
+    const TYPE_ACCEPTED = 1;
+    const TYPE_DE_ACCEPTED = 2;
+
+
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::className(),
+        ];
+    }
+
     /**
      * @inheritdoc
      */
@@ -34,7 +47,7 @@ class CuratorGroup extends \yii\db\ActiveRecord
         return [
             [['group_id', 'teacher_id', 'type', 'created_at', 'updated_at'], 'integer'],
             [['date'], 'safe'],
-            [['group_id', 'teacher_id', 'type', 'date'], 'required']
+            [['group_id', 'teacher_id', 'type'], 'required']
         ];
     }
 
@@ -54,41 +67,26 @@ class CuratorGroup extends \yii\db\ActiveRecord
         ];
     }
 
-    public function getType()
-    {
-        return ($this->type) ? Yii::t('app', 'Accepted') : Yii::t('app', 'De accepted');
-    }
+//    public function getType()
+//    {
+//        return ($this->type) ? Yii::t('app', 'Accepted') : Yii::t('app', 'De accepted');
+//    }
 
     public static function getTypesList()
     {
         return [
-            0 => Yii::t('app', 'De accepted'),
-            1 => Yii::t('app', 'Accepted'),
+            self::TYPE_DE_ACCEPTED => Yii::t('app', 'De accepted'),
+            self::TYPE_ACCEPTED => Yii::t('app', 'Accepted'),
         ];
     }
 
-    public static function getGroupsByTeacher($teacher_id)
+    public function getTeacher()
     {
-        $query = self::find();
-        $groups_id = ArrayHelper::index(Group::getActiveGroups(),'id');
-        $query->andWhere(['group_id'=>$groups_id]);
-        $listRecord = $query->all();
-        foreach ($listRecord as $item){
-            if($item->type==1) {
-                $k=0;
-                if(in_array($item->group_id,$listGroup)) continue;
-                foreach($listRecord as $item2){
-                    if($item->group_id==$item2->group_id) {
-                        if ($item != $item2 && $item2->type == 0) {
-                            $k+=1;
-                        }
-                    }
-                }
-                if($k%2==0){
-                    array_push($listGroup,$item->group_id)  ;
-                }
-            }
-        }
+        return $this->hasOne(Employee::className(), ['id' => 'teacher_id']);
+    }
 
+    public function getGroup()
+    {
+        return $this->hasOne(Group::className(), ['id' => 'group_id']);
     }
 }
