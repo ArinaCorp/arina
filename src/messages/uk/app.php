@@ -185,4 +185,10 @@ return [
     'Accepted' => 'Призначити',
     'Curator ID' => 'Куратор',
     'Get list group Excel document' => 'Отримати список групи в Excel',
+    'Phones' => 'Телефони',
+    'Add phone' => 'Додати телефон',
+    'Comment' => 'Коментар',
+    'General' => 'Головне',
+    'Contacts' => 'Контакти',
+    'Emails'=>''
 ];
