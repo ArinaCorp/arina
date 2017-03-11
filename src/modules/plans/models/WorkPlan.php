@@ -8,6 +8,9 @@ use yii\db\ActiveQuery;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 
+use yii\behaviors\TimestampBehavior;
+use nullref\useful\behaviors\JsonBehavior;
+
 use app\modules\directories\models\StudyYear;
 use app\modules\directories\models\speciality\Speciality;
 use app\modules\directories\models\department\Department;
@@ -45,24 +48,18 @@ class WorkPlan extends ActiveRecord
     public function behaviors()
     {
         return [
-            /*'JSONBehavior' => [
-                'class' => 'application.behaviors.JSONBehavior',
+            'JsonBehavior' => [
+                'class' => JsonBehavior::className(),
                 'fields' => [
-                    'graphs'
+                    'graphs', 'semesters'
                 ],
             ],
-            'StrBehavior' => [
-                'class' => 'application.behaviors.StrBehavior',
-                'fields' => [
-                    'semesters',
-                ],
-            ],
-            'CTimestampBehavior' => [
-                'class' => 'zii.behaviors.CTimestampBehavior',
-                'createAttribute' => 'created',
-                'updateAttribute' => 'updated',
-                'setUpdateOnCreate' => true,
-            ],*/
+            'TimestampBehavior' => [
+                'class' => TimestampBehavior::className(),
+                'createdAtAttribute' => 'created',
+                'updatedAtAttribute' => 'updated',
+                'value' => date('Y-m-d', time()),
+            ]
         ];
     }
 
@@ -72,16 +69,16 @@ class WorkPlan extends ActiveRecord
     public function rules()
     {
         return [
-            /*['speciality_id, study_year_id', 'required'],
-            [
+            ['speciality_id, study_year_id', 'required'],
+            /*[
                 'semesters', 'required',
                 'message' => Yii::t('plans', 'Click "Generate" and check the data'), 'on' => 'graphs'
-            ],
-            ['speciality_id', 'study_study_year_id', 'uniqueRecord', 'on' => 'insert'],
-            ['speciality_id', 'numerical', 'integerOnly' => true],
-            ['created', 'default', 'value' => date('Y-m-d', time()), 'on' => 'insert'],
-            ['id', 'speciality_id', 'safe', 'on' => 'search'],
-            ['study_plan_origin', 'work_plan_origin', 'check_origin', 'on' => 'insert'],*/
+            ],*/
+            [['speciality_id', 'study_study_year_id'], 'uniqueRecord', 'on' => 'insert'],
+            [['speciality_id', 'numerical'], 'integer'],
+            [['created'], 'default', 'value' => date('Y-m-d', time()), 'on' => 'insert'],
+            [['id', 'speciality_id'], 'safe', 'on' => 'search'],
+            [['study_plan_origin', 'work_plan_origin'], 'checkOrigin', 'on' => 'insert'],
         ];
     }
 
@@ -93,7 +90,7 @@ class WorkPlan extends ActiveRecord
         /** @var StudyPlan $studyPlan */
         $studyPlan = StudyPlan::find()->where(['speciality_id' => $this->speciality_id]);
         if ($studyPlan)
-            return count($studyPlan->graphs);
+            return count($studyPlan->graph);
         else
             return 0;
     }
@@ -281,8 +278,8 @@ class WorkPlan extends ActiveRecord
         $groups = $this->speciality->getGroupsByStudyYear($this->study_year_id);
         $graphs = [];
         foreach ($groups as $course) {
-            if (isset($origin->graphs[$course - 1])) {
-                $graph[] = $origin->graphs[$course - 1];
+            if (isset($origin->graph[$course - 1])) {
+                $graph[] = $origin->graph[$course - 1];
             }
         }
         $this->graphs = $graphs;

@@ -11,11 +11,11 @@ class m170117_164527_create_table_study_plan extends Migration
     {
         $this->createTable('{{%study_plan}}', [
             'id' => $this->primaryKey(),
-            'speciality_id' => $this->integer(5),
+            'speciality_id' => $this->integer(10),
             'semesters' => $this->string(255),
-            'graph' => $this->string(255),
-            'created' => $this->date(),
-            'updated' => $this->date(),
+            'graph' => $this->text(),
+            'created' => $this->integer(),
+            'updated' => $this->integer(),
         ], $this->getTableOptions());
     }
 

@@ -20,35 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="row well">
 
-    <?php echo Html::a('Експортувати', Url::to('plans/study-plan/makeExcel', ['id' => $model->id]), ['class' => 'btn btn-primary']); ?>
-    <?php echo Html::a('Редагувати предмети', Url::to('subjects', ['id' => $model->id]), ['class' => 'btn btn-primary']); ?>
+    <?= Html::a('Експортувати', Url::to('plans/study-plan/makeExcel', ['id' => $model->id]), ['class' => 'btn btn-primary']); ?>
+    <?= Html::a('Редагувати предмети', Url::to('subjects', ['id' => $model->id]), ['class' => 'btn btn-primary']); ?>
     <br/>
-    <?= Graph::widget(['model' => $model, 'field' => '', 'readOnly' => true, 'graph' => $model->graphs]) ?>
-    <?php
-
-
-    ?>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/><br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/><br/><br/>
-    
-
-    <?= ""/*SubjectTable::widget(['subjectDataProvider' => $model->getPlanSubjectProvider()]);*/  ?>
-    <br/>
+    <?= Graph::widget(['model' => $model, 'field' => '', 'readOnly' => true, 'graph' => $model->graph]) ?>

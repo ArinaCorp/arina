@@ -3,7 +3,6 @@
 use yii\web\View;
 use yii\widgets\Pjax;
 use yii\bootstrap\ActiveForm;
-use yii\bootstrap\Button;
 use yii\helpers\Html;
 
 use app\modules\plans\models\StudyPlan;

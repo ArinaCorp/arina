@@ -9,6 +9,7 @@ use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
 use nullref\useful\behaviors\JsonBehavior;
 use yii\behaviors\TimestampBehavior;
+use app\behaviors\StrBehavior;
 
 use app\modules\directories\models\speciality\Speciality;
 use app\modules\directories\models\department\Department;
@@ -39,15 +40,18 @@ class StudyPlan extends ActiveRecord
         return [
             'JsonBehavior' => [
                 'class' => JsonBehavior::className(),
-                'fields' => ['graph', 'semesters'],
+                'fields' => ['graph'],
             ],
-            /*'TimestampBehavior' => [
+            'StrBehavior' => [
+                'class' => StrBehavior::className(),
+                'fields' => ['semesters'],
+            ],
+            'TimestampBehavior' => [
                 'class' => TimestampBehavior::className(),
-                'attributes' => [
-                    ActiveRecord::EVENT_BEFORE_INSERT => ['created', 'updated'],
-                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updated'],
-                ],
-            ]*/
+                'createdAtAttribute' => 'created',
+                'updatedAtAttribute' => 'updated',
+                'value' => date('Y-m-d', time()),
+            ]
         ];
     }
 

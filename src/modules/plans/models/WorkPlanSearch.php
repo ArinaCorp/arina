@@ -14,16 +14,16 @@ class WorkPlanSearch extends WorkPlan
     public function rules()
     {
         return [
-            /*['speciality_id, study_year_id', 'required'],
-            [
+            ['speciality_id, study_year_id', 'required'],
+            /*[
                 'semesters', 'required',
                 'message' => Yii::t('plans', 'Click "Generate" and check the data'), 'on' => 'graphs'
-            ],
-            ['speciality_id', 'study_study_year_id', 'uniqueRecord', 'on' => 'insert'],
-            ['speciality_id', 'numerical', 'integerOnly' => true],
-            ['created', 'default', 'value' => date('Y-m-d', time()), 'on' => 'insert'],
-            ['id', 'speciality_id', 'safe', 'on' => 'search'],
-            ['study_plan_origin', 'work_plan_origin', 'check_origin', 'on' => 'insert'],*/
+            ],*/
+            [['speciality_id', 'study_study_year_id'], 'uniqueRecord', 'on' => 'insert'],
+            [['speciality_id', 'numerical'], 'integer'],
+            [['created'], 'default', 'value' => date('Y-m-d', time()), 'on' => 'insert'],
+            [['id', 'speciality_id'], 'safe', 'on' => 'search'],
+            [['study_plan_origin', 'work_plan_origin'], 'checkOrigin', 'on' => 'insert'],
         ];
     }
 

@@ -3,11 +3,13 @@
 namespace app\modules\plans\models;
 
 use Yii;
-use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\db\ActiveQuery;
 use yii\helpers\ArrayHelper;
 use yii\data\ActiveDataProvider;
+
+use nullref\useful\behaviors\JsonBehavior;
+use app\behaviors\StrBehavior;
 
 use app\modules\directories\models\subject\Subject;
 use app\modules\directories\models\cyclic_commission\CyclicCommission;
@@ -54,25 +56,13 @@ class WorkSubject extends ActiveRecord
     public function behaviors()
     {
         return [
-            TimestampBehavior::className(),
-            [
-                'StrBehavior' => [
-                    'class' => 'application.behaviors.StrBehavior',
-                    'fields' => [
-                        'total',
-                        'lectures',
-                        'lab_works',
-                        'practices',
-                        'weeks',
-                    ]
-                ],
-                'JSONBehavior' => [
-                    'class' => 'application.behaviors.JSONBehavior',
-                    'fields' => [
-                        'control',
-                        'control_hours',
-                    ]
-                ],
+            'StrBehavior' => [
+                'class' => StrBehavior::className(),
+                'fields' => ['total', 'lectures', 'lab_works', 'practices', 'weeks',],
+            ],
+            'JsonBehavior' => [
+                'class' => JSONBehavior::className(),
+                'fields' => ['control', 'control_hours',],
             ],
         ];
     }
@@ -106,7 +96,7 @@ class WorkSubject extends ActiveRecord
     {
         return [
             'id' => 'ID',
-            'work_plan_id' => Yii::t('plans', 'Plan ID'),
+            'work_plan_id' => Yii::t('plans', 'Work plan'),
             'subject_id' => Yii::t('plans', 'Subject ID'),
             'total' => Yii::t('plans', 'Total'),
             'lectures' => Yii::t('plans', 'Lectures'),
@@ -231,7 +221,7 @@ class WorkSubject extends ActiveRecord
 
         $query->andFilterWhere([
             'id' => $this->id,
-            'plan_id' => $this->work_plan_id,
+            'work_plan_id' => $this->work_plan_id,
             'subject_id' => $this->subject_id,
             'cyclic_commission_id' => $this->cyclic_commission_id,
             'project_hours' => $this->project_hours,

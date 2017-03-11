@@ -67,8 +67,8 @@ class StudyPlanController extends Controller implements IAdminController
         $subjects = StudySubject::findAll(['plan_id' => $origin->id]);
         foreach ($subjects as $subject) {
             $model = new StudySubject();
-            $model->attributesf = $subject->attributes;
-            $model->plan_id = $newPlan->id;
+            $model->attributes = $subject->attributes;
+            $model->study_plan_id = $newPlan->id;
             $model->save(false);
         }
     }
@@ -120,13 +120,13 @@ class StudyPlanController extends Controller implements IAdminController
     public function actionSubjects($id)
     {
         $model = new StudySubject();
-        $model->plan_id = $id;
+        $model->study_plan_id = $id;
 
         if (isset($_POST['StudySubject'])) {
             $model->attributes = $_POST['StudySubject'];
             if ($model->save()) {
                 $model = new StudySubject();
-                $model->plan_id = $id;
+                $model->study_plan_id = $id;
             }
         }
         return $this->render('subjects', ['model' => $model]);
@@ -168,7 +168,7 @@ class StudyPlanController extends Controller implements IAdminController
         if (isset($_POST['StudySubject'])) {
             $model->setAttributes($_POST['StudySubject'], false);
             if ($model->save()) {
-                $this->redirect(Url::to('view', ['id' => $model->plan_id]));
+                $this->redirect(Url::to('view', ['id' => $model->study_plan_id]));
             }
         }
 

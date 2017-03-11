@@ -15,9 +15,9 @@ class StudyPlanSearch extends StudyPlan
     {
         return [
             [['speciality_id'], 'required'],
-            [['semesters'], 'required', 'message' => Yii::t('plans', 'Click "Generate" and check the data')],
+            //[['semesters'], 'required', 'message' => Yii::t('plans', 'Click "Generate" and check the data')],
             [['id', 'speciality_id'], 'integer'],
-            [['created'], 'default', 'value' => date('Y-m-d', time()), 'on' => 'insert'],
+            [['created', 'updated'], 'safe'],
             [['id, speciality_id'], 'safe', 'on' => 'search'],
             [['id'], 'unique']
         ];
