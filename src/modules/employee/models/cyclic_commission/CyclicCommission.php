@@ -6,6 +6,9 @@ use app\modules\employee\models\Employee;
 use Yii;
 use yii\helpers\ArrayHelper;
 
+use PHPExcel;
+use PHPExcel_IOFactory;
+
 /**
  * This is the model class for table "cyclic_commission".
  *
@@ -99,6 +102,71 @@ class CyclicCommission extends \yii\db\ActiveRecord
         }
 
         return $result;
+    }
+
+    public static function getCyclicCommissionArray($id)
+    {
+        $array = null;
+        foreach (Employee::getAllTeacher() as $item) {
+            $array[$item->data['current']['cyclic_commission_id']] = $item->data['current']['cyclic_commission_id'];
+        }
+        return $array = Employee::getAllTeacher();
+    }
+
+    public function getDocument()
+    {
+        $tmpfname = Yii::getAlias('@webroot') . "/templates/cyclic_commission.xls";
+        $excelReader = PHPExcel_IOFactory::createReaderForFile($tmpfname);;
+        $excelObj = $excelReader->load($tmpfname);
+        $excelObj->setActiveSheetIndex(0);
+
+        /**
+         * @var Employee[] $employees
+         */
+        $employees = $this->getEmployeeArray();
+        $excelObj->getActiveSheet()->SetCellValue('B2', "Циклова комісія ". $this->title);
+        if (!is_null($employees)) {
+            $startRow = 5;
+            $current = $startRow;
+            $i = 1;
+            foreach ($employees as $employee) {
+                $excelObj->getActiveSheet()->mergeCells("C" . $current . ":D" . $current);
+                $excelObj->getActiveSheet()->mergeCells("E" . $current . ":I" . $current);
+
+                $excelObj->getActiveSheet()->insertNewRowBefore($current + 1);
+                $excelObj->getActiveSheet()->setCellValue('B' . $current, $i);
+                $excelObj->getActiveSheet()->setCellValue('C' . $current, $employee->getPosition());
+                $excelObj->getActiveSheet()->setCellValue('E' . $current, $employee->getFullName());
+                $i++;
+                $current++;
+            }
+            $excelObj->getActiveSheet()->removeRow($current);
+            $excelObj->getActiveSheet()->removeRow($current);
+//            $excelObj->getActiveSheet()
+//                ->getCell('C' . $current - 1)
+//                ->getStyle()
+//                ->getBorders()
+//                ->getBottom()
+//                ->setBorderStyle(\PHPExcel_Style_Border::BORDER_NONE);
+//            $excelObj->getActiveSheet()
+//                ->getCell('B' . $current - 1)
+//                ->getStyle()
+//                ->getBorders()
+//                ->getBottom()
+//                ->setBorderStyle(\PHPExcel_Style_Border::BORDER_NONE);
+//            $excelObj->getActiveSheet()
+//                ->getCell('H' . $current - 1)
+//                ->getStyle()
+//                ->getBorders()
+//                ->getBottom()
+//                ->setBorderStyle(\PHPExcel_Style_Border::BORDER_NONE);
+        }
+        header('Content-Type: application/vnd.ms-excel');
+        $filename = "Cyclic_Commission_" . $this->title . "_" . date("d-m-Y-His") . ".xls";
+        header('Content-Disposition: attachment;filename=' . $filename . ' ');
+        header('Cache-Control: max-age=0');
+        $objWriter = PHPExcel_IOFactory::createWriter($excelObj, 'Excel2007');
+        $objWriter->save('php://output');
     }
 
 

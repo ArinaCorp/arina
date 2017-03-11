@@ -14,9 +14,6 @@ use voskobovich\linker\LinkerBehavior;
 use app\modules\directories\models\position\Position;
 use app\modules\employee\models\cyclic_commission\CyclicCommission;
 
-use PHPExcel;
-use PHPExcel_IOFactory;
-
 /**
  * This is the model class for table "employee".
  * @property integer $id
@@ -43,6 +40,8 @@ class Employee extends ActiveRecord
     const TYPE_NONE = 0;
     const TYPE_TEACHER = 1;
     const TYPE_OTHER = 2;
+
+    public $data;
 
     public function behaviors()
     {
@@ -141,15 +140,9 @@ class Employee extends ActiveRecord
         return $query->all();
     }
 
-
-    public
-    static function getCyclicCommissionArray()
+    public function getCyclicCommissionArray()
     {
-        $array = null;
-        foreach ($id as $item) {
-            $array[$item->data['current']['cyclic_commission_id']] = $item->data['current']['position_id'];
-        }
-        return $array;
+        return CyclicCommission::getCyclicCommissionArray($this->id);
     }
 
     public function getEducation()
@@ -189,78 +182,6 @@ class Employee extends ActiveRecord
     {
         return CyclicCommission::findOne(['id' => $this->cyclic_commission_id])->title;
     }
-
-    public function getEmployeeArray()
-    {
-        /**
-         * @var $result Employee[];
-         * @var $employee Employee[];
-         */
-        $result = [];
-        $employee = Employee::find()->all();
-                    array_push($result, $employee);
-
-        return $result;
-    }
-
-    public function getDocument()
-    {
-        $tmpfname = Yii::getAlias('@webroot') . "/templates/employee.xls";
-        $excelReader = PHPExcel_IOFactory::createReaderForFile($tmpfname);;
-        $excelObj = $excelReader->load($tmpfname);
-        $excelObj->setActiveSheetIndex(0);
-
-        /**
-         * @var Employee[] $employees
-         */
-        $employees = $this->getEmployeeArray();
-        if (!is_null($employees)) {
-            $startRow = 4;
-            $current = $startRow;
-            $i = 1;
-            foreach ($employees as $employee) {
-                $excelObj->getActiveSheet()->mergeCells("C" . $current . ":D" . $current);
-                $excelObj->getActiveSheet()->mergeCells("E" . $current . ":I" . $current);
-                $excelObj->getActiveSheet()->mergeCells("J" . $current . ":M" . $current);
-
-                $excelObj->getActiveSheet()->insertNewRowBefore($current + 1);
-                $excelObj->getActiveSheet()->setCellValue('B' . $current, $i);
-                $excelObj->getActiveSheet()->setCellValue('C' . $current, $employee->getPosition());
-                $excelObj->getActiveSheet()->setCellValue('E' . $current, $employee->getFullName());
-                $excelObj->getActiveSheet()->setCellValue('G' . $current, $employee->getCyclicCommission());
-                $i++;
-                $current++;
-            }
-            $excelObj->getActiveSheet()->removeRow($current);
-            $excelObj->getActiveSheet()->removeRow($current);
-//            $excelObj->getActiveSheet()
-//                ->getCell('C' . $current - 1)
-//                ->getStyle()
-//                ->getBorders()
-//                ->getBottom()
-//                ->setBorderStyle(\PHPExcel_Style_Border::BORDER_NONE);
-//            $excelObj->getActiveSheet()
-//                ->getCell('B' . $current - 1)
-//                ->getStyle()
-//                ->getBorders()
-//                ->getBottom()
-//                ->setBorderStyle(\PHPExcel_Style_Border::BORDER_NONE);
-//            $excelObj->getActiveSheet()
-//                ->getCell('H' . $current - 1)
-//                ->getStyle()
-//                ->getBorders()
-//                ->getBottom()
-//                ->setBorderStyle(\PHPExcel_Style_Border::BORDER_NONE);
-        }
-        header('Content-Type: application/vnd.ms-excel');
-        $filename = "Employee_" . $this->title . "_" . date("d-m-Y-His") . ".xls";
-        header('Content-Disposition: attachment;filename=' . $filename . ' ');
-        header('Cache-Control: max-age=0');
-        $objWriter = PHPExcel_IOFactory::createWriter($excelObj, 'Excel2007');
-        $objWriter->save('php://output');
-    }
-    
-    
 
     public static function getAllTeacherList()
     {

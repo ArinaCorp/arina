@@ -174,12 +174,6 @@ class DefaultController extends Controller implements IAdminController
         return $this->redirect(['index']);
     }
 
-    public function actionDocument($id)
-    {
-        $model = $this->findModel($id);
-        $model->getDocument();
-    }
-
     /**
      * Finds the Employee model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
