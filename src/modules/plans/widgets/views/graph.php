@@ -7,19 +7,17 @@ use app\modules\plans\widgets\Graph;
 
 /**
  * @var boolean $readOnly
- * @var Graph $this
+ * @var \yii\web\View $this
  * @var string $graphProcessLink
  * @var array $list
  * @var array $rows
  * @var array $map
  */
+$this->registerJs(<<<JS
+    console.log('loaded');
+JS
+);
 ?>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
-    <script>
-        $(document).ready(function () {
-            console.log('loaded');
-        });
-    </script>
     <style>
         div.result {
             margin-top: 15px;
@@ -103,79 +101,86 @@ use app\modules\plans\widgets\Graph;
         endforeach; ?>
         </tbody>
     </table>
-<?php if (!$readOnly): ?>
+<?php if (!$readOnly):
+    $resetGraphUrl = Url::to("/plans/study-plan/reset-graph");
+    $graphProcessUrl = Url::to($graphProcessLink);
+
+    /** Generate js translations for types */
+    $js = implode(PHP_EOL, array_map(function ($item) {
+        return 'var ' . $item . ' = "' . Yii::t('plans', strtoupper($item)) . '";';
+    }, ['t', 's', 'p', 'h', 'dp', 'da']));
+
+
+    $js .= <<<JS
+    
+var empty = " ";
+var loader = jQuery('img.load').hide();
+jQuery('tr.line').find('input').click(function () {
+    $.get("$resetGraphUrl").done(function () {
+        jQuery("div.result").empty();
+    });
+    var obj = jQuery(this);
+    switch (obj.attr('data-state')) {
+        case 'T':
+            obj.val(s);
+            obj.attr('data-state', 'S');
+            break;
+        case 'S':
+            obj.val(p);
+            obj.attr('data-state', 'P');
+            break;
+        case 'P':
+            obj.val(h);
+            obj.attr('data-state', 'H');
+            break;
+        case 'H':
+            obj.val(dp);
+            obj.attr('data-state', 'DP');
+            break;
+        case 'DP':
+            obj.val(da);
+            obj.attr('data-state', 'DA');
+            break;
+        case 'DA':
+            obj.val(empty);
+            obj.attr('data-state', ' ');
+            break;
+        case ' ':
+            obj.val(t);
+            obj.attr('data-state', 'T');
+            break;
+    }
+});
+jQuery('#generate').click(function (e) {
+
+    jQuery("div.result").fadeOut();
+    loader.show();
+    var done = function (html) {
+        loader.fadeOut();
+        jQuery("div.result").empty().append(html).fadeIn();
+    };
+    var myInputs = jQuery('#graph').find('input').clone();
+    myInputs.each(function (i, val) {
+        var v = jQuery(val);
+        if (!v) {
+            v = jQuery(val).defaultValue;
+        }
+        v.attr('type', 'text');
+        v.val(v.attr('data-state'));
+    });
+    var data = jQuery('<form>').append(myInputs).serialize();
+    var url = "$graphProcessUrl";
+    var posting = $.post(url, data).done(done);
+
+    console.log(data);
+    e.preventDefault(e);
+    console.log('clicked');
+});
+JS;
+
+    $this->registerJs($js);
+    ?>
     <script>
-        var t = "<?= Yii::t('plans','T'); ?>";
-        var s = "<?= Yii::t('plans','S'); ?>";
-        var p = "<?= Yii::t('plans','P'); ?>";
-        var h = "<?= Yii::t('plans','H'); ?>";
-        var dp = "<?= Yii::t('plans','DP'); ?>";
-        var da = "<?= Yii::t('plans','DA'); ?>";
-        var empty = " ";
-        $(function () {
-            var loader = $('img.load').hide();
-            $('tr.line').find('input').click(function () {
-                $.get("<?= Url::to("/plans/study-plan/reset-graph");?>").done(function () {
-                    $("div.result").empty();
-                });
-                var obj = $(this);
-                switch (obj.attr('data-state')) {
-                    case 'T':
-                        obj.val(s);
-                        obj.attr('data-state', 'S');
-                        break;
-                    case 'S':
-                        obj.val(p);
-                        obj.attr('data-state', 'P');
-                        break;
-                    case 'P':
-                        obj.val(h);
-                        obj.attr('data-state', 'H');
-                        break;
-                    case 'H':
-                        obj.val(dp);
-                        obj.attr('data-state', 'DP');
-                        break;
-                    case 'DP':
-                        obj.val(da);
-                        obj.attr('data-state', 'DA');
-                        break;
-                    case 'DA':
-                        obj.val(empty);
-                        obj.attr('data-state', ' ');
-                        break;
-                    case ' ':
-                        obj.val(t);
-                        obj.attr('data-state', 'T');
-                        break;
-                }
-            });
-            $('#generate').click(function (e) {
-
-                $("div.result").fadeOut();
-                loader.show();
-                var done = function (html) {
-                    loader.fadeOut();
-                    $("div.result").empty().append(html).fadeIn();
-                };
-                var myInputs = $('#graph').find('input').clone();
-                myInputs.each(function (i, val) {
-                    var v = $(val);
-                    if (!v) {
-                        v = $(val).defaultValue;
-                    }
-                    v.attr('type', 'text');
-                    v.val(v.attr('data-state'));
-                });
-                var data = $('<form>').append(myInputs).serialize();
-                var url = "<?= Url::to($graphProcessLink);?>";
-                var posting = $.post(url, data).done(done);
-
-                console.log(data);
-                e.preventDefault(e);
-                console.log('clicked');
-            });
-        });
     </script>
     <span>
     <?= Yii::t('plans', 'Guide'); ?>
@@ -189,7 +194,7 @@ use app\modules\plans\widgets\Graph;
         <li><?= Yii::t('plans', 'DA - state certification'); ?> </li>
     </ul>
 
-    <?= Html::button(Yii::t('app', 'Generate'), [ 'class' => 'btn btn-primary', 'id' => 'generate' ]); ?>
+    <?= Html::button(Yii::t('app', 'Generate'), ['class' => 'btn btn-primary', 'id' => 'generate']); ?>
 
     <div class="result">
     </div>
