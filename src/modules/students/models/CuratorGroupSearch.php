@@ -57,6 +57,7 @@ class CuratorGroupSearch extends CuratorGroup
             return $dataProvider;
         }
 
+        $query->orderBy('id DESC');
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,

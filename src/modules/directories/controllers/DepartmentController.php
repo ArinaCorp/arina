@@ -2,14 +2,14 @@
 
 namespace app\modules\directories\controllers;
 
-use nullref\core\interfaces\IAdminController;
-use nullref\core\interfaces\IAdminModule;
 use Yii;
+
 use app\modules\directories\models\department\Department;
 use app\modules\directories\models\department\DepartmentQuery;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use nullref\core\interfaces\IAdminController;
 
 /**
  * DepartmentController implements the CRUD actions for Department model.

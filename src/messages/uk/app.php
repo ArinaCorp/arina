@@ -185,4 +185,10 @@ return [
     '' => '',
 
 
+    'Curator Groups' => 'Група - куратор',
+    'Teacher ID' => 'Викладач',
+    'Create Curator Group' => 'Створити запис історії',
+    'Accepted' => 'Призначити',
+    'Curator ID' => 'Куратор',
+    'Get list group Excel document' => 'Отримати список групи в Excel',
 ];
