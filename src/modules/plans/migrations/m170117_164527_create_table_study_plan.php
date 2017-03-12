@@ -7,6 +7,9 @@ class m170117_164527_create_table_study_plan extends Migration
 {
     use MigrationTrait;
 
+    /**
+     * @inheritdoc
+     */
     public function up()
     {
         $this->createTable('{{%study_plan}}', [
@@ -19,6 +22,9 @@ class m170117_164527_create_table_study_plan extends Migration
         ], $this->getTableOptions());
     }
 
+    /**
+     * @inheritdoc
+     */
     public function down()
     {
         $this->dropTable('{{%study_plan}}');

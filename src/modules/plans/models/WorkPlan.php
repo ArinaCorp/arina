@@ -10,6 +10,7 @@ use yii\helpers\Html;
 
 use yii\behaviors\TimestampBehavior;
 use nullref\useful\behaviors\JsonBehavior;
+use app\behaviors\StrBehavior;
 
 use app\modules\directories\models\StudyYear;
 use app\modules\directories\models\speciality\Speciality;
@@ -23,7 +24,7 @@ use yii\web\HttpException;
  * @property integer $id
  * @property integer $speciality_id
  * @property array $semesters
- * @property array $graphs
+ * @property array $graph
  * @property integer $created
  * @property integer $updated
  * @property integer $study_year_id
@@ -51,7 +52,13 @@ class WorkPlan extends ActiveRecord
             'JsonBehavior' => [
                 'class' => JsonBehavior::className(),
                 'fields' => [
-                    'graphs', 'semesters'
+                    'graph'
+                ],
+            ],
+            'StrBehavior' => [
+                'class' => StrBehavior::className(),
+                'fields' => [
+                    'semesters'
                 ],
             ],
             'TimestampBehavior' => [
@@ -70,11 +77,11 @@ class WorkPlan extends ActiveRecord
     {
         return [
             ['speciality_id, study_year_id', 'required'],
-            /*[
-                'semesters', 'required',
+            [
+                ['semesters'], 'required',
                 'message' => Yii::t('plans', 'Click "Generate" and check the data'), 'on' => 'graphs'
-            ],*/
-            [['speciality_id', 'study_study_year_id'], 'uniqueRecord', 'on' => 'insert'],
+            ],
+            [['speciality_id', 'study_year_id'], 'uniqueRecord', 'on' => 'insert'],
             [['speciality_id', 'numerical'], 'integer'],
             [['created'], 'default', 'value' => date('Y-m-d', time()), 'on' => 'insert'],
             [['id', 'speciality_id'], 'safe', 'on' => 'search'],
@@ -179,10 +186,10 @@ class WorkPlan extends ActiveRecord
     {
         return [
             'id' => 'ID',
-            'study_year_id' => Yii::t('plans', 'Study year'),
-            'speciality_id' => Yii::t('plans', 'Speciality'),
-            'created' => Yii::t('plans', 'Date of creation'),
-            'updated' => Yii::t('plans', 'Date of update'),
+            'study_year_id' => Yii::t('app', 'Study year'),
+            'speciality_id' => Yii::t('app', 'Speciality'),
+            'created' => Yii::t('app', 'Date of creation'),
+            'updated' => Yii::t('app', 'Date of update'),
             'study_plan_origin' => Yii::t('plans', 'The study plan for the base'),
             'work_plan_origin' => Yii::t('plans', 'The work plan for the base'),
         ];
@@ -214,7 +221,7 @@ class WorkPlan extends ActiveRecord
     {
         if (!$this->hasErrors()) {
             if (empty($this->study_plan_origin) && (empty($this->work_plan_origin))) {
-                $this->addError('study_plan_origin, work_plan_origin', Yii::t('plans', 'Choose the plan basis'));
+                $this->addError('study_plan_origin, work_plan_origin', Yii::t('plans', 'Choose the plan for base'));
             }
         }
     }
@@ -229,7 +236,7 @@ class WorkPlan extends ActiveRecord
             if (abs(array_sum($subject->total) - (isset($subject->control_hours['total']) ?
                         $subject->control_hours['total'] : 0)) > self::HOURS_DIFF) {
                 if (isset($subject->subject))
-                    $warnings[] = Yii::t('plans', 'Subject') . $subject->subject->title .
+                    $warnings[] = Yii::t('app', 'Subject') . $subject->subject->title .
                         Yii::t('plans', 'The total number of hours is different from the curriculum more than on') .
                         self::HOURS_DIFF . Yii::t('plans', 'Hours');
             }
@@ -261,7 +268,7 @@ class WorkPlan extends ActiveRecord
      */
     protected function copyWorkPlan($origin)
     {
-        $this->graphs = $origin->graphs;
+        $this->graph = $origin->graph;
         foreach ($origin->work_subjects as $subject) {
             $model = new WorkSubject();
             $model->attributes = $subject->attributes;
@@ -282,7 +289,7 @@ class WorkPlan extends ActiveRecord
                 $graph[] = $origin->graph[$course - 1];
             }
         }
-        $this->graphs = $graphs;
+        $this->graph = $graphs;
         foreach ($origin->study_subjects as $subject) {
             $model = new WorkSubject();
             $model->work_plan_id = $this->id;
@@ -308,7 +315,7 @@ class WorkPlan extends ActiveRecord
      */
     public function beforeSave($insert=false)
     {
-        if ($this->getScenario() == 'graphs') {
+        if ($this->getScenario() == 'graph') {
             if (count($this->semesters) < 8) throw new HttpException(Yii::t('plans', 'No matching groups to plan'));
         }
         return parent::beforeSave(false);

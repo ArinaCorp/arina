@@ -33,11 +33,15 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             [
-                'header' => Yii::t('base','Speciality'),
+                'header',
+                'value' => function ($model) {
+                    return $model->speciality->title;
+                }
             ],
             [
-                'header' => Yii::t('base','Study year'),
-                 'value' => 'study_year_id'
+                 'value' => function ($model) {
+                    return $model->study_year->getFullName();
+                 }
             ],
             'created',
             ['class' => 'yii\grid\ActionColumn'],

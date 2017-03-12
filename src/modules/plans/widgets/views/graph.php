@@ -57,7 +57,6 @@ JS
             display: block;
         }
     </style>
-    <br/>
     <table id="graph" class="graph items table table-striped table-condensed table-bordered table-hover">
         <thead>
         <tr>

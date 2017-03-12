@@ -5,8 +5,8 @@ namespace app\modules\directories\models\subject;
 use Yii;
 use yii\db\ActiveRecord;
 
-use app\modules\directories\models\relation\SubjectRelation;
-use app\modules\directories\models\relation\SubjectCycle;
+use app\modules\directories\models\subject_relation\SubjectRelation;
+use app\modules\directories\models\subject_cycle\SubjectCycle;
 
 /**
  * This is the model class for table "subject".

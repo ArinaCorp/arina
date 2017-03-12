@@ -105,7 +105,7 @@ class StudyPlan extends ActiveRecord
      */
     public function getUnusedSubjects()
     {
-        $usedSubjects = ArrayHelper::map($this->study_subjects, 'subject_id', 'id');
+        $usedSubjects = ArrayHelper::map(StudySubject::findAll(['id'=>$this->id]), 'subject_id', 'id');
         $allSubjects = Subject::getListForSpeciality($this->speciality_id);
         $result = [];
         foreach ($allSubjects as $cycle => $subject) {
@@ -163,13 +163,12 @@ class StudyPlan extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('App', 'ID'),
-            'year_id' => Yii::t('plans', 'Study year'),
-            'speciality_id' => Yii::t('plans', 'Speciality'),
+            'id' => Yii::t('app', 'ID'),
+            'speciality_id' => Yii::t('app', 'Speciality'),
             'semesters' => Yii::t('plans', 'Semesters'),
             'graph' => Yii::t('plans', 'Graph'),
-            'created' => Yii::t('plans', 'Date of creation'),
-            'updated' => Yii::t('plans', 'Date of update'),
+            'created' => Yii::t('app', 'Date of creation'),
+            'updated' => Yii::t('app', 'Date of update'),
         ];
     }
 

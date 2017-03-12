@@ -108,10 +108,10 @@ class StudySubject extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('plans', 'ID'),
+            'id' => Yii::t('plans', 'Study subject'),
             'study_plan_id' => Yii::t('plans', 'Study plan'),
-            'subject_id' => Yii::t('plans', 'Subject'),
-            'total' => Yii::t('plans', 'Total'),
+            'subject_id' => Yii::t('app', 'Subject'),
+            'total' => Yii::t('app', 'Total'),
             'lectures' => Yii::t('plans', 'Lectures'),
             'lab_works' => Yii::t('plans', 'Lab works'),
             'practices' => Yii::t('plans', 'Practice works'),
@@ -119,13 +119,15 @@ class StudySubject extends ActiveRecord
             'practice_weeks' => Yii::t('plans', 'Practice weeks'),
             'diploma_name' => Yii::t('plans', 'Diploma name'),
             'certificate_name' => Yii::t('plans', 'Certificate name'),
-            'dual_lab_work' => Yii::t('plans', 'Dual laboratory works'),
-            'dual_practice' => Yii::t('plans', 'Dual practice works'),
+            'dual_lab_work' => Yii::t('plans', 'Dual laboratory work'),
+            'dual_practice' => Yii::t('plans', 'Dual practice work'),
             'selfWork' => Yii::t('plans', 'Self work'),
             'credit' => Yii::t('plans', 'Credit'),
-            'exam' => Yii::t('plans', 'Exam'),
+            'exam' => Yii::t('app', 'Exam'),
             'workSemester' => Yii::t('plans', 'Work semester'),
             'projectSemester' => Yii::t('plans', 'Project semester'),
+            'testSemesters' => Yii::t('plans', 'Test semesters'),
+            'examSemesters' => Yii::t('plans', 'Exam semesters'),
         ];
     }
 

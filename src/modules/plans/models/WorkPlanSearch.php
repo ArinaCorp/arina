@@ -13,18 +13,7 @@ class WorkPlanSearch extends WorkPlan
      */
     public function rules()
     {
-        return [
-            ['speciality_id, study_year_id', 'required'],
-            /*[
-                'semesters', 'required',
-                'message' => Yii::t('plans', 'Click "Generate" and check the data'), 'on' => 'graphs'
-            ],*/
-            [['speciality_id', 'study_study_year_id'], 'uniqueRecord', 'on' => 'insert'],
-            [['speciality_id', 'numerical'], 'integer'],
-            [['created'], 'default', 'value' => date('Y-m-d', time()), 'on' => 'insert'],
-            [['id', 'speciality_id'], 'safe', 'on' => 'search'],
-            [['study_plan_origin', 'work_plan_origin'], 'checkOrigin', 'on' => 'insert'],
-        ];
+        parent::rules();
     }
 
     /**
@@ -52,10 +41,6 @@ class WorkPlanSearch extends WorkPlan
 
         $this->load($params);
 
-        if (!$this->validate()) {
-            return $dataProvider;
-        }
-
         $query->andFilterWhere([
             'id' => $this->id,
             'speciality_id' => $this->speciality_id,
@@ -65,7 +50,7 @@ class WorkPlanSearch extends WorkPlan
         ]);
 
         $query->andFilterWhere(['like', 'semesters', $this->semesters])
-            ->andFilterWhere(['like', 'graphs', $this->graphs]);
+            ->andFilterWhere(['like', 'graph', $this->graph]);
         return $dataProvider;
     }
 }

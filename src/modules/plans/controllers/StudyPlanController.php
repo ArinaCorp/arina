@@ -150,11 +150,22 @@ class StudyPlanController extends Controller implements IAdminController
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', ['model' => $model]);
+        if (isset($_POST['StudyPlan'])) {
+            $model->attributes = $_POST['StudyPlan'];
+            if (isset(Yii::$app->session['weeks'])) {
+                $model->semesters = Yii::$app->session['weeks'];
+                unset(Yii::$app->session['weeks']);
+            }
+            if (isset(Yii::$app->session['graph'])) {
+                $model->graph = Yii::$app->session['graph'];
+                unset(Yii::$app->session['graph']);
+            }
+            if ($model->save()) {
+                return $this->render('view', ['model' => $model]);
+            }
         }
+
+        return $this->render('update', ['model' => $model]);
     }
 
     /**

@@ -7,6 +7,9 @@ class m170117_163258_create_table_work_plan extends Migration
 {
     use MigrationTrait;
 
+    /**
+     * @inheritdoc
+     */
     public function up()
     {
         $this->createTable('{{%work_plan}}', [
@@ -20,6 +23,9 @@ class m170117_163258_create_table_work_plan extends Migration
         ], $this->getTableOptions());
     }
 
+    /**
+     * @inheritdoc
+     */
     public function down()
     {
         $this->dropTable('{{%work_plan}}');

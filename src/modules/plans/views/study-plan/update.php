@@ -5,6 +5,7 @@ use yii\bootstrap\Html;
 
 use app\modules\plans\models\StudyPlan;
 use app\modules\plans\widgets\SubjectTable;
+use yii\helpers\Url;
 
 /**
  * @var $this View
@@ -18,15 +19,17 @@ $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', ['id'
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<div class="study-plan-update">
+<div class="row">
+
     <h1><?= Html::encode($this->title) ?></h1>
+
+    <?= Html::a(Yii::t('plans', 'Edit subjects'), Url::toRoute(['study-plan/subjects', 'id' => $model->id]), ['class' => 'btn btn-success']); ?>
+
+    <?= Html::a(Yii::t('app', 'Return'), ['index'], ['class' => 'btn btn-danger']) ?>
 
     <?= $this->render('_form', [
         'model' => $model,
     ]) ?>
 
-    <?= Html::a(Yii::t('plans', 'Edit subjects'), ['subjects', ['id' => $model->id]], ['class' => 'btn btn-default']) ?>
-
-    <?= Html::a(Yii::t('base', 'Return'), ['index'], ['class' => 'btn btn-danger']) ?>
-
+    <?= SubjectTable::widget(['subjectDataProvider' => $model->getStudyPlanStudySubjectProvider()]) ?>
 </div>

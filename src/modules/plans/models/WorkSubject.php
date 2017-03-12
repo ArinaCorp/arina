@@ -97,20 +97,20 @@ class WorkSubject extends ActiveRecord
         return [
             'id' => 'ID',
             'work_plan_id' => Yii::t('plans', 'Work plan'),
-            'subject_id' => Yii::t('plans', 'Subject ID'),
-            'total' => Yii::t('plans', 'Total'),
+            'subject_id' => Yii::t('app', 'Subject'),
+            'total' => Yii::t('app', 'Total'),
             'lectures' => Yii::t('plans', 'Lectures'),
-            'lab_works' => Yii::t('plans', 'Laboratory'),
-            'practices' => Yii::t('plans', 'Practices'),
-            'weeks' => Yii::t('plans', 'Weeks'),
+            'lab_works' => Yii::t('plans', 'Lab works'),
+            'practices' => Yii::t('plans', 'Practice works'),
+            'weeks' => Yii::t('app', 'Weeks'),
             'control' => Yii::t('plans', 'Control'),
-            'cyclic_commission_id' => Yii::t('plans', 'Cyclic Commission ID'),
+            'cyclic_commission_id' => Yii::t('app', 'Cyclic commission'),
             'certificate_name' => Yii::t('plans', 'Certificate name'),
             'diploma_name' => Yii::t('plans', 'Diploma name'),
             'project_hours' => Yii::t('plans','Project hours'),
             'control_hours' => Yii::t('plans', 'Control hours'),
-            'dual_lab_work' => Yii::t('plans', 'Dual laboratory works'),
-            'dual_practice'=>Yii::t('plans', 'Dual practice works'),
+            'dual_lab_work' => Yii::t('plans', 'Dual laboratory work'),
+            'dual_practice'=>Yii::t('plans', 'Dual practice work'),
         ];
     }
 

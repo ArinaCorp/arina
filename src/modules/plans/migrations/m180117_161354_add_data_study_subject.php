@@ -7,6 +7,9 @@ class m180117_161354_add_data_study_subject extends Migration
 {
     use MigrationTrait;
 
+    /**
+     * @inheritdoc
+     */
     public function up()
     {
         $this->batchInsert('{{%study_subject}}', [
@@ -34,6 +37,10 @@ class m180117_161354_add_data_study_subject extends Migration
         );
     }
 
+    /**
+     * @return bool
+     * @inheritdoc
+     */
     public function down()
     {
         echo "m180117_161354_add_data_study_subject cannot be reverted.\n";

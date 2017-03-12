@@ -7,6 +7,9 @@ class m170117_145511_create_table_work_subject extends Migration
 {
     use MigrationTrait;
 
+    /**
+     * @inheritdoc
+     */
     public function up()
     {
         $this->createTable('{{%work_subject}}', [
@@ -29,6 +32,9 @@ class m170117_145511_create_table_work_subject extends Migration
         ], $this->getTableOptions());
     }
 
+    /**
+     * @inheritdoc
+     */
     public function down()
     {
         $this->dropTable('{{%work_subject}}');

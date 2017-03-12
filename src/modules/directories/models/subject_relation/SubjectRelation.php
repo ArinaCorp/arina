@@ -1,12 +1,15 @@
 <?php
 
-namespace app\modules\directories\models\relation;
+namespace app\modules\directories\models\subject_relation;
 
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use yii\data\ArrayDataProvider;
+
 use app\modules\directories\models\subject\Subject;
-use app\modules\directories\models\speciality_qualification\SpecialityQualification;
+use app\modules\directories\models\subject_cycle\SubjectCycle;
+use app\modules\directories\models\speciality\Speciality;
 
 /**
  * This is the model class for table "subject_has_speciality_and_cycle".
@@ -14,23 +17,57 @@ use app\modules\directories\models\speciality_qualification\SpecialityQualificat
  * The followings are the available columns in table 'subject_has_speciality_and_cycle':
  * @property string $id
  * @property integer $subject_id
- * @property integer $speciality_qualification_id
+ * @property integer $speciality_id
  * @property integer $subject_cycle_id
  *
  * @property Subject $subject;
- * @property SpecialityQualification $speciality_qualification;
+ * @property Speciality $speciality;
  * @property SubjectCycle $subject_cycle;
  */
 class SubjectRelation extends ActiveRecord
 {
+    public static function getProviderById($id)
+    {
+        $deleted = isset(Yii::$app->session['subject']['delete']) ? Yii::$app->session['subject']['delete'] : [];
+        $added = isset(Yii::$app->session['subject']['add']) ? Yii::$app->session['subject']['add'] : [];
+        $list = [];
+        $relations = isset($id) ? self::findAll(['subject_id' => $id]) : [];
+        foreach ($added as $item) {
+            /**@var SubjectRelation $item */
+            $continue = false;
+            foreach ($relations as $i) {
+                /**@var SubjectRelation $i */
+                if ($i->getId() == $item->getId()) {
+                    $continue = true;
+                    break;
+                }
+            }
+            if ($continue) continue;
+            $relations[] = $item;
+        }
+        foreach ($relations as $item) {
+            /**@var SubjectRelation $item */
+            $continue = false;
+            foreach ($deleted as $i) {
+                if ($i['id'] == $item->getId()) {
+                    $continue = true;
+                    break;
+                }
+            }
+            if ($continue) continue;
+            $list[] = ['id' => $item->getId(), 'link' => $item->getLinkId(), 'speciality' => $item->speciality->title, 'cycle' => $item->subject_cycle->title];
+        }
+        return new ArrayDataProvider($list);
+    }
+
     public function getId()
     {
-        return $this->subject_id . '.' . $this->speciality_qualification_id . '.' . $this->subject_cycle_id;
+        return $this->subject_id . '.' . $this->speciality_id . '.' . $this->subject_cycle_id;
     }
 
     public function getLinkId()
     {
-        return array('id1' => $this->subject_id, 'id2' => $this->speciality_qualification_id, 'id3' => $this->subject_cycle_id);
+        return ['id1' => $this->subject_id, 'id2' => $this->speciality_id, 'id3' => $this->subject_cycle_id];
     }
 
     /**
@@ -72,9 +109,9 @@ class SubjectRelation extends ActiveRecord
     /**
      * @return ActiveQuery
      */
-    public function getSpecialityQualification()
+    public function getSpeciality()
     {
-        return $this->hasOne(SpecialityQualification::className(), ['id' => 'speciality_qualification_id']);
+        return $this->hasOne(Speciality::className(), ['id' => 'speciality_id']);
     }
 
     /**
@@ -82,10 +119,10 @@ class SubjectRelation extends ActiveRecord
      */
     public function attributeLabels()
     {
-        return array(
-            'subject_id' => Yii::t('base', 'Subject'),
-            'speciality_qualification_id' => Yii::t('base', 'Speciality qualification'),
-            'subject_cycle_id' => Yii::t('base', 'Subject cycles'),
-        );
+        return [
+            'subject_id' => Yii::t('app', 'Subject'),
+            'speciality_id' => Yii::t('app', 'Speciality'),
+            'subject_cycle_id' => Yii::t('app', 'Subject cycle'),
+        ];
     }
 }

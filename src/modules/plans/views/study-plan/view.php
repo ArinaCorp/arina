@@ -18,10 +18,10 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('plans', 'Study plans'), 'ur
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<div class="row well">
-    <h3><?= $model->speciality->title; ?></h3>
+<div class="row">
+    <h1><?= $model->speciality->title; ?></h1>
 
-    <h5><?= $model->getAttributeLabel('created').': '.$model->created; ?></h5>
+    <h4><?= $model->getAttributeLabel('created').': '.$model->created; ?></h4>
 
     <?= Html::a(Yii::t('plans', 'Export'), Url::toRoute(['study-plan/make-excel', 'id' => $model->id]), ['class' => 'btn btn-success']); ?>
 

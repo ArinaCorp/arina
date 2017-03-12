@@ -6,9 +6,9 @@
 <table class="table table-striped table-condensed table-bordered table-hover">
     <thead>
     <tr>
-        <td>Курс</td>
-        <td>Осінній</td>
-        <td>Весняний</td>
+        <td><?= Yii::t('plans', 'Course'); ?></td>
+        <td><?= Yii::t('app', 'Autumn'); ?></td>
+        <td><?= Yii::t('app', 'Spring'); ?></td>
     </tr>
     </thead>
     <tbody>

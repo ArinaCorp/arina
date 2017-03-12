@@ -18,7 +18,7 @@ use app\modules\plans\models\StudyPlan;
 $this->title = Yii::t('plans', 'Edit study plan');
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('plans', 'Study plans'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->study_plan->speciality->title, 'url' => ['plans/study-plan/view', ['id' => $model->study_plan_id]]];
+//$this->params['breadcrumbs'][] = ['label' => $model->study_plan->speciality->title, 'url' => ['plans/study-plan/view', ['id' => $model->study_plan_id]]];
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>
@@ -71,16 +71,26 @@ $this->params['breadcrumbs'][] = $this->title;
 ); ?>
 
 <h3><? Yii::t('plans', 'Adding subjects');?></h3>
+
 <?= $form->errorSummary($model); ?>
 
 <div class="span3">
     <?php var_dump(StudyPlan::findOne(['id' => $model->id]));?>
 
+    <?php var_dump(StudyPlan::findOne(['id'=> 4]));?>
     <?= $form->field($model, 'subject_id')->widget(Select2::className(), [
-        'data' => StudyPlan::findOne(['id' => $model->id])->getUnusedSubjects(),
+        'data' => StudyPlan::findOne(['id'=> 4])->getUnusedSubjects(),
         'options' =>
             [
                 'placeholder' => Yii::t('plans', 'Select subject')
             ]
     ]);?>
+</div>
+
+<div class="span3">
+    <?= $form->field($model, 'total')->textInput(['maxlength' => true, 'placeholder' => $model->getAttributeLabel('total')]) ?>
+
+    <?php echo Html::label('Тижневі', 'classes_weeks'); ?>
+
+    <?php echo Html::label('Аудиторні', 'classes'); ?>
 </div>

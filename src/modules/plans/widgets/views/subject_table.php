@@ -42,7 +42,6 @@ use yii\helpers\Url;
         [ 'header' => '6', 'value' => function ($model) { return $model->weeks[5]; }],
         [ 'header' => '7', 'value' => function ($model) { return $model->weeks[6]; }],
         [ 'header' => '8', 'value' => function ($model) { return $model->weeks[7]; }],
-
         [
             'class' => ActionColumn::className(),
             'header' => Yii::t('plans', 'Acts'),
@@ -67,7 +66,6 @@ use yii\helpers\Url;
                 }
             ],
         ]
-        //$semesterColumns
     ],
 ]);
 ?>
