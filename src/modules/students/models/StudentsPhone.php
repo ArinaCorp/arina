@@ -4,27 +4,18 @@ namespace app\modules\students\models;
 
 use Yii;
 use yii\behaviors\TimestampBehavior;
-use yii\helpers\ArrayHelper;
 use yii\web\BadRequestHttpException;
 
 /**
- * This is the model class for table "family_ties".
+ * This is the model class for table "{{%students_phones}}".
  *
  * @property integer $id
  * @property integer $student_id
- * @property integer $type_id
- * @property string $last_name
- * @property string $first_name
- * @property string $middle_name
- * @property string $work_place
- * @property string $work_position
- * @property string $phone1
- * @property string $phone2
- * @property string $email
+ * @property string $phone
  * @property integer $created_at
  * @property integer $updated_at
  */
-class FamilyTie extends \yii\db\ActiveRecord
+class StudentsPhone extends \yii\db\ActiveRecord
 {
 
     public function behaviors()
@@ -39,7 +30,7 @@ class FamilyTie extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'family_ties';
+        return '{{%students_phones}}';
     }
 
     /**
@@ -48,11 +39,9 @@ class FamilyTie extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['student_id', 'type_id', 'created_at', 'updated_at'], 'integer'],
-            [['last_name', 'first_name', 'middle_name', 'type_id'], 'required'],
-            [['last_name', 'first_name', 'middle_name', 'work_place', 'work_position'], 'string', 'max' => 255],
-            [['email'], 'email'],
-            [['phone1', 'phone2'], 'integer'],
+            [['student_id', 'created_at', 'updated_at'], 'integer'],
+            [['phone', 'comment'], 'string'],
+            [['phone'], 'required'],
         ];
     }
 
@@ -65,28 +54,11 @@ class FamilyTie extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'student_id' => Yii::t('app', 'Student ID'),
-            'type_id' => Yii::t('app', 'Type Family Tie'),
-            'last_name' => Yii::t('app', 'Last Name'),
-            'first_name' => Yii::t('app', 'First Name'),
-            'middle_name' => Yii::t('app', 'Middle Name'),
-            'work_place' => Yii::t('app', 'Work Place'),
-            'work_position' => Yii::t('app', 'Work Position'),
-            'phone1' => Yii::t('app', 'Phone'),
-            'phone2' => Yii::t('app', 'Phone'),
-            'email' => Yii::t('app', 'Email'),
+            'phone' => Yii::t('app', 'Phone'),
+            'comment' => Yii::t('app', 'Comment'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
-    }
-
-    public function getType()
-    {
-        return $this->hasOne(FamilyTiesType::className(), ['id' => 'type_id']);
-    }
-
-    public function getStudent()
-    {
-        return $this->hasOne(Student::className(), ['student_id' => 'id']);
     }
 
     public static function getList($student_id, $student)
@@ -97,28 +69,28 @@ class FamilyTie extends \yii\db\ActiveRecord
         ]);
         $list = $query->all();
         /**
-         * @var $list FamilyTie[];
+         * @var $list self[];
          */
         foreach ($list as $key => $familyTie) {
             if ($familyTie->isNewRecord) {
                 $list[$key]->id = null;
             }
         };
-        $params = Yii::$app->request->post('FamilyTie');
+        $params = Yii::$app->request->post('StudentsPhone');
         if ($params && is_array($params)) {
             $list = [];
             for ($i = 0; $i < count($params); $i++) {
-                $model = new FamilyTie();
+                $model = new self();
                 $model->setAttributes($params[$i]);
                 $list[] = $model;
             }
         } elseif (Yii::$app->request->isPost) {
             $list = [];
         }
-        if (Yii::$app->request->post('add-family-tie')) {
-            $list[] = new FamilyTie();;
+        if (Yii::$app->request->post('add-students-phone')) {
+            $list[] = new self();;
         }
-        if (Yii::$app->request->post('remove-family-tie')) {
+        if (Yii::$app->request->post('remove-students-phone')) {
             unset($list[Yii::$app->request->post('data-key')]);
             $oldList = $list;
             $list = [];
@@ -137,9 +109,9 @@ class FamilyTie extends \yii\db\ActiveRecord
     public static function validateSt($student)
     {
         $success = true;
-        $modelsFamily = $student->has_family;
+        $modelsFamily = $student->has_phones;
         /**
-         * @var $modelsFamily FamilyTie[];
+         * @var $modelsFamily self[];
          */
         foreach ($modelsFamily as $model) {
             $success = $success && $model->validate();

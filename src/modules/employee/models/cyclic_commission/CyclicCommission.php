@@ -92,7 +92,7 @@ class CyclicCommission extends \yii\db\ActiveRecord
         $result = [];
         $employees = Employee::find()->all();
         foreach ($employees as $employee) {
-            $idsCyclicCommission = $employee->getCyclicCommissionArray();
+            $idsCyclicCommission = $employee->getCyclicCommissionArray($this->id);
             if (!is_null($idsCyclicCommission)) {
                 if (array_key_exists($this->id, $idsCyclicCommission)) {
                     $employee->position_id = $idsCyclicCommission[$this->id];
@@ -107,10 +107,13 @@ class CyclicCommission extends \yii\db\ActiveRecord
     public static function getCyclicCommissionArray($id)
     {
         $array = null;
+
         foreach (Employee::getAllTeacher() as $item) {
-            $array[$item->data['current']['cyclic_commission_id']] = $item->data['current']['cyclic_commission_id'];
+            if ($item->cyclic_commission_id == $id) {
+                $array[] = $item->data;
+            }
         }
-        return $array = Employee::getAllTeacher();
+        return $array;
     }
 
     public function getDocument()
