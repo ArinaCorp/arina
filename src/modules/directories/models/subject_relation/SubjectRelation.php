@@ -22,7 +22,7 @@ use app\modules\directories\models\speciality\Speciality;
  *
  * @property Subject $subject;
  * @property Speciality $speciality;
- * @property SubjectCycle $subject_cycle;
+ * @property SubjectCycle $subjectCycle;
  */
 class SubjectRelation extends ActiveRecord
 {
@@ -55,7 +55,7 @@ class SubjectRelation extends ActiveRecord
                 }
             }
             if ($continue) continue;
-            $list[] = ['id' => $item->getId(), 'link' => $item->getLinkId(), 'speciality' => $item->speciality->title, 'cycle' => $item->subject_cycle->title];
+            $list[] = ['id' => $item->getId(), 'link' => $item->getLinkId(), 'speciality' => $item->speciality->title, 'cycle' => $item->subjectCycle->title];
         }
         return new ArrayDataProvider($list);
     }

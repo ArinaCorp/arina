@@ -31,7 +31,7 @@ use app\modules\directories\models\subject\Subject;
  * @property string $certificate_name
  *
  * The followings are the available model relations:
- * @property StudyPlan $study_plan
+ * @property StudyPlan $studyPlan
  * @property Subject $subject
  */
 class StudySubject extends ActiveRecord
@@ -74,10 +74,10 @@ class StudySubject extends ActiveRecord
             [['lectures'], 'checkClasses'],
             [['subject_id'], 'checkSubject', 'on' => 'insert'],
             [['lectures', 'lab_works', 'practices'], 'default', 'value' => 0, 'on' => 'insert'],
-            [['study_plan_id, subject_id, total, lectures, lab_works, practices'], 'integer', ],
-            [['study_plan_id, subject_id, total, lectures, lab_works, practices, weeks, control, practice_weeks,
-             dual_lab_work, dual_practice, diploma_name, certificate_name'], 'safe'],
-            [['id, study_plan_id, subject_id, total, lectures, lab_works, practices, subject'], 'safe', 'on' => 'search'],
+            [['study_plan_id', 'subject_id', 'total', 'lectures', 'lab_works', 'practices'], 'integer', ],
+            [['study_plan_id', 'subject_id', 'total', 'lectures', 'lab_works', 'practices', 'weeks', 'control',
+                'practice_weeks', 'dual_lab_work', 'dual_practice', 'diploma_name', 'certificate_name'], 'safe'],
+            [['id', 'study_plan_id', 'subject_id', 'total', 'lectures', 'lab_works', 'practices', 'subject'], 'safe', 'on' => 'search'],
         ];
     }
 
@@ -116,6 +116,7 @@ class StudySubject extends ActiveRecord
             'lab_works' => Yii::t('plans', 'Lab works'),
             'practices' => Yii::t('plans', 'Practice works'),
             'classes' => Yii::t('plans', 'Class works'),
+            'classes_week' => Yii::t('plans', 'Classes for week'),
             'practice_weeks' => Yii::t('plans', 'Practice weeks'),
             'diploma_name' => Yii::t('plans', 'Diploma name'),
             'certificate_name' => Yii::t('plans', 'Certificate name'),
@@ -128,6 +129,7 @@ class StudySubject extends ActiveRecord
             'projectSemester' => Yii::t('plans', 'Project semester'),
             'testSemesters' => Yii::t('plans', 'Test semesters'),
             'examSemesters' => Yii::t('plans', 'Exam semesters'),
+            'control[1][0]' => 'adsada',
         ];
     }
 
@@ -326,6 +328,5 @@ class StudySubject extends ActiveRecord
             }
         }
     }
-
 
 }

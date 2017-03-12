@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('plans', 'Study plans'), 'ur
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<div class="study-plan-create">
+<div class="row">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

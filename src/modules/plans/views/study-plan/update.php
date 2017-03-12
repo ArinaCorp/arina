@@ -23,7 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <?= Html::a(Yii::t('plans', 'Edit subjects'), Url::toRoute(['study-plan/subjects', 'id' => $model->id]), ['class' => 'btn btn-success']); ?>
+    <?= Html::a(Yii::t('plans', 'Add subject'), Url::toRoute(['study-plan/add-subject', 'id' => $model->id]), ['class' => 'btn btn-success']); ?>
 
     <?= Html::a(Yii::t('app', 'Return'), ['index'], ['class' => 'btn btn-danger']) ?>
 

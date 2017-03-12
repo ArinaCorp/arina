@@ -136,6 +136,26 @@ class StudyPlanController extends Controller implements IAdminController
      * @param $id
      * @return string
      */
+    public function actionCreateSubject($id)
+    {
+        $model = new StudySubject();
+        $model->study_plan_id = $id;
+
+        if (isset($_POST['StudySubject'])) {
+            $model->attributes = $_POST['StudySubject'];
+            if ($model->save()) {
+                $model = new StudySubject();
+                $model->study_plan_id = $id;
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
+        }
+        return $this->render('create_subject', ['model' => $model]);
+    }
+
+    /**
+     * @param $id
+     * @return string
+     */
     public function actionView($id)
     {
         $model = StudyPlan::findOne($id);
@@ -171,7 +191,7 @@ class StudyPlanController extends Controller implements IAdminController
     /**
      * @param $id
      */
-    public function actionEditSubject($id)
+    public function actionUpdateSubject($id)
     {
         /** @var StudySubject $model */
         $model = StudySubject::findOne($id);
@@ -183,7 +203,7 @@ class StudyPlanController extends Controller implements IAdminController
             }
         }
 
-        $this->render('edit_subject', ['model' => $model]);
+        $this->render('update_subject', ['model' => $model]);
     }
 
     /**

@@ -79,10 +79,10 @@ class Subject extends ActiveRecord
         $relations = SubjectRelation::find()->where(['speciality_id' => $id])->all();
         foreach ($relations as $relation) {
             /**@var $relation SubjectRelation */
-            if (!isset($list[$relation->subject_cycle->title])) {
-                $list[$relation->subject_cycle->title] = [];
+            if (!isset($list[$relation->subjectCycle->title])) {
+                $list[$relation->subjectCycle->title] = [];
             }
-            $list[$relation->subject_cycle->title][$relation->subject_id] = $relation->subject->title;
+            $list[$relation->subjectCycle->title][$relation->subject_id] = $relation->subject->title;
         }
         return $list;
     }
@@ -95,7 +95,7 @@ class Subject extends ActiveRecord
     {
         /**@var $relation SubjectRelation */
         $relation = SubjectRelation::find()->where(['speciality_id' => $specialityId, 'subject_id' => $this->id]);
-        return $relation->subject_cycle;
+        return $relation->subjectCycle;
     }
 
 }

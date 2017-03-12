@@ -50,15 +50,15 @@ use yii\helpers\Url;
             'buttons' => [
                 'update' => function ($url, $model) {
                     $options = [
-                        'title' => Yii::t('plans', 'Update'),
+                        'title' => Yii::t('app', 'Update'),
                         'data-pjax' => '0',
                     ];
-                    $url = Url::toRoute(['study-plan/edit-subject', 'id' => $model->id]);
+                    $url = Url::toRoute(['study-plan/update-subject', 'id' => $model->id]);
                     return Html::a('<span class="glyphicon glyphicon-pencil"</span>', $url, $options);
                 },
                 'delete' => function ($url, $model) {
                     $options = [
-                        'title' => Yii::t('yii', 'Delete'),
+                        'title' => Yii::t('app', 'Delete'),
                         'data-pjax' => '0',
                     ];
                     $url = Url::toRoute(['study-plan/delete-subject', 'id' => $model->id]);

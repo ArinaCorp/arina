@@ -27,7 +27,7 @@ use app\modules\directories\models\subject\Subject;
  * @property integer $updated
  *
  * The followings are the available model relations:
- * @property StudySubject[] $study_subjects
+ * @property StudySubject[] $studySubjects
  * @property Speciality $speciality
  */
 class StudyPlan extends ActiveRecord
@@ -105,7 +105,7 @@ class StudyPlan extends ActiveRecord
      */
     public function getUnusedSubjects()
     {
-        $usedSubjects = ArrayHelper::map(StudySubject::findAll(['id'=>$this->id]), 'subject_id', 'id');
+        $usedSubjects = ArrayHelper::map(StudySubject::find()->all(), 'subject_id', 'id');
         $allSubjects = Subject::getListForSpeciality($this->speciality_id);
         $result = [];
         foreach ($allSubjects as $cycle => $subject) {
@@ -145,7 +145,7 @@ class StudyPlan extends ActiveRecord
     public function getSubjectsByCycles()
     {
         $list = [];
-        foreach ($this->study_subjects as $item) {
+        foreach ($this->studySubjects as $item) {
             $cycle = $item->subject->getCycle($this->speciality_id);
             $name = $cycle->id .' '. $cycle->title;
             if (isset($list[$name])) {

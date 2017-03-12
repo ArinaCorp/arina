@@ -5,8 +5,9 @@ use yii\web\View;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
 use yii\data\ActiveDataProvider;
+use yii\grid\ActionColumn;
+use yii\helpers\Url;
 
-use app\modules\directories\models\speciality\Speciality;
 use app\modules\plans\models\StudyPlanSearch;
 
 /* @var $this View
@@ -17,7 +18,7 @@ use app\modules\plans\models\StudyPlanSearch;
 $this->title = Yii::t('plans', 'Study plans');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="study-plans-index">
+<div class="row">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -36,13 +37,24 @@ $this->params['breadcrumbs'][] = $this->title;
                 'contentOptions' => ['style' => 'width: 550px'],
                 'attribute' => 'speciality_id',
                 'value' => function ($model) {
-                    return Speciality::findOne(['id' => $model->speciality_id])->title;
+                    return $model->speciality->title;
                 }
             ],
             'updated',
             [
-                'class' => 'yii\grid\ActionColumn',
-                'contentOptions'=>[ 'style'=>'width: 80px'],
+                'header' => Yii::t('app', 'Actions'),
+                'class' => ActionColumn::className(),
+                'contentOptions' => ['style'=>'width: 90px'],
+                'template' => '{update} {delete} {view} {export}',
+                'buttons' => [
+                    'export' => function ($url, $model) {
+                        $options = [
+                            'title' => Yii::t('plans', 'Export'),
+                        ];
+                        $url = Url::toRoute(['study-plan/make-excel', 'id' => $model->id]);
+                        return Html::a('<span class="glyphicon glyphicon-file"</span>', $url, $options);
+                    }
+                ]
             ],
         ],
     ]);
