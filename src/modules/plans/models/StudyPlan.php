@@ -70,7 +70,7 @@ class StudyPlan extends ActiveRecord
     {
         return [
             [['speciality_id'], 'required'],
-            //[['semesters'], 'required', 'message' => Yii::t('plans', 'Click "Generate" and check the data')],
+            [['semesters'], 'required', 'message' => Yii::t('plans', 'Click "Generate" and check the data')],
             [['id', 'speciality_id'], 'integer'],
             [['created', 'updated'], 'safe'],
             [['id, speciality_id'], 'safe', 'on' => 'search'],
@@ -133,9 +133,9 @@ class StudyPlan extends ActiveRecord
     /**
      * @return ActiveQuery
      */
-    public function getStudySubject()
+    public function getStudySubjects()
     {
-        return $this->hasMany(StudySubject::className(), ['speciality_id' => 'id']) ->via('study_subjects');
+        return $this->hasMany(StudySubject::className(), ['speciality_id' => 'id']);
     }
 
     /**
@@ -205,11 +205,18 @@ class StudyPlan extends ActiveRecord
     }
 
     /**
-     * @return static[]
+     * @return ActiveDataProvider
      */
-    public static function getPlanSubjectProvider()
+    public function getStudyPlanStudySubjectProvider()
     {
-        return StudySubject::findAll(['plan_id' => 'id']);
+
+        $query = StudySubject::find()->where(['study_plan_id' => $this->id]);
+
+        $provider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        return $provider;
     }
 
     /**

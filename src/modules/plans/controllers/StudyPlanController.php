@@ -64,7 +64,7 @@ class StudyPlanController extends Controller implements IAdminController
      */
     public function copyPlan($origin, $newPlan)
     {
-        $subjects = StudySubject::findAll(['plan_id' => $origin->id]);
+        $subjects = StudySubject::findAll(['study_plan_id' => $origin->id]);
         foreach ($subjects as $subject) {
             $model = new StudySubject();
             $model->attributes = $subject->attributes;
@@ -110,7 +110,7 @@ class StudyPlanController extends Controller implements IAdminController
         }
         Yii::$app->session['weeks'] = $weeks;
         Yii::$app->session['graph'] = $_POST['graph'];
-        $this->renderPartial('semesters_plan', ['data' => $semesters]);
+        return $this->renderPartial('semesters_plan', ['data' => $semesters]);
     }
 
     /**

@@ -24,4 +24,5 @@ use app\modules\plans\models\StudyPlan;
     <?php ActiveForm::end(); ?>
 
     <?php Pjax::end(); ?>
+    <br/>
 </div>

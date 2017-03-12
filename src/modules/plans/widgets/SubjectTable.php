@@ -18,6 +18,7 @@ class SubjectTable extends Widget
 
     public function run()
     {
+
         return $this->render('subject_table', ['dataProvider' => $this->subjectDataProvider]);
     }
 } 

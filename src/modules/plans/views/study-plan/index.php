@@ -33,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             [
-                'contentOptions'=>[ 'style'=>'width: 550px'],
+                'contentOptions' => ['style' => 'width: 550px'],
                 'attribute' => 'speciality_id',
                 'value' => function ($model) {
                     return Speciality::findOne(['id' => $model->speciality_id])->title;

@@ -1,6 +1,5 @@
 <?php
 /**
- *
  * @var array $data
  */
 ?>

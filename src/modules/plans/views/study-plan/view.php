@@ -12,15 +12,24 @@ use app\modules\plans\widgets\SubjectTable;
  * @var $model StudyPlan
  */
 
-$this->title = 'View';//$model->speciality->title;
+$this->title = $model->speciality->title;
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('plans', 'Study plans'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="row well">
+    <h3><?= $model->speciality->title; ?></h3>
 
-    <?= Html::a('Експортувати', Url::to('plans/study-plan/makeExcel', ['id' => $model->id]), ['class' => 'btn btn-primary']); ?>
-    <?= Html::a('Редагувати предмети', Url::to('subjects', ['id' => $model->id]), ['class' => 'btn btn-primary']); ?>
-    <br/>
+    <h5><?= $model->getAttributeLabel('created').': '.$model->created; ?></h5>
+
+    <?= Html::a(Yii::t('plans', 'Export'), Url::toRoute(['study-plan/make-excel', 'id' => $model->id]), ['class' => 'btn btn-success']); ?>
+
+    <?= Html::a(Yii::t('plans', 'Update'), Url::toRoute(['study-plan/update', 'id' => $model->id]), ['class' => 'btn btn-info']); ?>
+
+    <?= Html::a(Yii::t('plans', 'Edit subjects'), Url::toRoute(['study-plan/subjects', 'id' => $model->id]), ['class' => 'btn btn-primary']); ?>
+    <br/><br/>
     <?= Graph::widget(['model' => $model, 'field' => '', 'readOnly' => true, 'graph' => $model->graph]) ?>
+
+    <?= SubjectTable::widget(['subjectDataProvider' => $model->getStudyPlanStudySubjectProvider()]) ?>
+</div>

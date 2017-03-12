@@ -2,6 +2,7 @@
 
 namespace app\modules\plans\models;
 
+use app\behaviors\StrBehavior;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\data\ActiveDataProvider;
@@ -49,9 +50,13 @@ class StudySubject extends ActiveRecord
     public function behaviors()
     {
         return [
+            'StrBehavior' => [
+                'class' => StrBehavior::className(),
+                'fields' => ['weeks'],
+            ],
             'JsonBehavior' => [
                 'class' => JsonBehavior::className(),
-                'fields' => ['weeks', 'control'],
+                'fields' => ['control'],
             ],
         ];
     }
@@ -108,7 +113,7 @@ class StudySubject extends ActiveRecord
             'subject_id' => Yii::t('plans', 'Subject'),
             'total' => Yii::t('plans', 'Total'),
             'lectures' => Yii::t('plans', 'Lectures'),
-            'lab_works' => Yii::t('plans', 'Laboratory works'),
+            'lab_works' => Yii::t('plans', 'Lab works'),
             'practices' => Yii::t('plans', 'Practice works'),
             'classes' => Yii::t('plans', 'Class works'),
             'practice_weeks' => Yii::t('plans', 'Practice weeks'),
@@ -116,11 +121,11 @@ class StudySubject extends ActiveRecord
             'certificate_name' => Yii::t('plans', 'Certificate name'),
             'dual_lab_work' => Yii::t('plans', 'Dual laboratory works'),
             'dual_practice' => Yii::t('plans', 'Dual practice works'),
-            'self_work' => Yii::t('plans', 'Self work'),
+            'selfWork' => Yii::t('plans', 'Self work'),
             'credit' => Yii::t('plans', 'Credit'),
             'exam' => Yii::t('plans', 'Exam'),
-            'work_semester' => Yii::t('plans', 'Work semester'),
-            'project_semester' => Yii::t('plans', 'Project semester'),
+            'workSemester' => Yii::t('plans', 'Work semester'),
+            'projectSemester' => Yii::t('plans', 'Project semester'),
         ];
     }
 

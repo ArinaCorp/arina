@@ -14,7 +14,7 @@ use app\modules\plans\widgets\SubjectTable;
 $this->title = Yii::t('plans', 'Edit study plan');
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('plans', 'Study plans'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', ['id' => $model->id, 'graph'=>$model->graphs]]];
+$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', ['id' => $model->id, 'graph'=>$model->graph]]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 

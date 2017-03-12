@@ -18,7 +18,7 @@ use app\modules\plans\models\StudyPlan;
 $this->title = Yii::t('plans', 'Edit study plan');
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('plans', 'Study plans'), 'url' => ['index']];
-//$this->params['breadcrumbs'][] = ['label' => $model->study_plan->speciality->title, 'url' => ['plans/study-plan/view', ['id' => $model->plan_id]]];
+$this->params['breadcrumbs'][] = ['label' => $model->study_plan->speciality->title, 'url' => ['plans/study-plan/view', ['id' => $model->study_plan_id]]];
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>
@@ -70,12 +70,13 @@ $this->params['breadcrumbs'][] = $this->title;
     ]
 ); ?>
 
-<h3>Додання предметів</h3>
+<h3><? Yii::t('plans', 'Adding subjects');?></h3>
 <?= $form->errorSummary($model); ?>
 
 <div class="span3">
     <?php var_dump(StudyPlan::findOne(['id' => $model->id]));?>
-    <?= $form->field($model, 'speciality_id')->widget(Select2::className(), [
+
+    <?= $form->field($model, 'subject_id')->widget(Select2::className(), [
         'data' => StudyPlan::findOne(['id' => $model->id])->getUnusedSubjects(),
         'options' =>
             [

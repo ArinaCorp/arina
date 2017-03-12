@@ -27,12 +27,4 @@ class DefaultController extends Controller implements IAdminController
             ],
         ];
     }
-
-    /**
-     * @return string
-     */
-    public function actionIndex()
-    {
-        return $this->render('index');
-    }
 }

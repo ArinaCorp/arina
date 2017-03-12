@@ -57,6 +57,7 @@ JS
             display: block;
         }
     </style>
+    <br/>
     <table id="graph" class="graph items table table-striped table-condensed table-bordered table-hover">
         <thead>
         <tr>
@@ -143,9 +144,9 @@ jQuery('tr.line').find('input').click(function () {
             break;
         case 'DA':
             obj.val(empty);
-            obj.attr('data-state', ' ');
+            obj.attr('data-state', '');
             break;
-        case ' ':
+        case '':
             obj.val(t);
             obj.attr('data-state', 'T');
             break;
@@ -173,8 +174,6 @@ jQuery('#generate').click(function (e) {
     var posting = $.post(url, data).done(done);
 
     console.log(data);
-    e.preventDefault(e);
-    console.log('clicked');
 });
 JS;
 

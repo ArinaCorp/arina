@@ -23,8 +23,8 @@ class Graph extends Widget
     public $specialityId;
     /** @var $studyYearId int for work plan */
     public $studyYearId;
-    public $studyPlanProcessLink = '/study-plan/execute';
-    public $workPlanProcessLink = '/work-plan/execute';
+    public $studyPlanProcessLink = '/plans/study-plan/execute-graph';
+    public $workPlanProcessLink = '/plans/work-plan/execute-graph';
 
     protected $list;
     protected $map;
@@ -37,7 +37,7 @@ class Graph extends Widget
         if ($this->studyPlan) {
             $this->graphProcessLink = $this->studyPlanProcessLink;
             if (empty($this->yearAmount))
-                throw new Exception('Years amount must be set');
+                throw new Exception(Yii::t('plans', 'Years amount must be set'));
 
             for ($i = 0; $i < $this->yearAmount; $i++) {
                 $this->rows[$i+1] = $i + 1;
