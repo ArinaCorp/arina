@@ -11,7 +11,7 @@ use nullref\useful\behaviors\JsonBehavior;
 use yii\behaviors\TimestampBehavior;
 use app\behaviors\StrBehavior;
 
-use app\modules\directories\models\speciality_qualification\SpecialityQualification;
+use app\modules\directories\models\speciality\Speciality;
 use app\modules\directories\models\department\Department;
 use app\modules\directories\models\subject\Subject;
 
@@ -28,7 +28,7 @@ use app\modules\directories\models\subject\Subject;
  *
  * The followings are the available model relations:
  * @property StudySubject[] $studySubjects
- * @property SpecialityQualification $specialityQualification
+ * @property Speciality $speciality
  */
 class StudyPlan extends ActiveRecord
 {
@@ -224,6 +224,6 @@ class StudyPlan extends ActiveRecord
      */
     public function getTitle()
     {
-        return $this->specialityQualification->title . ' - ' . date('H:i d.m.Y', $this->updated);
+        return $this->speciality->title . ' - ' . date('H:i d.m.Y', $this->updated);
     }
 }
