@@ -125,11 +125,10 @@ class StudySubject extends ActiveRecord
             'selfWork' => Yii::t('plans', 'Self work'),
             'credit' => Yii::t('plans', 'Credit'),
             'exam' => Yii::t('app', 'Exam'),
-            'workSemester' => Yii::t('plans', 'Work semester'),
-            'projectSemester' => Yii::t('plans', 'Project semester'),
+            'workSemesters' => Yii::t('plans', 'Work semester'),
+            'projectSemesters' => Yii::t('plans', 'Project semester'),
             'testSemesters' => Yii::t('plans', 'Test semesters'),
             'examSemesters' => Yii::t('plans', 'Exam semesters'),
-            'control[1][0]' => 'adsada',
         ];
     }
 
@@ -296,7 +295,7 @@ class StudySubject extends ActiveRecord
             $sum = 0;
             foreach ($this->weeks as $semester => $weekly) {
                 if (!empty($weekly)) {
-                    $sum += $weekly * $this->study_plan->semesters[$semester];
+                    $sum += $weekly * $this->studyPlan->semesters[$semester];
                 }
             }
             if (!$this->subject->practice && ($sum < $this->getClasses())) {

@@ -3,10 +3,11 @@
 use yii\web\View;
 use yii\bootstrap\ActiveForm;
 use yii\widgets\Pjax;
-use kartik\touchspin\TouchSpin;
 use kartik\select2\Select2;
+use kartik\touchspin\TouchSpin;
 
 use app\modules\plans\models\StudySubject;
+use app\modules\directories\models\subject\Subject;
 
 /**
  * @var $this View
@@ -36,7 +37,7 @@ use app\modules\plans\models\StudySubject;
         <div class="col-sm-4">
             <?= $form->field($model, 'subject_id')->widget(Select2::className(),
                 [
-                    'data' => $model->studyPlan->getUnusedSubjects(),
+                    'data' => $model->isNewRecord ? $model->studyPlan->getUnusedSubjects() : Subject::getListForSpeciality($model->studyPlan->speciality_id),
                     'options' =>[ 'placeholder' => Yii::t('plans', 'Select subject')]
                 ]) ?>
         </div>

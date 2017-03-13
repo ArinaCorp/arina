@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use nullref\core\interfaces\IAdminController;
 use yii\helpers\Url;
+use app\components\Excel;
 
 use app\modules\plans\models\StudyPlan;
 use app\modules\plans\models\StudySubject;
@@ -38,7 +39,6 @@ class StudyPlanController extends Controller implements IAdminController
 
         if ($model->load(Yii::$app->request->post())) {
             $model->attributes = $_POST['StudyPlan'];
-            $model->created = date('Y-m-d', time());
             if (isset(Yii::$app->session['weeks'])) {
                 $model->semesters = Yii::$app->session['weeks'];
                 unset(Yii::$app->session['weeks']);
@@ -49,9 +49,9 @@ class StudyPlanController extends Controller implements IAdminController
             }
             if ($model->save()) {
                 if (!empty($_POST['origin'])) {
-                    return $this->copyPlan(StudyPlan::findOne(['id' => $_POST['origin']]), $model);
+                    $this->copyPlan(StudyPlan::findOne(['id' => $_POST['origin']]), $model);
                 }
-                return $this->redirect(['subjects', 'id' => $model->id]);
+                return $this->redirect(['view', 'id' => $model->id]);
             }
         }
 
@@ -64,8 +64,7 @@ class StudyPlanController extends Controller implements IAdminController
      */
     public function copyPlan($origin, $newPlan)
     {
-        $subjects = StudySubject::findAll(['study_plan_id' => $origin->id]);
-        foreach ($subjects as $subject) {
+        foreach ($origin->studySubjects as $subject) {
             $model = new StudySubject();
             $model->attributes = $subject->attributes;
             $model->study_plan_id = $newPlan->id;
@@ -146,7 +145,7 @@ class StudyPlanController extends Controller implements IAdminController
             if ($model->save()) {
                 $model = new StudySubject();
                 $model->study_plan_id = $id;
-                return $this->redirect(['view', 'id' => $model->id]);
+                return $this->redirect(Url::toRoute(['study-plan/view', 'id' => $id]));
             }
         }
         return $this->render('create_subject', ['model' => $model]);
@@ -190,6 +189,7 @@ class StudyPlanController extends Controller implements IAdminController
 
     /**
      * @param $id
+     * @return string|Response
      */
     public function actionUpdateSubject($id)
     {
@@ -199,11 +199,11 @@ class StudyPlanController extends Controller implements IAdminController
         if (isset($_POST['StudySubject'])) {
             $model->setAttributes($_POST['StudySubject'], false);
             if ($model->save()) {
-                $this->redirect(Url::to('view', ['id' => $model->study_plan_id]));
+                return $this->redirect(Url::toRoute(['study-plan/view', 'id' => $model->study_plan_id]));
             }
         }
 
-        $this->render('update_subject', ['model' => $model]);
+        return $this->render('update_subject', ['model' => $model]);
     }
 
     /**
@@ -222,7 +222,7 @@ class StudyPlanController extends Controller implements IAdminController
      */
     public function actionDelete($id)
     {
-        StudyPlan::findOne($id)->delete();
+        $this->findModel($id)->delete();
         return $this->redirect(['index']);
     }
 
@@ -238,5 +238,16 @@ class StudyPlanController extends Controller implements IAdminController
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+    /**
+     * @param $id
+     * @var $excel Excel
+     */
+    public function actionMakeExcel($id)
+    {
+        $excel = Yii::$app->excel;
+        $plan = self::findModel($id);
+        $excel->getDocument($plan, 'study-plan');
     }
 }

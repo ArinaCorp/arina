@@ -23,13 +23,12 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <?= Html::a(Yii::t('plans', 'Add subject'), Url::toRoute(['study-plan/add-subject', 'id' => $model->id]), ['class' => 'btn btn-success']); ?>
-
-    <?= Html::a(Yii::t('app', 'Return'), ['index'], ['class' => 'btn btn-danger']) ?>
-
     <?= $this->render('_form', [
         'model' => $model,
     ]) ?>
 
     <?= SubjectTable::widget(['subjectDataProvider' => $model->getStudyPlanStudySubjectProvider()]) ?>
+
+    <?= Html::a(Yii::t('plans', 'Add subject'), Url::toRoute(['study-plan/add-subject', 'id' => $model->id]), ['class' => 'btn btn-success']); ?>
+    <br/><br/>
 </div>
