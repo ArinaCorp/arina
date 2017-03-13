@@ -64,6 +64,7 @@ class Department extends \yii\db\ActiveRecord
             'title' => Yii::t('app','Title'),
             'head_id' => Yii::t('app','HeadID'),
             'specialities' => Yii::t('app','Specialities'),
+            'headName' => Yii::t('app', 'HeadID'),
         ];
     }
 

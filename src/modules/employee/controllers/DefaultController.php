@@ -178,4 +178,9 @@ class DefaultController extends Controller implements IAdminController
             throw new NotFoundHttpException('The requested page does not exist.');
     }
 
+    public function actionDocument()
+    {
+         Employee::getDocument();
+    }
+
 }

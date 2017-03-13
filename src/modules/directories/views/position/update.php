@@ -7,9 +7,7 @@ use app\modules\directories\models\position\Position;
 /* @var $this View
  * @var $model Position */
 
-$this->title = Yii::t('app', 'Update {modelClass}: ', [
-        'modelClass' => 'Position',
-    ]) . ' ' . $model->title;
+$this->title = Yii::t('app', 'Update position: ') . ' ' . $model->title;
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Positions'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->title, 'url' => ['view', 'id' => $model->id]];

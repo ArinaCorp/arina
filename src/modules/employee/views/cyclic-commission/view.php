@@ -8,7 +8,7 @@ use app\modules\directories\models\position\Position;
 /* @var $this yii\web\View */
 /* @var $model app\modules\employee\models\cyclic_commission\CyclicCommission */
 
-$this->title = $model->title;
+$this->title = Yii::t('app', 'Cyclic Commission ') . $model->title;
 $this->params['breadcrumbs'][] = ['label' => 'Cyclic Commissions', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -19,14 +19,15 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= Html::a(Yii::t('app', 'List'), ['index'], ['class' => 'btn btn-success']) ?>
         <?= Html::a(Yii::t('app', 'Get Excel document'), ['document', 'id' => $model->id], ['class' => 'btn btn-info']) ?>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
+        <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
                 'confirm' => 'Are you sure you want to delete this item?',
                 'method' => 'post',
             ],
-        ]) ?>
+        ]) 
+        ?>
     </p>
 
     <?= DetailView::widget([

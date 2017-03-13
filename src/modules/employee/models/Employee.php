@@ -144,15 +144,16 @@ class Employee extends ActiveRecord
     public static function getAllTeacher()
     {
         $query = self::find();
-        $query->andWhere(['is_in_education' => 0]);
+        $query->andWhere(['is_in_education' => 1]);
         $query->addOrderBy(['first_name' => SORT_ASC, 'middle_name' => SORT_ASC, 'last_name' => SORT_ASC]);
         return $query->all();
     }
 
     public static function getList()
     {
-        $models = self::find()->all();
-        return ArrayHelper::map($models, 'id', 'fullName');
+        $query = self::find();
+        $query->addOrderBy(['first_name' => SORT_ASC, 'middle_name' => SORT_ASC, 'last_name' => SORT_ASC]);
+        return $query->all();
     }
 
     public function getCyclicCommissionArray($id)
@@ -257,5 +258,50 @@ class Employee extends ActiveRecord
             }
         }
         return $success;
+    }
+
+    public static function getDocument()
+    {
+        $tmpfname = Yii::getAlias('@webroot') . "/templates/employee.xls";
+        $excelReader = PHPExcel_IOFactory::createReaderForFile($tmpfname);;
+        $excelObj = $excelReader->load($tmpfname);
+        $excelObj->setActiveSheetIndex(0);
+
+        /**
+         * @var Employee[] $employees
+         */
+        $employees = Employee::getList();
+        if (!is_null($employees)) {
+            $startRow = 5;
+            $current = $startRow;
+            $i = 1;
+            foreach ($employees as $employee) {
+                $excelObj->getActiveSheet()->mergeCells("C" . $current . ":D" . $current);
+                $excelObj->getActiveSheet()->mergeCells("E" . $current . ":I" . $current);
+                $excelObj->getActiveSheet()->mergeCells("J" . $current . ":L" . $current);
+                $excelObj->getActiveSheet()->mergeCells("M" . $current . ":O" . $current);
+
+                $excelObj->getActiveSheet()->insertNewRowBefore($current + 1);
+                $excelObj->getActiveSheet()->setCellValue('B' . $current, $i);
+                $excelObj->getActiveSheet()->setCellValue('C' . $current, $employee->getPosition());
+                $excelObj->getActiveSheet()->setCellValue('E' . $current, $employee->getFullName());
+                $excelObj->getActiveSheet()->setCellValue('J' . $current, $employee->getCyclicCommission());
+                $excelObj->getActiveSheet()->setCellValue('M' . $current, $employee->getStartDate());
+                $i++;
+                $current++;
+            }
+            $excelObj->getActiveSheet()->removeRow($current);
+        }
+        header('Content-Type: application/vnd.ms-excel');
+        $filename = "Employee_" . date("d-m-Y-His") . ".xls";
+        header('Content-Disposition: attachment;filename=' . $filename . ' ');
+        header('Cache-Control: max-age=0');
+        $objWriter = PHPExcel_IOFactory::createWriter($excelObj, 'Excel2007');
+        $objWriter->save('php://output');
+    }
+
+    public static function getListArray()
+    {
+        ArrayHelper::map(self::getList(), 'id', 'fullName');
     }
 }

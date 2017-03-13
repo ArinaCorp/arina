@@ -90,6 +90,7 @@ class Audience extends ActiveRecord
             'type' => Yii::t('app', 'Type'),
             'id_teacher' => Yii::t('app', 'Responsible'),
             'capacity' => Yii::t('app', 'Capacity'),
+            'teacherName' => Yii::t('app', 'TeacherName'),
         ];
     }
 

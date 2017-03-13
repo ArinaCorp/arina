@@ -7,9 +7,7 @@ use app\modules\directories\models\subject\Subject;
 /* @var $this View
  * @var $model Subject */
 
-$this->title = Yii::t('app', 'Update {modelClass}: ', [
-        'modelClass' => 'Subject',
-    ]) . ' ' . $model->title;
+$this->title = Yii::t('app', 'Update Subject: ') . ' ' . $model->title;
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Subjects'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->title, 'url' => ['view', 'id' => $model->id]];

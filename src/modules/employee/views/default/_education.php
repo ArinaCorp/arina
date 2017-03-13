@@ -18,7 +18,10 @@ use yii\bootstrap\Html;
     </div>
 
     <div class="panel-body container-items"><!-- widgetContainer -->
-        <?php foreach ($modelsEducation as $index => $modelEducation): ?>
+        <?php
+        if (is_array($modelsEducation) || is_object($modelsEducation)) {
+            foreach ($modelsEducation as $index => $modelEducation):
+            ?>
         <div class="item panel panel-default"><!-- widgetBody -->
             <div class="panel-heading">
                     <span class="panel-title-address"><?= Yii::t('app', 'Education') ?>
@@ -66,6 +69,6 @@ use yii\bootstrap\Html;
                 </div>
             </div><!-- end:row -->
         </div>
-        <?php endforeach; ?>
+        <?php endforeach;} ?>
     </div>
 </div>

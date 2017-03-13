@@ -48,6 +48,7 @@ class CyclicCommission extends \yii\db\ActiveRecord
             'id' => Yii::t('app','ID'),
             'title' => Yii::t('app','Title'),
             'head_id' => Yii::t('app','Head ID'),
+            'headName' => Yii::t('app','Head ID'),
         ];
     }
 
