@@ -128,7 +128,7 @@ return [
     'Payment' => 'Фінансування',
     'Excluded' => 'Відрахований',
     'Information' => 'Інформація',
-    'Head ID' => 'Завідувач',
+    'Head ID' => 'Голова',
     'HeadID' => 'Зав. Відділенням',
     'Specialities' => 'Спеціальності',
     'Departments' => 'Відділення',
