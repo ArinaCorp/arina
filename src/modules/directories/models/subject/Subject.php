@@ -88,13 +88,13 @@ class Subject extends ActiveRecord
     }
 
     /**
-     * @param $specialityId
+     * @param $speciality_id
      * @return SubjectCycle
      */
-    public function getCycle($specialityId)
+    public function getCycle($speciality_id)
     {
         /**@var $relation SubjectRelation */
-        $relation = SubjectRelation::find()->where(['speciality_id' => $specialityId, 'subject_id' => $this->id]);
+        $relation = SubjectRelation::find()->where(['speciality_id' => $speciality_id, 'subject_id' => $this->id]);
         return $relation->subjectCycle;
     }
 

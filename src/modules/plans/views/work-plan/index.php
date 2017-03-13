@@ -5,8 +5,8 @@ use yii\data\ActiveDataProvider;
 use yii\bootstrap\Html;
 use yii\widgets\Pjax;
 use yii\grid\GridView;
-
-use app\modules\directories\models\speciality\Speciality;
+use yii\grid\ActionColumn;
+use yii\helpers\Url;
 
 /**
  * @var View $this
@@ -17,15 +17,14 @@ $this->params['breadcrumbs'][] = $this->title;
 
 ?>
 
-<div class="study-plans-index">
+<div class="row">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
     <div class="col-lg-8">
         <?= Html::a(Yii::t('plans', 'Create work plan'), ['create'], ['class' => 'btn btn-success']) ?>
-        <br/>
     </div>
-
+    <br/><br/>
     <?php Pjax::begin(); ?>
 
     <?= GridView::widget([
@@ -33,18 +32,30 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             [
-                'header',
-                'value' => function ($model) {
-                    return $model->speciality->title;
-                }
+                'header' => Yii::t('plans', 'Work plans'),
+                'value' => 'title',
+                'contentOptions' => ['style'=>'width: 50%'],
             ],
             [
-                 'value' => function ($model) {
-                    return $model->study_year->getFullName();
-                 }
+                 'header' => Yii::t('app', 'Study year'),
+                 'value' => 'yearTitle'
             ],
-            'created',
-            ['class' => 'yii\grid\ActionColumn'],
+            'updated',
+            [
+                'header' => Yii::t('app', 'Actions'),
+                'class' => ActionColumn::className(),
+                'contentOptions' => ['style'=>'width: 90px'],
+                'template' => '{view} {update} {export} {delete}',
+                'buttons' => [
+                    'export' => function ($url, $model) {
+                        $options = [
+                            'title' => Yii::t('plans', 'Export'),
+                        ];
+                        $url = Url::toRoute(['study-plan/make-excel', 'id' => $model->id]);
+                        return Html::a('<span class="glyphicon glyphicon-file"</span>', $url, $options);
+                    }
+                ]
+            ],
         ],
     ]);
     ?>

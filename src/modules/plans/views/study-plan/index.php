@@ -45,7 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'header' => Yii::t('app', 'Actions'),
                 'class' => ActionColumn::className(),
                 'contentOptions' => ['style'=>'width: 90px'],
-                'template' => '{update} {delete} {view} {export}',
+                'template' => '{view} {update} {export} {delete}',
                 'buttons' => [
                     'export' => function ($url, $model) {
                         $options = [

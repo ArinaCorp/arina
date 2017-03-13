@@ -30,7 +30,7 @@ use yii\web\HttpException;
  * @property integer $study_year_id
  *
  * The followings are the available model relations:
- * @property StudyYear $study_year
+ * @property StudyYear $studyYear
  * @property WorkSubject[] $work_subjects
  * @property Speciality $speciality
  */
@@ -176,7 +176,7 @@ class WorkPlan extends ActiveRecord
      */
     public function getWorkSubjects()
     {
-        return $this->hasMany(StudySubject::className(), ['work_plan_id' => 'id']) ->via('work_subjects');
+        return $this->hasMany(StudySubject::className(), ['work_plan_id' => 'id']);
     }
 
     /**
@@ -192,6 +192,7 @@ class WorkPlan extends ActiveRecord
             'updated' => Yii::t('app', 'Date of update'),
             'study_plan_origin' => Yii::t('plans', 'The study plan for the base'),
             'work_plan_origin' => Yii::t('plans', 'The work plan for the base'),
+            'title' => Yii::t('plans', 'Work plan'),
         ];
     }
 
@@ -213,8 +214,7 @@ class WorkPlan extends ActiveRecord
      */
     public function getTitle()
     {
-        $year = StudyYear::findOne(['id' => $this->study_year_id]);
-        return $this->speciality->title . ' - ' . $year->getFullName();
+        return $this->speciality->title . ' - ' . $this->studyYear->getFullName();
     }
 
     public function checkOrigin()
@@ -290,7 +290,7 @@ class WorkPlan extends ActiveRecord
             }
         }
         $this->graph = $graphs;
-        foreach ($origin->study_subjects as $subject) {
+        foreach ($origin->studySubjects as $subject) {
             $model = new WorkSubject();
             $model->work_plan_id = $this->id;
             $model->subject_id = $subject->subject_id;
@@ -319,6 +319,10 @@ class WorkPlan extends ActiveRecord
             if (count($this->semesters) < 8) throw new HttpException(Yii::t('plans', 'No matching groups to plan'));
         }
         return parent::beforeSave(false);
+    }
+
+    public function getYearTitle (){
+        return $this->studyYear->getFullName();
     }
 
 

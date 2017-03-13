@@ -27,7 +27,6 @@ use app\modules\plans\models\WorkPlan;
  * The followings are the available model relations:
  * @property Department $department
  * @property SpecialityQualification[] $specialityQualifications
- * @property Group[] $groups
  * @property StudyPlan[] $studyPlans
  * @property WorkPlan[] $workPlans
  */
@@ -166,9 +165,11 @@ class Speciality extends ActiveRecord
      */
     public function getGroupsByStudyYear($yearId)
     {
-        $list = array();
-        foreach ($this->groups as $group) {
-            $list[$group->title] = $group->getCourse($yearId);
+        $list = [];
+        foreach ($this->specialityQualifications as $sQ) {
+            foreach ($sQ->groups as $group) {
+                $list[$group->title] = $group->getCourse($yearId);
+            }
         }
         array_multisort($list);
         return $list;
