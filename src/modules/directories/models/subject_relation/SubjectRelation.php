@@ -12,9 +12,9 @@ use app\modules\directories\models\subject_cycle\SubjectCycle;
 use app\modules\directories\models\speciality\Speciality;
 
 /**
- * This is the model class for table "subject_has_speciality_and_cycle".
+ * This is the model class for table "subject_cycle".
  *
- * The followings are the available columns in table 'subject_has_speciality_and_cycle':
+ * The followings are the available columns in table 'subject_cycle':
  * @property string $id
  * @property integer $subject_id
  * @property integer $speciality_id
@@ -84,9 +84,9 @@ class SubjectRelation extends ActiveRecord
     public function rules()
     {
         return [
-            [['subject_id', 'speciality_qualification_id', 'subject_cycle_id'], 'required'],
-            [['subject_id', 'speciality_qualification_id', 'subject_cycle_id'], 'integer'],
-            [['subject_id', 'speciality_qualification_id', 'subject_cycle_id'], 'safe'],
+            [['subject_id', 'speciality_id', 'subject_cycle_id'], 'required'],
+            [['subject_id', 'speciality_id', 'subject_cycle_id'], 'integer'],
+            [['subject_id', 'speciality_id', 'subject_cycle_id'], 'safe'],
         ];
     }
 

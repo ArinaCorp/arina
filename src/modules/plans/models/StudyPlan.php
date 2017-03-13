@@ -11,7 +11,7 @@ use nullref\useful\behaviors\JsonBehavior;
 use yii\behaviors\TimestampBehavior;
 use app\behaviors\StrBehavior;
 
-use app\modules\directories\models\speciality\Speciality;
+use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 use app\modules\directories\models\department\Department;
 use app\modules\directories\models\subject\Subject;
 
@@ -28,7 +28,7 @@ use app\modules\directories\models\subject\Subject;
  *
  * The followings are the available model relations:
  * @property StudySubject[] $studySubjects
- * @property Speciality $speciality
+ * @property SpecialityQualification $specialityQualification
  */
 class StudyPlan extends ActiveRecord
 {
@@ -69,11 +69,11 @@ class StudyPlan extends ActiveRecord
     public function rules()
     {
         return [
-            [['speciality_id'], 'required'],
+            [['speciality_qualification_id'], 'required'],
             [['semesters'], 'required', 'message' => Yii::t('plans', 'Click "Generate" and check the data')],
             [['id', 'speciality_id'], 'integer'],
             [['created', 'updated'], 'safe'],
-            [['id, speciality_id'], 'safe', 'on' => 'search'],
+            [['id', 'speciality_qualification_id'], 'safe', 'on' => 'search'],
             [['id'], 'unique']
         ];
     }
@@ -224,6 +224,6 @@ class StudyPlan extends ActiveRecord
      */
     public function getTitle()
     {
-        return $this->speciality->title . ' - ' . date('H:i d.m.Y', $this->updated);
+        return $this->specialityQualification->title . ' - ' . date('H:i d.m.Y', $this->updated);
     }
 }

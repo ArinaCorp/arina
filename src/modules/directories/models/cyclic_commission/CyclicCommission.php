@@ -2,11 +2,10 @@
 
 namespace app\modules\directories\models\cyclic_commission;
 
-use app\modules\work_subject\models\WorkSubject;
+use app\modules\plans\models\WorkSubject;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
-use app\modules\teacher\models\Teacher;
 
 /**
  * This is the model class for table "cyclic_commission".
