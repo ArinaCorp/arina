@@ -5,7 +5,9 @@ use yii\web\View;
 use app\modules\employee\models\Employee;
 
 /* @var $this View
- * @var $model Employee */
+ * @var $model Employee 
+ * @var $modelsEducation \app\modules\employee\models\EmployeeEducation[]
+ */
 
 $this->title = Yii::t('app', 'Update employee:', [
         'modelClass' => 'Employee',

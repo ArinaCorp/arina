@@ -14,6 +14,9 @@ use voskobovich\linker\LinkerBehavior;
 use app\modules\directories\models\position\Position;
 use app\modules\employee\models\cyclic_commission\CyclicCommission;
 
+use PHPExcel;
+use PHPExcel_IOFactory;
+
 /**
  * This is the model class for table "employee".
  * @property integer $id
@@ -42,7 +45,8 @@ class Employee extends ActiveRecord
     const TYPE_OTHER = 2;
 
     public $data;
-
+    public $has_education;
+    
     public function behaviors()
     {
         return [
@@ -112,6 +116,11 @@ class Employee extends ActiveRecord
     {
         return $this->first_name . ' ' . $this->middle_name . ' ' . $this->last_name;
     }
+    
+    public function getStartDate()
+    {
+        return $this->start_date;
+    }
 
     public static function getTypes()
     {
@@ -138,6 +147,12 @@ class Employee extends ActiveRecord
         $query->andWhere(['is_in_education' => 0]);
         $query->addOrderBy(['first_name' => SORT_ASC, 'middle_name' => SORT_ASC, 'last_name' => SORT_ASC]);
         return $query->all();
+    }
+
+    public static function getList()
+    {
+        $models = self::find()->all();
+        return ArrayHelper::map($models, 'id', 'fullName');
     }
 
     public function getCyclicCommissionArray($id)
@@ -221,5 +236,26 @@ class Employee extends ActiveRecord
     public function getLink()
     {
         return Html::a($this->getFullName(), Url::to(['/employee/default/view', 'id' => $this->id]));
+    }
+
+    public function save($runValidation = true, $attributeNames = null, $withAllParams = true)
+    {
+        $saved = parent::save($runValidation, $attributeNames);
+        if ($saved && $withAllParams) {
+            EmployeeEducation::saveSt($this->id, $this);
+        }
+        return $saved;
+    }
+
+    public function validate($attributeNames = null, $clearErrors = true)
+    {
+        $success = parent::validate($attributeNames, $clearErrors);
+        if (!empty($this->has_family)) {
+            $familyValidation = EmployeeEducation::validateSt($this);
+            if (!$familyValidation) {
+                $success = false;
+            }
+        }
+        return $success;
     }
 }

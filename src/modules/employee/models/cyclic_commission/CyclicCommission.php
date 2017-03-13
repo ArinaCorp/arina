@@ -145,25 +145,6 @@ class CyclicCommission extends \yii\db\ActiveRecord
                 $current++;
             }
             $excelObj->getActiveSheet()->removeRow($current);
-            $excelObj->getActiveSheet()->removeRow($current);
-//            $excelObj->getActiveSheet()
-//                ->getCell('C' . $current - 1)
-//                ->getStyle()
-//                ->getBorders()
-//                ->getBottom()
-//                ->setBorderStyle(\PHPExcel_Style_Border::BORDER_NONE);
-//            $excelObj->getActiveSheet()
-//                ->getCell('B' . $current - 1)
-//                ->getStyle()
-//                ->getBorders()
-//                ->getBottom()
-//                ->setBorderStyle(\PHPExcel_Style_Border::BORDER_NONE);
-//            $excelObj->getActiveSheet()
-//                ->getCell('H' . $current - 1)
-//                ->getStyle()
-//                ->getBorders()
-//                ->getBottom()
-//                ->setBorderStyle(\PHPExcel_Style_Border::BORDER_NONE);
         }
         header('Content-Type: application/vnd.ms-excel');
         $filename = "Cyclic_Commission_" . $this->title . "_" . date("d-m-Y-His") . ".xls";

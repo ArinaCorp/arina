@@ -116,49 +116,38 @@ class DefaultController extends Controller implements IAdminController
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
-        $modelsEducation = $model->education;
+        if (empty($id)) {
+            $model = new Employee();
+        } else {
+            $model = $this->findModel($id);
+        }
+
+        $model->has_education = EmployeeEducation::getList($id, $model);
+
         /**
          * @var $modelsEducation EmployeeEducation[]
          */
-        if ($model->load(Yii::$app->request->post())) {
-            $educationOldIDs = ArrayHelper::map($modelsEducation, 'id', 'id');
-            $modelsEducation = Employee::createMultiple(EmployeeEducation::className(), $modelsEducation);
-            Model::loadMultiple($modelsEducation, Yii::$app->request->post());
-            $educationDeletedIDs = array_diff($educationOldIDs, array_filter(ArrayHelper::map($modelsEducation, 'id', 'id')));
-            // validate all models
-            $valid = $model->validate();
-            $valid = Model::validateMultiple($modelsEducation) && $valid;
 
-            if ($valid) {
-                $transaction = \Yii::$app->db->beginTransaction();
-                try {
-                    if ($flag = $model->save(false)) {
-                        if (!empty($familyDeletedIDs)) {
-                            EmployeeEducation::deleteAll(['id' => $educationDeletedIDs]);
-                        }
-                        foreach ($modelsEducation as $modelEducation) {
-                            $modelEducation->employee_id = $model->id;
-                            if (!($flag = $modelEducation->save(false))) {
-                                $transaction->rollBack();
-                                break;
-                            }
-                        }
-                    }
-                    if ($flag) {
-                        $transaction->commit();
-                        return $this->redirect(['view', 'id' => $model->id]);
-                    }
-                } catch (Exception $e) {
-                    $transaction->rollBack();
+        $saveAction = Yii::$app->request->post('save');
+        $newRecord = $model->isNewRecord;
+        if ($model->load(Yii::$app->request->post()) && $saveAction && $model->save()) {
+            if (!Yii::$app->request->post('stay')) {
+                return $this->redirect(Yii::$app->user->getReturnUrl(['index']));
+            } else {
+                Yii::$app->session->setFlash('save-record-employee', Yii::t('app', 'Employee record is saved!'));
+                if ($newRecord) {
+                    return $this->redirect(['/employee/update', 'id' => $model->primaryKey]);
+                } else {
+                    return $this->refresh();
                 }
             }
-        }
+        } else {
 
-        return $this->render('update', [
-            'model' => $model,
-            'modelsEducation' => (empty($modelsEducation)) ? [new EmployeeEducation()] : $modelsEducation,
-        ]);
+            return $this->render('update', [
+                'model' => $model,
+                'modelsFamily' => $model->has_education,
+            ]);
+        }
     }
 
     /**
