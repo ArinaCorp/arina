@@ -2,6 +2,8 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use app\modules\employee\models\Employee;
+use app\modules\directories\models\position\Position;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\employee\models\cyclic_commission\CyclicCommission */
@@ -35,11 +37,14 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]) ?>
 
-    <?= \yii\grid\GridView::widget([
+    <?=
+    /**
+     * @var $emp Employee
+     */
+    \yii\grid\GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-            'position',
             'last_name',
             'first_name',
             'middle_name',

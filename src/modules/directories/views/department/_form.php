@@ -22,7 +22,7 @@ use app\modules\employee\models\Employee;
 
         <div class="col-sm-6">
             <?= $form->field($model, 'head_id')->widget(Select2::className(), [
-                'data' => Employee::getList(),
+                'data' => Employee::getAllTeacherList(),
                 'options' =>
                     [
                         'placeholder' => Yii::t('app', 'Select head'),
