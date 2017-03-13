@@ -68,12 +68,24 @@ class DefaultController extends Controller implements IAdminController
      */
     public function actionCreate()
     {
+
+        $model = new Employee();
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        } else {
+            return $this->render('create', [
+                'model' => $model,
+            ]);
+        }
+
+        /*
         $model = new Employee();
         $modelsEducation = [new EmployeeEducation()];
 
         /**
          * @var $modelsEducation EmployeeEducation[]
-         */
+         *
 
         if ($model->load(Yii::$app->request->post())) {
             $modelsEducation = Employee::createMultiple(EmployeeEducation::className());
@@ -106,6 +118,8 @@ class DefaultController extends Controller implements IAdminController
             'model' => $model,
             'modelsEducation' => (empty($modelsEducation)) ? [new EmployeeEducation()] : $modelsEducation,
         ]);
+
+        */
     }
 
     /**
@@ -116,6 +130,18 @@ class DefaultController extends Controller implements IAdminController
      */
     public function actionUpdate($id)
     {
+
+        $model = $this->findModel($id);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        } else {
+            return $this->render('update', [
+                'model' => $model,
+            ]);
+        }
+        
+       /*
         if (empty($id)) {
             $model = new Employee();
         } else {
@@ -126,7 +152,7 @@ class DefaultController extends Controller implements IAdminController
 
         /**
          * @var $modelsEducation EmployeeEducation[]
-         */
+         *
 
         $saveAction = Yii::$app->request->post('save');
         $newRecord = $model->isNewRecord;
@@ -148,6 +174,7 @@ class DefaultController extends Controller implements IAdminController
                 'modelsFamily' => $model->has_education,
             ]);
         }
+        */
     }
 
     /**
