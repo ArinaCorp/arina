@@ -1,11 +1,10 @@
 <?php
 
-namespace app\modules\directories\models\subject_cycle;
+namespace app\modules\directories\models\relation;
 
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
-use app\modules\directories\models\subject_relation\SubjectRelation;
 
 /**
  * This is the model class for table "subject_cycle".

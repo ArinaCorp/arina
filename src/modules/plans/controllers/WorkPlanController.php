@@ -5,54 +5,36 @@ namespace app\modules\plans\controllers;
 use Yii;
 use yii\web\Controller;
 use yii\helpers\Url;
-use nullref\core\interfaces\IAdminController;
 use yii\web\NotFoundHttpException;
-use yii\web\Response;
 
 use app\modules\plans\models\WorkPlan;
 use app\modules\plans\models\WorkSubject;
-use app\modules\plans\models\WorkPlanSearch;
 
-class WorkPlanController extends Controller implements IAdminController
+class WorkController extends Controller
 {
     public $name = 'Work plan';
 
-    /**
-     * @return string
-     */
     public function actionIndex()
     {
-        $searchModel = new WorkPlanSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+        $this->render('index');
     }
 
-    /**
-     * @return string|Response
-     */
     public function actionCreate()
     {
         $model = new WorkPlan();
 
-        if (isset($_POST['WorkPlan'])) {
-            $model->attributes = $_POST['WorkPlan'];
-            $model->updated = $model->created = date('Y-m-d', time());
+        $model->attributes = $_POST['WorkPlan'];
+        $model->created = date('Y-m-d', time());
 
-            if ($model->save()) {
-                return $this->redirect(Url::to('graph', ['id' => $model->id]));
-            }
+        if ($model->save()) {
+            $this->redirect(Url::to('graph', ['id' => $model->id]));
         }
-
-        return $this->render('create', ['model' => $model]);
+        $this->render('create', ['model' => $model]);
     }
 
     /**
-     * @param $id
-     * @return string
+     * @var WorkPlan $model
+     * @param integer $id
      */
     public function actionGraph($id)
     {
@@ -64,30 +46,25 @@ class WorkPlanController extends Controller implements IAdminController
                 unset(Yii::$app->session['weeks']);
             }
             if (isset(Yii::$app->session['graph'])) {
-                $model->graph = Yii::$app->session['graph'];
+                $model->graphs = Yii::$app->session['graph'];
                 unset(Yii::$app->session['graph']);
             }
             if ($model->save()) {
-                return $this->redirect(Url::to('subjects', ['id' => $model->id]));
+                $this->redirect(Url::to('subjects', ['id' => $model->id]));
             }
         }
-        return $this->render('graph', ['model' => $model]);
+        $this->render('graph', ['model' => $model]);
     }
 
     /**
-     * @param $id
-     * @return string
+     * @param integer $id
      */
     public function actionView($id)
     {
         $model = WorkPlan::findOne($id);
-        return $this->render('view', ['model' => $model]);
+        $this->render('view', ['model' => $model]);
     }
 
-    /**
-     * @param $id
-     * @return string
-     */
     public function actionUpdate($id)
     {
         $model = WorkPlan::findOne($id);
@@ -99,42 +76,31 @@ class WorkPlanController extends Controller implements IAdminController
                 unset(Yii::$app->session['weeks']);
             }
             if (isset(Yii::$app->session['graph'])) {
-                $model->graphs = Yii::$app->session['graph'];
+                $model->graph = Yii::$app->session['graph'];
                 unset(Yii::$app->session['graph']);
             }
             if ($model->save()) {
-                return $this->redirect(['index']);
+                $this->redirect(['index']);
             }
         }
 
-        return $this->render('update', ['model' => $model]);
+        $this->render('update', ['model' => $model]);
 
     }
 
-    /**
-     * @param $id
-     * @return Response
-     */
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
         return $this->redirect(['index']);
     }
 
-    /**
-     * @param $id
-     * @return string
-     */
+    //CRUD for Work Subject
     public function actionSubjects($id)
     {
         $model = WorkPlan::findOne($id);
-        return $this->render('subjects', ['model' => $model]);
+        $this->render('subjects', ['model' => $model]);
     }
 
-    /**
-     * @param $id
-     * @return string
-     */
     public function actionAddSubject($id)
     {
         $model = new WorkSubject();
@@ -143,16 +109,12 @@ class WorkPlanController extends Controller implements IAdminController
         if (isset($_POST['WorkSubject'])) {
             $model->attributes = $_POST['WorkSubject'];
             if ($model->save())
-                return $this->redirect(Url::to('subjects', ['id' => $id]));
+                $this->redirect(Url::to('subjects', ['id' => $id]));
         }
 
-        return $this->render('subject_form', ['model' => $model, 'plan' => WorkPlan::findOne($id)]);
+        $this->render('subject_form', ['model' => $model, 'plan' => WorkPlan::findOne($id)]);
     }
 
-    /**
-     * @param $id
-     * @return string|Response
-     */
     public function actionEditSubject($id)
     {
         /**
@@ -163,17 +125,13 @@ class WorkPlanController extends Controller implements IAdminController
         if (isset($_POST['WorkSubject'])) {
             $model->attributes = $_POST['WorkSubject'];
             if ($model->save()) {
-                return $this->redirect(Url::to('view', ['id' => $model->work_plan_id]));
+                $this->redirect(Url::to('view', ['id' => $model->work_plan_id]));
             }
         }
 
-        return $this->render('subject_form', ['model' => $model, 'plan' => $model->work_plan]);
+        $this->render('subject_form', ['model' => $model, 'plan' => $model->work_plan]);
     }
 
-    /**
-     * @param $id
-     * @return Response
-     */
     public function actionDeleteSubject($id)
     {
         WorkSubject::findOne($id)->delete();
@@ -221,8 +179,7 @@ class WorkPlanController extends Controller implements IAdminController
                 if (!empty($lastYear) && ($course == $last)) {
                     $t = $semesters[$groupId + 1];
                     if (($t[2] != $lastYear[2]) || ($t[1] != $lastYear[1])) {
-                        $errors[$groupName] = Yii::t('plans',
-                                'Number of weeks is different for same groups of course (group') . $groupName .')';
+                        $errors[$groupName] = "Кількість тижнів для груп на одному курсі різна (група $groupName)";
                     }
                 }
                 $semestersForGroups[$groupName] = $semesters[$groupId + 1];
@@ -237,7 +194,7 @@ class WorkPlanController extends Controller implements IAdminController
         }
         Yii::$app->session['weeks'] = $weeks;
         Yii::$app->session['graph'] = $_POST['graph'];
-        return $this->renderPartial('semestersPlan', ['data' => $semestersForGroups, 'errors' => $errors]);
+        $this->renderPartial('semestersPlan', ['data' => $semestersForGroups, 'errors' => $errors]);
     }
 
     /**

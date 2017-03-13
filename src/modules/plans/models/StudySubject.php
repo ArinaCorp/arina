@@ -2,12 +2,10 @@
 
 namespace app\modules\plans\models;
 
-use app\behaviors\StrBehavior;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\data\ActiveDataProvider;
 use yii\db\ActiveRecord;
-use nullref\useful\behaviors\JsonBehavior;
 
 use app\modules\directories\models\subject\Subject;
 
@@ -16,7 +14,7 @@ use app\modules\directories\models\subject\Subject;
  *
  * The followings are the available columns in table 'study_subject':
  * @property integer $id
- * @property integer $study_plan_id
+ * @property integer $plan_id
  * @property integer $subject_id
  * @property integer $total
  * @property integer $lectures
@@ -31,7 +29,7 @@ use app\modules\directories\models\subject\Subject;
  * @property string $certificate_name
  *
  * The followings are the available model relations:
- * @property StudyPlan $studyPlan
+ * @property StudyPlan $study_plan
  * @property Subject $subject
  */
 class StudySubject extends ActiveRecord
@@ -45,39 +43,22 @@ class StudySubject extends ActiveRecord
     }
 
     /**
-     * @return array
-     */
-    public function behaviors()
-    {
-        return [
-            'StrBehavior' => [
-                'class' => StrBehavior::className(),
-                'fields' => ['weeks'],
-            ],
-            'JsonBehavior' => [
-                'class' => JsonBehavior::className(),
-                'fields' => ['control'],
-            ],
-        ];
-    }
-
-    /**
      * @return array validation rules for model attributes.
      */
     public function rules()
     {
         return [
-            [['study_plan_id', 'subject_id', 'total'], 'required', 'message' => Yii::t('plans', 'Specify').'{attribute}'],
+            [['plan_id', 'subject_id', 'total'], 'required', 'message' => Yii::t('plans', 'Specify').'{attribute}'],
             [['weeks'], 'checkWeeks'],
             [['total'], 'checkHours'],
             [['practice_weeks'], 'checkPractice'],
             [['lectures'], 'checkClasses'],
             [['subject_id'], 'checkSubject', 'on' => 'insert'],
             [['lectures', 'lab_works', 'practices'], 'default', 'value' => 0, 'on' => 'insert'],
-            [['study_plan_id', 'subject_id', 'total', 'lectures', 'lab_works', 'practices'], 'integer', ],
-            [['study_plan_id', 'subject_id', 'total', 'lectures', 'lab_works', 'practices', 'weeks', 'control',
-                'practice_weeks', 'dual_lab_work', 'dual_practice', 'diploma_name', 'certificate_name'], 'safe'],
-            [['id', 'study_plan_id', 'subject_id', 'total', 'lectures', 'lab_works', 'practices', 'subject'], 'safe', 'on' => 'search'],
+            [['plan_id, subject_id, total, lectures, lab_works, practices'], 'integer', 'integerOnly' => true],
+            [['plan_id, subject_id, total, lectures, lab_works, practices, weeks, control, practice_weeks,
+             dual_lab_work, dual_practice, diploma_name, certificate_name'], 'safe'],
+            [['id, plan_id, subject_id, total, lectures, lab_works, practices, subject'], 'safe', 'on' => 'search'],
         ];
     }
 
@@ -91,7 +72,7 @@ class StudySubject extends ActiveRecord
      */
     public function getStudyPlan()
     {
-        return $this->hasOne(StudyPlan::className(), ['id' => 'study_plan_id']);
+        return $this->hasOne(StudyPlan::className(), ['id' => 'plan_id']);
     }
 
     /**
@@ -103,32 +84,51 @@ class StudySubject extends ActiveRecord
     }
 
     /**
+     * @return array
+     */
+    /*public function behaviors()
+    {
+        return [
+            'StrBehavior' => [
+                'class' => 'application.behaviors.StrBehavior',
+                'fields' => [
+                    'weeks',
+
+                ],
+            ],
+            'JSONBehavior' => [
+                'class' => 'application.behaviors.JSONBehavior',
+                'fields' => [
+                    'control',
+                ],
+            ],
+        ];
+    }/*
+
+    /**
      * @return array customized attribute labels (name=>label)
      */
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('plans', 'Study subject'),
-            'study_plan_id' => Yii::t('plans', 'Study plan'),
-            'subject_id' => Yii::t('app', 'Subject'),
-            'total' => Yii::t('app', 'Total'),
+            'id' => Yii::t('plans', 'ID'),
+            'plan_id' => Yii::t('plans', 'Plan'),
+            'subject_id' => Yii::t('plans', 'Subject'),
+            'total' => Yii::t('plans', 'Total'),
             'lectures' => Yii::t('plans', 'Lectures'),
-            'lab_works' => Yii::t('plans', 'Lab works'),
+            'lab_works' => Yii::t('plans', 'Laboratory works'),
             'practices' => Yii::t('plans', 'Practice works'),
             'classes' => Yii::t('plans', 'Class works'),
-            'classes_week' => Yii::t('plans', 'Classes for week'),
             'practice_weeks' => Yii::t('plans', 'Practice weeks'),
             'diploma_name' => Yii::t('plans', 'Diploma name'),
             'certificate_name' => Yii::t('plans', 'Certificate name'),
-            'dual_lab_work' => Yii::t('plans', 'Dual laboratory work'),
-            'dual_practice' => Yii::t('plans', 'Dual practice work'),
-            'selfWork' => Yii::t('plans', 'Self work'),
+            'dual_lab_work' => Yii::t('plans', 'Dual laboratory works'),
+            'dual_practice' => Yii::t('plans', 'Dual practice works'),
+            'self_work' => Yii::t('plans', 'Self work'),
             'credit' => Yii::t('plans', 'Credit'),
-            'exam' => Yii::t('app', 'Exam'),
-            'workSemesters' => Yii::t('plans', 'Work semester'),
-            'projectSemesters' => Yii::t('plans', 'Project semester'),
-            'testSemesters' => Yii::t('plans', 'Test semesters'),
-            'examSemesters' => Yii::t('plans', 'Exam semesters'),
+            'exam' => Yii::t('plans', 'Exam'),
+            'work_semester' => Yii::t('plans', 'Work semester'),
+            'project_semester' => Yii::t('plans', 'Project semester'),
         ];
     }
 
@@ -153,7 +153,7 @@ class StudySubject extends ActiveRecord
 
         $query->andFilterWhere([
             'id' => $this->id,
-            'study_plan_id' => $this->study_plan_id,
+            'plan_id' => $this->plan_id,
             'subject_id' => $this->subject_id,
             'total' => $this->total,
             'lectures' => $this->lectures,
@@ -273,7 +273,7 @@ class StudySubject extends ActiveRecord
         if (!$this->hasErrors()) {
             if ($this->subject->practice) {
                 if (empty($this->practice_weeks)) {
-                    $this->addError('practice_weeks', Yii::t('plans', 'Specify the number of weeks'));
+                    $this->addError('practice_weeks', Yii::t('plans','Specify the number of weeks'));
                 }
                 $valid = false;
                 foreach ($this->control as $item) {
@@ -295,7 +295,7 @@ class StudySubject extends ActiveRecord
             $sum = 0;
             foreach ($this->weeks as $semester => $weekly) {
                 if (!empty($weekly)) {
-                    $sum += $weekly * $this->studyPlan->semesters[$semester];
+                    $sum += $weekly * $this->study_plan->semesters[$semester];
                 }
             }
             if (!$this->subject->practice && ($sum < $this->getClasses())) {
@@ -319,13 +319,14 @@ class StudySubject extends ActiveRecord
         }
     }
 
-    public function checkSubject()
+    /*public function checkSubject()
     {
         if (!$this->hasErrors()) {
-            if (StudyPlan::find()->where(['id' => $this->subject_id])) {
-                $this->addError('subject_id', Yii::t('plans', 'Record about this subject exists in this study plan'));
+            if (StudyPlan::find()->where(['id' => $this->subject_id])->exists($criteria)) {
+                $this->addError('subject_id', Yii::t('plans','Record about this subject exists in this study plan'));
             }
         }
-    }
+    }*/
+
 
 }

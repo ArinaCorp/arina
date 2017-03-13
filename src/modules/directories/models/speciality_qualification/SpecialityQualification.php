@@ -2,14 +2,12 @@
 
 namespace app\modules\directories\models\speciality_qualification;
 
-use Yii;
-use yii\helpers\ArrayHelper;
-
 use app\modules\students\models\Group;
+use Yii;
 use app\modules\directories\models\speciality\Speciality;
 use app\modules\directories\models\qualification\Qualification;
 use app\modules\directories\models\department\Department;
-use app\modules\directories\models\subject_relation\SubjectRelation;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "speciality_qualification".
@@ -168,6 +166,6 @@ class SpecialityQualification extends \yii\db\ActiveRecord
 
     public function getGroupsActiveList()
     {
-        return ArrayHelper::map($this->getGroupsActive(), 'id', 'title');
+        return ArrayHelper::map($this->groupsActive, 'id', 'title');
     }
 }
