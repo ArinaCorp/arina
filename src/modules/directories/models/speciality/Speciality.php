@@ -7,6 +7,7 @@ use yii\db\ActiveQuery;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 use app\modules\directories\models\department\Department;
 use app\modules\directories\models\speciality_qualification\SpecialityQualification;
@@ -26,8 +27,7 @@ use app\modules\plans\models\WorkPlan;
  *
  * The followings are the available model relations:
  * @property Department $department
- * @property $specialityQualifications SpecialityQualification[]
- * @property Group[] $groups
+ * @property SpecialityQualification[] $specialityQualifications
  * @property StudyPlan[] $studyPlans
  * @property WorkPlan[] $workPlans
  */
@@ -66,11 +66,17 @@ class Speciality extends ActiveRecord
         return $this->hasOne(Department::className(), ['id' => 'department_id']);
     }
 
+    /**
+     * @return ActiveQuery
+     */
     public function getSpecialityQualifications()
     {
         return $this->hasMany(SpecialityQualification::className(), ['speciality_id' => 'id']);
     }
 
+    /**
+     * @return ActiveQuery
+     */
     public function getQualification()
     {
         return $this->hasMany(Qualification::className(), ['id' => 'qualification_id'])
@@ -105,12 +111,10 @@ class Speciality extends ActiveRecord
     {
         return [
             'id' => 'ID',
-            'title' => Yii::t('app', 'Title'),
-            'short_title' => Yii::t('app', 'Short Title'),
-            'department_id' => Yii::t('app', 'Department ID'),
-            'number' => Yii::t('app', 'Number'),
-            'accreditation_date' => Yii::t('app', 'Accreditation Date'),
-            'qualifications' => Yii::t('app', 'Qualifications'),
+            'title' => 'Title',
+            'department' => 'Department',
+            'number' => 'Number',
+            'accreditation_date' => 'Accreditation Date',
         ];
     }
 
@@ -147,11 +151,11 @@ class Speciality extends ActiveRecord
      */
     public function getSpecialityQualificationsLinks(){
         $list = "";
-        foreach ($this->specialityQualifications as $specialityQualification) {
+        foreach ($this->specialityQualifications as $specialityQualification){
             /**
              * @var $specialityQualification SpecialityQualification
              */
-            $list .= Html::a($specialityQualification->title, Url::to(['/admin/directories/speciality-qualification', 'id' => $specialityQualification->id])) . '<br/>';
+            $list.=Html::a($specialityQualification->title, Url::to(['/admin/directories/speciality-qualification','id'=>$specialityQualification->id])).'<br/>';
         }
         return $list;
     }
@@ -162,11 +166,22 @@ class Speciality extends ActiveRecord
      */
     public function getGroupsByStudyYear($yearId)
     {
-        $list = array();
-        foreach ($this->groups as $group) {
-            $list[$group->title] = $group->getCourse($yearId);
+        $list = [];
+        foreach ($this->specialityQualifications as $sQ) {
+            foreach ($sQ->groups as $group) {
+                $list[$group->title] = $group->getCourse($yearId);
+            }
         }
         array_multisort($list);
         return $list;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getList()
+    {
+        return ArrayHelper::map(Speciality::find()->all(), 'id', 'title');
+
     }
 }
