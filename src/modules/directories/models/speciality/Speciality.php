@@ -2,6 +2,7 @@
 
 namespace app\modules\directories\models\speciality;
 
+use Yii;
 use yii\db\ActiveQuery;
 use yii\helpers\Html;
 use yii\helpers\Url;

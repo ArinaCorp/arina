@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?= Html::a(Yii::t('app', 'List'), ['index'], ['class' => 'btn btn-success']) ?>
-        <?= Html::a(Yii::t('app', 'Get Excel document'), ['document', 'id' => $model->id], ['class' => 'btn btn-info']) ?>
+        <?= Html::a(Yii::t('app', 'Get list group Excel document'), ['document', 'id' => $model->id], ['class' => 'btn btn-info']) ?>
         <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
@@ -55,8 +55,14 @@ $this->params['breadcrumbs'][] = $this->title;
             'title',
             [
                 'attribute' => 'group_leader_id',
-                'value' => $model->getGroupLeaderFullName(),
+                'format' => 'raw',
+                'value' => $model->groupLeader->getLink(),
             ],
+            [
+                'attribute' => 'curator_id',
+                'format' => 'raw',
+                'value' => $model->getCuratorLink(),
+            ]
         ],
     ]) ?>
 

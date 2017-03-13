@@ -4,7 +4,9 @@ namespace app\modules\students\controllers;
 
 /* @author VasyaKog */
 use app\modules\students\models\FamilyTie;
+use app\modules\students\models\StudentsEmail;
 use app\modules\students\models\StudentsHistory;
+use app\modules\students\models\StudentsPhone;
 use yii\base\Exception;
 use yii\base\Model;
 use yii\filters\VerbFilter;
@@ -77,17 +79,20 @@ class DefaultController extends Controller implements IAdminController
     {
         $model = new Student();
         $modelsFamily = [new FamilyTie()];
+        $modelsPhones = [new StudentsPhone()];
         /**
          * @var $modelsFamily FamilyTie[]
+         * @var $modelsPhones StudentsPhones[]
          */
         if ($model->load(Yii::$app->request->post())) {
             $modelsFamily = Student::createMultiple(FamilyTie::classname());
+            $modelsPhones = Student::createMultiple(StudentsPhone::className());
+            Model::loadMultiple($modelsPhones, Yii::$app->request->post());
             Model::loadMultiple($modelsFamily, Yii::$app->request->post());
             $valid = $model->validate();
-            $valid = Model::validateMultiple($modelsFamily) && $valid;
+            $valid = Model::validateMultiple($modelsFamily) && Model::validateMultiple($modelsPhones) && $valid;
             if ($valid) {
                 $transaction = \Yii::$app->db->beginTransaction();
-
                 try {
                     if ($flag = $model->save(false)) {
                         foreach ($modelsFamily as $modelFamily) {
@@ -97,8 +102,14 @@ class DefaultController extends Controller implements IAdminController
                                 break;
                             }
                         }
+                        foreach ($modelsPhones as $modelPhone) {
+                            $modelPhone->student_id = $model->id;
+                            if (!($flag = $modelPhone->save(false))) {
+                                $transaction->rollBack();
+                                break;
+                            }
+                        }
                     }
-
                     if ($flag) {
                         $transaction->commit();
                         return $this->redirect(['view', 'id' => $model->id]);
@@ -112,7 +123,8 @@ class DefaultController extends Controller implements IAdminController
 
         return $this->render('create', [
             'model' => $model,
-            'modelsFamily' => (empty($modelsFamily)) ? [new FamilyTie()] : $modelsFamily
+            'modelsFamily' => (empty($modelsFamily)) ? [new FamilyTie()] : $modelsFamily,
+            'modelsPhones' => (empty($modelsPhones)) ? [new StudentsPhone()] : $modelsPhones,
         ]);
     }
 
@@ -126,50 +138,43 @@ class DefaultController extends Controller implements IAdminController
     public
     function actionUpdate($id)
     {
-        $model = $this->findModel($id);
-        $modelsFamily = $model->family;
+        if (empty($id)) {
+            $model = new Student();
+        } else {
+            $model = $this->findModel($id);
+        }
+
+
+        $model->has_family = FamilyTie::getList($id, $model);
+        $model->has_phones = StudentsPhone::getList($id, $model);
+        $model->has_emails = StudentsEmail::getList($id, $model);
+
         /**
          * @var $modelsFamily FamilyTie[]
          */
-        if ($model->load(Yii::$app->request->post())) {
-            $oldIDs = ArrayHelper::map($modelsFamily, 'id', 'id');
-            $modelsFamily = Student::createMultiple(FamilyTie::classname(), $modelsFamily);
-            Model::loadMultiple($modelsFamily, Yii::$app->request->post());
-            $deletedIDs = array_diff($oldIDs, array_filter(ArrayHelper::map($modelsFamily, 'id', 'id')));
 
-            // validate all models
-            $valid = $model->validate();
-            $valid = Model::validateMultiple($modelsFamily) && $valid;
-
-            if ($valid) {
-                $transaction = \Yii::$app->db->beginTransaction();
-                try {
-                    if ($flag = $model->save(false)) {
-                        if (!empty($deletedIDs)) {
-                            FamilyTie::deleteAll(['id' => $deletedIDs]);
-                        }
-                        foreach ($modelsFamily as $modelFamily) {
-                            $modelFamily->student_id = $model->id;
-                            if (!($flag = $modelFamily->save(false))) {
-                                $transaction->rollBack();
-                                break;
-                            }
-                        }
-                    }
-                    if ($flag) {
-                        $transaction->commit();
-                        return $this->redirect(['view', 'id' => $model->id]);
-                    }
-                } catch (Exception $e) {
-                    $transaction->rollBack();
+        $saveAction = Yii::$app->request->post('save');
+        $newRecord = $model->isNewRecord;
+        if ($model->load(Yii::$app->request->post()) && $saveAction && $model->save()) {
+            if (!Yii::$app->request->post('stay')) {
+                return $this->redirect(Yii::$app->user->getReturnUrl(['index']));
+            } else {
+                Yii::$app->session->setFlash('save-record-student', Yii::t('app', 'Student record is saved!'));
+                if ($newRecord) {
+                    return $this->redirect(['/students/update', 'id' => $model->primaryKey]);
+                } else {
+                    return $this->refresh();
                 }
             }
-        }
+        } else {
 
-        return $this->render('update', [
-            'model' => $model,
-            'modelsFamily' => (empty($modelsFamily)) ? [new FamilyTie()] : $modelsFamily
-        ]);
+            return $this->render('update', [
+                'model' => $model,
+                'modelsFamily' => $model->has_family,
+                'modelsPhones' => $model->has_phones,
+                'modelsEmails' => $model->has_emails,
+            ]);
+        }
     }
 
 

@@ -4,6 +4,7 @@ use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\students\models\Student */
+/* @var $modelsFamily \app\modules\students\models\FamilyTie[] */
 /* @author VasyaKog */
 
 $this->title = Yii::t('app', 'Update student: ', [
@@ -20,6 +21,8 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
     <?= $this->render('_form', [
         'model' => $model,
         'modelsFamily' => $modelsFamily,
+        'modelsPhones' => $modelsPhones,
+        'modelsEmails' => $modelsEmails,
     ]) ?>
 
 </div> 

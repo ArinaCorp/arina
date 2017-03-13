@@ -34,8 +34,9 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
             [
                 'attribute' => 'student_id',
+                'format' => 'raw',
                 'value' => function ($model) {
-                    return Student::findOne(['id' => $model->student_id])->fullNameAndBirthDate;
+                    return Student::findOne(['id' => $model->student_id])->getLink();
                 }
             ],
             'date',

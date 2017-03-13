@@ -6,205 +6,159 @@ use yii\bootstrap\ActiveForm;
 use app\modules\students\models\FamilyTiesType;
 use yii\widgets\MaskedInput;
 use app\modules\students\models\Exemption;
+use yii\widgets\Pjax;
+use rmrevin\yii\fontawesome\FA;
+use yii\bootstrap\Alert;
+use yii\bootstrap\Tabs;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\students\models\Student */
 /* @var $modelsFamily \app\modules\students\models\FamilyTie[] */
+/* @var $modelsPhones \app\modules\students\models\StudentsPhones[] */
 /* @var $form \yii\bootstrap\ActiveForm */
 /* @author VasyaKog */
 
-$js = '
-jQuery(".dynamicform_wrapper").on("afterInsert", function(e, item) {
-    jQuery(".dynamicform_wrapper .panel-title-address").each(function(index) {
-        jQuery(this).html("' . Yii::t('app', 'Family tie') . ': " + (index + 1))
-    });
-});
+Pjax::begin([
+    'id' => 'pjax-container',
+    'formSelector' => '#student-form',
+    'timeout' => 3000,
+]);
+$form = ActiveForm::begin([
+    'id' => 'product-form',
+    'enableClientValidation' => false,
+]);
 
-jQuery(".dynamicform_wrapper").on("afterDelete", function(e) {
-    jQuery(".dynamicform_wrapper .panel-title-address").each(function(index) {
-        jQuery(this).html("' . Yii::t('app', 'Family tie') . ': " + (index + 1))
-    });
-});
-';
+if (isset($_COOKIE['active-student-tab'])) {
+    $tab = $_COOKIE['active-student-tab'];
+    $activeTab = strtr($tab, ['#active-student-tab' => '']);
+}
 
-$this->registerJs($js);
+
+?>
+<div class="status-bar row">
+    <?php
+    echo Html::a(FA::icon('undo'), Yii::$app->user->getReturnUrl(['/shop/product/index']), [
+        'title' => Yii::t('app', 'Cancel'),
+        'data-toggle' => 'tooltip',
+        'class' => 'btn btn-default cancel-btn'
+    ]);
+    echo Html::button(FA::icon('save'), [
+        'title' => Yii::t('app', 'Save'),
+        'data-toggle' => 'tooltip',
+        'class' => 'btn btn-primary save-btn',
+    ]);
+    echo Html::button(FA::icon('floppy-o'), [
+        'title' => Yii::t('app', 'Save and stay here'),
+        'data-toggle' => 'tooltip',
+        'data-action' => 'stay',
+        'class' => 'btn btn-info save-btn',
+    ]);
+    if (!$model->isNewRecord) {
+        echo Html::a(FA::icon('trash'), ['/shop/product/delete', 'id' => $model->primaryKey], [
+            'title' => Yii::t('app', 'Delete'),
+            'data-toggle' => 'tooltip',
+            'class' => 'btn btn-danger del-btn',
+            'data-method' => 'post',
+            'data-confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
+        ]);
+    }
+    ?>
+    <div class="clearfix"></div>
+</div>
+<?php
+if (Yii::$app->session->hasFlash('save-student')) {
+    echo Alert::widget([
+        'id' => 'success-alert',
+        'type' => 0,
+        'body' => Yii::$app->session->getFlash('save-student'),
+        'closeButton' => [],
+        'delay' => 1000
+    ]);
+}
+?>
+<?= $form->errorSummary($model) ?>
+<div class="row product-card">
+    <?= Tabs::widget([
+        'id' => 'product-tabs',
+        'items' => [
+            [
+                'label' => Yii::t('app', 'General'),
+                'content' =>
+                    $this->render('_main', [
+                        'model' => $model,
+                        'form' => $form,
+                    ]),
+                'active' => $activeTab == 0 ? true : false,
+                'options' => [
+                    'id' => 'general'
+                ],
+            ],
+            [
+                'label' => Yii::t('app', 'Family'),
+                'content' => $this->render('_family', [
+                    'model' => $model,
+                    'modelsFamily' => $modelsFamily,
+                    'form' => $form,
+                ]),
+                'active' => $activeTab == 1 ? true : false,
+                'options' => [
+                    'id' => 'family'
+                ],
+            ],
+            [
+                'label' => Yii::t('app', 'Contacts'),
+                'content' => $this->render('_contacts', [
+                    'model' => $model,
+                    'modelsPhones' => $modelsPhones,
+                    'modelsEmails' => $modelsEmails,
+                    'form' => $form,
+                ]),
+                'active' => $activeTab == 2 ? true : false,
+            ],
+//            [
+//                'label' => Yii::t('app', 'Options'),
+//                'content' => $this->render('_options', [
+//                    'model' => $model,
+//                    'dataProvider' => $optionsDataProvider,
+//                    'form' => $form,
+//                ]),
+//                'active' => $activeTab == 3 ? true : false,
+//            ],
+//            [
+//                'label' => Yii::t('app', 'In stock'),
+//                'content' => $this->render('_stock', [
+//                    'model' => $model,
+//                    'dataProvider' => $inStockDataProvider,
+//                    'columns' => $columns,
+//                    'total' => $total,
+//                    'form' => $form,
+//                ]),
+//                'active' => $activeTab == 4 ? true : false,
+//            ],
+//            [
+//                'label' => Yii::t('app', 'Images'),
+//                'content' => $this->render('_images', [
+//                    'model' => $model,
+//                    'dataProvider' => $imageDataProvider,
+//                    'thumbsDataProvider' => $thumbsDataProvider,
+//                    'columns' => $imageColumns,
+//                    'form' => $form,
+//                ]),
+//                'active' => $activeTab == 5 ? true : false,
+//            ],
+        ],
+        'navType' => 'nav-tabs',
+        'options' => [
+            'class' => 'row'
+        ],
+        'itemOptions' => [
+            'class' => 'student-tab'
+        ],
+        'encodeLabels' => false
+    ]) ?>
+</div>
+<?php
+ActiveForm::end();
+Pjax::end();
 ?>
 
-
-<div class="student-form">
-    <?php \yii\widgets\Pjax::begin(); ?>
-    <?php $form = ActiveForm::begin(
-        [
-            'id' => 'dynamic-form',
-            'options' => [
-                'enctype' => 'multipart/form-data',
-            ],
-
-        ]
-    ); ?>
-    <p class="note"><?php echo Yii::t('app', 'Fields with <span class="required">*</span> are required.'); ?></p>
-    <?php echo $form->errorSummary($model); ?>
-    <div class="row">
-        <div class="col-sm-6">
-            <?= $form->field($model, 'photo')->fileInput();
-            ?>
-            <?= $model->getThumbFileUrl('photo', 'thumb'); ?>
-        </div>
-        <div class="col-sm-6">
-            <?= $form->field($model, 'student_code')->widget(MaskedInput::className(), ['mask' => 'AA №99999999'], ['placeholder' => $model->getAttributeLabel('birth_day')]);
-            ?>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-4">
-            <?= $form->field($model, 'last_name')->textInput(['maxlength' => true, 'placeholder' => $model->getAttributeLabel('last_name')]) ?>
-        </div>
-        <div class="col-sm-4">
-            <?= $form->field($model, 'first_name')->textInput(['maxlength' => true, 'placeholder' => $model->getAttributeLabel('first_name')]) ?>
-        </div>
-        <div class="col-sm-4">
-            <?= $form->field($model, 'middle_name')->textInput(['maxlength' => true, 'placeholder' => $model->getAttributeLabel('middle_name')]) ?>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-xs-12">
-            <?= $form->field($model, 'exemption_ids')->checkboxList(Exemption::getList(), ['class' => 'list-inline']); ?>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-6">
-            <?= $form->field($model, 'gender')->dropDownList([0 => Yii::t('app', 'Male'), 1 => Yii::t('app', 'Female')], ['prompt' => Yii::t('app', 'Select gender')]); ?>
-        </div>
-        <div class="col-sm-6">
-            <?= $form->field($model, 'birth_day')->widget(dosamigos\datepicker\DatePicker::className(), [
-                'language' => 'uk',
-                'clientOptions' => [
-                    'autoclose' => true,
-
-                ]
-            ]); ?>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-3">
-            <?= $form->field($model, 'passport_code')->widget(MaskedInput::className(), ['mask' => 'AA №999999']) ?>
-        </div>
-        <div class="col-sm-3">
-            <?= $form->field($model, 'passport_issued')->textInput(['maxlength' => true, 'placeholder' => $model->getAttributeLabel('passport_issued')]) ?>
-        </div>
-        <div class="col-sm-3">
-            <?= $form->field($model, 'passport_issued_date')->widget(dosamigos\datepicker\DatePicker::className(), [
-                'language' => 'uk',
-                'clientOptions' => [
-                    'autoclose' => true,
-
-                ]
-            ]); ?>
-        </div>
-        <div class="col-sm-3">
-            <?= $form->field($model, 'birth_certificate')->widget(MaskedInput::className(), ['mask' => 'AA №999999']);
-            ?>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-6">
-            <?= $form->field($model, 'tax_id')->textInput(['maxlength' => true]) ?>
-        </div>
-        <div class="col-sm-6">
-            <?= $form->field($model, 'sseed_id')->textInput() ?>
-        </div>
-    </div>
-    <?php DynamicFormWidget::begin([
-        'widgetContainer' => 'dynamicform_wrapper', // required: only alphanumeric characters plus "_" [A-Za-z0-9_]
-        'widgetBody' => '.container-items', // required: css class selector
-        'widgetItem' => '.item', // required: css class
-        'limit' => 12, // the maximum times, an element can be cloned (default 999)
-        'min' => 0, // 0 or 1 (default 1)
-        'insertButton' => '.add-item', // css class
-        'deleteButton' => '.remove-item', // css class
-        'model' => $modelsFamily[0],
-        'formId' => 'dynamic-form',
-        'formFields' => [
-            'last_name',
-            'first_name',
-            'middle_name',
-            'work_place',
-            'work_position',
-            'phone1',
-            'phone2',
-            'email',
-        ],
-    ]); ?>
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <i class="fa fa-users"></i> <?= Yii::t('app', 'Family') ?>
-            <button type="button" class="pull-right add-item btn btn-success btn-xs"><i
-                    class="fa fa-plus"></i> <?= Yii::t('app', 'Add ties') ?></button>
-            <div class="clearfix"></div>
-        </div>
-        <div class="panel-body container-items"><!-- widgetContainer -->
-            <?php foreach ($modelsFamily as $index => $modelFamily): ?>
-                <div class="item panel panel-default"><!-- widgetBody -->
-                    <div class="panel-heading">
-                            <span class="panel-title-address"><?= Yii::t('app', 'Family tie') ?>
-                                : <?= ($index + 1) ?></span>
-                        <button type="button" class="pull-right remove-item btn btn-danger btn-xs"><i
-                                class="fa fa-minus"></i></button>
-                        <div class="clearfix"></div>
-                    </div>
-                    <div class="panel-body">
-                        <?php
-                        // necessary for update action.
-                        if (!$modelFamily->isNewRecord) {
-                            echo Html::activeHiddenInput($modelFamily, "[{$index}]id");
-                        }
-                        ?>
-                        <?= $form->field($modelFamily, "[{$index}]type_id")->dropDownList(FamilyTiesType::getList(), ['prompt' => Yii::t('app', 'Select') . ' ' . Yii::t('app', 'Family tie type')]); ?>
-
-                        <div class="row">
-                            <div class="col-sm-4">
-                                <?= $form->field($modelFamily, "[{$index}]last_name")->textInput() ?>
-                            </div>
-                            <div class="col-sm-4">
-                                <?= $form->field($modelFamily, "[{$index}]first_name")->textInput() ?>
-                            </div>
-                            <div class="col-sm-4">
-                                <?= $form->field($modelFamily, "[{$index}]middle_name")->textInput() ?>
-                            </div>
-                        </div><!-- end:row -->
-
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <?= $form->field($modelFamily, "[{$index}]work_place")->textInput() ?>
-                            </div>
-                            <div class="col-sm-6">
-                                <?= $form->field($modelFamily, "[{$index}]work_position")->textInput() ?>
-                            </div>
-                        </div><!-- end:row -->
-
-                        <div class="row">
-                            <div class="col-sm-4">
-                                <?= $form->field($modelFamily, "[{$index}]phone1")->widget(MaskedInput::className(), ['mask' => '(999) 999-9999']); ?>
-                            </div>
-                            <div class="col-sm-4">
-                                <?= $form->field($modelFamily, "[{$index}]phone2")->widget(MaskedInput::className(), ['mask' => '(999) 999-9999']); ?>
-                            </div>
-                            <div class="col-sm-4">
-                                <?= $form->field($modelFamily, "[{$index}]email")->textInput() ?>
-                            </div>
-                        </div><!-- end:row -->
-                    </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
-    </div>
-    <?php DynamicFormWidget::end(); ?>
-
-    <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-    </div>
-
-    <?php ActiveForm::end(); ?>
-    <?php \yii\widgets\Pjax::end(); ?>
-</div>
