@@ -97,6 +97,7 @@ class Employee extends ActiveRecord
             'passport_issued_by' => Yii::t('app', 'Passport issued'),
             'passport_issued_date' => Yii::t('app', 'Passport issued date'),
             'start_date' => Yii::t('app', 'Start date'),
+            'fullName' => Yii::t('app', 'Full Name'),
         ];
     }
 

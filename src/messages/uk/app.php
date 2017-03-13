@@ -209,5 +209,6 @@ return [
     'Comment' => 'Коментар',
     'General' => 'Головне',
     'Contacts' => 'Контакти',
-    'Emails'=>''
+    'Emails'=>'',
+    'Full Name' => 'П.І.Б.',
 ];
