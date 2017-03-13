@@ -110,11 +110,12 @@ class Speciality extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'title' => 'Title',
-            'department' => 'Department',
-            'number' => 'Number',
-            'accreditation_date' => 'Accreditation Date',
+            'id' => Yii::t('app', 'ID'),
+            'title' => Yii::t('app', 'Title'),
+            'department_id' => Yii::t('app', 'Department'),
+            'number' => Yii::t('app', 'Number'),
+            'accreditation_date' => Yii::t('app', 'Accreditation Date'),
+            'short_title' => Yii::t('app', 'Short Title'),
         ];
     }
 

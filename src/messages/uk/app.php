@@ -132,6 +132,7 @@ return [
     'HeadID' => 'Зав. Відділенням',
     'Specialities' => 'Спеціальності',
     'Departments' => 'Відділення',
+    'Department' => 'Відділення',
     'Create Department' => 'Створити відділення',
     'Create Speciality' => 'Створити спеціальність',
     'Short Title' => 'Коротка назва',
