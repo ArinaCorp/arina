@@ -7,24 +7,18 @@ class m170117_164527_create_table_study_plan extends Migration
 {
     use MigrationTrait;
 
-    /**
-     * @inheritdoc
-     */
     public function up()
     {
         $this->createTable('{{%study_plan}}', [
             'id' => $this->primaryKey(),
-            'speciality_qualification_id' => $this->integer(10),
+            'speciality_id' => $this->integer(5),
             'semesters' => $this->string(255),
-            'graph' => $this->text(),
-            'created' => $this->integer(),
-            'updated' => $this->integer(),
+            'graphs' => $this->string(255),
+            'created' => $this->date(),
+            'updated' => $this->date(),
         ], $this->getTableOptions());
     }
 
-    /**
-     * @inheritdoc
-     */
     public function down()
     {
         $this->dropTable('{{%study_plan}}');

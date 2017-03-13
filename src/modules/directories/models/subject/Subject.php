@@ -5,8 +5,8 @@ namespace app\modules\directories\models\subject;
 use Yii;
 use yii\db\ActiveRecord;
 
-use app\modules\directories\models\subject_relation\SubjectRelation;
-use app\modules\directories\models\subject_cycle\SubjectCycle;
+use app\modules\directories\models\relation\SubjectRelation;
+use app\modules\directories\models\relation\SubjectCycle;
 
 /**
  * This is the model class for table "subject".
@@ -79,23 +79,23 @@ class Subject extends ActiveRecord
         $relations = SubjectRelation::find()->where(['speciality_id' => $id])->all();
         foreach ($relations as $relation) {
             /**@var $relation SubjectRelation */
-            if (!isset($list[$relation->subjectCycle->title])) {
-                $list[$relation->subjectCycle->title] = [];
+            if (!isset($list[$relation->subject_cycle->title])) {
+                $list[$relation->subject_cycle->title] = array();
             }
-            $list[$relation->subjectCycle->title][$relation->subject_id] = $relation->subject->title;
+            $list[$relation->subject_cycle->title][$relation->subject_id] = $relation->subject->title;
         }
         return $list;
     }
 
     /**
-     * @param $speciality_id
+     * @param $specialityId
      * @return SubjectCycle
      */
-    public function getCycle($speciality_id)
+    public function getCycle($specialityId)
     {
         /**@var $relation SubjectRelation */
-        $relation = SubjectRelation::find()->where(['speciality_id' => $speciality_id, 'subject_id' => $this->id]);
-        return $relation->subjectCycle;
+        $relation = SubjectRelation::find()->where(['speciality_id' => $specialityId, 'subject_id' => $this->id]);
+        return $relation->subject_cycle;
     }
 
 }

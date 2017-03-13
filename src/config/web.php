@@ -12,9 +12,6 @@ $config = [
     'bootstrap' => ['log'],
     'language'=> 'uk',
     'components' => [
-        'excel' => [
-            'class' => 'app\components\Excel'
-        ],
         'formatter' => [
             'class' => 'app\components\Formatter',
         ],

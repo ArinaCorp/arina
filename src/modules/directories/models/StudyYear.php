@@ -13,6 +13,7 @@ use app\modules\plans\models\WorkPlan;
  *
  * @property integer $id
  * @property integer $year_start
+ * @property integer $active
  *
  * @property WorkPlan[] $work_plans
  */
@@ -32,8 +33,9 @@ class StudyYear extends ActiveRecord
     public function rules()
     {
         return [
-            ['year_start','required'],
+            ['year_start', 'required'],
             [['year_start'], 'integer'],
+            ['active', 'boolean'],
         ];
     }
 
@@ -45,33 +47,38 @@ class StudyYear extends ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'year_start' => Yii::t('app', 'Start of the study year'),
-            'year_end' => Yii::t('app','End of the study year'),
+            'yearend' => Yii::t('app', 'End of the study year'),
+            'active' => Yii::t('app', 'Current'),
+            'fullName' => Yii::t('app', 'Study year'),
         ];
     }
 
-    public function getYearEnd(){
-        return $this->year_start+1;
+    public function getYearEnd()
+    {
+        return $this->year_start + 1;
     }
 
     /**
      * @return string
      */
-    public function getYearPrefix(){
+    public function getYearPrefix()
+    {
         $str = (string)$this->year_start;
-        return $str[sizeof($this)-2].$str[sizeof($this)-1];
+        return $str[sizeof($this) - 2] . $str[sizeof($this) - 1];
     }
 
     /**
      * @return array
      */
-    public static function getYearList(){
+    public static function getYearList()
+    {
         $studyYears = StudyYear::find()->all();
-        $items=[];
-        foreach ($studyYears as $studyYear){
+        $items = [];
+        foreach ($studyYears as $studyYear) {
             /**
              * @var StudyYear $studyYear
              */
-            $items[$studyYear->id]=$studyYear->getFullName();
+            $items[$studyYear->id] = $studyYear->getFullName();
         }
         return $items;
     }
@@ -79,8 +86,9 @@ class StudyYear extends ActiveRecord
     /**
      * @return string
      */
-    public function getFullName(){
-        return $this->year_start.'/'.$this->getYearEnd();
+    public function getFullName()
+    {
+        return $this->year_start . '/' . $this->getYearEnd();
     }
 
     /**
@@ -88,7 +96,7 @@ class StudyYear extends ActiveRecord
      */
     public function getStudySubject()
     {
-        return $this->hasMany(WorkPlan::className(), ['year_id' => 'id']) ->via('work_plans');
+        return $this->hasMany(WorkPlan::className(), ['year_id' => 'id'])->via('work_plans');
     }
 
     /**
@@ -96,14 +104,7 @@ class StudyYear extends ActiveRecord
      */
     public static function getCurrentYear()
     {
-        $cur_year = StudyYear::findOne(['year_start' => date("Y")]);
-        if ($cur_year) {
-            return $cur_year;
-        }
-        else {
-            $cur_year = new self;
-            $cur_year->year_start = date("Y");
-            return $cur_year;
-        }
+        $cur_year = StudyYear::findOne(['active' => 1]);
+        return $cur_year;
     }
 }
