@@ -32,15 +32,17 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+            ['class' => 'yii\grid\SerialColumn',
+            'contentOptions' => ['style' => 'width: 50px']],
             [
-                'contentOptions' => ['style' => 'width: 550px'],
-                'attribute' => 'speciality_id',
-                'value' => function ($model) {
-                    return $model->speciality->title;
-                }
+                'header' => Yii::t('plans', 'Study plans'),
+                'contentOptions' => ['style' => 'width: 750px'],
+                'value' => 'title'
             ],
-            'updated',
+            [
+                'header' => Yii::t('app', 'Updated'),
+                    'value' => 'updatedForm'
+            ],
             [
                 'header' => Yii::t('app', 'Actions'),
                 'class' => ActionColumn::className(),

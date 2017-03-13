@@ -50,7 +50,6 @@ class StudyPlan extends ActiveRecord
                 'class' => TimestampBehavior::className(),
                 'createdAtAttribute' => 'created',
                 'updatedAtAttribute' => 'updated',
-                'value' => date('Y-m-d', time()),
             ]
         ];
     }
@@ -224,6 +223,13 @@ class StudyPlan extends ActiveRecord
      */
     public function getTitle()
     {
-        return $this->speciality->title . ' - ' . date('H:i d.m.Y', $this->updated);
+        return $this->speciality->title . ' - ' . date('H:i d.m.Y', $this->created);
+    }
+
+    /**
+     * @return false|string
+     */
+    public function getUpdatedForm() {
+        return date('d.m.Y', $this->updated);
     }
 }

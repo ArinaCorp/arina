@@ -39,6 +39,7 @@ class StudyPlanController extends Controller implements IAdminController
 
         if ($model->load(Yii::$app->request->post())) {
             $model->attributes = $_POST['StudyPlan'];
+            $model->created = date('Y-m-d', time());
             if (isset(Yii::$app->session['weeks'])) {
                 $model->semesters = Yii::$app->session['weeks'];
                 unset(Yii::$app->session['weeks']);

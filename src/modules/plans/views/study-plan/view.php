@@ -21,7 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="row">
     <h1><?= $model->speciality->title; ?></h1>
 
-    <h4><?= $model->getAttributeLabel('created').': '.$model->created; ?></h4>
+    <h4><?= $model->getAttributeLabel('created').': '.date('d.m.Y', $model->created); ?></h4>
 
     <?= Html::a(Yii::t('plans', 'Export'), Url::toRoute(['study-plan/make-excel', 'id' => $model->id]), ['class' => 'btn btn-success']); ?>
 
