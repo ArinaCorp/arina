@@ -69,11 +69,11 @@ class StudyPlan extends ActiveRecord
     public function rules()
     {
         return [
-            [['speciality_qualification_id'], 'required'],
+            [['speciality_id'], 'required'],
             [['semesters'], 'required', 'message' => Yii::t('plans', 'Click "Generate" and check the data')],
             [['id', 'speciality_id'], 'integer'],
             [['created', 'updated'], 'safe'],
-            [['id', 'speciality_qualification_id'], 'safe', 'on' => 'search'],
+            [['id', 'speciality_id'], 'safe', 'on' => 'search'],
             [['id'], 'unique']
         ];
     }
