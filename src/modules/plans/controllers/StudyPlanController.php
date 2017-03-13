@@ -249,6 +249,6 @@ class StudyPlanController extends Controller implements IAdminController
     {
         $excel = Yii::$app->excel;
         $plan = self::findModel($id);
-        $excel->getDocument($plan, 'study-plan');
+        $excel->getDocument($plan, 'StudyPlan');
     }
 }

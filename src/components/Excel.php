@@ -26,10 +26,9 @@ class Excel extends Component
      */
     public function init()
     {
-        $phpExcelPath = 'vendor/phpoffice/phpexcel/Classes';
+        $phpExcelPath = Yii::getAlias('@vendor').'/phpoffice/phpexcel/Classes';
         spl_autoload_unregister(array('YiiBase', 'autoload'));
         include($phpExcelPath . DIRECTORY_SEPARATOR . 'PHPExcel.php');
-        spl_autoload_register(array('YiiBase', 'autoload'));
     }
 
     public function rome($num)
@@ -140,7 +139,7 @@ class Excel extends Component
      */
     protected function makeStudyPlan($plan)
     {
-        $objPHPExcel = $this->loadTemplate('plan.xls');
+        $objPHPExcel = $this->loadTemplate(Yii::getAlias('@web').'templates/study-plan.xls');
 
         //SHEET #1
         $sheet = $sheet = $objPHPExcel->setActiveSheetIndex(0);

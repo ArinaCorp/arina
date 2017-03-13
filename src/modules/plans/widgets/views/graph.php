@@ -3,30 +3,21 @@
 use yii\helpers\Url;
 
 use yii\helpers\Html;
-use app\modules\plans\widgets\Graph;
+use yii\web\View;
 
 /**
  * @var boolean $readOnly
- * @var \yii\web\View $this
+ * @var View $this
  * @var string $graphProcessLink
  * @var array $list
  * @var array $rows
  * @var array $map
  */
-$this->registerJs(<<<JS
-    console.log('loaded');
-JS
-);
+
 ?>
     <style>
         div.result {
             margin-top: 15px;
-        }
-
-        div.result img.load {
-            display: block;
-            width: 32px;
-            margin: auto;
         }
 
         table.graph * {
@@ -178,8 +169,6 @@ JS;
 
     $this->registerJs($js);
     ?>
-    <script>
-    </script>
     <span>
     <?= Yii::t('plans', 'Guide'); ?>
 </span>

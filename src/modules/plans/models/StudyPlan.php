@@ -223,13 +223,13 @@ class StudyPlan extends ActiveRecord
      */
     public function getTitle()
     {
-        return $this->speciality->title . ' - ' . date('H:i d.m.Y', $this->created);
+        return $this->speciality->title . ' - ' . date('d.m.Y H:i', $this->created);
     }
 
     /**
      * @return false|string
      */
     public function getUpdatedForm() {
-        return date('d.m.Y', $this->updated);
+        return date('d.m.Y H:i', $this->updated);
     }
 }
