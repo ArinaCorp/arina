@@ -54,11 +54,12 @@ use app\modules\plans\widgets\Graph;
                     'name' => 'origin',
                     'options' =>
                         [
-                            'placeholder' => Yii::t('app', 'Select copy plan')
+                            'placeholder' => Yii::t('plans', 'Select copy plan')
                         ]
                 ]
             );?>
         </div>
+        <br/><br/>
     </div>
     <?php endif; ?>
 

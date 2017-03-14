@@ -23,29 +23,29 @@ class Module extends BaseModule implements IAdminModule
     public static function getAdminMenu()
     {
         return [
-            'label' => Yii::t('Plans', 'Plans'),
-            'icon' => 'users',
+            'label' => Yii::t('plans', 'Plans'),
+            'icon' => 'folder',
             'items' => [
                 [
-                    'label' => Yii::t('Plans', 'View study plans'),
+                    'label' => Yii::t('plans', 'View study plans'),
                     'url' => ['/plans/study-plan/'],
-                    'icon' => 'list',
+                    'icon' => 'th-list',
                 ],
                 [
-                    'label' => Yii::t('Plans', 'Create study plan'),
+                    'label' => Yii::t('plans', 'Create study plan'),
                     'url' => ['/plans/study-plan/create'],
-                    'icon' => 'list',
+                    'icon' => 'plus',
                 ],
-                [
-                    'label' => Yii::t('Plans', 'View work plans'),
+                /*[
+                    'label' => Yii::t('plans', 'View work plans'),
                     'url' => ['/plans/work-plan/'],
                     'icon' => 'list',
                 ],
                 [
-                    'label' => Yii::t('Plans', 'Create work plan'),
+                    'label' => Yii::t('plans', 'Create work plan'),
                     'url' => ['/plans/work-plan/create'],
                     'icon' => 'list',
-                ],
+                ],*/
             ]
         ];
     }

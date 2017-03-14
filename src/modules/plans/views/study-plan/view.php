@@ -23,9 +23,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h4><?= $model->getAttributeLabel('created').': '.date('d.m.Y', $model->created); ?></h4>
 
-    <?= Html::a(Yii::t('plans', 'Export'), Url::toRoute(['study-plan/make-excel', 'id' => $model->id]), ['class' => 'btn btn-success']); ?>
+    <?= Html::a(Yii::t('app', 'Export'), Url::toRoute(['study-plan/make-excel', 'id' => $model->id]), ['class' => 'btn btn-success']); ?>
 
-    <?= Html::a(Yii::t('plans', 'Update'), Url::toRoute(['study-plan/update', 'id' => $model->id]), ['class' => 'btn btn-info']); ?>
+    <?= Html::a(Yii::t('app', 'Update'), Url::toRoute(['study-plan/update', 'id' => $model->id]), ['class' => 'btn btn-info']); ?>
 
     <?= Html::a(Yii::t('plans', 'Add subject'), Url::toRoute(['study-plan/create-subject', 'id' => $model->id]), ['class' => 'btn btn-primary']); ?>
     <br/><br/>

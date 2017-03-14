@@ -10,7 +10,7 @@ use app\modules\plans\models\StudyPlan;
  * @var $model StudyPlan
  */
 
-$this->title = Yii::t('plans', 'Create study plan');
+$this->title = Yii::t('plans', 'Study plan creating');
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('plans', 'Study plans'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;

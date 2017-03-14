@@ -134,7 +134,7 @@ class StudyPlan extends ActiveRecord
      */
     public function getStudySubjects()
     {
-        return $this->hasMany(StudySubject::className(), ['speciality_id' => 'id']);
+        return $this->hasMany(StudySubject::className(), ['study_plan_id' => 'id']);
     }
 
     /**
@@ -207,7 +207,6 @@ class StudyPlan extends ActiveRecord
      */
     public function getStudyPlanStudySubjectProvider()
     {
-
         $query = StudySubject::find()->where(['study_plan_id' => $this->id]);
 
         $provider = new ActiveDataProvider([

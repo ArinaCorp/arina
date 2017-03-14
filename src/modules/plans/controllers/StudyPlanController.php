@@ -117,25 +117,6 @@ class StudyPlanController extends Controller implements IAdminController
      * @param $id
      * @return string
      */
-    public function actionSubjects($id)
-    {
-        $model = new StudySubject();
-        $model->study_plan_id = $id;
-
-        if (isset($_POST['StudySubject'])) {
-            $model->attributes = $_POST['StudySubject'];
-            if ($model->save()) {
-                $model = new StudySubject();
-                $model->study_plan_id = $id;
-            }
-        }
-        return $this->render('subjects', ['model' => $model]);
-    }
-
-    /**
-     * @param $id
-     * @return string
-     */
     public function actionCreateSubject($id)
     {
         $model = new StudySubject();

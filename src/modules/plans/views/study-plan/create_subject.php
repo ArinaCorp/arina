@@ -7,10 +7,10 @@ use app\modules\plans\models\StudySubject;
 
 /**
  * @var $this View
- * @var $model \app\modules\plans\models\StudySubject
+ * @var $model StudySubject
  */
 
-$this->title = Yii::t('plans', 'Add study subject');
+$this->title = Yii::t('plans', 'Study subject adding');
 ?>
 
 <div class="row">

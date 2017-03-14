@@ -57,7 +57,7 @@ use yii\web\View;
             foreach ($list as $key => $item):
                 $amount += $item;
                 ?>
-                <th colspan="<?php echo $item; ?>"><?php echo Yii::t('base', $key); ?></th>
+                <th colspan="<?php echo $item; ?>"><?php echo Yii::t('app', $key); ?></th>
             <?php endforeach; ?>
         </tr>
         <tr class="numbers">
@@ -82,7 +82,7 @@ use yii\web\View;
                         <input
                             name="<?= "graph[$j][$i]"; ?>"
                             type="button" class="btn"
-                            value="<?= Yii::t('plan', $map[$j][$i]); ?>"
+                            value="<?= Yii::t('plans', $map[$j][$i]); ?>"
                             data-state="<?= $map[$j][$i]; ?>"/>
                     </td>
                 <?php endfor; ?>
@@ -136,7 +136,7 @@ jQuery('tr.line').find('input').click(function () {
             obj.val(empty);
             obj.attr('data-state', '');
             break;
-        case '':
+        case " ":
             obj.val(t);
             obj.attr('data-state', 'T');
             break;

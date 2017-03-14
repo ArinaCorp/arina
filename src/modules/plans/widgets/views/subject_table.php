@@ -30,8 +30,8 @@ use yii\helpers\Url;
         'lab_works',
         'practices',
         'selfWork',
-        'testSemesters',
-        'examSemesters',
+        //'testSemesters',
+        //'examSemesters',
         'workSemesters',
         'projectSemesters',
         [ 'header' => '1', 'value' => function ($model) { return $model->weeks[0]; }],
@@ -44,7 +44,7 @@ use yii\helpers\Url;
         [ 'header' => '8', 'value' => function ($model) { return $model->weeks[7]; }],
         [
             'class' => ActionColumn::className(),
-            'header' => Yii::t('plans', 'Acts'),
+            'header' => Yii::t('app', 'Actions'),
             'contentOptions' => ['style' => 'width: 20px'],
             'template' => '{update} {delete}',
             'buttons' => [
