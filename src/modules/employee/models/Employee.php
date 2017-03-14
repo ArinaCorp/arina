@@ -152,9 +152,9 @@ class Employee extends ActiveRecord
         return $query->all();
     }
 
-    public function getCyclicCommissionArray($id)
+    public function getCyclicCommissionArray()
     {
-        return CyclicCommission::getCyclicCommissionArray($id);
+        return CyclicCommission::getCyclicCommissionArray();
     }
 
     public function getEducation()
