@@ -197,7 +197,7 @@ class Employee extends ActiveRecord
 
     public static function getAllTeacherList()
     {
-        return ArrayHelper::map(self::getAllTeacher(), 'id', 'fullName');
+        return ArrayHelper::map(self::getAllTeacher(), 'id', 'fullName', 'cyclic_commission_id');
     }
 
     public function getGroupArray()

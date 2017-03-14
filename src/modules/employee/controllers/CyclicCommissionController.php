@@ -57,7 +57,7 @@ class CyclicCommissionController extends Controller implements IAdminController
     public function actionView($id)
     {
         $dataProvider = new ArrayDataProvider([
-            'allModels' => $this->findModel($id)->getEmployeeArray(),
+            'allModels' => $this->findModel($id)->getEmployeeArray($id),
         ]);
         
         return $this->render('view', [

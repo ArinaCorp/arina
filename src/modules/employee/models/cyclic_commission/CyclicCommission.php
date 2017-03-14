@@ -84,7 +84,7 @@ class CyclicCommission extends \yii\db\ActiveRecord
     /**
      * @return Employee[]
      */
-    public function getEmployeeArray()
+    public function getEmployeeArray($id)
     {
         /**
          * @var $result Employee[];
@@ -96,8 +96,9 @@ class CyclicCommission extends \yii\db\ActiveRecord
             $idsCyclicCommission = $employee->getCyclicCommissionArray($this->id);
             if (!is_null($idsCyclicCommission)) {
                 if (array_key_exists($this->id, $idsCyclicCommission)) {
-                  
-                    array_push($result, $employee);
+                    if ($employee->cyclic_commission_id == $id) {
+                        array_push($result, $employee);
+                    }
                 };
             }
         }
@@ -108,12 +109,8 @@ class CyclicCommission extends \yii\db\ActiveRecord
     public static function getCyclicCommissionArray($id)
     {
         $array = null;
-
         foreach (Employee::getAllTeacher() as $item) {
-
-            if ($item->cyclic_commission_id == $id) {
                 $array[] = $item->data;
-            }
         }
         return $array;
     }
@@ -128,7 +125,7 @@ class CyclicCommission extends \yii\db\ActiveRecord
         /**
          * @var Employee[] $employees
          */
-        $employees = $this->getEmployeeArray();
+        $employees = $this->getEmployeeArray($this->id);
         $excelObj->getActiveSheet()->SetCellValue('B2', "Циклова комісія ". $this->title);
         if (!is_null($employees)) {
             $startRow = 5;
