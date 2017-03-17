@@ -56,7 +56,6 @@ class WorkPlan extends ActiveRecord
                 'class' => TimestampBehavior::className(),
                 'createdAtAttribute' => 'created',
                 'updatedAtAttribute' => 'updated',
-                'value' => date('Y-m-d', time()),
             ]
         ];
     }
@@ -67,14 +66,12 @@ class WorkPlan extends ActiveRecord
     public function rules()
     {
         return [
-            ['speciality_qualification_id, study_year_id', 'required'],
-            [
-                ['semesters'], 'required',
+            [['speciality_qualification_id', 'study_year_id'], 'required'],
+            [['semesters'], 'required',
                 'message' => Yii::t('plans', 'Click "Generate" and check the data'), 'on' => 'graphs'
             ],
             [['speciality_qualification_id', 'study_year_id'], 'uniqueRecord', 'on' => 'insert'],
             [['speciality_qualification_id', 'numerical'], 'integer'],
-            [['created'], 'default', 'value' => date('Y-m-d', time()), 'on' => 'insert'],
             [['id', 'speciality_qualification_id'], 'safe', 'on' => 'search'],
             [['study_plan_origin', 'work_plan_origin'], 'checkOrigin', 'on' => 'insert'],
         ];
@@ -115,7 +112,7 @@ class WorkPlan extends ActiveRecord
                 if (isset($list[$name])) {
                     $list[$name][] = $item;
                 } else {
-                    $list[$name] = array($item);
+                    $list[$name] = [$item];
                 }
             }
         }
@@ -273,7 +270,7 @@ class WorkPlan extends ActiveRecord
      */
     protected function copyFromStudyPlan($origin)
     {
-        $groups = $this->specialityQualification->speciality->getGroupsByStudyYear($this->study_year_id);
+        $groups = $this->specialityQualification->getGroupsByStudyYear($this->study_year_id);
         $graphs = [];
         foreach ($groups as $course) {
             if (isset($origin->graph[$course - 1])) {
@@ -312,9 +309,18 @@ class WorkPlan extends ActiveRecord
         return parent::beforeSave(false);
     }
 
+    /**
+     * @return string
+     */
     public function getYearTitle (){
         return $this->studyYear->getFullName();
     }
 
+    /**
+     * @return false|string
+     */
+    public function getUpdatedForm() {
+        return date('d.m.Y H:i', $this->updated);
+    }
 
 }

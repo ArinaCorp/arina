@@ -91,7 +91,6 @@ class WorkSubject extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
             'work_plan_id' => Yii::t('plans', 'Work plan'),
             'subject_id' => Yii::t('app', 'Subject'),
             'total' => Yii::t('app', 'Total'),

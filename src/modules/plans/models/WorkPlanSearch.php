@@ -13,7 +13,7 @@ class WorkPlanSearch extends WorkPlan
      */
     public function rules()
     {
-        parent::rules();
+        return parent::rules();
     }
 
     /**
@@ -43,7 +43,7 @@ class WorkPlanSearch extends WorkPlan
 
         $query->andFilterWhere([
             'id' => $this->id,
-            'speciality_id' => $this->speciality_id,
+            'speciality_qualification_id' => $this->speciality_qualification_id,
             'created' => $this->created,
             'updated' => $this->updated,
             'study_year_id' => $this->study_year_id,

@@ -190,6 +190,21 @@ class SpecialityQualification extends ActiveRecord
     }
 
     /**
+     * @param $yearId
+     * @return array
+     */
+    public function getGroupsByStudyYear($yearId)
+    {
+        $list = [];
+        foreach ($this->groups as $group) {
+            /** @var Group $group */
+            $list[$group->title] = $group->getCourse($yearId);
+        }
+        array_multisort($list);
+        return $list;
+    }
+
+    /**
      * @return array
      */
     public static function getList()

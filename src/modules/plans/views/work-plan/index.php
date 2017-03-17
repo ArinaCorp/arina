@@ -1,22 +1,23 @@
 <?php
 
+use yii\helpers\Html;
 use yii\web\View;
-use yii\data\ActiveDataProvider;
-use yii\bootstrap\Html;
-use yii\widgets\Pjax;
 use yii\grid\GridView;
+use yii\widgets\Pjax;
+use yii\data\ActiveDataProvider;
 use yii\grid\ActionColumn;
 use yii\helpers\Url;
 
-/**
- * @var View $this
- * @var ActiveDataProvider $dataProvider
+use app\modules\plans\models\StudyPlanSearch;
+
+/* @var $this View
+ * @var $searchModel StudyPlanSearch;
+ * @var $dataProvider ActiveDataProvider
  */
+
 $this->title = Yii::t('plans', 'Work plans');
 $this->params['breadcrumbs'][] = $this->title;
-
 ?>
-
 <div class="row">
 
     <h1><?= Html::encode($this->title) ?></h1>
@@ -25,22 +26,27 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a(Yii::t('plans', 'Create work plan'), ['create'], ['class' => 'btn btn-success']) ?>
     </div>
     <br/><br/>
+
     <?php Pjax::begin(); ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+            ['class' => 'yii\grid\SerialColumn',
+                'contentOptions' => ['style' => 'width: 50px']],
             [
                 'header' => Yii::t('plans', 'Work plans'),
-                'value' => 'title',
-                'contentOptions' => ['style'=>'width: 50%'],
+                'contentOptions' => ['style' => 'width: 750px'],
+                'label' => 'title',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    return Html::a($model->getTitle(), Url::toRoute(['work-plan/view', 'id' => $model->id]));
+                },
             ],
             [
-                 'header' => Yii::t('app', 'Study year'),
-                 'value' => 'yearTitle'
+                'header' => Yii::t('app', 'Updated'),
+                'value' => 'updatedForm'
             ],
-            'updated',
             [
                 'header' => Yii::t('app', 'Actions'),
                 'class' => ActionColumn::className(),
@@ -51,7 +57,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         $options = [
                             'title' => Yii::t('plans', 'Export'),
                         ];
-                        $url = Url::toRoute(['study-plan/make-excel', 'id' => $model->id]);
+                        $url = Url::toRoute(['work-plan/make-excel', 'id' => $model->id]);
                         return Html::a('<span class="glyphicon glyphicon-file"</span>', $url, $options);
                     }
                 ]

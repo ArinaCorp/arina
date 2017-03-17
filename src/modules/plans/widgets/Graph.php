@@ -7,7 +7,7 @@ use yii\bootstrap\Widget;
 use yii\base\Exception;
 
 use app\helpers\GlobalHelper;
-use app\modules\directories\models\speciality\Speciality;
+use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 use app\helpers\PlanHelper;
 
 class Graph extends Widget
@@ -19,8 +19,8 @@ class Graph extends Widget
     public $studyPlan = true;
     /** @var $yearAmount int for study plan */
     public $yearAmount = 4;
-    /** @var $specialityId int for work plan */
-    public $specialityId;
+    /** @var $speciality_qualification_id int for work plan */
+    public $speciality_qualification_id;
     /** @var $studyYearId int for work plan */
     public $studyYearId;
     public $studyPlanProcessLink = '/plans/study-plan/execute-graph';
@@ -59,9 +59,9 @@ class Graph extends Widget
             if (empty($this->studyYearId))
                 throw new Exception(Yii::t('plans', 'Study year Id must be set'));
 
-            /** @var Speciality $speciality */
-            $speciality = Speciality::findOne($this->specialityId);
-            $this->rows = $speciality->getGroupsByStudyYear($this->studyYearId);
+            /** @var SpecialityQualification $specialityQualification */
+            $specialityQualification = SpecialityQualification::findOne($this->speciality_qualification_id);
+            $this->rows = $specialityQualification->getGroupsByStudyYear($this->studyYearId);
 
             if (empty($this->graph)) {
                 $this->map = PlanHelper::getDefaultWorkPlan($this->rows);

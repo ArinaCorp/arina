@@ -124,13 +124,13 @@ class Excel extends Component
 
         //SHEET #1
         $sheet = $sheet = $objPHPExcel->setActiveSheetIndex(0);
-        $sheet->setCellValue("F19", $plan->speciality->number . ' ' . $plan->speciality->title);
+        $sheet->setCellValue("F19", $plan->specialityQualification->speciality->number . ' ' . $plan->specialityQualification->speciality->title);
 
         // table #1
         for ($i = 0; $i < count($plan->graph); $i++) {
             $char = 'B';
             for ($j = 0; $j < count($plan->graph[$i]); $j++) {
-                $sheet->setCellValue($char . ($i + 32), Yii::t('plan', $plan->graph[$i][$j]));
+                $sheet->setCellValue($char . ($i + 32), Yii::t('plans', $plan->graph[$i][$j]));
                 $char++;
             }
         }
@@ -241,7 +241,7 @@ class Excel extends Component
             foreach ($group as $item) {
                 /**@var $item StudySubject */
                 $sheet->setCellValue("A$i", $item->subject->code);
-                $sheet->setCellValue("B$i", $item->subject->getCycle($plan->speciality_id)->id . '.' . $jj . $item->getTitle());
+                $sheet->setCellValue("B$i", $item->subject->getCycle($plan->speciality_qualification_id)->id . '.' . $jj . $item->getTitle());
                 $sheet->setCellValue("C$i", $item->getExamSemesters());
                 $sheet->setCellValue("D$i", $item->getTestSemesters());
                 $sheet->setCellValue("E$i", $item->getWorkSemesters());
@@ -276,6 +276,11 @@ class Excel extends Component
         for ($c = 'G'; $c < 'V'; $c++) {
             $sheet->setCellValue("$c$i", "=SUM($c" . implode("+$c", $totals) . ')');
         }
-        return $objPHPExcel;
+        header('Content-Type: application/vnd.ms-excel');
+        $filename = "Study_plan_" . $plan->getTitle() . "_" . date("d-m-Y-His") . ".xls";
+        header('Content-Disposition: attachment;filename=' . $filename . ' ');
+        header('Cache-Control: max-age=0');
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        $objWriter->save('php://output');
     }
 }

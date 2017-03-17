@@ -3,6 +3,7 @@
 namespace app\modules\directories\models\subject;
 
 use Yii;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 use app\modules\directories\models\subject_relation\SubjectRelation;
@@ -93,14 +94,9 @@ class Subject extends ActiveRecord
      */
     public function getCycle($speciality_qualification_id)
     {
-        /**@var $relation SubjectRelation */
-        $relation = SubjectRelation::find()->where(
-            [
-                'speciality_qualification_id' => $speciality_qualification_id,
-                'subject_id' => $this->id
-            ]
-        );
-        return $relation->subjectCycle;
+        return SubjectRelation::findOne([
+            'speciality_qualification_id' => $speciality_qualification_id,
+            'subject_id' => $this->id])->subjectCycle;
     }
 
 }
