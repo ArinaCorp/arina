@@ -33,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
             'title',
-            'head_id',
+            'headName',
             [
                 'attribute'=>'specialities',
                 'format'=>'raw',

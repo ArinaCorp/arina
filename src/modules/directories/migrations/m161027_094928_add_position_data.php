@@ -7,9 +7,9 @@ class m161027_094928_add_position_data extends Migration
     public function up()
     {
         $this->batchInsert('{{%position}}', ['id', 'title', 'max_hours_1', 'max_hours_2'],[
-            [1, 'Teacher', 720, 360],
-            [2, 'Dep head', 720, 360],
-            [3, 'Director', 720, 360],
+            [1, 'Викладач', 720, 360],
+            [2, 'Завідувач', 720, 360],
+            [3, 'Директор', 720, 360],
         ]);
     }
 

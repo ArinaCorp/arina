@@ -9,6 +9,8 @@ use app\modules\employee\models\cyclic_commission\CyclicCommissionSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\data\ActiveDataProvider;
+use yii\data\ArrayDataProvider;
 
 /**
  * CyclicCommissionController implements the CRUD actions for CyclicCommission model.
@@ -37,7 +39,9 @@ class CyclicCommissionController extends Controller implements IAdminController
     public function actionIndex()
     {
         $searchModel = new CyclicCommissionSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = new ActiveDataProvider([
+            'query' => CyclicCommission::find(),
+        ]);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -52,7 +56,12 @@ class CyclicCommissionController extends Controller implements IAdminController
      */
     public function actionView($id)
     {
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $this->findModel($id)->getEmployeeArray(),
+        ]);
+        
         return $this->render('view', [
+            'dataProvider' => $dataProvider,
             'model' => $this->findModel($id),
         ]);
     }
@@ -105,6 +114,12 @@ class CyclicCommissionController extends Controller implements IAdminController
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    public function actionDocument($id)
+    {
+        $model = $this->findModel($id);
+        $model->getDocument();
     }
 
     /**

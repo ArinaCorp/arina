@@ -17,14 +17,14 @@ use app\modules\employee\models\Employee;
     <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'head_id')->widget(Select2::className(), [
-        'data' => Employee::getList(),
+        'data' => Employee::getAllTeacherList(),
         'options' =>
             [
                 'placeholder' => Yii::t('app', 'Select head')
             ]]) ?>
 
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

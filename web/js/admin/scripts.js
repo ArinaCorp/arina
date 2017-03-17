@@ -35,3 +35,13 @@ $(document).ready(function () {
         });
     });
 });
+
+$(document).ready(function () {
+    $('#employee-is_in_education').on('change',function () {
+        if($(this).val()==0){
+            $('.field_cyclic_commission_id').addClass('hidden');
+        } else {
+            $('.field_cyclic_commission_id').removeClass('hidden');
+        }
+    })
+})

@@ -2,9 +2,13 @@
 
 namespace app\modules\employee\controllers;
 
+use app\modules\employee\models\EmployeeEducation;
 use app\modules\employee\models\EmployeeSearch;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
+use yii\base\Model;
+use yii\base\Exception;
+use yii\helpers\ArrayHelper;
 use app\modules\employee\models\Employee;
 use yii\web\NotFoundHttpException;
 use nullref\core\interfaces\IAdminController;
@@ -64,6 +68,7 @@ class DefaultController extends Controller implements IAdminController
      */
     public function actionCreate()
     {
+
         $model = new Employee();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -73,6 +78,48 @@ class DefaultController extends Controller implements IAdminController
                 'model' => $model,
             ]);
         }
+
+        /*
+        $model = new Employee();
+        $modelsEducation = [new EmployeeEducation()];
+
+        /**
+         * @var $modelsEducation EmployeeEducation[]
+         *
+
+        if ($model->load(Yii::$app->request->post())) {
+            $modelsEducation = Employee::createMultiple(EmployeeEducation::className());
+            Model::loadMultiple($modelsEducation, Yii::$app->request->post());
+            $valid = $model->validate();
+            $valid = Model::validateMultiple($modelsEducation) && $valid;
+            if ($valid) {
+                $transaction = \Yii::$app->db->beginTransaction();
+                try {
+                    if ($flag = $model->save(false)) {
+                        foreach ($modelsEducation as $modelEducation) {
+                            $modelEducation->employee_id = $model->id;
+                            if (!($flag = $modelEducation->save(false))) {
+                                $transaction->rollBack();
+                                break;
+                            }
+                        }
+                    }
+                    if ($flag) {
+                        $transaction->commit();
+                        return $this->redirect(['view', 'id' => $model->id]);
+                    }
+                } catch (Exception $e) {
+                    $transaction->rollBack();
+                }
+            }
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+        return $this->render('create', [
+            'model' => $model,
+            'modelsEducation' => (empty($modelsEducation)) ? [new EmployeeEducation()] : $modelsEducation,
+        ]);
+
+        */
     }
 
     /**
@@ -83,6 +130,7 @@ class DefaultController extends Controller implements IAdminController
      */
     public function actionUpdate($id)
     {
+
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -92,6 +140,41 @@ class DefaultController extends Controller implements IAdminController
                 'model' => $model,
             ]);
         }
+        
+       /*
+        if (empty($id)) {
+            $model = new Employee();
+        } else {
+            $model = $this->findModel($id);
+        }
+
+        $model->has_education = EmployeeEducation::getList($id, $model);
+
+        /**
+         * @var $modelsEducation EmployeeEducation[]
+         *
+
+        $saveAction = Yii::$app->request->post('save');
+        $newRecord = $model->isNewRecord;
+        if ($model->load(Yii::$app->request->post()) && $saveAction && $model->save()) {
+            if (!Yii::$app->request->post('stay')) {
+                return $this->redirect(Yii::$app->user->getReturnUrl(['index']));
+            } else {
+                Yii::$app->session->setFlash('save-record-employee', Yii::t('app', 'Employee record is saved!'));
+                if ($newRecord) {
+                    return $this->redirect(['/employee/update', 'id' => $model->primaryKey]);
+                } else {
+                    return $this->refresh();
+                }
+            }
+        } else {
+
+            return $this->render('update', [
+                'model' => $model,
+                'modelsFamily' => $model->has_education,
+            ]);
+        }
+        */
     }
 
     /**
@@ -120,6 +203,11 @@ class DefaultController extends Controller implements IAdminController
             return $model;
         else
             throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    public function actionDocument()
+    {
+         Employee::getDocument();
     }
 
 }
