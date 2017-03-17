@@ -14,11 +14,11 @@ class StudyPlanSearch extends StudyPlan
     public function rules()
     {
         return [
-            [['speciality_id'], 'required'],
+            [['speciality_qualification_id'], 'required'],
             [['semesters'], 'required', 'message' => Yii::t('plans', 'Click "Generate" and check the data')],
-            [['id', 'speciality_id'], 'integer'],
+            [['id', 'speciality_qualification_id'], 'integer'],
             [['created', 'updated'], 'safe'],
-            [['id, speciality_id'], 'safe', 'on' => 'search'],
+            [['id, speciality_qualification_id'], 'safe', 'on' => 'search'],
             [['id'], 'unique']
         ];
     }
@@ -52,13 +52,13 @@ class StudyPlanSearch extends StudyPlan
 
         $query->andFilterWhere([
             'id' => $this->id,
-            'speciality_id' => $this->speciality_id,
+            'speciality_qualification_id' => $this->speciality_qualification_id,
             'created' => $this->created,
             'updated' => $this->updated,
         ]);
 
         $query->andFilterWhere(['like', 'semesters', $this->semesters])
-            ->andFilterWhere(['like', 'graphs', $this->graphs]);
+            ->andFilterWhere(['like', 'graphs', $this->graph]);
         return $dataProvider;
     }
 }

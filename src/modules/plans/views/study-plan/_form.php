@@ -5,7 +5,7 @@ use yii\bootstrap\ActiveForm;
 use yii\widgets\Pjax;
 use kartik\select2\Select2;
 
-use app\modules\directories\models\speciality\Speciality;
+use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 use app\modules\plans\models\StudyPlan;
 use app\modules\plans\widgets\Graph;
 
@@ -35,11 +35,11 @@ use app\modules\plans\widgets\Graph;
 
     <div class="row">
         <div class="col-sm-6">
-            <?= $form->field($model, 'speciality_id')->widget(Select2::className(), [
-                'data' => Speciality::getList(),
+            <?= $form->field($model, 'speciality_qualification_id')->widget(Select2::className(), [
+                'data' => SpecialityQualification::getList(),
                 'options' =>
                     [
-                        'placeholder' => $model->getAttributeLabel('speciality_id')
+                        'placeholder' => $model->getAttributeLabel('speciality_qualification_id')
                     ]
             ]);?>
         </div>

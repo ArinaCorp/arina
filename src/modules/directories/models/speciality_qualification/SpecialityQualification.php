@@ -4,6 +4,7 @@ namespace app\modules\directories\models\speciality_qualification;
 
 use Yii;
 use yii\helpers\ArrayHelper;
+use yii\db\ActiveRecord;
 
 use app\modules\students\models\Group;
 use app\modules\directories\models\speciality\Speciality;
@@ -26,7 +27,7 @@ use app\modules\directories\models\subject_relation\SubjectRelation;
  * @property $relations SubjectRelation[]
  * @property $groups Group[]
  */
-class SpecialityQualification extends \yii\db\ActiveRecord
+class SpecialityQualification extends ActiveRecord
 {
     /**
      * @inheritdoc
@@ -114,6 +115,11 @@ class SpecialityQualification extends \yii\db\ActiveRecord
         return $this->hasMany(SubjectRelation::className(), ['speciality_qualification_id' => 'id']);
     }
 
+    /**
+     * @param $f1
+     * @param $f2
+     * @return int
+     */
     public function compare($f1, $f2)
     {
         /**
@@ -125,6 +131,9 @@ class SpecialityQualification extends \yii\db\ActiveRecord
         else return 0;
     }
 
+    /**
+     * @return bool|int
+     */
     public function getOffsetYears()
     {
         /**
@@ -148,11 +157,17 @@ class SpecialityQualification extends \yii\db\ActiveRecord
         return false;
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getGroups()
     {
         return $this->hasMany(Group::className(), ['speciality_qualifications_id' => 'id']);
     }
 
+    /**
+     * @return Group[]
+     */
     public function getGroupsActive()
     {
 
@@ -166,9 +181,20 @@ class SpecialityQualification extends \yii\db\ActiveRecord
         return $array;
     }
 
+    /**
+     * @return array
+     */
     public function getGroupsActiveList()
     {
         return ArrayHelper::map($this->getGroupsActive(), 'id', 'title');
+    }
+
+    /**
+     * @return array
+     */
+    public static function getList()
+    {
+        return ArrayHelper::map(SpecialityQualification::find()->all(), 'id', 'title');
     }
 
 }

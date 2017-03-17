@@ -226,7 +226,6 @@ class StudyPlanController extends Controller implements IAdminController
 
     /**
      * @param $id
-     * @var $excel Excel
      */
     public function actionMakeExcel($id)
     {

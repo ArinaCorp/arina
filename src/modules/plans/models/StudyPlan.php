@@ -65,10 +65,11 @@ class StudyPlan extends ActiveRecord
         return [
             [['speciality_qualification_id'], 'required'],
             [['semesters'], 'required', 'message' => Yii::t('plans', 'Click "Generate" and check the data')],
-            [['id', 'speciality_id'], 'integer'],
+            [['id', 'speciality_qualification_id'], 'integer'],
             [['created', 'updated'], 'safe'],
-            [['id', 'speciality_id'], 'safe', 'on' => 'search'],
-            [['id'], 'unique']
+            [['id', 'speciality_qualification_id'], 'safe', 'on' => 'search'],
+            [['id'], 'unique'],
+            [['origin'], 'checkOrigin', 'on' => 'create']
         ];
     }
 
@@ -158,7 +159,7 @@ class StudyPlan extends ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'speciality_id' => Yii::t('app', 'Speciality'),
+            'speciality_qualification_id' => Yii::t('app', 'Speciality qualification'),
             'semesters' => Yii::t('plans', 'Semesters'),
             'graph' => Yii::t('plans', 'Graph'),
             'created' => Yii::t('app', 'Date of creation'),
@@ -187,7 +188,7 @@ class StudyPlan extends ActiveRecord
 
         $query->andFilterWhere([
             'id' => $this->id,
-            'speciality_id' => $this->speciality_qualification_id,
+            'speciality_qualification_id' => $this->speciality_qualification_id,
             'created' => $this->created,
             'updated' => $this->updated,
         ]);

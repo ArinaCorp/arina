@@ -12,14 +12,14 @@ use app\modules\plans\widgets\SubjectTable;
  * @var $model StudyPlan
  */
 
-$this->title = $model->speciality->title;
+$this->title = $model->specialityQualification->title;
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('plans', 'Study plans'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="row">
-    <h1><?= $model->speciality->title; ?></h1>
+    <h1><?= Html::encode($this->title); ?></h1>
 
     <h4><?= $model->getAttributeLabel('created').': '.date('d.m.Y', $model->created); ?></h4>
 
