@@ -13,7 +13,7 @@ class m180117_162217_add_data_study_plan extends Migration
     public function up()
     {
         $this->batchInsert('{{%study_plan}}', [
-            'id', 'speciality_id', 'semesters', 'created', 'updated', 'graph'
+            'id', 'speciality_qualification_id', 'semesters', 'created', 'updated', 'graph'
         ],
             [
                 [
@@ -32,7 +32,7 @@ class m180117_162217_add_data_study_plan extends Migration
                     "P","P","DP","DP","T","DP","DP"," ","T"," ","S"," "," "," "," "," "," "]]'
                 ],
                 [
-                    2, 2, '17|24|16|17|16|17|16|8', 1435148140, 1435148140,
+                    2, 4, '17|24|16|17|16|17|16|8', 1435148140, 1435148140,
                     '[["T","T","T","T","T","T","T","T","T","T","T","T","T","T","T","T","T",
                     "H","H","T","T","T","T","T","T","T","T","T","T","T","T","T","T","T","T",
                     "T","T","T","T","T","T","T","T","H","H","H","H","H","H","H","H","H"],

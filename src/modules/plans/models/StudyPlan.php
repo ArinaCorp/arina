@@ -9,9 +9,8 @@ use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
 use nullref\useful\behaviors\JsonBehavior;
 use yii\behaviors\TimestampBehavior;
-use app\behaviors\StrBehavior;
 
-use app\modules\directories\models\speciality\Speciality;
+use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 use app\modules\directories\models\department\Department;
 use app\modules\directories\models\subject\Subject;
 
@@ -20,7 +19,7 @@ use app\modules\directories\models\subject\Subject;
  *
  * The followings are the available columns in table 'study_plan':
  * @property integer $id
- * @property integer $speciality_id
+ * @property integer $speciality_qualification_id
  * @property array $semesters
  * @property array $graph
  * @property integer $created
@@ -28,7 +27,7 @@ use app\modules\directories\models\subject\Subject;
  *
  * The followings are the available model relations:
  * @property StudySubject[] $studySubjects
- * @property Speciality $speciality
+ * @property SpecialityQualification $specialityQualification
  */
 class StudyPlan extends ActiveRecord
 {
@@ -40,11 +39,7 @@ class StudyPlan extends ActiveRecord
         return [
             'JsonBehavior' => [
                 'class' => JsonBehavior::className(),
-                'fields' => ['graph'],
-            ],
-            'StrBehavior' => [
-                'class' => StrBehavior::className(),
-                'fields' => ['semesters'],
+                'fields' => ['graph', 'semesters'],
             ],
             'TimestampBehavior' => [
                 'class' => TimestampBehavior::className(),
@@ -68,7 +63,7 @@ class StudyPlan extends ActiveRecord
     public function rules()
     {
         return [
-            [['speciality_id'], 'required'],
+            [['speciality_qualification_id'], 'required'],
             [['semesters'], 'required', 'message' => Yii::t('plans', 'Click "Generate" and check the data')],
             [['id', 'speciality_id'], 'integer'],
             [['created', 'updated'], 'safe'],
@@ -104,8 +99,8 @@ class StudyPlan extends ActiveRecord
      */
     public function getUnusedSubjects()
     {
-        $usedSubjects = ArrayHelper::map(StudySubject::find()->all(), 'subject_id', 'id');
-        $allSubjects = Subject::getListForSpeciality($this->speciality_id);
+        $usedSubjects = ArrayHelper::map($this->studySubjects, 'subject_id', 'id');
+        $allSubjects = Subject::getListForSpecialityQualification($this->speciality_qualification_id);
         $result = [];
         foreach ($allSubjects as $cycle => $subject) {
             $result[$cycle] = [];
@@ -124,9 +119,9 @@ class StudyPlan extends ActiveRecord
     /**
      * @return ActiveQuery
      */
-    public function getSpeciality()
+    public function getSpecialityQualification()
     {
-        return $this->hasOne(Speciality::className(), ['id' => 'speciality_id']);
+        return $this->hasOne(SpecialityQualification::className(), ['id' => 'speciality_qualification_id']);
     }
 
     /**
@@ -145,7 +140,7 @@ class StudyPlan extends ActiveRecord
     {
         $list = [];
         foreach ($this->studySubjects as $item) {
-            $cycle = $item->subject->getCycle($this->speciality_id);
+            $cycle = $item->subject->getCycle($this->speciality_qualification_id);
             $name = $cycle->id .' '. $cycle->title;
             if (isset($list[$name])) {
                 $list[$name][] = $item;
@@ -192,7 +187,7 @@ class StudyPlan extends ActiveRecord
 
         $query->andFilterWhere([
             'id' => $this->id,
-            'speciality_id' => $this->speciality_id,
+            'speciality_id' => $this->speciality_qualification_id,
             'created' => $this->created,
             'updated' => $this->updated,
         ]);
@@ -222,7 +217,7 @@ class StudyPlan extends ActiveRecord
      */
     public function getTitle()
     {
-        return $this->speciality->title . ' - ' . date('d.m.Y H:i', $this->created);
+        return $this->specialityQualification->title . ' - ' . date('d.m.Y H:i', $this->created);
     }
 
     /**

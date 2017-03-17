@@ -56,13 +56,9 @@ class WorkSubject extends ActiveRecord
     public function behaviors()
     {
         return [
-            'StrBehavior' => [
-                'class' => StrBehavior::className(),
-                'fields' => ['total', 'lectures', 'lab_works', 'practices', 'weeks',],
-            ],
             'JsonBehavior' => [
                 'class' => JSONBehavior::className(),
-                'fields' => ['control', 'control_hours',],
+                'fields' => ['control', 'control_hours', 'total', 'lectures', 'lab_works', 'practices', 'weeks',],
             ],
         ];
     }

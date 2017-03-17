@@ -66,7 +66,9 @@ return [
     'Study subject adding' => 'Додання навчального предмету',
     'Dual practice work' => 'Роздвоєння практичних робіт',
     'View study plans' => 'Переглянути навчальні плани',
-    'Plans' => 'Плани'
+    'Plans' => 'Плани',
+    'Study plan editing' => 'Редагування навчального плану',
+    'Select subject' => 'Виберіть предмет'
 
 
 ];

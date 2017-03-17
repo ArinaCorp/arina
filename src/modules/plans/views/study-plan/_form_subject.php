@@ -100,7 +100,7 @@ JS;
         <div class="col-sm-4">
             <?= $form->field($model, 'subject_id')->widget(Select2::className(),
                 [
-                    'data' => $model->isNewRecord ? $model->studyPlan->getUnusedSubjects() : Subject::getListForSpeciality($model->studyPlan->speciality_id),
+                    'data' => $model->isNewRecord ? $model->studyPlan->getUnusedSubjects() : Subject::getListForSpecialityQualification($model->studyPlan->speciality_id),
                     'options' =>[ 'placeholder' => Yii::t('plans', 'Select subject')]
                 ]) ?>
         </div>

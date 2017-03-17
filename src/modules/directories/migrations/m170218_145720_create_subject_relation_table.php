@@ -14,7 +14,7 @@ class m170218_145720_create_subject_relation_table extends Migration
     {
         $this->createTable('{{%subject_relation}}', [
             'subject_id' => $this->integer(),
-            'speciality_id' => $this->integer(),
+            'speciality_qualification_id' => $this->integer(),
             'subject_cycle_id' => $this->integer(),
         ], $this->getTableOptions());
     }

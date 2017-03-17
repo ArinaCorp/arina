@@ -170,4 +170,5 @@ class SpecialityQualification extends \yii\db\ActiveRecord
     {
         return ArrayHelper::map($this->getGroupsActive(), 'id', 'title');
     }
+
 }

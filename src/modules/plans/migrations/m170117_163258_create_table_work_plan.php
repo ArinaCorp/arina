@@ -14,7 +14,7 @@ class m170117_163258_create_table_work_plan extends Migration
     {
         $this->createTable('{{%work_plan}}', [
             'id' => $this->primaryKey(),
-            'speciality_id' => $this->integer(10),
+            'speciality_qualification_id' => $this->integer(10),
             'semesters' => $this->string(255),
             'graph' => $this->text(),
             'created' => $this->integer(),

@@ -9,7 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use nullref\core\interfaces\IAdminController;
 use yii\helpers\Url;
-use app\components\Excel;
+use Excel;
 
 use app\modules\plans\models\StudyPlan;
 use app\modules\plans\models\StudySubject;
@@ -194,8 +194,10 @@ class StudyPlanController extends Controller implements IAdminController
      */
     public function actionDeleteSubject($id)
     {
-        StudySubject::findOne($id)->delete();
-        return $this->redirect(['index']);
+        $subject = StudySubject::findOne($id);
+        $planId = $subject->study_plan_id;
+        $subject->delete();
+        return $this->redirect(Url::toRoute(['study-plan/view', 'id' => $planId]));
     }
 
     /**
@@ -228,8 +230,9 @@ class StudyPlanController extends Controller implements IAdminController
      */
     public function actionMakeExcel($id)
     {
-        $excel = Yii::$app->excel;
+        
         $plan = self::findModel($id);
-        $excel->getDocument($plan, 'StudyPlan');
+        Yii::$app->excel->makeStudyPlan($plan);
     }
+
 }

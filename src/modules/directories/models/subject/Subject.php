@@ -73,10 +73,10 @@ class Subject extends ActiveRecord
      * @param integer $id speciality id
      * @return array for dropDownList
      */
-    public static function getListForSpeciality($id)
+    public static function getListForSpecialityQualification($id)
     {
         $list = [];
-        $relations = SubjectRelation::find()->where(['speciality_id' => $id])->all();
+        $relations = SubjectRelation::find()->where(['speciality_qualification_id' => $id])->all();
         foreach ($relations as $relation) {
             /**@var $relation SubjectRelation */
             if (!isset($list[$relation->subjectCycle->title])) {
@@ -88,13 +88,18 @@ class Subject extends ActiveRecord
     }
 
     /**
-     * @param $speciality_id
+     * @param $speciality_qualification_id
      * @return SubjectCycle
      */
-    public function getCycle($speciality_id)
+    public function getCycle($speciality_qualification_id)
     {
         /**@var $relation SubjectRelation */
-        $relation = SubjectRelation::find()->where(['speciality_id' => $speciality_id, 'subject_id' => $this->id]);
+        $relation = SubjectRelation::find()->where(
+            [
+                'speciality_qualification_id' => $speciality_qualification_id,
+                'subject_id' => $this->id
+            ]
+        );
         return $relation->subjectCycle;
     }
 

@@ -20,7 +20,7 @@ class m161022_093131_create_speciality_table extends Migration
             'department_id' => $this->integer(),
             'number' => $this->string(),
             'accreditation_date' => $this->date(),
-        ]);
+        ], $this->getTableOptions());
     }
 
     /**

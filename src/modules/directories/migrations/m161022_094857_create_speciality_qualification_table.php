@@ -1,12 +1,15 @@
 <?php
 
 use yii\db\Migration;
+use nullref\core\traits\MigrationTrait;
 
 /**
  * Handles the creation of table `speciality_qualification`.
  */
 class m161022_094857_create_speciality_qualification_table extends Migration
 {
+    use MigrationTrait;
+
     /**
      * @inheritdoc
      */
@@ -19,7 +22,7 @@ class m161022_094857_create_speciality_qualification_table extends Migration
             'qualification_id'=>$this->integer(),
             'years_count' => $this->integer(),
             'months_count' => $this->integer(),
-        ]);
+        ], $this->getTableOptions());
     }
 
     /**

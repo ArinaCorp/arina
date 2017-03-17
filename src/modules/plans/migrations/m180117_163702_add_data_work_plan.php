@@ -13,7 +13,7 @@ class m180117_163702_add_data_work_plan extends Migration
     public function up()
     {
         $this->batchInsert('{{%work_plan}}', [
-            'id', 'speciality_id', 'semesters', 'created', 'updated', 'graph', 'study_year_id'
+            'id', 'speciality_qualification_id', 'semesters', 'created', 'updated', 'graph', 'study_year_id'
         ],
             [
                 [

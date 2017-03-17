@@ -50,13 +50,9 @@ class StudySubject extends ActiveRecord
     public function behaviors()
     {
         return [
-            'StrBehavior' => [
-                'class' => StrBehavior::className(),
-                'fields' => ['weeks'],
-            ],
             'JsonBehavior' => [
                 'class' => JsonBehavior::className(),
-                'fields' => ['control'],
+                'fields' => ['control', 'weeks'],
             ],
         ];
     }

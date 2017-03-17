@@ -10,10 +10,9 @@ use yii\helpers\Html;
 
 use yii\behaviors\TimestampBehavior;
 use nullref\useful\behaviors\JsonBehavior;
-use app\behaviors\StrBehavior;
 
 use app\modules\directories\models\StudyYear;
-use app\modules\directories\models\speciality\Speciality;
+use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 use app\modules\directories\models\department\Department;
 use yii\web\HttpException;
 
@@ -22,7 +21,7 @@ use yii\web\HttpException;
  *
  * The followings are the available columns in table 'work_plan':
  * @property integer $id
- * @property integer $speciality_id
+ * @property integer $speciality_qualification_id
  * @property array $semesters
  * @property array $graph
  * @property integer $created
@@ -32,7 +31,7 @@ use yii\web\HttpException;
  * The followings are the available model relations:
  * @property StudyYear $studyYear
  * @property WorkSubject[] $work_subjects
- * @property Speciality $speciality
+ * @property SpecialityQualification $specialityQualification
  */
 class WorkPlan extends ActiveRecord
 {
@@ -51,15 +50,7 @@ class WorkPlan extends ActiveRecord
         return [
             'JsonBehavior' => [
                 'class' => JsonBehavior::className(),
-                'fields' => [
-                    'graph'
-                ],
-            ],
-            'StrBehavior' => [
-                'class' => StrBehavior::className(),
-                'fields' => [
-                    'semesters'
-                ],
+                'fields' => ['graph', 'semesters'],
             ],
             'TimestampBehavior' => [
                 'class' => TimestampBehavior::className(),
@@ -76,15 +67,15 @@ class WorkPlan extends ActiveRecord
     public function rules()
     {
         return [
-            ['speciality_id, study_year_id', 'required'],
+            ['speciality_qualification_id, study_year_id', 'required'],
             [
                 ['semesters'], 'required',
                 'message' => Yii::t('plans', 'Click "Generate" and check the data'), 'on' => 'graphs'
             ],
-            [['speciality_id', 'study_year_id'], 'uniqueRecord', 'on' => 'insert'],
-            [['speciality_id', 'numerical'], 'integer'],
+            [['speciality_qualification_id', 'study_year_id'], 'uniqueRecord', 'on' => 'insert'],
+            [['speciality_qualification_id', 'numerical'], 'integer'],
             [['created'], 'default', 'value' => date('Y-m-d', time()), 'on' => 'insert'],
-            [['id', 'speciality_id'], 'safe', 'on' => 'search'],
+            [['id', 'speciality_qualification_id'], 'safe', 'on' => 'search'],
             [['study_plan_origin', 'work_plan_origin'], 'checkOrigin', 'on' => 'insert'],
         ];
     }
@@ -95,7 +86,7 @@ class WorkPlan extends ActiveRecord
     public function getCourseAmount()
     {
         /** @var StudyPlan $studyPlan */
-        $studyPlan = StudyPlan::find()->where(['speciality_id' => $this->speciality_id]);
+        $studyPlan = StudyPlan::find()->where(['speciality_qualification_id' => $this->speciality_qualification_id]);
         if ($studyPlan)
             return count($studyPlan->graph);
         else
@@ -119,7 +110,7 @@ class WorkPlan extends ActiveRecord
         $list = [];
         foreach ($this->work_subjects as $item) {
             if ($item->presentIn($course)){
-                $cycle = $item->subject->getCycle($this->speciality_id);
+                $cycle = $item->subject->getCycle($this->speciality_qualification_id);
                 $name = $cycle->id .' '. $cycle->title;
                 if (isset($list[$name])) {
                     $list[$name][] = $item;
@@ -158,9 +149,9 @@ class WorkPlan extends ActiveRecord
     /**
      * @return ActiveQuery
      */
-    public function getSpeciality()
+    public function getSpecialityQualification()
     {
-        return $this->hasOne(Speciality::className(), ['id' => 'speciality_id']);
+        return $this->hasOne(SpecialityQualification::className(), ['id' => 'speciality_qualification_id']);
     }
 
     /**
@@ -187,7 +178,7 @@ class WorkPlan extends ActiveRecord
         return [
             'id' => 'ID',
             'study_year_id' => Yii::t('app', 'Study year'),
-            'speciality_id' => Yii::t('app', 'Speciality'),
+            'speciality_qualification_id' => Yii::t('app', 'Speciality qualification'),
             'created' => Yii::t('app', 'Date of creation'),
             'updated' => Yii::t('app', 'Date of update'),
             'study_plan_origin' => Yii::t('plans', 'The study plan for the base'),
@@ -200,7 +191,7 @@ class WorkPlan extends ActiveRecord
     {
         if (!$this->hasErrors()) {
             $record = self::find()->where([
-                'speciality_id' => $this->speciality_id,
+                'speciality_qualification_id' => $this->speciality_qualification_id,
                 'study_year_id' => $this->study_year_id
             ]);
             if (isset($record)) {
@@ -214,7 +205,7 @@ class WorkPlan extends ActiveRecord
      */
     public function getTitle()
     {
-        return $this->speciality->title . ' - ' . $this->studyYear->getFullName();
+        return $this->specialityQualification->title . ' - ' . $this->studyYear->getFullName();
     }
 
     public function checkOrigin()
@@ -282,7 +273,7 @@ class WorkPlan extends ActiveRecord
      */
     protected function copyFromStudyPlan($origin)
     {
-        $groups = $this->speciality->getGroupsByStudyYear($this->study_year_id);
+        $groups = $this->specialityQualification->speciality->getGroupsByStudyYear($this->study_year_id);
         $graphs = [];
         foreach ($groups as $course) {
             if (isset($origin->graph[$course - 1])) {

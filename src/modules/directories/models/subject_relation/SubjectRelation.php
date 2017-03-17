@@ -9,7 +9,7 @@ use yii\data\ArrayDataProvider;
 
 use app\modules\directories\models\subject\Subject;
 use app\modules\directories\models\subject_cycle\SubjectCycle;
-use app\modules\directories\models\speciality\Speciality;
+use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 
 /**
  * This is the model class for table "subject_cycle".
@@ -17,11 +17,11 @@ use app\modules\directories\models\speciality\Speciality;
  * The followings are the available columns in table 'subject_cycle':
  * @property string $id
  * @property integer $subject_id
- * @property integer $speciality_id
+ * @property integer $speciality_qualification_id
  * @property integer $subject_cycle_id
  *
  * @property Subject $subject;
- * @property Speciality $speciality;
+ * @property SpecialityQualification $specialityQualification;
  * @property SubjectCycle $subjectCycle;
  */
 class SubjectRelation extends ActiveRecord
@@ -55,19 +55,28 @@ class SubjectRelation extends ActiveRecord
                 }
             }
             if ($continue) continue;
-            $list[] = ['id' => $item->getId(), 'link' => $item->getLinkId(), 'speciality' => $item->speciality->title, 'cycle' => $item->subjectCycle->title];
+            $list[] = [
+                'id' => $item->getId(),
+                'link' => $item->getLinkId(),
+                'specialityQualification' => $item->specialityQualification->title,
+                'cycle' => $item->subjectCycle->title
+            ];
         }
         return new ArrayDataProvider($list);
     }
 
     public function getId()
     {
-        return $this->subject_id . '.' . $this->speciality_id . '.' . $this->subject_cycle_id;
+        return $this->subject_id . '.' . $this->speciality_qualification_id . '.' . $this->subject_cycle_id;
     }
 
     public function getLinkId()
     {
-        return ['id1' => $this->subject_id, 'id2' => $this->speciality_id, 'id3' => $this->subject_cycle_id];
+        return [
+            'id1' => $this->subject_id,
+            'id2' => $this->speciality_qualification_id,
+            'id3' => $this->subject_cycle_id
+        ];
     }
 
     /**
@@ -84,9 +93,9 @@ class SubjectRelation extends ActiveRecord
     public function rules()
     {
         return [
-            [['subject_id', 'speciality_id', 'subject_cycle_id'], 'required'],
-            [['subject_id', 'speciality_id', 'subject_cycle_id'], 'integer'],
-            [['subject_id', 'speciality_id', 'subject_cycle_id'], 'safe'],
+            [['subject_id', 'speciality_qualification_id', 'subject_cycle_id'], 'required'],
+            [['subject_id', 'speciality_qualification_id', 'subject_cycle_id'], 'integer'],
+            [['subject_id', 'speciality_qualification_id', 'subject_cycle_id'], 'safe'],
         ];
     }
 
@@ -109,9 +118,9 @@ class SubjectRelation extends ActiveRecord
     /**
      * @return ActiveQuery
      */
-    public function getSpeciality()
+    public function getSpecialityQualification()
     {
-        return $this->hasOne(Speciality::className(), ['id' => 'speciality_id']);
+        return $this->hasOne(SpecialityQualification::className(), ['id' => 'speciality_qualification_id']);
     }
 
     /**
@@ -121,7 +130,7 @@ class SubjectRelation extends ActiveRecord
     {
         return [
             'subject_id' => Yii::t('app', 'Subject'),
-            'speciality_id' => Yii::t('app', 'Speciality'),
+            'speciality_qualification_id' => Yii::t('app', 'Speciality qualification'),
             'subject_cycle_id' => Yii::t('app', 'Subject cycle'),
         ];
     }

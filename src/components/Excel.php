@@ -16,21 +16,6 @@ use app\modules\plans\models\StudySubject;
 
 class Excel extends Component
 {
-    /**
-     * @var string alias of path to directory with templates
-     */
-    public $templatesPath = 'web.templates';
-
-    /**
-     * Load PHPExcel
-     */
-    public function init()
-    {
-        $phpExcelPath = Yii::getAlias('@vendor').'/phpoffice/phpexcel/Classes';
-        spl_autoload_unregister(array('YiiBase', 'autoload'));
-        include($phpExcelPath . DIRECTORY_SEPARATOR . 'PHPExcel.php');
-    }
-
     public function rome($num)
     {
         $n = intval($num);
@@ -53,17 +38,11 @@ class Excel extends Component
             'I' => 1);
 
         foreach ($romanNumber_Array as $roman => $number) {
-            //divide to get  matches
             $matches = intval($n / $number);
-
-            //assign the roman char * $matches
             $res .= str_repeat($roman, $matches);
-
-            //substract from the number
             $n = $n % $number;
         }
 
-        // return the result
         return $res;
     }
 
@@ -122,14 +101,14 @@ class Excel extends Component
 
     protected static function getBorderStyle()
     {
-        return array(
-            'borders' => array(
-                'allborders' => array(
+        return [
+            'borders' => [
+                'allborders' => [
                     'style' => PHPExcel_Style_Border::BORDER_THIN,
-                    'color' => array('argb' => '00000000'),
-                ),
-            ),
-        );
+                    'color' => ['argb' => '00000000'],
+                ],
+            ],
+        ];
     }
 
     /**
@@ -137,9 +116,11 @@ class Excel extends Component
      * @param $plan StudyPlan
      * @return PHPExcel
      */
-    protected function makeStudyPlan($plan)
+    public function makeStudyPlan($plan)
     {
-        $objPHPExcel = $this->loadTemplate(Yii::getAlias('@web').'templates/study-plan.xls');
+        $tmpfname = Yii::getAlias('@webroot') . "/templates/study-plan.xls";
+        $excelReader = PHPExcel_IOFactory::createReaderForFile($tmpfname);;
+        $objPHPExcel = $excelReader->load($tmpfname);
 
         //SHEET #1
         $sheet = $sheet = $objPHPExcel->setActiveSheetIndex(0);
