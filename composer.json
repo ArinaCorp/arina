@@ -38,13 +38,25 @@
         "phpoffice/phpexcel": "^1.8"
     },
     "require-dev": {
-        "yiisoft/yii2-codeception": "*",
         "yiisoft/yii2-debug": "*",
         "yiisoft/yii2-gii": "*",
         "yiisoft/yii2-faker": "*"
     },
     "config": {
-        "process-timeout": 1800
+        "process-timeout": 1800,
+        "fxp-asset":{
+            "pattern-skip-version": "(-build|-patch)",
+            "repositories": [
+                {
+                    "type": "bower-git",
+                    "url": "https://github.com/adobe-webplatform/eve.git",
+                    "name": "bower-asset/eve"
+                }
+            ],
+            "vcs-driver-options": {
+                "github-no-api": true
+            }
+        }
     },
     "scripts": {
         "post-create-project-cmd": [
@@ -53,17 +65,6 @@
         ]
     },
     "extra": {
-        "asset-repositories": [
-            {
-                "type": "bower-git",
-                "url": "https://github.com/adobe-webplatform/eve.git",
-                "name": "bower-asset/eve"
-            }
-        ],
-        "asset-vcs-driver-options": {
-            "github-no-api": true
-        },
-        "asset-pattern-skip-version": "(-build|-patch)",
         "yii\\composer\\Installer::postCreateProject": {
             "setPermission": [
                 {
@@ -77,8 +78,8 @@
             ]
         },
         "asset-installer-paths": {
-            "npm-asset-library": "vendor/npm",
-            "bower-asset-library": "vendor/bower"
+          "npm-asset-library": "vendor/npm",
+          "bower-asset-library": "vendor/bower"
         }
     }
 }
