@@ -4,12 +4,14 @@ namespace app\modules\plans\controllers;
 
 use app\modules\plans\models\StudyPlanSearch;
 use Yii;
+use yii\helpers\ArrayHelper;
 use yii\web\Response;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use nullref\core\interfaces\IAdminController;
 use yii\helpers\Url;
-use Excel;
+use yii\helpers\Json;
+use app\components\DepDropHelper;
 
 use app\modules\plans\models\StudyPlan;
 use app\modules\plans\models\StudySubject;
@@ -232,6 +234,20 @@ class StudyPlanController extends Controller implements IAdminController
         
         $plan = self::findModel($id);
         Yii::$app->excel->makeStudyPlan($plan);
+    }
+
+    function actionGetOrigins()
+    {
+        $out = [];
+        if (!empty($_POST['depdrop_all_params'])) {
+            $params = $_POST['depdrop_all_params'];
+            $spec = $params['studyplan-speciality_qualification_id'];
+            DepDropHelper::convertMap(ArrayHelper::map(StudyPlan::find()->where([
+                'speciality_qualification_id' => $spec,
+            ])->all(), 'id', 'title'));
+        }
+        echo Json::encode(['output' => $out, 'selected' => Yii::t('app', 'Select ...')]);
+        return;
     }
 
 }

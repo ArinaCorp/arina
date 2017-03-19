@@ -14,7 +14,6 @@ use yii\helpers\Url;
  * @var $dataProvider ActiveDataProvider
  */
 ?>
-
 <?= GridView::widget([
     'dataProvider' => $dataProvider,
     'columns' => [

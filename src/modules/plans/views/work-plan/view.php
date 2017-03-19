@@ -4,12 +4,11 @@ use yii\bootstrap\Html;
 use yii\web\View;
 use yii\helpers\Url;
 
-use app\modules\plans\models\StudyPlan;
+use app\modules\plans\models\WorkPlan;
 use app\modules\plans\widgets\Graph;
-use app\modules\plans\widgets\SubjectTable;
 /**
  * @var $this View
- * @var $model StudyPlan
+ * @var $model WorkPlan
  */
 
 $this->title = $model->specialityQualification->title;
@@ -29,7 +28,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= Html::a(Yii::t('plans', 'Add subject'), Url::toRoute(['study-plan/create-subject', 'id' => $model->id]), ['class' => 'btn btn-primary']); ?>
     <br/><br/>
-    <?= Graph::widget(['model' => $model, 'field' => '', 'readOnly' => true, 'graph' => $model->graph]) ?>
+    <?= Graph::widget(['model' => $model, 'field' => '', 'readOnly' => true,
+        'graph' => $model->graph, 'speciality_qualification_id'=>$model->speciality_qualification_id,
+        'study_year_id' => $model->study_year_id, 'studyPlan' => false]) ?>
 
     <?php $this->render('_subjects', array('model' => $model)); ?>
 </div>

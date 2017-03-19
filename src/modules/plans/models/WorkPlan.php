@@ -30,7 +30,7 @@ use yii\web\HttpException;
  *
  * The followings are the available model relations:
  * @property StudyYear $studyYear
- * @property WorkSubject[] $work_subjects
+ * @property WorkSubject[] $workSubjects
  * @property SpecialityQualification $specialityQualification
  */
 class WorkPlan extends ActiveRecord
@@ -105,7 +105,7 @@ class WorkPlan extends ActiveRecord
     public function getSubjectsByCycles($course)
     {
         $list = [];
-        foreach ($this->work_subjects as $item) {
+        foreach ($this->workSubjects as $item) {
             if ($item->presentIn($course)){
                 $cycle = $item->subject->getCycle($this->speciality_qualification_id);
                 $name = $cycle->id .' '. $cycle->title;
@@ -220,7 +220,7 @@ class WorkPlan extends ActiveRecord
     public function checkSubjects()
     {
         $warnings = array();
-        foreach ($this->work_subjects as $subject) {
+        foreach ($this->workSubjects as $subject) {
             if (abs(array_sum($subject->total) - (isset($subject->control_hours['total']) ?
                         $subject->control_hours['total'] : 0)) > self::HOURS_DIFF) {
                 if (isset($subject->subject))
@@ -257,7 +257,7 @@ class WorkPlan extends ActiveRecord
     protected function copyWorkPlan($origin)
     {
         $this->graph = $origin->graph;
-        foreach ($origin->work_subjects as $subject) {
+        foreach ($origin->workSubjects as $subject) {
             $model = new WorkSubject();
             $model->attributes = $subject->attributes;
             $model->work_plan_id = $this->id;

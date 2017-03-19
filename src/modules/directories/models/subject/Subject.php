@@ -3,7 +3,6 @@
 namespace app\modules\directories\models\subject;
 
 use Yii;
-use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 use app\modules\directories\models\subject_relation\SubjectRelation;

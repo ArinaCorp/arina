@@ -100,7 +100,9 @@ JS;
         <div class="col-sm-4">
             <?= $form->field($model, 'subject_id')->widget(Select2::className(),
                 [
-                    'data' => $model->isNewRecord ? $model->studyPlan->getUnusedSubjects() : Subject::getListForSpecialityQualification($model->studyPlan->speciality_id),
+                    'data' => $model->isNewRecord ?
+                        $model->studyPlan->getUnusedSubjects() :
+                        Subject::getListForSpecialityQualification($model->studyPlan->speciality_qualification_id),
                     'options' =>[ 'placeholder' => Yii::t('plans', 'Select subject')]
                 ]) ?>
         </div>
@@ -143,32 +145,38 @@ JS;
             <?= $form->field($model, 'dual_practice')->checkbox()?>
         </div>
         <div class="col-sm-3">
-            <?= $form->field($model, 'practice_weeks')->widget(TouchSpin::className(), ['pluginOptions' => ['max'=>1000]])?>
+            <?= $form->field($model, 'practice_weeks')->widget(TouchSpin::className(), [
+                    'pluginOptions' => ['max'=>1000]
+            ])?>
         </div>
     </div>
     <?php foreach ($model->studyPlan->semesters as $semester => $weeks): ?>
         <div class="row">
             <div class="col-sm-4">
-                <label class="control-label"><?= $semester + 1 . '-й семестр: ' . $weeks . ' тижнів'?></label>
-                <?= $form->field($model, "weeks[$semester]")->widget(TouchSpin::className(),
-                    ['pluginOptions' => ['max'=>1000]])?>
+                <?= $form->field($model, "weeks[$semester]")->widget(TouchSpin::className(), [
+                    'pluginOptions' => [
+                        'max' => 1000,
+                        'initval' => 0,
+                    ],
+                    'options' => ['placeholder' => Yii::t('plans', 'Hours per week')]
+                ])->label($semester + 1 . '-й семестр: ' . $weeks . ' тижнів')?>
             </div>
-            <div class="col-sm-1">
+            <div class="col-sm-1"><br/>
                 <?= $form->field($model, "control[$semester][0]")->checkbox(['label' => Yii::t('plans', 'Test')])?>
             </div>
-            <div class="col-sm-1">
+            <div class="col-sm-1"><br/>
                 <?= $form->field($model, "control[$semester][1]")->checkbox(['label' => Yii::t('plans', 'Exam')])?>
             </div>
-            <div class="col-sm-1">
+            <div class="col-sm-1"><br/>
                 <?= $form->field($model, "control[$semester][2]")->checkbox(['label' => Yii::t('plans', 'DPA')])?>
             </div>
-            <div class="col-sm-1">
+            <div class="col-sm-1"><br/>
                 <?= $form->field($model, "control[$semester][3]")->checkbox(['label' => Yii::t('plans', 'DA')])?>
             </div>
-            <div class="col-sm-2">
+            <div class="col-sm-2"><br/>
                 <?= $form->field($model, "control[$semester][4]")->checkbox(['label' => Yii::t('plans', 'Course work')])?>
             </div>
-            <div class="col-sm-2">
+            <div class="col-sm-2"><br/>
                 <?= $form->field($model, "control[$semester][5]")->checkbox(['label' => Yii::t('plans', 'Course project')])?>
             </div>
         </div>

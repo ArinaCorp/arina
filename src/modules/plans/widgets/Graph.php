@@ -22,7 +22,7 @@ class Graph extends Widget
     /** @var $speciality_qualification_id int for work plan */
     public $speciality_qualification_id;
     /** @var $studyYearId int for work plan */
-    public $studyYearId;
+    public $study_year_id;
     public $studyPlanProcessLink = '/plans/study-plan/execute-graph';
     public $workPlanProcessLink = '/plans/work-plan/execute-graph';
 
@@ -53,15 +53,15 @@ class Graph extends Widget
         {
             $this->graphProcessLink = $this->workPlanProcessLink;
 
-            if (empty($this->specialityId))
+            if (empty($this->speciality_qualification_id))
                 throw new Exception(Yii::t('plans', 'Speciality Id must be set'));
 
-            if (empty($this->studyYearId))
+            if (empty($this->study_year_id))
                 throw new Exception(Yii::t('plans', 'Study year Id must be set'));
 
             /** @var SpecialityQualification $specialityQualification */
             $specialityQualification = SpecialityQualification::findOne($this->speciality_qualification_id);
-            $this->rows = $specialityQualification->getGroupsByStudyYear($this->studyYearId);
+            $this->rows = $specialityQualification->getGroupsByStudyYear($this->study_year_id);
 
             if (empty($this->graph)) {
                 $this->map = PlanHelper::getDefaultWorkPlan($this->rows);

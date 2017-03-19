@@ -69,7 +69,6 @@ class StudyPlan extends ActiveRecord
             [['created', 'updated'], 'safe'],
             [['id', 'speciality_qualification_id'], 'safe', 'on' => 'search'],
             [['id'], 'unique'],
-            [['origin'], 'checkOrigin', 'on' => 'create']
         ];
     }
 

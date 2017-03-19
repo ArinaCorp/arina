@@ -4,6 +4,8 @@ use yii\web\View;
 use yii\bootstrap\ActiveForm;
 use yii\widgets\Pjax;
 use kartik\select2\Select2;
+use yii\helpers\Url;
+use kartik\depdrop\DepDrop;
 
 use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 use app\modules\plans\models\StudyPlan;
@@ -37,6 +39,7 @@ use app\modules\plans\widgets\Graph;
         <div class="col-sm-6">
             <?= $form->field($model, 'speciality_qualification_id')->widget(Select2::className(), [
                 'data' => SpecialityQualification::getList(),
+                'id' => 'speciality_qualification_id',
                 'options' =>
                     [
                         'placeholder' => $model->getAttributeLabel('speciality_qualification_id')
@@ -47,15 +50,18 @@ use app\modules\plans\widgets\Graph;
     <?php if ($model->isNewRecord): ?>
     <div class="row">
         <div class="col-sm-6">
-            <?= Select2::widget(
+            <?= DepDrop::widget(
                 [
-                    'data' => StudyPlan::getList(),
+                    'data' => [],
                     'id' => 'origin',
                     'name' => 'origin',
-                    'options' =>
-                        [
-                            'placeholder' => Yii::t('plans', 'Select copy plan')
-                        ]
+                    'type' => DepDrop::TYPE_SELECT2,
+                    'select2Options' => ['pluginOptions' => ['allowClear' => true]],
+                    'pluginOptions' => [
+                        'depends' => ['studyplan-speciality_qualification_id'],
+                        'url' => Url::to(['get-origins']),
+                        'loadingText' => Yii::t('app', 'Loading ...'),
+                    ],
                 ]
             );?>
         </div>

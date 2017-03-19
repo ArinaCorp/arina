@@ -277,7 +277,7 @@ class Excel extends Component
             $sheet->setCellValue("$c$i", "=SUM($c" . implode("+$c", $totals) . ')');
         }
         header('Content-Type: application/vnd.ms-excel');
-        $filename = "Study_plan_" . $plan->getTitle() . "_" . date("d-m-Y-His") . ".xls";
+        $filename = "Study_plan_" . "_" . date("d-m-Y-His") . ".xls";
         header('Content-Disposition: attachment;filename=' . $filename . ' ');
         header('Cache-Control: max-age=0');
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
