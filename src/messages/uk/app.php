@@ -211,4 +211,5 @@ return [
     'Contacts' => 'Контакти',
     'Emails'=>'',
     'Full Name' => 'П.І.Б.',
+    'Subject' => 'Предмети',
 ];

@@ -207,7 +207,6 @@ class Employee extends ActiveRecord
          */
         $listRecord = CuratorGroup::find()->andWhere(['teacher_id' => $this->id])->orderBy('id ASC')->all();
         $listGroup = [];
-//        var_dump($listRecord);
         foreach ($listRecord as $item) {
             switch ($item->type) {
                 case 1: {

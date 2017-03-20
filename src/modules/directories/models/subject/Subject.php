@@ -46,6 +46,7 @@ class Subject extends ActiveRecord
     {
         return [
             [['id', 'practice'], 'integer'],
+            [['title', 'code', 'short_name'],'required'],
             [['title', 'short_name', 'code'], 'string', 'max' => 255],
         ];
     }
