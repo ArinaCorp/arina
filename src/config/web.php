@@ -12,6 +12,16 @@ $config = [
     'bootstrap' => ['log'],
     'language'=> 'uk',
     'components' => [
+        'assetManager' => [
+            'bundles' => [
+                'nullref\admin\assets\AdminAsset' => [
+                    'js' => [
+                        'js/tools.js',
+                        'js/admin/scripts.js',
+                    ],
+                ],
+            ],
+        ],
         'formatter' => [
             'class' => 'app\components\Formatter',
         ],
@@ -57,10 +67,6 @@ $config = [
 ];
 
 if (YII_ENV_DEV) {
-    // configuration adjustments for 'dev' environment
-    $config['bootstrap'][] = 'debug';
-    $config['modules']['debug'] = 'yii\debug\Module';
-
     $config['bootstrap'][] = 'gii';
     $config['modules']['gii'] = 'yii\gii\Module';
 }

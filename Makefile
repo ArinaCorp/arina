@@ -1,5 +1,5 @@
 serve:
-	php yii serve --docroot=@webroot
+	php yii serve --docroot=@webroot --port=8888
 run:
 	make serve
 fix-permissions:

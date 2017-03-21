@@ -1,6 +1,3 @@
-/**
- * Created by Василий on 04.12.2016.
- */
 $(document).ready(function () {
     $(document).on('click', '.action-button', function (e) {
         e.preventDefault();
@@ -34,6 +31,22 @@ $(document).ready(function () {
             data: data
         });
     });
+
+    /**
+     * Save menu position to cookie
+     */
+    var expandMainMenu = tools.cookie.get('expandMainMenu');
+
+    jQuery('.menu-button').on('click', function () {
+        setTimeout(function () {
+            tools.cookie.set('expandMainMenu', !jQuery('.sidebar').hasClass('closed'));
+        });
+    });
+
+    if (expandMainMenu == 'true') {
+        jQuery('.sidebar').removeClass('closed');
+        jQuery('#page-wrapper').removeClass('maximized');
+    }
 });
 
 $(document).ready(function () {
