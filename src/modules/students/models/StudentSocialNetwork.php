@@ -7,16 +7,20 @@ use yii\behaviors\TimestampBehavior;
 use yii\web\BadRequestHttpException;
 
 /**
- * This is the model class for table "{{%students_emails}}".
+ * This is the model class for table "{{%students_social_networks}}".
  *
- * @property integer $id
- * @property integer $student_id
- * @property string $email
- * @property integer $created_at
- * @property integer $updated_at
+ * @property int $id
+ * @property int $student_id
+ * @property int $network_id
+ * @property string $url
+ * @property int $created_at
+ * @property int $updated_at
  */
-class StudentsEmail extends \yii\db\ActiveRecord
+class StudentSocialNetwork extends \yii\db\ActiveRecord
 {
+    /**
+     * @inheritdoc
+     */
 
     public function behaviors()
     {
@@ -24,13 +28,9 @@ class StudentsEmail extends \yii\db\ActiveRecord
             TimestampBehavior::className(),
         ];
     }
-
-    /**
-     * @inheritdoc
-     */
     public static function tableName()
     {
-        return '{{%students_emails}}';
+        return '{{%students_social_networks}}';
     }
 
     /**
@@ -39,12 +39,11 @@ class StudentsEmail extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['student_id', 'created_at', 'updated_at'], 'integer'],
-            [['email'], 'email'],
-            [['email', 'comment'], 'required']
+            [['student_id', 'network_id', 'created_at', 'updated_at'], 'integer'],
+            [['url'], 'string', 'max' => 128],
+            [['network_id', 'url'], 'required']
         ];
     }
-
 
     /**
      * @inheritdoc
@@ -54,12 +53,18 @@ class StudentsEmail extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'student_id' => Yii::t('app', 'Student ID'),
-            'email' => Yii::t('app', 'Email'),
-            'comment' => Yii::t('app', 'Comment'),
+            'network_id' => Yii::t('app', 'Network ID'),
+            'url' => Yii::t('app', 'Url'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
     }
+
+    /**
+     * @param $student_id
+     * @param $student
+     * @return StudentSocialNetwork[]|array|\yii\db\ActiveRecord[]
+     */
 
     public static function shortClassName()
     {
@@ -116,7 +121,7 @@ class StudentsEmail extends \yii\db\ActiveRecord
     public static function validateSt($student)
     {
         $success = true;
-        $modelsFamily = $student->has_emails;
+        $modelsFamily = $student->has_socials;
         /**
          * @var $modelsFamily self[];
          */

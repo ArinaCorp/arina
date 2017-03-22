@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
+
 /* @var $this yii\web\View */
 /* @var $searchModel app\modules\students\models\StudentSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -15,10 +16,10 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="student-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php  //echo $this->render('_search', ['model' => $searchModel]); ?>
+    <?php //echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <div class="col-lg-8">
-        <?= Html::a(Yii::t('app', 'Create Student'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('app', 'Create Student'), ['update'], ['class' => 'btn btn-success']) ?>
     </div>
     <?php Pjax::begin(); ?>
     <?= GridView::widget([
@@ -33,7 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'last_name',
             'first_name',
             'middle_name',
-            
+
             // 'gender',
             // 'birth_day',
             // 'passport_code',

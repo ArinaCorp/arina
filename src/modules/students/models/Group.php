@@ -313,25 +313,6 @@ class Group extends ActiveRecord
             $excelObj->getActiveSheet()->setCellValue('F' . $current, $this->getCuratorFullName());
             $current += 2;
               $excelObj->getActiveSheet()->setCellValue('F' . $current, $this->getGroupLeaderFullName());
-
-//            $excelObj->getActiveSheet()
-//                ->getCell('C' . $current - 1)
-//                ->getStyle()
-//                ->getBorders()
-//                ->getBottom()
-//                ->setBorderStyle(\PHPExcel_Style_Border::BORDER_NONE);
-//            $excelObj->getActiveSheet()
-//                ->getCell('B' . $current - 1)
-//                ->getStyle()
-//                ->getBorders()
-//                ->getBottom()
-//                ->setBorderStyle(\PHPExcel_Style_Border::BORDER_NONE);
-//            $excelObj->getActiveSheet()
-//                ->getCell('H' . $current - 1)
-//                ->getStyle()
-//                ->getBorders()
-//                ->getBottom()
-//                ->setBorderStyle(\PHPExcel_Style_Border::BORDER_NONE);
         }
         header('Content-Type: application/vnd.ms-excel');
         $filename = "Group_" . $this->title . "_" . date("d-m-Y-His") . ".xls";
