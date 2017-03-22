@@ -1,19 +1,21 @@
 <?php
 
-namespace app\modules\directories\controllers;
+namespace app\modules\employee\controllers;
 
-use Yii;
 use nullref\core\interfaces\IAdminController;
-use app\modules\directories\models\speciality\Speciality;
-use app\modules\directories\models\speciality\SpecialitySearch;
+use Yii;
+use app\modules\employee\models\cyclic_commission\CyclicCommission;
+use app\modules\employee\models\cyclic_commission\CyclicCommissionSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\data\ActiveDataProvider;
+use yii\data\ArrayDataProvider;
 
 /**
- * SpecialityController implements the CRUD actions for Speciality model.
+ * CyclicCommissionController implements the CRUD actions for CyclicCommission model.
  */
-class SpecialityController extends Controller implements IAdminController
+class CyclicCommissionController extends Controller implements IAdminController
 {
     /**
      * @inheritdoc
@@ -31,13 +33,15 @@ class SpecialityController extends Controller implements IAdminController
     }
 
     /**
-     * Lists all Speciality models.
+     * Lists all CyclicCommission models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new SpecialitySearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $searchModel = new CyclicCommissionSearch();
+        $dataProvider = new ActiveDataProvider([
+            'query' => CyclicCommission::find(),
+        ]);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -46,25 +50,30 @@ class SpecialityController extends Controller implements IAdminController
     }
 
     /**
-     * Displays a single Speciality model.
+     * Displays a single CyclicCommission model.
      * @param integer $id
      * @return mixed
      */
     public function actionView($id)
     {
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $this->findModel($id)->getEmployeeArray(),
+        ]);
+        
         return $this->render('view', [
+            'dataProvider' => $dataProvider,
             'model' => $this->findModel($id),
         ]);
     }
 
     /**
-     * Creates a new Speciality model.
+     * Creates a new CyclicCommission model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Speciality();
+        $model = new CyclicCommission();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -76,7 +85,7 @@ class SpecialityController extends Controller implements IAdminController
     }
 
     /**
-     * Updates an existing Speciality model.
+     * Updates an existing CyclicCommission model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -95,7 +104,7 @@ class SpecialityController extends Controller implements IAdminController
     }
 
     /**
-     * Deletes an existing Speciality model.
+     * Deletes an existing CyclicCommission model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -107,16 +116,22 @@ class SpecialityController extends Controller implements IAdminController
         return $this->redirect(['index']);
     }
 
+    public function actionDocument($id)
+    {
+        $model = $this->findModel($id);
+        $model->getDocument();
+    }
+
     /**
-     * Finds the Speciality model based on its primary key value.
+     * Finds the CyclicCommission model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Speciality the loaded model
+     * @return CyclicCommission the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Speciality::findOne($id)) !== null) {
+        if (($model = CyclicCommission::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

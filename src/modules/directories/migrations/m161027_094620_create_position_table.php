@@ -1,6 +1,7 @@
 <?php
 
 use yii\db\Migration;
+use nullref\core\traits\MigrationTrait;
 
 /**
  * Handles the creation of table `position`.
@@ -8,6 +9,8 @@ use yii\db\Migration;
 
 class m161027_094620_create_position_table extends Migration
 {
+    use MigrationTrait;
+
     /**
      * @inheritdoc
      */
@@ -19,7 +22,7 @@ class m161027_094620_create_position_table extends Migration
             'title' => $this->string(),
             'max_hours_1' => $this->integer(),
             'max_hours_2' => $this->integer(),
-        ]);
+        ], $this->getTableOptions());
     }
 
     /**
