@@ -4,8 +4,10 @@ namespace app\modules\students\controllers;
 
 /* @author VasyaKog */
 use app\modules\students\models\FamilyTie;
+use app\modules\students\models\StudentCharacteristic;
 use app\modules\students\models\StudentsEmail;
 use app\modules\students\models\StudentsHistory;
+use app\modules\students\models\StudentSocialNetwork;
 use app\modules\students\models\StudentsPhone;
 use yii\base\Exception;
 use yii\base\Model;
@@ -136,7 +138,7 @@ class DefaultController extends Controller implements IAdminController
      * @return mixed
      */
     public
-    function actionUpdate($id)
+    function actionUpdate($id = null)
     {
         if (empty($id)) {
             $model = new Student();
@@ -148,6 +150,8 @@ class DefaultController extends Controller implements IAdminController
         $model->has_family = FamilyTie::getList($id, $model);
         $model->has_phones = StudentsPhone::getList($id, $model);
         $model->has_emails = StudentsEmail::getList($id, $model);
+        $model->has_socials = StudentSocialNetwork::getList($id, $model);
+        $model->has_characteristics = StudentCharacteristic::getList($id, $model);
 
         /**
          * @var $modelsFamily FamilyTie[]
@@ -157,7 +161,7 @@ class DefaultController extends Controller implements IAdminController
         $newRecord = $model->isNewRecord;
         if ($model->load(Yii::$app->request->post()) && $saveAction && $model->save()) {
             if (!Yii::$app->request->post('stay')) {
-                return $this->redirect(Yii::$app->user->getReturnUrl(['index']));
+                return $this->redirect(Yii::$app->user->getReturnUrl(['/students/default']));
             } else {
                 Yii::$app->session->setFlash('save-record-student', Yii::t('app', 'Student record is saved!'));
                 if ($newRecord) {
@@ -173,6 +177,8 @@ class DefaultController extends Controller implements IAdminController
                 'modelsFamily' => $model->has_family,
                 'modelsPhones' => $model->has_phones,
                 'modelsEmails' => $model->has_emails,
+                'modelsSocials' => $model->has_socials,
+                'modelsCharacteristics' => $model->has_characteristics,
             ]);
         }
     }

@@ -49,7 +49,7 @@ class Module extends BaseModule implements IAdminModule
                 [
                     'label' => Yii::t('app', 'Family ties types'),
                     'url' => ['/students/family-ties-types'],
-                    'icon' => '',
+                    'icon' => 'home',
                 ],
                 [
                     'label' => Yii::t('app', 'Exemptions'),
@@ -60,6 +60,16 @@ class Module extends BaseModule implements IAdminModule
                     'label' => Yii::t('app', 'Curator Groups'),
                     'url' => ['/students/curator-groups'],
                     'icon' => 'sort',
+                ],
+                [
+                    'label' => Yii::t('app', 'Social Networks'),
+                    'url' => ['/students/social-networks'],
+                    'icon' => 'users'
+                ],
+                [
+                    'label' => Yii::t('app', 'Characteristics Types'),
+                    'url' => ['/students/characteristics-type'],
+                    'icon' => 'file-text-o',
                 ]
             ]
         ];

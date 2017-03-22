@@ -3,34 +3,29 @@
 namespace app\modules\students\models;
 
 use Yii;
-use yii\behaviors\TimestampBehavior;
 use yii\web\BadRequestHttpException;
 
 /**
- * This is the model class for table "{{%students_emails}}".
+ * This is the model class for table "students_characteristics".
  *
- * @property integer $id
- * @property integer $student_id
- * @property string $email
- * @property integer $created_at
- * @property integer $updated_at
+ * @property int $id
+ * @property int $student_id
+ * @property int $type_id
+ * @property string $title
+ * @property string $date
+ * @property string $from
+ * @property string $text
+ * @property int $created_at
+ * @property int $updated_at
  */
-class StudentsEmail extends \yii\db\ActiveRecord
+class StudentCharacteristic extends \yii\db\ActiveRecord
 {
-
-    public function behaviors()
-    {
-        return [
-            TimestampBehavior::className(),
-        ];
-    }
-
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return '{{%students_emails}}';
+        return '{{%students_characteristics}}';
     }
 
     /**
@@ -39,12 +34,12 @@ class StudentsEmail extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['student_id', 'created_at', 'updated_at'], 'integer'],
-            [['email'], 'email'],
-            [['email', 'comment'], 'required']
+            [['student_id', 'type_id', 'created_at', 'updated_at'], 'integer'],
+            [['date'], 'safe'],
+            [['text'], 'string'],
+            [['title', 'from'], 'string', 'max' => 128],
         ];
     }
-
 
     /**
      * @inheritdoc
@@ -54,8 +49,11 @@ class StudentsEmail extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'student_id' => Yii::t('app', 'Student ID'),
-            'email' => Yii::t('app', 'Email'),
-            'comment' => Yii::t('app', 'Comment'),
+            'type_id' => Yii::t('app', 'Type ID'),
+            'title' => Yii::t('app', 'Title'),
+            'date' => Yii::t('app', 'Date'),
+            'from' => Yii::t('app', 'From'),
+            'text' => Yii::t('app', 'Text'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
@@ -116,7 +114,7 @@ class StudentsEmail extends \yii\db\ActiveRecord
     public static function validateSt($student)
     {
         $success = true;
-        $modelsFamily = $student->has_emails;
+        $modelsFamily = $student->has_socials;
         /**
          * @var $modelsFamily self[];
          */

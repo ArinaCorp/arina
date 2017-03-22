@@ -56,7 +56,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'group_leader_id',
                 'format' => 'raw',
-                'value' => $model->groupLeader->getLink(),
+                'value' => $model->getGroupLeaderLink(),
             ],
             [
                 'attribute' => 'curator_id',

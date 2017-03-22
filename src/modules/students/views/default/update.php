@@ -6,13 +6,20 @@ use yii\helpers\Html;
 /* @var $model app\modules\students\models\Student */
 /* @var $modelsFamily \app\modules\students\models\FamilyTie[] */
 /* @author VasyaKog */
-
-$this->title = Yii::t('app', 'Update student: ', [
+if (!$model->isNewRecord) {
+    $this->title = Yii::t('app', 'Update student: ', [
+            'modelClass' => 'Student',
+        ]) . $model->getShortName();
+    $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Students'), 'url' => ['index']];
+    $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
+    $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
+} else {
+    $this->title = Yii::t('app', 'Create student', [
         'modelClass' => 'Student',
-    ]) . $model->getShortName();
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Students'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = Yii::t('app', 'Update');
+    ]);
+    $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Students'), 'url' => ['index']];
+    $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['Create', 'id' => $model->id]];
+}
 ?>
 <div class="student-update">
 
@@ -23,6 +30,7 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
         'modelsFamily' => $modelsFamily,
         'modelsPhones' => $modelsPhones,
         'modelsEmails' => $modelsEmails,
+        'modelsSocials' => $modelsSocials,
     ]) ?>
 
 </div> 

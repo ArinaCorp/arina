@@ -49,6 +49,8 @@ class Student extends \yii\db\ActiveRecord
     public $has_family;
     public $has_phones;
     public $has_emails;
+    public $has_socials;
+    public $has_characteristics;
 
     public function behaviors()
     {
@@ -378,6 +380,7 @@ class Student extends \yii\db\ActiveRecord
             FamilyTie::saveSt($this->id, $this);
             StudentsPhone::saveSt($this->id, $this);
             StudentsEmail::saveSt($this->id, $this);
+            StudentSocialNetwork::saveSt($this->id, $this);
         }
         return $saved;
     }
@@ -401,6 +404,12 @@ class Student extends \yii\db\ActiveRecord
             $emailsValidations = StudentsEmail::validateSt($this);
             if (!$emailsValidations) {
                 $success = false;
+            }
+        }
+        if (!empty($this->has_socials)) {
+            $socialValidations = StudentSocialNetwork::validateSt($this);
+            if (!$socialValidations) {
+                $success = true;
             }
         }
         return $success;
