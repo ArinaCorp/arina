@@ -1,6 +1,6 @@
 <?php
 require(__DIR__ . '/../vendor/autoload.php');
-
+#phpinfo();
 Dotenv::load(__DIR__ . '/..');
 Dotenv::required(['DB_HOST', 'DB_NAME', 'DB_USER', 'DB_PASS', 'YII_DEBUG', 'YII_MAIL_USE_FILE_TRANSPORT']);
 

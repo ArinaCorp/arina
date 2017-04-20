@@ -50,18 +50,15 @@ use app\modules\plans\widgets\Graph;
     <?php if ($model->isNewRecord): ?>
     <div class="row">
         <div class="col-sm-6">
-            <?= DepDrop::widget(
+            <?= Select2::widget(
                 [
-                    'data' => [],
+                    'data' => StudyPlan::getList(),
                     'id' => 'origin',
                     'name' => 'origin',
-                    'type' => DepDrop::TYPE_SELECT2,
-                    'select2Options' => ['pluginOptions' => ['allowClear' => true]],
-                    'pluginOptions' => [
-                        'depends' => ['studyplan-speciality_qualification_id'],
-                        'url' => Url::to(['get-origins']),
-                        'loadingText' => Yii::t('app', 'Loading ...'),
-                    ],
+                    'options' =>
+                        [
+                            'placeholder' => Yii::t('plans', 'Select copy plan')
+                        ]
                 ]
             );?>
         </div>
