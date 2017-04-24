@@ -37,7 +37,7 @@ if (isset($_COOKIE['active-student-tab'])) {
 ?>
 <div class="status-bar row">
     <?php
-    echo Html::a(FA::icon('undo'), Yii::$app->user->getReturnUrl(['/shop/product/index']), [
+    echo Html::a(FA::icon('undo'), \yii\helpers\Url::to(['/students/default']), [
         'title' => Yii::t('app', 'Cancel'),
         'data-toggle' => 'tooltip',
         'class' => 'btn btn-default cancel-btn'
@@ -53,15 +53,6 @@ if (isset($_COOKIE['active-student-tab'])) {
         'data-action' => 'stay',
         'class' => 'btn btn-info save-btn',
     ]);
-    if (!$model->isNewRecord) {
-        echo Html::a(FA::icon('trash'), ['/shop/product/delete', 'id' => $model->primaryKey], [
-            'title' => Yii::t('app', 'Delete'),
-            'data-toggle' => 'tooltip',
-            'class' => 'btn btn-danger del-btn',
-            'data-method' => 'post',
-            'data-confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
-        ]);
-    }
     ?>
     <div class="clearfix"></div>
 </div>
@@ -111,6 +102,7 @@ if (Yii::$app->session->hasFlash('save-student')) {
                     'model' => $model,
                     'modelsPhones' => $modelsPhones,
                     'modelsEmails' => $modelsEmails,
+                    'modelsSocials' => $modelsSocials,
                     'form' => $form,
                 ]),
                 'active' => $activeTab == 2 ? true : false,
