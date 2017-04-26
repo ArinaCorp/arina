@@ -9,13 +9,11 @@ class m161023_200213_add_study_year extends Migration
 
     public function up()
     {
-        $this->createTable(
-            '{{%study_years}}',
+        $this->createTable('{{%study_years}}',
             [
                 'id' => $this->primaryKey(),
                 'year_start' => $this->integer(),
-            ],
-            $this->getTableOptions()
+            ], $this->getTableOptions()
         );
     }
 

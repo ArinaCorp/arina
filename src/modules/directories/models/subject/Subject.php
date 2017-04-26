@@ -5,8 +5,8 @@ namespace app\modules\directories\models\subject;
 use Yii;
 use yii\db\ActiveRecord;
 
-use app\modules\directories\models\relation\SubjectRelation;
-use app\modules\directories\models\relation\SubjectCycle;
+use app\modules\directories\models\subject_relation\SubjectRelation;
+use app\modules\directories\models\subject_cycle\SubjectCycle;
 
 /**
  * This is the model class for table "subject".
@@ -59,7 +59,7 @@ class Subject extends ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'title' => Yii::t('app', 'Title'),
             'code' => Yii::t('app', 'Code'),
-            'short_name' => Yii::t('app', 'Short Title'),
+            'short_name' => Yii::t('app', 'Short title'),
             'practice' => Yii::t('app', 'Practice'),
         ];
     }
@@ -73,29 +73,29 @@ class Subject extends ActiveRecord
      * @param integer $id speciality id
      * @return array for dropDownList
      */
-    public static function getListForSpeciality($id)
+    public static function getListForSpecialityQualification($id)
     {
         $list = [];
-        $relations = SubjectRelation::find()->where(['speciality_id' => $id])->all();
+        $relations = SubjectRelation::find()->where(['speciality_qualification_id' => $id])->all();
         foreach ($relations as $relation) {
             /**@var $relation SubjectRelation */
-            if (!isset($list[$relation->subject_cycle->title])) {
-                $list[$relation->subject_cycle->title] = array();
+            if (!isset($list[$relation->subjectCycle->title])) {
+                $list[$relation->subjectCycle->title] = [];
             }
-            $list[$relation->subject_cycle->title][$relation->subject_id] = $relation->subject->title;
+            $list[$relation->subjectCycle->title][$relation->subject_id] = $relation->subject->title;
         }
         return $list;
     }
 
     /**
-     * @param $specialityId
+     * @param $speciality_qualification_id
      * @return SubjectCycle
      */
-    public function getCycle($specialityId)
+    public function getCycle($speciality_qualification_id)
     {
-        /**@var $relation SubjectRelation */
-        $relation = SubjectRelation::find()->where(['speciality_id' => $specialityId, 'subject_id' => $this->id]);
-        return $relation->subject_cycle;
+        return SubjectRelation::findOne([
+            'speciality_qualification_id' => $speciality_qualification_id,
+            'subject_id' => $this->id])->subjectCycle;
     }
 
 }

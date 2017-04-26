@@ -16,8 +16,7 @@ class m161020_172816_add_subject_table extends Migration
             'code' => $this->string(),
             'short_name' => $this->string(),
             'practice' => $this->integer(),
-        ],
-            $this->getTableOptions());
+        ], $this->getTableOptions());
     }
 
     public function down()
