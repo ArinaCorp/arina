@@ -27,10 +27,20 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= Html::a(Yii::t('app', 'Update'), Url::toRoute(['study-plan/update', 'id' => $model->id]), ['class' => 'btn btn-info']); ?>
 
     <?= Html::a(Yii::t('plans', 'Add subject'), Url::toRoute(['study-plan/create-subject', 'id' => $model->id]), ['class' => 'btn btn-primary']); ?>
+
     <br/><br/>
-    <?= Graph::widget(['model' => $model, 'field' => '', 'readOnly' => true,
-        'graph' => $model->graph, 'speciality_qualification_id'=>$model->speciality_qualification_id,
-        'study_year_id' => $model->study_year_id, 'studyPlan' => false]) ?>
+
+    <?= Graph::widget(
+            [
+                'model' => $model,
+                'field' => '',
+                'readOnly' => true,
+                'graph' => $model->graph,
+                'speciality_qualification_id'=>$model->speciality_qualification_id,
+                'study_year_id' => $model->study_year_id,
+                'studyPlan' => false
+            ]
+    )?>
 
     <?php $this->render('_subjects', array('model' => $model)); ?>
 </div>

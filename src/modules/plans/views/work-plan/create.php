@@ -1,12 +1,28 @@
 <?php
+
+use yii\helpers\Html;
+use yii\web\View;
+
+use app\modules\plans\models\WorkPlan;
+
 /**
- * @var PlanController $this
- * @var StudyPlan $model
+ * @var $this View
+ * @var $model WorkPlan
  */
-$this->breadcrumbs = array(
-    'Робочі плани'=> $this->createUrl('main/index'),
-    'Новий робочий план'
-);
+
+$this->title = Yii::t('plans', 'Work plan creating');
+
+$this->params['breadcrumbs'][] = ['label' => Yii::t('plans', 'Work plans'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = $this->title;
 ?>
-    <h2>Створення нового робочого плану</h2>
-<?php $this->renderPartial('_form', array('model' => $model)); ?>
+
+<div class="row">
+
+    <h1><?= Html::encode($this->title) ?></h1>
+
+    <?= $this->render('_form', [
+        'model' => $model,
+    ]) ?>
+
+</div>
+

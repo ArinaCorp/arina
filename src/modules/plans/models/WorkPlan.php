@@ -71,7 +71,8 @@ class WorkPlan extends ActiveRecord
                 'message' => Yii::t('plans', 'Click "Generate" and check the data'), 'on' => 'graphs'
             ],
             [['speciality_qualification_id', 'study_year_id'], 'uniqueRecord', 'on' => 'insert'],
-            [['speciality_qualification_id', 'numerical'], 'integer'],
+            [['speciality_qualification_id',], 'integer'],
+            [['created', 'updated'], 'safe'],
             [['id', 'speciality_qualification_id'], 'safe', 'on' => 'search'],
             [['study_plan_origin', 'work_plan_origin'], 'checkOrigin', 'on' => 'insert'],
         ];
@@ -123,7 +124,7 @@ class WorkPlan extends ActiveRecord
      * @param $id
      * @return array
      */
-    public static function getList($id)
+    public static function getList($id=NULL)
     {
         if (isset($id)) {
             /**

@@ -62,6 +62,7 @@ class Graph extends Widget
             /** @var SpecialityQualification $specialityQualification */
             $specialityQualification = SpecialityQualification::findOne($this->speciality_qualification_id);
             $this->rows = $specialityQualification->getGroupsByStudyYear($this->study_year_id);
+            //var_dump($this->rows);
 
             if (empty($this->graph)) {
                 $this->map = PlanHelper::getDefaultWorkPlan($this->rows);

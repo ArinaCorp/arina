@@ -42,14 +42,17 @@ class StudyPlanController extends Controller implements IAdminController
         if ($model->load(Yii::$app->request->post())) {
             $model->attributes = $_POST['StudyPlan'];
             $model->created = date('Y-m-d', time());
+
             if (isset(Yii::$app->session['weeks'])) {
                 $model->semesters = Yii::$app->session['weeks'];
                 unset(Yii::$app->session['weeks']);
             }
+
             if (isset(Yii::$app->session['graph'])) {
                 $model->graph = Yii::$app->session['graph'];
                 unset(Yii::$app->session['graph']);
             }
+
             if ($model->save()) {
                 if (!empty($_POST['origin'])) {
                     $this->copyPlan(StudyPlan::findOne(['id' => $_POST['origin']]), $model);
@@ -233,7 +236,7 @@ class StudyPlanController extends Controller implements IAdminController
     {
         
         $plan = self::findModel($id);
-        Yii::$app->excel->makeStudyPlan($plan);
+        return Yii::$app->excel->makeStudyPlan($plan);
     }
 
     function actionGetOrigins()

@@ -38,12 +38,12 @@ class WorkPlanController extends Controller implements IAdminController
     {
         $model = new WorkPlan();
 
-        if (isset($_POST['WorkPlan'])) {
+        if ($model->load(Yii::$app->request->post())) {
             $model->attributes = $_POST['WorkPlan'];
-            $model->updated = $model->created = date('Y-m-d', time());
+            $model->created = date('Y-m-d', time());
 
             if ($model->save()) {
-                return $this->redirect(Url::to('graph', ['id' => $model->id]));
+                return $this->redirect(['graph', 'id' => $model->id]);
             }
         }
 

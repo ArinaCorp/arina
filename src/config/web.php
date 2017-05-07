@@ -22,6 +22,9 @@ $config = [
                 ],
             ],
         ],
+        'excel' => [
+            'class' => 'app\components\Excel',
+        ],
         'formatter' => [
             'class' => 'app\components\Formatter',
         ],

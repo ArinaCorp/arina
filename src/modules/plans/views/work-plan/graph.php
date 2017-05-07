@@ -1,38 +1,56 @@
 <?php
+
+use yii\web\View;
+use yii\widgets\ActiveForm;
+use yii\widgets\Pjax;
+use yii\helpers\Html;
+
+use app\modules\plans\models\WorkPlan;
+use app\modules\plans\widgets\Graph;
+
 /**
- * @var WorkController $this
- * @var WorkPlan $model
- * @var TbActiveForm $form
+ * @var $this View
+ * @var $model WorkPlan
+ * @var $form ActiveForm
  */
-$this->breadcrumbs = array(
-    'Робочі плани' => $this->createUrl('index'),
-    $model->speciality->title => $this->createUrl('view', array('id' => $model->id)),
-);
+$this->title = Yii::t('plans', 'Work plan creating');
 
-$form = $this->beginWidget(
-    BoosterHelper::FORM,
-    array(
-        'type' => 'horizontal',
-        'htmlOptions' => array(
-            'class' => 'well',
-        ),
-        'id'=>'graph-form',
-    )
-);
+$this->params['breadcrumbs'][] = ['label' => Yii::t('plans', 'Work plans'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = $this->title;
+?>
 
-echo $form->errorSummary($model);
+<div class="row">
+    <h1><?= Html::encode($this->title); ?></h1>
 
-$this->widget(
-    'studyPlan.widgets.Graph',
-    array(
-        'model' => $model,
-        'field' => '',
-        'graph' => $model->graph,
-        'specialityId' => $model->speciality_id,
-        'studyYearId' => $model->year_id,
-        'studyPlan' => false
-    )
-);
+    <h4><?= $model->getAttributeLabel('created').': '.date('d.m.Y', $model->created); ?></h4>
 
-$this->renderPartial('//formButtons', array('model' => $model));
-$this->endWidget();
+    <?php Pjax::begin(); ?>
+
+    <?php $form = ActiveForm::begin(
+        [
+            'id' => 'graph-form',
+            'options' => [
+                'enctype' => 'multipart/form-data',
+            ],
+
+        ]
+    ); ?>
+
+    <?php echo $form->errorSummary($model); ?>
+
+    <?= Graph::widget(
+        [
+            'model' => $model,
+            'field' => '', 'graph' => $model->graph,
+            'speciality_qualification_id' => $model->speciality_qualification_id,
+            'study_year_id' => $model->study_year_id,
+            'studyPlan' => false,
+        ]
+    );?>
+
+    <?= $this->render('/_form_buttons', ['model' => $model, 'plan' => False]) ?>
+
+    <?php ActiveForm::end(); ?>
+
+    <?php Pjax::end(); ?>
+</div>
