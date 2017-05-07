@@ -335,11 +335,14 @@ class Group extends ActiveRecord
         if (!isset($year)) {
             $year = StudyYear::getCurrentYear();
         }
-        $last_year = mb_substr($this->title, 3, 2, 'UTF-8');
-        $value = $year->getYearEnd() - 2000 - $last_year;
+        $value = $year->getYearEnd() - $this->studyYear->year_start;
+        var_dump($value);
         return $value;
     }
 
+    /**
+     * @return bool|int
+     */
     public function getCuratorId()
     {
         $teachers = Employee::getAllTeacher();
@@ -375,4 +378,5 @@ class Group extends ActiveRecord
     {
         return Html::a($this->title, Url::to(['/students/group/view', 'id' => $this->id]));
     }
+
 }

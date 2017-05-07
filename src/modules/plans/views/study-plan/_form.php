@@ -68,7 +68,7 @@ use app\modules\plans\widgets\Graph;
 
     <?= Graph::widget(['model' => $model, 'field' => '', 'graph' => $model->graph]);?>
 
-    <?= $this->render('_form_buttons', ['model' => $model, ]) ?>
+    <?= $this->render('/_form_buttons', ['model' => $model, 'plan' => True ]) ?>
 
     <?php ActiveForm::end(); ?>
 

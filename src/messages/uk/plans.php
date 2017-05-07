@@ -68,7 +68,8 @@ return [
     'View study plans' => 'Переглянути навчальні плани',
     'Plans' => 'Плани',
     'Study plan editing' => 'Редагування навчального плану',
-    'Select subject' => 'Виберіть предмет'
+    'Select subject' => 'Виберіть предмет',
+    'Hours per week' => 'Годин на тиждень',
 
 
 ];

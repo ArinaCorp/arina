@@ -5,6 +5,7 @@ namespace app\modules\directories\models;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 use app\modules\plans\models\WorkPlan;
 
@@ -104,7 +105,15 @@ class StudyYear extends ActiveRecord
      */
     public static function getCurrentYear()
     {
-        $cur_year = StudyYear::findOne(['active' => 1]);
+        $cur_year = self::findOne(['active' => 1]);
         return $cur_year;
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function getList()
+    {
+        return ArrayHelper::map(StudyYear::find()->all(), 'id', 'year_start');
     }
 }

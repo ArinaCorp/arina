@@ -46,7 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'header' => Yii::t('app', 'Updated'),
-                    'value' => 'updatedForm'
+                'value' => 'updatedForm'
             ],
             [
                 'header' => Yii::t('app', 'Actions'),

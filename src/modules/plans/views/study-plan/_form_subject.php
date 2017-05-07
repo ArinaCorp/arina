@@ -117,18 +117,18 @@ JS;
     </div>
 
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-sm-3">
             <?= $form->field($model, 'total')->widget(TouchSpin::className(), ['pluginOptions' => ['max'=>1000]])?>
         </div>
-        <!--<div class="col-sm-3">
+        <div class="col-sm-3">
             <label class="control-label" for="classesweek-total"><?=$model->getAttributeLabel('classes_week')?></label>
-            <= TouchSpin::widget(['disabled' => true, 'name' => 'classes_week'])?>
+            <?= TouchSpin::widget(['disabled' => true, 'name' => 'classes_week'])?>
         </div>
         <div class="col-sm-3">
             <label class="control-label" for="classes-total"><?=$model->getAttributeLabel('classes')?></label>
-            <= TouchSpin::widget(['disabled' => true, 'name' => 'classes'])?>
-        </div>-->
-        <div class="col-sm-6">
+            <?= TouchSpin::widget(['disabled' => true, 'name' => 'classes'])?>
+        </div>
+        <div class="col-sm-3">
             <?= $form->field($model, 'lectures')->widget(TouchSpin::className(), ['pluginOptions' => ['max'=>1000]])?>
         </div>
     </div>
