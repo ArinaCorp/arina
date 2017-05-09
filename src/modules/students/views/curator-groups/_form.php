@@ -22,7 +22,7 @@ use yii\helpers\Url;
     <?= $form->field($model, 'group_id')->widget(Select2::className(), [
         'data' => Group::getActiveGroupsList(),
         'options' => [
-            'placeholder' => Yii::t('app', 'Select teacher'),
+            'placeholder' => Yii::t('app', 'Select group'),
         ],
         'pluginOptions' =>
             [

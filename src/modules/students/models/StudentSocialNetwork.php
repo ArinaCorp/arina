@@ -15,6 +15,8 @@ use yii\web\BadRequestHttpException;
  * @property string $url
  * @property int $created_at
  * @property int $updated_at
+ *
+ * @property SocialNetwork $network;
  */
 class StudentSocialNetwork extends \yii\db\ActiveRecord
 {
@@ -28,6 +30,7 @@ class StudentSocialNetwork extends \yii\db\ActiveRecord
             TimestampBehavior::className(),
         ];
     }
+
     public static function tableName()
     {
         return '{{%students_social_networks}}';
@@ -36,6 +39,17 @@ class StudentSocialNetwork extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+
+    public function getNetwork()
+    {
+        return $this->hasOne(SocialNetwork::className(), ['id' => 'network_id']);
+    }
+
+    public function getNetworkName()
+    {
+        return $this->network->title;
+    }
+
     public function rules()
     {
         return [
@@ -53,8 +67,8 @@ class StudentSocialNetwork extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'student_id' => Yii::t('app', 'Student ID'),
-            'network_id' => Yii::t('app', 'Network ID'),
-            'url' => Yii::t('app', 'Url'),
+            'network_id' => Yii::t('app', 'Social network'),
+            'url' => Yii::t('app', 'Url/NickName'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
