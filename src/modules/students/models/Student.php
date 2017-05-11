@@ -272,7 +272,7 @@ class Student extends \yii\db\ActiveRecord
                     $history->date = $objPHPExcel->getActiveSheet()->getCell('E' . $i)->getValue();
                     $history->action_type = StudentsHistory::$TYPE_INCLUDE;
                     $history->command = "Imported";
-                    $history->course = 1;
+                    $history->course = round($objPHPExcel->getActiveSheet()->getCell('E' . $i)->getValue(),0,PHP_ROUND_HALF_UP);
                     $history->payment_type = ($objPHPExcel->getActiveSheet()->getCell('F' . $i)->getValue() == "Контракт") ? StudentsHistory::$PAYMENT_CONTRACT : StudentsHistory::$PAYMENT_STATE;
                     $history->group_id = $group->id;
                     $history->date;
