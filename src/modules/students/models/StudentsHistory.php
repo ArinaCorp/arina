@@ -582,7 +582,6 @@ class StudentsHistory extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Student::className(), ['id' => 'student_id']);
     }
-
     public function getStudentFullName()
     {
         return $this->student->fullName();
