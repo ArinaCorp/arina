@@ -16,7 +16,7 @@ use app\modules\plans\models\WorkPlan;
  * @property integer $year_start
  * @property integer $active
  *
- * @property WorkPlan[] $work_plans
+ * @property WorkPlan[] $workPlans
  */
 class StudyYear extends ActiveRecord
 {
