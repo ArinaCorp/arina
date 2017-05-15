@@ -94,5 +94,92 @@ $this->params['breadcrumbs'][] = $this->title;
             <?php endforeach; ?>
         </div>
     </div>
+    <div class="row">
+        <div class="col-xs-4">
+            <div class="panel panel-default phones ">
+                <div class="panel-heading">
+                    <i class="fa fa-phone"></i> <?= Yii::t('app', 'Phones') ?>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="panel-body container-items"><!-- widgetContainer -->
+                    <?php foreach ($model->phones as $index => $modelPhone): ?>
+                        <div class="item panel panel-default"><!-- widgetBody -->
+                            <div class="panel-heading">
+                                <span class="panel-title-phone"><?= Yii::t('app', 'Phone') ?>
+                                    : <?= ($index + 1) ?></span>
+                            </div>
+                            <div class="panel-body">
+                                <?php
+                                echo DetailView::widget([
+                                    'model' => $modelPhone,
+                                    'attributes' => [
+                                        'phone',
+                                        'comment',
+                                    ],
+                                ]) ?>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-4">
+            <div class="panel panel-default phones">
+                <div class="panel-heading">
+                    <i class="fa fa-envelope-o"></i> <?= Yii::t('app', 'Emails') ?>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="panel-body container-items"><!-- widgetContainer -->
+                    <?php foreach ($model->emails as $index => $modelEmail): ?>
+                    <div class="item panel panel-default"><!-- widgetBody -->
+                        <div class="panel-heading">
+                            <span class="panel-title-phone"><?= Yii::t('app', 'Email') ?>: <?= ($index + 1) ?></span>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="panel-body">
+                            <?php
+                            echo DetailView::widget([
+                                'model' => $modelEmail,
+                                'attributes' => [
+                                    'email',
+                                    'comment',
+                                ],
+                            ]) ?>
+                        </div>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+
+        <div class="col-xs-4">
+            <div class="panel panel-default phones">
+                <div class="panel-heading">
+                    <i class="fa fa-users"></i> <?= Yii::t('app', 'Social networks') ?>
+                </div>
+                <div class="panel-body container-items"><!-- widgetContainer -->
+                    <?php foreach ($model->socialNetworks as $index => $modelSocial): ?>
+                        <div class="item panel panel-default"><!-- widgetBody -->
+                            <div class="panel-heading">
+                                <span class="panel-title-phone"><?= Yii::t('app', 'Social network') ?>
+                                    : <?= ($index + 1) ?></span>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="panel-body">
+                                <?php
+                                echo DetailView::widget([
+                                    'model' => $modelSocial,
+                                    'attributes' => [
+                                        'networkName',
+                                        'url',
+                                    ],
+                                ]) ?>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div> 

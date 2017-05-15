@@ -37,11 +37,19 @@ if (isset($_COOKIE['active-student-tab'])) {
 ?>
 <div class="status-bar row">
     <?php
+    if (!$model->isNewRecord) {
+        echo Html::a(FA::icon('eye'), \yii\helpers\Url::to(['/students/default/view', 'id' => $model->primaryKey]), [
+            'title' => Yii::t('app', 'View'),
+            'data-toggle' => 'tooltip',
+            'class' => 'btn btn-default cancel-btn'
+        ]);
+    }
     echo Html::a(FA::icon('undo'), \yii\helpers\Url::to(['/students/default']), [
         'title' => Yii::t('app', 'Cancel'),
         'data-toggle' => 'tooltip',
         'class' => 'btn btn-default cancel-btn'
     ]);
+
     echo Html::button(FA::icon('save'), [
         'title' => Yii::t('app', 'Save'),
         'data-toggle' => 'tooltip',

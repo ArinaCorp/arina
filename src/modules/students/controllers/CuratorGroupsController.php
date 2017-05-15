@@ -135,7 +135,7 @@ class CuratorGroupsController extends Controller implements IAdminController
                     $type = $params['curatorgroup-type']; // get the value of input-type-1
                     if ($group_id && $type) {
                         switch ($type) {
-                            case '2': {
+                            case CuratorGroup::TYPE_DE_ACCEPTED: {
                                 $curator = Group::findOne(['id' => $group_id])->getCurator();
                                 /**
                                  * @var $curator Employee;
@@ -143,7 +143,7 @@ class CuratorGroupsController extends Controller implements IAdminController
                                 echo Json::encode(['output' => [['id' => $curator->id, 'name' => $curator->getFullName()]], 'selected' => ['id' => $curator->id, 'name' => $curator->getFullName()]]);
                                 break;
                             }
-                            case '1': {
+                            case CuratorGroup::TYPE_ACCEPTED: {
                                 $out = DepDropHelper::convertMap(Employee::getAllTeacherList());
                                 echo Json::encode(['output' => $out, 'selected' => Yii::t('app', 'Select teacher')]);
                                 break;

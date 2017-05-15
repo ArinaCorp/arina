@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use app\modules\students\models\StudentsHistory;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\students\models\Group */
@@ -32,38 +33,49 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ]) ?>
     </p>
-
+    <?php
+    $mainAttributes = [
+        [
+            'label' => Yii::t('app', 'Speciality'),
+            'value' => $model->specialityQualification->speciality->title,
+        ],
+        [
+            'attribute' => 'speciality_qualifications_id',
+            'value' => $model->specialityQualification->title,
+        ],
+        [
+            'attribute' => 'created_study_year_id',
+            'value' => $model->studyYear->getFullName(),
+        ],
+        'number_group',
+        [
+            'attribute' => 'systemTitle',
+        ],
+        'title',
+        [
+            'attribute' => 'group_leader_id',
+            'format' => 'raw',
+            'value' => $model->getGroupLeaderLink(),
+        ],
+        [
+            'attribute' => 'curator_id',
+            'format' => 'raw',
+            'value' => $model->getCuratorLink(),
+        ]
+    ];
+    $financeAttributes = [];
+    foreach (StudentsHistory::getPayments() as $key => $value) {
+        $financeAttributes[] = [
+            'label' => $value,
+            'format' => 'raw',
+            'value' => $model->getCountByPayment($key),
+        ];
+    }
+    $attributes = \yii\helpers\ArrayHelper::merge($mainAttributes, $financeAttributes);
+    ?>
     <?= DetailView::widget([
         'model' => $model,
-        'attributes' => [
-            [
-                'label' => Yii::t('app', 'Speciality'),
-                'value' => $model->specialityQualification->speciality->title,
-            ],
-            [
-                'attribute' => 'speciality_qualifications_id',
-                'value' => $model->specialityQualification->title,
-            ],
-            [
-                'attribute' => 'created_study_year_id',
-                'value' => $model->studyYear->getFullName(),
-            ],
-            'number_group',
-            [
-                'attribute' => 'systemTitle',
-            ],
-            'title',
-            [
-                'attribute' => 'group_leader_id',
-                'format' => 'raw',
-                'value' => $model->getGroupLeaderLink(),
-            ],
-            [
-                'attribute' => 'curator_id',
-                'format' => 'raw',
-                'value' => $model->getCuratorLink(),
-            ]
-        ],
+        'attributes' => $attributes,
     ]) ?>
 
     <?= \yii\grid\GridView::widget([

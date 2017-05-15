@@ -35,6 +35,8 @@ use yii\helpers\Url;
  */
 class Group extends ActiveRecord
 {
+    private $_students = [];
+
     /**
      * @inheritdoc
      */
@@ -111,6 +113,18 @@ class Group extends ActiveRecord
         return $this->specialityQualification->speciality->short_title . '-' . $this->getSystemYearPrefix() . $this->number_group;
     }
 
+
+    public function getCountByPayment($payment)
+    {
+        $count = 0;
+        foreach ($this->getStudentsArray() as $student) {
+            if ($student->payment_type == $payment) {
+                $count++;
+            }
+        }
+        return $count;
+    }
+
     /**
      * @return array
      */
@@ -138,20 +152,23 @@ class Group extends ActiveRecord
          * @var $result Student[];
          * @var $students Student[];
          */
-        $result = [];
-        $students = Student::find()->all();
-        foreach ($students as $student) {
-            $idsGroup = $student->getGroupArray();
-            if (!is_null($idsGroup)) {
-                if (array_key_exists($this->id, $idsGroup)) {
-                    $student->payment_type = $idsGroup[$this->id];
-                    array_push($result, $student);
-                };
+        if (empty($this->_students)) {
+            $result = [];
+            $students = Student::find()->all();
+            foreach ($students as $student) {
+                $idsGroup = $student->getGroupArray();
+                if (!is_null($idsGroup)) {
+                    if (array_key_exists($this->id, $idsGroup)) {
+                        $student->payment_type = $idsGroup[$this->id];
+                        array_push($result, $student);
+                    };
+                }
             }
+            $this->_students = $result;
         }
-
-        return $result;
+        return $this->_students;
     }
+
 
     /**
      * @return array
@@ -312,7 +329,7 @@ class Group extends ActiveRecord
             $current += 1;
             $excelObj->getActiveSheet()->setCellValue('F' . $current, $this->getCuratorFullName());
             $current += 2;
-              $excelObj->getActiveSheet()->setCellValue('F' . $current, $this->getGroupLeaderFullName());
+            $excelObj->getActiveSheet()->setCellValue('F' . $current, $this->getGroupLeaderFullName());
         }
         header('Content-Type: application/vnd.ms-excel');
         $filename = "Group_" . $this->title . "_" . date("d-m-Y-His") . ".xls";

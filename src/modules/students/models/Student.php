@@ -40,7 +40,9 @@ use yii\web\UploadedFile;
  *
  * @property FamilyTie[] $family
  * @property Exemption[] $exemptions
- * @property StudentsPhones[] $phones
+ * @property StudentsPhone[] $phones
+ * @property StudentsEmail[] $emails
+ * @property StudentSocialNetwork[] $socialNetworks
  */
 class Student extends \yii\db\ActiveRecord
 {
@@ -190,7 +192,7 @@ class Student extends \yii\db\ActiveRecord
 
     public function getLink()
     {
-        return Html::a($this->getFullName(), ['student/default/view', 'id' => $this->id]);
+        return Html::a($this->getFullName(), ['/students/default/view', 'id' => $this->id]);
     }
 
     public function getPhoto()
@@ -270,7 +272,7 @@ class Student extends \yii\db\ActiveRecord
                     $history->date = $objPHPExcel->getActiveSheet()->getCell('E' . $i)->getValue();
                     $history->action_type = StudentsHistory::$TYPE_INCLUDE;
                     $history->command = "Imported";
-                    $history->course = 1;
+                    $history->course = round($objPHPExcel->getActiveSheet()->getCell('E' . $i)->getValue(),0,PHP_ROUND_HALF_UP);
                     $history->payment_type = ($objPHPExcel->getActiveSheet()->getCell('F' . $i)->getValue() == "Контракт") ? StudentsHistory::$PAYMENT_CONTRACT : StudentsHistory::$PAYMENT_STATE;
                     $history->group_id = $group->id;
                     $history->date;
@@ -301,7 +303,17 @@ class Student extends \yii\db\ActiveRecord
 
     public function getPhones()
     {
-        return $this->hasMany(StudentsPhones::className(), ['student_id' => 'id']);
+        return $this->hasMany(StudentsPhone::className(), ['student_id' => 'id']);
+    }
+
+    public function getSocialNetworks()
+    {
+        return $this->hasMany(StudentSocialNetwork::className(), ['student_id' => 'id']);
+    }
+
+    public function getEmails()
+    {
+        return $this->hasMany(StudentsEmail::className(), ['student_id' => 'id']);
     }
 
     public function getGroupArray()
@@ -324,7 +336,6 @@ class Student extends \yii\db\ActiveRecord
     {
         return Group::find()->where(['id' => $this->getAlumnusGroupArray()])->all();
     }
-
 
     public function getExemptions()
     {
