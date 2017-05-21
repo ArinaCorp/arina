@@ -112,6 +112,11 @@ class Employee extends ActiveRecord
     {
         return $this->first_name . ' ' . $this->middle_name . ' ' . $this->last_name;
     }
+
+    public function getShortNameInitialFirst()
+    {
+        return mb_substr($this->first_name, 0, 1, 'UTF-8') . '.' . mb_substr($this->middle_name, 0, 1, 'UTF-8') . '.' . ' '.$this->last_name;
+    }
     
     public function getStartDate()
     {

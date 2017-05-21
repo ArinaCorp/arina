@@ -291,6 +291,16 @@ class Group extends ActiveRecord
         return ($this->getCuratorId() === false) ? Yii::t('app', 'Not assigned') : $this->getCurator()->getFullName();
     }
 
+    public function getGroupLeaderShortNameInitialFirst()
+    {
+        return (is_null($this->group_leader_id)) ? Yii::t('app', 'Not assigned') : $this->groupLeader->getShortNameInitialFirst();
+    }
+
+    public function getCuratorShortNameInitialFirst()
+    {
+        return ($this->getCuratorId() === false) ? Yii::t('app', 'Not assigned') : $this->getCurator()->getShortNameInitialFirst();
+    }
+
     public
     function getGroupLeaderLink()
     {
@@ -327,9 +337,12 @@ class Group extends ActiveRecord
             $excelObj->getActiveSheet()->removeRow($current);
             $excelObj->getActiveSheet()->removeRow($current);
             $current += 1;
-            $excelObj->getActiveSheet()->setCellValue('F' . $current, $this->getCuratorFullName());
+            $excelObj->getActiveSheet()->setCellValue('F' . $current, $this->getCuratorShortNameInitialFirst());
             $current += 2;
-            $excelObj->getActiveSheet()->setCellValue('F' . $current, $this->getGroupLeaderFullName());
+            $excelObj->getActiveSheet()->setCellValue('F' . $current, $this->getGroupLeaderShortNameInitialFirst());
+            $current += 2;
+            $excelObj->getActiveSheet()->setCellValue('F' . $current, Yii::t('app', 'Date created'));
+            $excelObj->getActiveSheet()->setCellValue('G' . $current, date('d.m.Y H:i:s'));
         }
         header('Content-Type: application/vnd.ms-excel');
         $filename = "Group_" . $this->title . "_" . date("d-m-Y-His") . ".xls";
@@ -390,6 +403,7 @@ class Group extends ActiveRecord
         if ($this->getCuratorId() === false) return Yii::t('app', 'Not assigned');
         return $this->getCurator()->getLink();
     }
+
 
     public function getTitleAndLink()
     {
