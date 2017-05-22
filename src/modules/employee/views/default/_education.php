@@ -1,6 +1,7 @@
 <?php
 
 use yii\bootstrap\Html;
+use app\modules\employee\models\EmployeeEducation;
 
 /**
  * @var $modelsEducation \app\modules\employee\models\EmployeeEducation[]
@@ -11,7 +12,7 @@ use yii\bootstrap\Html;
 <div class="panel panel-default education">
     <div class="panel-heading">
         <i class="fa fa-users"></i> <?= Yii::t('app', 'Education') ?>
-        <button data-action="add-education" type="button"
+        <button data-action="add-<?=EmployeeEducation::shortClassName()?>" type="button"
                 class="pull-right action-button add-item btn btn-success btn-xs"><i
                     class="fa fa-plus"></i> <?= Yii::t('app', 'Add education') ?></button>
         <div class="clearfix"></div>
@@ -28,7 +29,7 @@ use yii\bootstrap\Html;
                         : <?= ($index + 1) ?></span>
                 <button type="button" class="pull-right action-button remove-item btn btn-danger btn-xs"
                         data-key="<?= $index ?>"
-                        data-action="remove-education"><i
+                        data-action="remove-<?=EmployeeEducation::shortClassName()?>"><i
                         class="fa fa-minus"> </i></button>
                 <div class="clearfix"></div>
             </div>

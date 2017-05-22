@@ -39,10 +39,6 @@ use PHPExcel_IOFactory;
  */
 class Employee extends ActiveRecord
 {
-    /** Types */
-    const TYPE_NONE = 0;
-    const TYPE_TEACHER = 1;
-    const TYPE_OTHER = 2;
 
     public $data;
     public $has_education;
@@ -116,15 +112,6 @@ class Employee extends ActiveRecord
     public function getStartDate()
     {
         return $this->start_date;
-    }
-
-    public static function getTypes()
-    {
-        return [
-            self::TYPE_NONE => Yii::t('employee', 'Nobody'),
-            self::TYPE_OTHER => Yii::t('employee', 'Another employee'),
-            self::TYPE_TEACHER => Yii::t('employee', 'Teacher'),
-        ];
     }
 
     public function getGenderName()
@@ -246,9 +233,9 @@ class Employee extends ActiveRecord
     public function validate($attributeNames = null, $clearErrors = true)
     {
         $success = parent::validate($attributeNames, $clearErrors);
-        if (!empty($this->has_family)) {
-            $familyValidation = EmployeeEducation::validateSt($this);
-            if (!$familyValidation) {
+        if (!empty($this->has_education)) {
+            $educationValidation = EmployeeEducation::validateSt($this);
+            if (!$educationValidation) {
                 $success = false;
             }
         }
