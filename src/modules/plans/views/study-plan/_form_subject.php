@@ -118,7 +118,8 @@ JS;
 
     <div class="row">
         <div class="col-sm-3">
-            <?= $form->field($model, 'total')->textInput(['type' => 'number', 'min' => 0, 'value' => 0,])?>
+            <?= $form->field($model, 'total')->textInput(['type' => 'number', 'min' => 0,
+                'value' => $model->isNewRecord ? 0 : $model->total,])?>
         </div>
         <div class="col-sm-3">
             <label class="control-label" for="classesweek-total"><?=$model->getAttributeLabel('classes_week')?></label>
@@ -129,29 +130,34 @@ JS;
             <?= TouchSpin::widget(['disabled' => true, 'name' => 'classes'])?>
         </div>
         <div class="col-sm-3">
-            <?= $form->field($model, 'lectures')->textInput(['type' => 'number', 'min' => 0, 'value' => 0,])?>
+            <?= $form->field($model, 'lectures')->textInput(['type' => 'number', 'min' => 0,
+                'value' => $model->isNewRecord ? 0 : $model->lectures,])?>
         </div>
     </div>
 
     <div class="row">
         <div class="col-sm-3">
-            <?= $form->field($model, 'lab_works')->textInput(['type' => 'number', 'min' => 0, 'value' => 0,])?>
+            <?= $form->field($model, 'lab_works')->textInput(['type' => 'number', 'min' => 0,
+                'value' => $model->isNewRecord ? 0 : $model->lab_works,])?>
         </div>
         <div class="col-sm-3">
-            <?= $form->field($model, 'practices')->textInput(['type' => 'number', 'min' => 0, 'value' => 0,])?>
+            <?= $form->field($model, 'practices')->textInput(['type' => 'number', 'min' => 0,
+                'value' => $model->isNewRecord ? 0 : $model->practices,])?>
         </div>
         <div class="col-sm-3">
             <?= $form->field($model, 'dual_lab_work')->checkbox()?>
             <?= $form->field($model, 'dual_practice')->checkbox()?>
         </div>
         <div class="col-sm-3">
-            <?= $form->field($model, 'practice_weeks')->textInput(['type' => 'number', 'min' => 0, 'value' => 0,])?>
+            <?= $form->field($model, 'practice_weeks')->textInput(['type' => 'number', 'min' => 0,
+                'value' => $model->isNewRecord ? 0 : $model->practice_weeks,])?>
         </div>
     </div>
     <?php foreach ($model->studyPlan->semesters as $semester => $weeks): ?>
         <div class="row">
             <div class="col-sm-4">
-                <?= $form->field($model, "weeks[$semester]")->textInput(['type' => 'number', 'min' => 0, 'value' => 0,
+                <?= $form->field($model, "weeks[$semester]")->textInput(['type' => 'number', 'min' => 0,
+                    'value' => $model->isNewRecord ? 0 : $model->weeks[$semester],
                     'options' => ['placeholder' => Yii::t('plans', 'Hours per week')]])
                 ->label($semester + 1 . '-й семестр: ' . $weeks . ' тижнів')?>
             </div>

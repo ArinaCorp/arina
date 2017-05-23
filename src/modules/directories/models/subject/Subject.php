@@ -46,7 +46,9 @@ class Subject extends ActiveRecord
     public function rules()
     {
         return [
+            [['id', 'title', 'code'], 'required'],
             [['id', 'practice'], 'integer'],
+            [['id', 'title', 'code', 'short_name'], 'unique'],
             [['title', 'short_name', 'code'], 'string', 'max' => 255],
         ];
     }
@@ -102,6 +104,5 @@ class Subject extends ActiveRecord
     public static function getList()
     {
         return ArrayHelper::map(Subject::find()->all(), 'id', 'title');
-
     }
 }

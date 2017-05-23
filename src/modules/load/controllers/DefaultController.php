@@ -55,7 +55,6 @@ class DefaultController extends Controller implements IAdminController
          * @var StudyYear $year
          * @var Load $load
          */
-        var_dump($studyYear."1231");
         $year = StudyYear::findOne($studyYear);
         $load = Load::find()->where(['study_year_id' => $studyYear])->one();
         if ($load) {
@@ -63,7 +62,6 @@ class DefaultController extends Controller implements IAdminController
         }
         var_dump($year->id);
         foreach ($year->workPlans as $plan) {
-
             $groups = $plan->specialityQualification->getGroupsByStudyYear($year->id);
             foreach ($plan->workSubjects as $subject) {
                 foreach ($groups as $title => $course) {

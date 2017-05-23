@@ -255,4 +255,10 @@ class StudyPlanController extends Controller implements IAdminController
         return;
     }
 
+    public function actionResetGraph()
+    {
+        unset(Yii::$app->session['weeks']);
+        unset(Yii::$app->session['graph']);
+    }
+
 }
