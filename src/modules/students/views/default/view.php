@@ -131,24 +131,25 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
                 <div class="panel-body container-items"><!-- widgetContainer -->
                     <?php foreach ($model->emails as $index => $modelEmail): ?>
-                    <div class="item panel panel-default"><!-- widgetBody -->
-                        <div class="panel-heading">
-                            <span class="panel-title-phone"><?= Yii::t('app', 'Email') ?>: <?= ($index + 1) ?></span>
-                            <div class="clearfix"></div>
+                        <div class="item panel panel-default"><!-- widgetBody -->
+                            <div class="panel-heading">
+                                <span class="panel-title-phone"><?= Yii::t('app', 'Email') ?>
+                                    : <?= ($index + 1) ?></span>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="panel-body">
+                                <?php
+                                echo DetailView::widget([
+                                    'model' => $modelEmail,
+                                    'attributes' => [
+                                        'email',
+                                        'comment',
+                                    ],
+                                ]) ?>
+                            </div>
                         </div>
-                        <div class="panel-body">
-                            <?php
-                            echo DetailView::widget([
-                                'model' => $modelEmail,
-                                'attributes' => [
-                                    'email',
-                                    'comment',
-                                ],
-                            ]) ?>
-                        </div>
-                    </div>
+                    <?php endforeach; ?>
                 </div>
-                <?php endforeach; ?>
             </div>
         </div>
 

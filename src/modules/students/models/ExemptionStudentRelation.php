@@ -23,6 +23,7 @@ class ExemptionStudentRelation extends \yii\db\ActiveRecord
             TimestampBehavior::className(),
         ];
     }
+
     /**
      * @inheritdoc
      */
@@ -38,6 +39,7 @@ class ExemptionStudentRelation extends \yii\db\ActiveRecord
     {
         return [
             [['student_id', 'exemption_id', 'created_at', 'updated_at'], 'integer'],
+            [['date_start', 'date_end', 'information'], 'string'],
         ];
     }
 
@@ -50,6 +52,8 @@ class ExemptionStudentRelation extends \yii\db\ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'student_id' => Yii::t('app', 'Student ID'),
             'exemption_id' => Yii::t('app', 'Exemption ID'),
+            'date_start' => Yii::t('app', 'Start date'),
+            'date_end' => Yii::t('app', 'Start end'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
