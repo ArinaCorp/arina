@@ -16,6 +16,7 @@ use yii\behaviors\TimestampBehavior;
  */
 class ExemptionStudentRelation extends \yii\db\ActiveRecord
 {
+    public $group_id;
 
     public function behaviors()
     {
@@ -52,8 +53,8 @@ class ExemptionStudentRelation extends \yii\db\ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'student_id' => Yii::t('app', 'Student ID'),
             'exemption_id' => Yii::t('app', 'Exemption ID'),
-            'date_start' => Yii::t('app', 'Start date'),
-            'date_end' => Yii::t('app', 'Start end'),
+            'date_start' => Yii::t('app', 'Start date of exemptions'),
+            'date_end' => Yii::t('app', 'End date of exemptions'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
