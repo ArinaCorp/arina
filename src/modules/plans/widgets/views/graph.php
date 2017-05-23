@@ -111,6 +111,7 @@ jQuery('tr.line').find('input').click(function () {
         jQuery("div.result").empty();
     });
     var obj = jQuery(this);
+    
     switch (obj.attr('data-state')) {
         case 'T':
             obj.val(s);
@@ -134,13 +135,14 @@ jQuery('tr.line').find('input').click(function () {
             break;
         case 'DA':
             obj.val(empty);
-            obj.attr('data-state', '');
+            obj.attr('data-state', ' ');
             break;
-        case " ":
+        case ' ':
             obj.val(t);
             obj.attr('data-state', 'T');
             break;
     }
+    console.log('changed to ' + obj.attr('data-state'));
 });
 jQuery('#generate').click(function (e) {
 

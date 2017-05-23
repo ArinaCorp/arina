@@ -51,17 +51,27 @@ class Module extends BaseModule implements IAdminModule
                 [
                     'label' => Yii::t('app', 'Speciality Qualifications'),
                     'url' => ['/directories/speciality-qualification'],
-                    'icon' => 'graduation-cap',
+                    'icon' => 'institution',
                 ],
                 [
                     'label' => Yii::t('app', 'Study years'),
                     'url' => ['/directories/study-year'],
-                    'icon' => 'graduation-cap',
+                    'icon' => 'hourglass',
                 ],
                 [
                     'label' => Yii::t('app', 'Position'),
                     'url' => ['/directories/position'],
                     'icon' => 'graduation-cap',
+                ],
+                [
+                    'label' => Yii::t('app', 'Subject relations'),
+                    'url' => ['/directories/subject-relation'],
+                    'icon' => 'cloud',
+                ],
+                [
+                    'label' => Yii::t('app', 'Subject cycles'),
+                    'url' => ['/directories/subject-cycle'],
+                    'icon' => 'flag',
                 ],
             ]
         ];

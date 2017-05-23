@@ -1,12 +1,16 @@
 <?php
 
-namespace app\modules\plans\models;
+namespace app\modules\directories\models\subject_cycle;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 
-class StudyPlanSearch extends StudyPlan
+/**
+ * Class SubjectCycleSearch
+ * @package app\modules\directories\models\subject_cycle
+ */
+class SubjectCycleSearch extends SubjectCycle
 {
     /**
      * @inheritdoc
@@ -14,19 +18,16 @@ class StudyPlanSearch extends StudyPlan
     public function rules()
     {
         return [
-            [['speciality_qualification_id'], 'required'],
-            [['semesters'], 'required', 'message' => Yii::t('plans', 'Click "Generate" and check the data')],
-            [['id', 'speciality_qualification_id'], 'integer'],
-            [['created', 'updated'], 'safe'],
-            [['id, speciality_qualification_id'], 'safe', 'on' => 'search'],
-            [['id'], 'unique']
+            [['title'], 'safe', 'on' => 'search'],
         ];
     }
+
     /**
      * @inheritdoc
      */
     public function scenarios()
     {
+        // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
 
@@ -34,11 +35,14 @@ class StudyPlanSearch extends StudyPlan
      * Creates data provider instance with search query applied
      *
      * @param array $params
+     *
      * @return ActiveDataProvider
      */
     public function search($params)
     {
-        $query = StudyPlan::find();
+        $query = SubjectCycle::find();
+
+        // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -47,18 +51,17 @@ class StudyPlanSearch extends StudyPlan
         $this->load($params);
 
         if (!$this->validate()) {
+            // uncomment the following line if you do not want to return any records when validation fails
+            // $query->where('0=1');
             return $dataProvider;
         }
 
+        // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'speciality_qualification_id' => $this->speciality_qualification_id,
-            'created' => $this->created,
-            'updated' => $this->updated,
         ]);
 
-        $query->andFilterWhere(['like', 'semesters', $this->semesters])
-            ->andFilterWhere(['like', 'graphs', $this->graph]);
+        $query->andFilterWhere(['like', 'title', $this->title]);
 
         return $dataProvider;
     }

@@ -70,7 +70,7 @@ class StudySubject extends ActiveRecord
             [['lectures'], 'checkClasses'],
             [['subject_id'], 'checkSubject', 'on' => 'insert'],
             [['lectures', 'lab_works', 'practices'], 'default', 'value' => 0, 'on' => 'insert'],
-            [['study_plan_id', 'subject_id', 'total', 'lectures', 'lab_works', 'practices'], 'integer', ],
+            [['study_plan_id', 'subject_id', 'total', 'lectures', 'lab_works', 'practices'], 'integer',],
             [['study_plan_id', 'subject_id', 'total', 'lectures', 'lab_works', 'practices', 'weeks', 'control',
                 'practice_weeks', 'dual_lab_work', 'dual_practice', 'diploma_name', 'certificate_name'], 'safe'],
             [['id', 'study_plan_id', 'subject_id', 'total', 'lectures', 'lab_works', 'practices', 'subject'], 'safe', 'on' => 'search'],

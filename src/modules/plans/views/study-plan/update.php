@@ -29,6 +29,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= SubjectTable::widget(['subjectDataProvider' => $model->getStudyPlanStudySubjectProvider()]) ?>
 
-    <?= Html::a(Yii::t('plans', 'Add subject'), Url::toRoute(['study-plan/add-subject', 'id' => $model->id]), ['class' => 'btn btn-success']); ?>
+    <?= Html::a(Yii::t('plans', 'Add subject'), Url::toRoute(['study-plan/create-subject', 'id' => $model->id]), ['class' => 'btn btn-success']); ?>
     <br/><br/>
 </div>

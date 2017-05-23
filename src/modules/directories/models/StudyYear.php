@@ -16,7 +16,7 @@ use app\modules\plans\models\WorkPlan;
  * @property integer $year_start
  * @property integer $active
  *
- * @property WorkPlan[] $work_plans
+ * @property WorkPlan[] $workPlans
  */
 class StudyYear extends ActiveRecord
 {
@@ -95,9 +95,9 @@ class StudyYear extends ActiveRecord
     /**
      * @return ActiveQuery
      */
-    public function getStudySubject()
+    public function getWorkPlans()
     {
-        return $this->hasMany(WorkPlan::className(), ['year_id' => 'id'])->via('work_plans');
+        return $this->hasMany(WorkPlan::className(), ['study_year_id' => 'id'])->via('workPlans');
     }
 
     /**

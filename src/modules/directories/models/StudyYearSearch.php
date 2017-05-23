@@ -1,12 +1,12 @@
 <?php
 
-namespace app\modules\plans\models;
+namespace app\modules\directories\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 
-class StudyPlanSearch extends StudyPlan
+class StudyYearSearch extends StudyYear
 {
     /**
      * @inheritdoc
@@ -14,14 +14,12 @@ class StudyPlanSearch extends StudyPlan
     public function rules()
     {
         return [
-            [['speciality_qualification_id'], 'required'],
-            [['semesters'], 'required', 'message' => Yii::t('plans', 'Click "Generate" and check the data')],
-            [['id', 'speciality_qualification_id'], 'integer'],
-            [['created', 'updated'], 'safe'],
-            [['id, speciality_qualification_id'], 'safe', 'on' => 'search'],
-            [['id'], 'unique']
+            ['year_start', 'required'],
+            [['year_start'], 'integer'],
+            ['active', 'boolean'],
         ];
     }
+
     /**
      * @inheritdoc
      */
@@ -38,7 +36,7 @@ class StudyPlanSearch extends StudyPlan
      */
     public function search($params)
     {
-        $query = StudyPlan::find();
+        $query = StudyYear::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -52,13 +50,9 @@ class StudyPlanSearch extends StudyPlan
 
         $query->andFilterWhere([
             'id' => $this->id,
-            'speciality_qualification_id' => $this->speciality_qualification_id,
-            'created' => $this->created,
-            'updated' => $this->updated,
+            'year_start' => $this->year_start,
+            'active' => $this->active,
         ]);
-
-        $query->andFilterWhere(['like', 'semesters', $this->semesters])
-            ->andFilterWhere(['like', 'graphs', $this->graph]);
 
         return $dataProvider;
     }

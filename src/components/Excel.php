@@ -99,7 +99,7 @@ class Excel extends Component
         $sheet->setCellValue($cell, str_replace($alias, $value, $sheet->getCell($cell)->getCalculatedValue()));
     }
 
-    protected static function getBorderStyle()
+    public static function getBorderStyle()
     {
         return [
             'borders' => [
@@ -281,6 +281,6 @@ class Excel extends Component
         header('Content-Disposition: attachment;filename=' . $filename . ' ');
         header('Cache-Control: max-age=0');
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-        $objWriter->save('php://output');
+        return $objWriter->save('php://output');
     }
 }
