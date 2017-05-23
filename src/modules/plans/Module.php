@@ -27,7 +27,7 @@ class Module extends BaseModule implements IAdminModule
             'icon' => 'folder',
             'items' => [
                 [
-                    'label' => Yii::t('plans', 'View study plans'),
+                    'label' => Yii::t('plans', 'Study plans'),
                     'url' => ['/plans/study-plan/'],
                     'icon' => 'th-list',
                 ],
@@ -36,8 +36,8 @@ class Module extends BaseModule implements IAdminModule
                     'url' => ['/plans/study-plan/create'],
                     'icon' => 'plus',
                 ],
-                [
-                    'label' => Yii::t('plans', 'View work plans'),
+                /**[
+                    'label' => Yii::t('plans', 'Work plans'),
                     'url' => ['/plans/work-plan/'],
                     'icon' => 'th-list',
                 ],
@@ -45,7 +45,7 @@ class Module extends BaseModule implements IAdminModule
                     'label' => Yii::t('plans', 'Create work plan'),
                     'url' => ['/plans/work-plan/create'],
                     'icon' => 'plus',
-                ],
+                ],*/
             ]
         ];
     }

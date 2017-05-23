@@ -26,7 +26,6 @@ use yii\helpers\Url;
  * @property integer $group_leader_id
  *
  *
- *
  * @property SpecialityQualification $specialityQualification
  * @property Student $groupLeader
  * @property StudyYear $studyYear;

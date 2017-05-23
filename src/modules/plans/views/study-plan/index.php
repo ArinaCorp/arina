@@ -58,7 +58,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         $options = [
                             'title' => Yii::t('plans', 'Export'),
                         ];
-                        $url = Url::toRoute(['study-plan/make-excel', 'id' => $model->id]);
+                        $url = Url::toRoute(['study-plan/export', 'id' => $model->id]);
                         return Html::a('<span class="glyphicon glyphicon-file"</span>', $url, $options);
                     }
                 ]

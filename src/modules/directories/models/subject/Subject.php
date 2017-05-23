@@ -4,6 +4,7 @@ namespace app\modules\directories\models\subject;
 
 use Yii;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 use app\modules\directories\models\subject_relation\SubjectRelation;
 use app\modules\directories\models\subject_cycle\SubjectCycle;
@@ -98,4 +99,9 @@ class Subject extends ActiveRecord
             'subject_id' => $this->id])->subjectCycle;
     }
 
+    public static function getList()
+    {
+        return ArrayHelper::map(Subject::find()->all(), 'id', 'title');
+
+    }
 }

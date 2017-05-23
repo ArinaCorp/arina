@@ -118,7 +118,7 @@ JS;
 
     <div class="row">
         <div class="col-sm-3">
-            <?= $form->field($model, 'total')->widget(TouchSpin::className(), ['pluginOptions' => ['max'=>1000]])?>
+            <?= $form->field($model, 'total')->textInput(['type' => 'number', 'min' => 0, 'value' => 0,])?>
         </div>
         <div class="col-sm-3">
             <label class="control-label" for="classesweek-total"><?=$model->getAttributeLabel('classes_week')?></label>
@@ -129,37 +129,31 @@ JS;
             <?= TouchSpin::widget(['disabled' => true, 'name' => 'classes'])?>
         </div>
         <div class="col-sm-3">
-            <?= $form->field($model, 'lectures')->widget(TouchSpin::className(), ['pluginOptions' => ['max'=>1000]])?>
+            <?= $form->field($model, 'lectures')->textInput(['type' => 'number', 'min' => 0, 'value' => 0,])?>
         </div>
     </div>
 
     <div class="row">
         <div class="col-sm-3">
-            <?= $form->field($model, 'lab_works')->widget(TouchSpin::className(), ['pluginOptions' => ['max'=>1000]])?>
+            <?= $form->field($model, 'lab_works')->textInput(['type' => 'number', 'min' => 0, 'value' => 0,])?>
         </div>
         <div class="col-sm-3">
-            <?= $form->field($model, 'practices')->widget(TouchSpin::className(), ['pluginOptions' => ['max'=>1000]])?>
+            <?= $form->field($model, 'practices')->textInput(['type' => 'number', 'min' => 0, 'value' => 0,])?>
         </div>
         <div class="col-sm-3">
             <?= $form->field($model, 'dual_lab_work')->checkbox()?>
             <?= $form->field($model, 'dual_practice')->checkbox()?>
         </div>
         <div class="col-sm-3">
-            <?= $form->field($model, 'practice_weeks')->widget(TouchSpin::className(), [
-                    'pluginOptions' => ['max'=>1000]
-            ])?>
+            <?= $form->field($model, 'practice_weeks')->textInput(['type' => 'number', 'min' => 0, 'value' => 0,])?>
         </div>
     </div>
     <?php foreach ($model->studyPlan->semesters as $semester => $weeks): ?>
         <div class="row">
             <div class="col-sm-4">
-                <?= $form->field($model, "weeks[$semester]")->widget(TouchSpin::className(), [
-                    'pluginOptions' => [
-                        'max' => 1000,
-                        'initval' => 0,
-                    ],
-                    'options' => ['placeholder' => Yii::t('plans', 'Hours per week')]
-                ])->label($semester + 1 . '-й семестр: ' . $weeks . ' тижнів')?>
+                <?= $form->field($model, "weeks[$semester]")->textInput(['type' => 'number', 'min' => 0, 'value' => 0,
+                    'options' => ['placeholder' => Yii::t('plans', 'Hours per week')]])
+                ->label($semester + 1 . '-й семестр: ' . $weeks . ' тижнів')?>
             </div>
             <div class="col-sm-1"><br/>
                 <?= $form->field($model, "control[$semester][0]")->checkbox(['label' => Yii::t('plans', 'Test')])?>
@@ -182,7 +176,7 @@ JS;
         </div>
     <?php endforeach; ?>
 
-    <?= $this->render('_form_buttons', ['model' => $model, ]) ?>
+    <?= $this->render('/_form_buttons', ['model' => $model, 'plan' => 'study']) ?>
 
     <?php ActiveForm::end(); ?>
 

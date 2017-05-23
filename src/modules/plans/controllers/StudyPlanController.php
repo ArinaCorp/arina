@@ -230,13 +230,15 @@ class StudyPlanController extends Controller implements IAdminController
     }
 
     /**
-     * @param $id
+     * @param $id integer
      */
-    public function actionMakeExcel($id)
+    public function actionExport($id)
     {
-        
-        $plan = self::findModel($id);
-        return Yii::$app->excel->makeStudyPlan($plan);
+        /**
+         * @var $model StudyPlan
+         */
+        $model = $this->findModel($id);
+        $model->getDocument();
     }
 
     function actionGetOrigins()

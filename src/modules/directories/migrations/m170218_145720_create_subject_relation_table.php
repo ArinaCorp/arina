@@ -13,6 +13,7 @@ class m170218_145720_create_subject_relation_table extends Migration
     public function up()
     {
         $this->createTable('{{%subject_relation}}', [
+            'id' => $this->primaryKey(),
             'subject_id' => $this->integer(),
             'speciality_qualification_id' => $this->integer(),
             'subject_cycle_id' => $this->integer(),

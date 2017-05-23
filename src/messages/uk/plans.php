@@ -65,11 +65,12 @@ return [
     'Course project' => 'Курсовий проект',
     'Study subject adding' => 'Додання навчального предмету',
     'Dual practice work' => 'Роздвоєння практичних робіт',
-    'View study plans' => 'Переглянути навчальні плани',
     'Plans' => 'Плани',
     'Study plan editing' => 'Редагування навчального плану',
     'Select subject' => 'Виберіть предмет',
     'Hours per week' => 'Годин на тиждень',
+    'Work plans' => 'Робочi плани',
+    'Create work plan' => 'Створити робочий план',
 
 
 ];

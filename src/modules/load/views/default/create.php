@@ -1,21 +1,55 @@
 <?php
-/**
- * @var MainController $this
- */
-$this->breadcrumbs = array(
-    Yii::t('base', 'Load') => $this->createUrl('index'),
-    'Нове навантаження'
-);
-?>
-<div class="well">
-    <?php echo CHtml::beginForm('', 'post', array('style' => 'width: 405px; margin: auto auto')); ?>
-    <h2>Створення навантаження</h2>
-    <?php echo CHtml::label('Навчальний рік', 'study_year'); ?>
-    <?php echo CHtml::dropDownList('study_year', '', StudyYear::getList()); ?>
-    <div>
-        <?php echo CHtml::submitButton('Створити', array('class' => 'btn btn-primary')); ?>
-        <?php echo CHtml::link('Повернутись', $this->createUrl('index'), array('class' => 'btn btn-info')); ?>
-    </div>
-    <?php echo CHtml::endForm(); ?>
-</div>
 
+use yii\widgets\Pjax;
+use yii\widgets\ActiveForm;
+use yii\helpers\Html;
+use yii\web\View;
+use kartik\select2\Select2;
+
+use app\modules\directories\models\StudyYear;
+
+/**
+ * @var $this View
+ */
+
+$this->title = Yii::t('load', 'Load creating');
+
+$this->params['breadcrumbs'][] = ['label' => Yii::t('load', 'Load'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = $this->title;
+?>
+
+<div class="row">
+
+    <h1><?= Html::encode($this->title) ?></h1>
+
+    <?php Pjax::begin(); ?>
+
+    <?php $form = ActiveForm::begin(); ?>
+
+    <div class="row">
+        <div class="col-sm-4">
+            <?= Select2::widget(
+                [
+                    'data' => StudyYear::getList(),
+                    'id' => 'study_year',
+                    'name' => 'study_year',
+                    'options' =>
+                        [
+                            'placeholder' => Yii::t('load', 'Select study year')
+                        ]
+                ]
+            );?>
+        </div>
+        <br/><br/>
+
+    </div>
+
+    <?= Html::submitButton(Yii::t('app', 'Create'), ['class' => 'btn btn-success']) ?>
+
+    <?=Html::a(Yii::t('app', 'Return'), ['/load'], ['class' => 'btn btn-danger']) ?>
+
+    <?php ActiveForm::end(); ?>
+
+    <?php Pjax::end(); ?>
+
+</div>

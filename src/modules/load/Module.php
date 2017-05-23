@@ -33,7 +33,7 @@ class Module extends BaseModule implements IAdminModule
                 ],
                 [
                     'label' => Yii::t('load', 'Create load'),
-                    'url' => ['/load/create'],
+                    'url' => ['/load/default/create'],
                     'icon' => 'plus',
                 ],
             ]

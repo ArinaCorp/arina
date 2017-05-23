@@ -125,10 +125,10 @@ class WorkPlanController extends Controller implements IAdminController
      * @param $id
      * @return string
      */
-    public function actionSubjects($id)
+    public function actionEditSubjects($id)
     {
         $model = WorkPlan::findOne($id);
-        return $this->render('subjects', ['model' => $model]);
+        return $this->render('edit_subjects', ['model' => $model]);
     }
 
     /**

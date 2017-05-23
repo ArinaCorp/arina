@@ -7,6 +7,7 @@ use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 use nullref\useful\JsonBehavior;
+use yii\web\NotFoundHttpException;
 
 use app\modules\directories\models\StudyYear;
 use app\modules\students\models\Group;
@@ -170,7 +171,7 @@ class Load extends ActiveRecord
         if (isset($this->students[0])) {
             return $this->students[0];
         } else {
-            return $this->group->getStudentsCount();
+            return count($this->group->getStudentsArray());
         }
     }
 
@@ -182,7 +183,7 @@ class Load extends ActiveRecord
         if (isset($this->students[1])) {
             return $this->students[1];
         } else {
-            return $this->group->getBudgetStudentsCount();
+            return $this->group->getCountByPayment(1);
         }
     }
 
@@ -205,7 +206,7 @@ class Load extends ActiveRecord
         if (isset($this->students[2])) {
             return $this->students[2];
         } else {
-            return $this->group->getContractStudentsCount();
+            return $this->group->getCountByPayment(2);
         }
     }
 
@@ -399,7 +400,7 @@ class Load extends ActiveRecord
             return 0;
         }
         $k = $control[WorkSubject::CONTROL_EXAM] ? 0.33 : 0.5;
-        return floor($this->group->getStudentsCount() * $k);
+        return floor(count($this->group->getStudentsArray()) * $k);
     }
 
     /**
@@ -525,6 +526,15 @@ class Load extends ActiveRecord
             1 => Yii::t('load', 'Course project'),
             2 => Yii::t('load', 'Diploma project'),
         ];
+    }
+
+    protected function findModel($id)
+    {
+        if (($model = self::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
     }
 
 

@@ -134,7 +134,7 @@ jQuery('tr.line').find('input').click(function () {
             break;
         case 'DA':
             obj.val(empty);
-            obj.attr('data-state', '');
+            obj.attr('data-state', " ");
             break;
         case " ":
             obj.val(t);

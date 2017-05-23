@@ -1,5 +1,8 @@
 <?php
 
+namespace app\modules\load\controllers;
+
+use Yii;
 use yii\web\Controller;
 use nullref\core\interfaces\IAdminController;
 use yii\helpers\Url;
@@ -27,6 +30,7 @@ class DefaultController extends Controller implements IAdminController
     public function actionCreate()
     {
         if (isset($_POST['study_year'])) {
+
             $this->generateLoadFor($_POST['study_year']);
             return $this->redirect(Url::to('index'));
         }
@@ -49,11 +53,17 @@ class DefaultController extends Controller implements IAdminController
     {
         /**
          * @var StudyYear $year
+         * @var Load $load
          */
+        var_dump($studyYear."1231");
         $year = StudyYear::findOne($studyYear);
-        Load::findOne($studyYear)->delete();
-
+        $load = Load::find()->where(['study_year_id' => $studyYear])->one();
+        if ($load) {
+            $load->delete();
+        }
+        var_dump($year->id);
         foreach ($year->workPlans as $plan) {
+
             $groups = $plan->specialityQualification->getGroupsByStudyYear($year->id);
             foreach ($plan->workSubjects as $subject) {
                 foreach ($groups as $title => $course) {
@@ -97,9 +107,9 @@ class DefaultController extends Controller implements IAdminController
         $consult[1] = $model->calcConsultation($course * 2);
         $model->consult = $consult;
         $students = array();
-        $students[0] = $group->getStudentsCount();
-        $students[1] = $group->getBudgetStudentsCount();
-        $students[2] = $group->getContractStudentsCount();
+        $students[0] = count($group->getStudentsArray());
+        $students[1] = $group->getCountByPayment(1);
+        $students[2] = $group->getCountByPayment(2);
         $model->students = $students;
         $model->save();
     }
@@ -189,9 +199,6 @@ class DefaultController extends Controller implements IAdminController
                 $model->generate();
             }
         }
-        $this->render('doc', array(
-            'model' => $model,
-            'year'=>$year,
-        ));
+        return $this->render('doc', ['model' => $model, 'year'=>$year]);
     }
 }
