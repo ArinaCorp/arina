@@ -39,10 +39,6 @@ use PHPExcel_IOFactory;
  */
 class Employee extends ActiveRecord
 {
-    /** Types */
-    const TYPE_NONE = 0;
-    const TYPE_TEACHER = 1;
-    const TYPE_OTHER = 2;
 
     public $data;
     public $has_education;
@@ -123,15 +119,6 @@ class Employee extends ActiveRecord
         return $this->start_date;
     }
 
-    public static function getTypes()
-    {
-        return [
-            self::TYPE_NONE => Yii::t('employee', 'Nobody'),
-            self::TYPE_OTHER => Yii::t('employee', 'Another employee'),
-            self::TYPE_TEACHER => Yii::t('employee', 'Teacher'),
-        ];
-    }
-
     public function getGenderName()
     {
         return $this->gender ? Yii::t('app', 'Female') : Yii::t('app', 'Male');
@@ -157,9 +144,9 @@ class Employee extends ActiveRecord
         return $query->all();
     }
 
-    public function getCyclicCommissionArray($id)
+    public function getCyclicCommissionArray()
     {
-        return CyclicCommission::getCyclicCommissionArray($id);
+        return CyclicCommission::getCyclicCommissionArray();
     }
 
     public function getEducation()
@@ -202,7 +189,7 @@ class Employee extends ActiveRecord
 
     public static function getAllTeacherList()
     {
-        return ArrayHelper::map(self::getAllTeacher(), 'id', 'fullName');
+        return ArrayHelper::map(self::getAllTeacher(), 'id', 'fullName', 'cyclic_commission_id');
     }
 
     public function getGroupArray()
@@ -212,7 +199,6 @@ class Employee extends ActiveRecord
          */
         $listRecord = CuratorGroup::find()->andWhere(['teacher_id' => $this->id])->orderBy('id ASC')->all();
         $listGroup = [];
-//        var_dump($listRecord);
         foreach ($listRecord as $item) {
             switch ($item->type) {
                 case 1: {
@@ -252,9 +238,9 @@ class Employee extends ActiveRecord
     public function validate($attributeNames = null, $clearErrors = true)
     {
         $success = parent::validate($attributeNames, $clearErrors);
-        if (!empty($this->has_family)) {
-            $familyValidation = EmployeeEducation::validateSt($this);
-            if (!$familyValidation) {
+        if (!empty($this->has_education)) {
+            $educationValidation = EmployeeEducation::validateSt($this);
+            if (!$educationValidation) {
                 $success = false;
             }
         }

@@ -44,7 +44,7 @@ class SpecialityQualification extends ActiveRecord
     public function rules()
     {
         return [
-            [['years_count', 'months_count', 'speciality_id', 'qualification_id'], 'required'],
+            [['title','years_count', 'months_count', 'speciality_id', 'qualification_id'], 'required'],
             [['years_count', 'months_count', 'speciality_id', 'qualification_id'], 'integer'],
             [['title'], 'string', 'max' => 255],
         ];

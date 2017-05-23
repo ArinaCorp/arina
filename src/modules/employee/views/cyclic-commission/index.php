@@ -30,7 +30,17 @@ $this->params['breadcrumbs'][] = $this->title;
             'title',
             'headName',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{view} {document} {update} {delete}',
+                'buttons'=>[
+                    'document' => function ($url, $model) {
+                        return Html::a('<span class="glyphicon glyphicon-list"></span>', $url, [
+                            'title' => Yii::t('app', 'List'),
+                        ]);
+                    },
+                ],
+            ],
         ],
     ]); ?>
 </div>

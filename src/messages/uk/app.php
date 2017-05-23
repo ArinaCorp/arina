@@ -260,5 +260,5 @@ return [
     'Create subject cycle' => 'Створити предметний цикл',
     'Cycle number' => 'Номер циклу',
     'Start date of exemptions' => 'Дата початку дії пільги',
-    'End date of exemptions' => 'Дата кінця дії пільги'
+    'End date of exemptions' => 'Дата кінця дії пільги',
 ];
