@@ -12,8 +12,7 @@ use app\modules\directories\models\qualification\Qualification;
     <div class="col-sm-4">
         <?= $form->field($model, 'is_in_education')
             ->dropDownList(
-                [0 => Yii::t('app', 'No'), 1 => Yii::t('app', 'Yes')],
-                ['prompt' => Yii::t('app', 'Select option')]
+                [0 => Yii::t('app', 'No'), 1 => Yii::t('app', 'Yes')]
             ) ?>
     </div>
     <div class="col-sm-4 hidden field_cyclic_commission_id">
