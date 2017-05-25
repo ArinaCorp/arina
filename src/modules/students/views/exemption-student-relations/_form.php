@@ -25,7 +25,7 @@ use kartik\date\DatePicker;
             'data' => Group::getActiveGroupsList(),
             'pluginOptions' => [
                 'placeholder' => Yii::t('app', 'Select group'),
-                'allowClear' => true
+               // 'allowClear' => true
             ],
             'options' => [
                 'id' => 'group_id',

@@ -261,4 +261,9 @@ return [
     'Cycle number' => 'Номер циклу',
     'Start date of exemptions' => 'Дата початку дії пільги',
     'End date of exemptions' => 'Дата кінця дії пільги',
+    'Exemptions journal' => 'Журнал пільг',
+    'Exemption title' => 'Пільга',
+    'Add record to exemptions journal' => 'Додати запис до журналу пільг',
+    'Select exemption' => 'Оберіть пільгу',
+    'Select student' => 'Оберіть студента',
 ];
