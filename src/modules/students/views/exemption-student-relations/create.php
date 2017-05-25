@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\modules\students\models\ExemptionStudentRelation */
 
-$this->title = Yii::t('app', 'Create Exemption Student Relation');
+$this->title = Yii::t('app', 'Add record to exemptions journal');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Exemption Student Relations'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

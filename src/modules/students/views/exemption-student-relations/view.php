@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\modules\students\models\ExemptionStudentRelation */
 
-$this->title = $model->id;
+$this->title = $model->student->getFullName();
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Exemption Student Relations'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -22,7 +22,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?= Html::a(Yii::t('app', 'List'), ['index'], ['class' => 'btn btn-success']) ?>
-        <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
@@ -35,11 +34,23 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
-            'student_id',
-            'exemption_id',
-            'created_at',
-            'updated_at',
+            [
+                'attribute' => 'student_id',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    return $model->student->link;
+                }
+            ],
+            [
+                'attribute' => 'exemption_id',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    /**
+                     * @var $model \app\modules\students\models\ExemptionStudentRelation;
+                     */
+                    return $model->getExemptionTitle();
+                }
+            ],
             'date_start',
             'date_end',
             'information',

@@ -13,6 +13,9 @@ use yii\behaviors\TimestampBehavior;
  * @property integer $exemption_id
  * @property integer $created_at
  * @property integer $updated_at
+ *
+ * @property Student $student
+ * @property Exemption $exemption
  */
 class ExemptionStudentRelation extends \yii\db\ActiveRecord
 {
@@ -52,11 +55,34 @@ class ExemptionStudentRelation extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'student_id' => Yii::t('app', 'Student ID'),
-            'exemption_id' => Yii::t('app', 'Exemption ID'),
+            'group_id' => Yii::t('app', 'Group ID'),
+            'exemption_id' => Yii::t('app', 'Exemption title'),
+            'exemptionTitle' => Yii::t('app', 'Exemption title'),
             'date_start' => Yii::t('app', 'Start date of exemptions'),
             'date_end' => Yii::t('app', 'End date of exemptions'),
+            'information' => Yii::t('app', 'Information'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
+    }
+
+    public function getExemption()
+    {
+        return $this->hasOne(Exemption::className(), ['id' => 'exemption_id']);
+    }
+
+    public function getStudent()
+    {
+        return $this->hasOne(Student::className(), ['id' => 'student_id']);
+    }
+
+    public function getStudentFullName()
+    {
+        return $this->student->getFullNameAndBirthDate();
+    }
+
+    public function getExemptionTitle()
+    {
+        return $this->exemption->title;
     }
 }
