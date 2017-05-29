@@ -24,4 +24,7 @@ return array_merge(require(__DIR__ . '/installed_modules.php'), [
     'plans' => [
         'class' => 'app\modules\plans\Module',
     ],
+    'accounting' => [
+        'class' => 'app\modules\accounting\Accounting',
+    ],
 ]);
