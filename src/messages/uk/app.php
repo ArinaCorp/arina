@@ -266,4 +266,5 @@ return [
     'Add record to exemptions journal' => 'Додати запис до журналу пільг',
     'Select exemption' => 'Оберіть пільгу',
     'Select student' => 'Оберіть студента',
+    'Date action' => 'Дата дії'
 ];

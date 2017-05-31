@@ -11,6 +11,8 @@ use yii\behaviors\TimestampBehavior;
  * @property integer $id
  * @property integer $student_id
  * @property integer $exemption_id
+ * @property string $date_start
+ * @property string $date_end
  * @property integer $created_at
  * @property integer $updated_at
  *
@@ -20,6 +22,7 @@ use yii\behaviors\TimestampBehavior;
 class ExemptionStudentRelation extends \yii\db\ActiveRecord
 {
     public $group_id;
+    public $date_range;
 
     public function behaviors()
     {
@@ -60,6 +63,7 @@ class ExemptionStudentRelation extends \yii\db\ActiveRecord
             'exemptionTitle' => Yii::t('app', 'Exemption title'),
             'date_start' => Yii::t('app', 'Start date of exemptions'),
             'date_end' => Yii::t('app', 'End date of exemptions'),
+            'date_range' => Yii::t('app', 'Date action'),
             'information' => Yii::t('app', 'Information'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
