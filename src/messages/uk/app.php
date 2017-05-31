@@ -266,5 +266,17 @@ return [
     'Add record to exemptions journal' => 'Додати запис до журналу пільг',
     'Select exemption' => 'Оберіть пільгу',
     'Select student' => 'Оберіть студента',
-    'Date action' => 'Дата дії'
+    'Date action' => 'Дата дії',
+    'Journal' => 'Журнал',
+    'Evaluation systems' => 'Системи оцінювання',
+    'Evaluation Systems' => 'Системи оцінювання',
+    'Evaluation system' => 'Система оцінювання',
+    'Evaluations' => 'Оцінки',
+    'Create Evaluation System' => 'Створити систему оцінювання',
+    'Update Evaluation System' => 'Оновити систему оцінювання',
+    'Value' => 'Значення',
+    'Evaluation' => 'Оцінка',
+    'Create Evaluation' => 'Створити оцінку',
+    'Select evaluation system' => 'Оберіть систему оцінювання',
+    'Update Evaluation' => 'Оновити оцінку'
 ];

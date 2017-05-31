@@ -23,8 +23,10 @@ return array_merge(require(__DIR__ . '/installed_modules.php'), [
     'plans' => [
         'class' => 'app\modules\plans\Module',
     ],
-
     'load' => [
         'class' => 'app\modules\load\Module',
     ],
+    'journal' => [
+        'class' => 'app\modules\journal\Module',
+    ]
 ]);
