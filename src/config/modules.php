@@ -20,4 +20,7 @@ return array_merge(require(__DIR__ . '/installed_modules.php'), [
     'employee' => [
         'class' => 'app\modules\employee\Module',
     ],
+    'geo' => [
+        'class' => 'app\modules\geo\Module',
+    ],
 ]);
