@@ -12,6 +12,7 @@ use yii\web\BadRequestHttpException;
  * @property integer $id
  * @property integer $student_id
  * @property string $phone
+ * @property string $comment
  * @property integer $created_at
  * @property integer $updated_at
  */

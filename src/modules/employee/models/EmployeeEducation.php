@@ -20,12 +20,7 @@ use yii\web\BadRequestHttpException;
  */
 class EmployeeEducation extends \yii\db\ActiveRecord
 {
-    public function behaviors()
-    {
-        return [
-            TimestampBehavior::className(),
-        ];
-    }
+
     
     /**
      * @inheritdoc
@@ -42,7 +37,7 @@ class EmployeeEducation extends \yii\db\ActiveRecord
     {
         return [
             [['employee_id', 'graduation_year'], 'integer'],
-            [['name_of_institution', 'document', 'education_form', 'type_id'], 'required'],
+            [['name_of_institution', 'document', 'education_form'], 'required'],
             [['name_of_institution', 'document', 'education_form'], 'string', 'max' => 64],
             [['speciality', 'qualification'], 'string', 'max' => 11],
         ];
@@ -70,6 +65,13 @@ class EmployeeEducation extends \yii\db\ActiveRecord
         return $this->hasOne(Employee::className(), ['employee_id' => 'id']);
     }
 
+    public static function shortClassName()
+    {
+        $reflector = new \ReflectionClass(get_called_class());
+
+        return $reflector->getShortName();
+    }
+
     public static function getList($employee_id, $employee)
     {
         $query = self::find();
@@ -78,28 +80,28 @@ class EmployeeEducation extends \yii\db\ActiveRecord
         ]);
         $list = $query->all();
         /**
-         * @var $list EmployeeEducation[];
+         * @var $list self[];
          */
         foreach ($list as $key => $employeeEducation) {
             if ($employeeEducation->isNewRecord) {
                 $list[$key]->id = null;
             }
         };
-        $params = Yii::$app->request->post('Education');
+        $params = Yii::$app->request->post(self::shortClassName());
         if ($params && is_array($params)) {
             $list = [];
             for ($i = 0; $i < count($params); $i++) {
-                $model = new EmployeeEducation();
+                $model = new self();
                 $model->setAttributes($params[$i]);
                 $list[] = $model;
             }
         } elseif (Yii::$app->request->isPost) {
             $list = [];
         }
-        if (Yii::$app->request->post('add-education')) {
-            $list[] = new EmployeeEducation();;
+        if (Yii::$app->request->post('add-' . self::shortClassName())) {
+            $list[] = new self();;
         }
-        if (Yii::$app->request->post('remove-education-tie')) {
+        if (Yii::$app->request->post('remove-' . self::shortClassName())) {
             unset($list[Yii::$app->request->post('data-key')]);
             $oldList = $list;
             $list = [];
@@ -120,7 +122,7 @@ class EmployeeEducation extends \yii\db\ActiveRecord
         $success = true;
         $modelsEducation = $employee->has_education;
         /**
-         * @var $modelsEducation EmployeeEducation[];
+         * @var $modelsEducation self[];
          */
         foreach ($modelsEducation as $model) {
             $success = $success && $model->validate();

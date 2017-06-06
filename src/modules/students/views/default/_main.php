@@ -35,12 +35,6 @@ use yii\widgets\MaskedInput;
         <?= $form->field($model, 'middle_name')->textInput(['maxlength' => true, 'placeholder' => $model->getAttributeLabel('middle_name')]) ?>
     </div>
 </div>
-
-<div class="row">
-    <div class="col-xs-12">
-        <?= $form->field($model, 'exemption_ids')->checkboxList(Exemption::getList(), ['class' => 'list-inline']); ?>
-    </div>
-</div>
 <div class="row">
     <div class="col-sm-6">
         <?= $form->field($model, 'gender')->dropDownList([0 => Yii::t('app', 'Male'), 1 => Yii::t('app', 'Female')], ['prompt' => Yii::t('app', 'Select gender')]); ?>

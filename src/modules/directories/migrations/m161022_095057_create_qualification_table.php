@@ -9,7 +9,7 @@ use nullref\core\traits\MigrationTrait;
 class m161022_095057_create_qualification_table extends Migration
 {
     use MigrationTrait;
-    
+
     /**
      * @inheritdoc
      */

@@ -74,6 +74,7 @@ class Audience extends ActiveRecord
     {
         return [
             [['type', 'id_teacher', 'capacity'], 'integer'],
+            [['number', 'name'],'required'],
             [['number', 'name'], 'string', 'max' => 255],
         ];
     }

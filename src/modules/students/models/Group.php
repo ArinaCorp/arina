@@ -26,7 +26,6 @@ use yii\helpers\Url;
  * @property integer $group_leader_id
  *
  *
- *
  * @property SpecialityQualification $specialityQualification
  * @property Student $groupLeader
  * @property StudyYear $studyYear;
@@ -35,6 +34,8 @@ use yii\helpers\Url;
  */
 class Group extends ActiveRecord
 {
+    private $_students = [];
+
     /**
      * @inheritdoc
      */
@@ -111,6 +112,18 @@ class Group extends ActiveRecord
         return $this->specialityQualification->speciality->short_title . '-' . $this->getSystemYearPrefix() . $this->number_group;
     }
 
+
+    public function getCountByPayment($payment)
+    {
+        $count = 0;
+        foreach ($this->getStudentsArray() as $student) {
+            if ($student->payment_type == $payment) {
+                $count++;
+            }
+        }
+        return $count;
+    }
+
     /**
      * @return array
      */
@@ -138,20 +151,23 @@ class Group extends ActiveRecord
          * @var $result Student[];
          * @var $students Student[];
          */
-        $result = [];
-        $students = Student::find()->all();
-        foreach ($students as $student) {
-            $idsGroup = $student->getGroupArray();
-            if (!is_null($idsGroup)) {
-                if (array_key_exists($this->id, $idsGroup)) {
-                    $student->payment_type = $idsGroup[$this->id];
-                    array_push($result, $student);
-                };
+        if (empty($this->_students)) {
+            $result = [];
+            $students = Student::find()->all();
+            foreach ($students as $student) {
+                $idsGroup = $student->getGroupArray();
+                if (!is_null($idsGroup)) {
+                    if (array_key_exists($this->id, $idsGroup)) {
+                        $student->payment_type = $idsGroup[$this->id];
+                        array_push($result, $student);
+                    };
+                }
             }
+            $this->_students = $result;
         }
-
-        return $result;
+        return $this->_students;
     }
+
 
     /**
      * @return array
@@ -274,6 +290,16 @@ class Group extends ActiveRecord
         return ($this->getCuratorId() === false) ? Yii::t('app', 'Not assigned') : $this->getCurator()->getFullName();
     }
 
+    public function getGroupLeaderShortNameInitialFirst()
+    {
+        return (is_null($this->group_leader_id)) ? Yii::t('app', 'Not assigned') : $this->groupLeader->getShortNameInitialFirst();
+    }
+
+    public function getCuratorShortNameInitialFirst()
+    {
+        return ($this->getCuratorId() === false) ? Yii::t('app', 'Not assigned') : $this->getCurator()->getShortNameInitialFirst();
+    }
+
     public
     function getGroupLeaderLink()
     {
@@ -310,9 +336,12 @@ class Group extends ActiveRecord
             $excelObj->getActiveSheet()->removeRow($current);
             $excelObj->getActiveSheet()->removeRow($current);
             $current += 1;
-            $excelObj->getActiveSheet()->setCellValue('F' . $current, $this->getCuratorFullName());
+            $excelObj->getActiveSheet()->setCellValue('F' . $current, $this->getCuratorShortNameInitialFirst());
             $current += 2;
-              $excelObj->getActiveSheet()->setCellValue('F' . $current, $this->getGroupLeaderFullName());
+            $excelObj->getActiveSheet()->setCellValue('F' . $current, $this->getGroupLeaderShortNameInitialFirst());
+            $current += 2;
+            $excelObj->getActiveSheet()->setCellValue('F' . $current, Yii::t('app', 'Date created'));
+            $excelObj->getActiveSheet()->setCellValue('G' . $current, date('d.m.Y H:i:s'));
         }
         header('Content-Type: application/vnd.ms-excel');
         $filename = "Group_" . $this->title . "_" . date("d-m-Y-His") . ".xls";
@@ -335,11 +364,14 @@ class Group extends ActiveRecord
         if (!isset($year)) {
             $year = StudyYear::getCurrentYear();
         }
-        $last_year = mb_substr($this->title, 3, 2, 'UTF-8');
-        $value = $year->getYearEnd() - 2000 - $last_year;
+        $value = $year->getYearEnd() - $this->studyYear->year_start;
+        var_dump($value);
         return $value;
     }
 
+    /**
+     * @return bool|int
+     */
     public function getCuratorId()
     {
         $teachers = Employee::getAllTeacher();
@@ -371,8 +403,10 @@ class Group extends ActiveRecord
         return $this->getCurator()->getLink();
     }
 
+
     public function getTitleAndLink()
     {
         return Html::a($this->title, Url::to(['/students/group/view', 'id' => $this->id]));
     }
+
 }

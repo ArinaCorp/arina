@@ -56,6 +56,7 @@ class GroupController extends Controller implements IAdminController
         $dataProvider = new ArrayDataProvider([
             'allModels' => $this->findModel($id)->getStudentsArray(),
         ]);
+        $dataProvider->pagination->setPageSize(40);
 
 
         return $this->render('view', [

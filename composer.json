@@ -35,7 +35,8 @@
         "voskobovich/yii2-linker-behavior": "^4.0",
         "kartik-v/yii2-widget-select2": "@dev",
         "kartik-v/yii2-widget-datepicker": "@dev",
-        "phpoffice/phpexcel": "^1.8"
+        "phpoffice/phpexcel": "^1.8",
+        "kartik-v/yii2-date-range": "^1.6"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "*",

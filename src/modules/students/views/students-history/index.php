@@ -33,8 +33,9 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             [
-                'attribute' => 'student_id',
+                'attribute' => 'studentFullName',
                 'format' => 'raw',
+                'label' => Yii::t('app', 'Full Name'),
                 'value' => function ($model) {
                     return Student::findOne(['id' => $model->student_id])->getLink();
                 }
