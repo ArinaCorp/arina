@@ -35,6 +35,8 @@ class m170531_193614_tbls_evolation_systems_and_evolation extends Migration
 
     public function down()
     {
+        $this->dropTable('{{%evaluations}}');
+        $this->dropTable('{{%evaluation_systems}}');
     }
 
     /*
