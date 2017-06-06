@@ -31,5 +31,8 @@ return array_merge(require(__DIR__ . '/installed_modules.php'), [
     ],
     'journal' => [
         'class' => 'app\modules\journal\Module',
-    ]
+    ],
+    'accounting' => [
+        'class' => 'app\modules\accounting\Accounting',
+    ],
 ]);
