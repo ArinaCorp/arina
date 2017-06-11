@@ -36,7 +36,7 @@ class Module extends BaseModule implements IAdminModule
                     'url' => ['/plans/study-plan/create'],
                     'icon' => 'plus',
                 ],
-                /**[
+                [
                     'label' => Yii::t('plans', 'Work plans'),
                     'url' => ['/plans/work-plan/'],
                     'icon' => 'th-list',
@@ -45,7 +45,7 @@ class Module extends BaseModule implements IAdminModule
                     'label' => Yii::t('plans', 'Create work plan'),
                     'url' => ['/plans/work-plan/create'],
                     'icon' => 'plus',
-                ],*/
+                ],
             ]
         ];
     }

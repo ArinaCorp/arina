@@ -259,4 +259,5 @@ return [
     'Subject cycles' => 'Предметнi цикли',
     'Create subject cycle' => 'Створити предметний цикл',
     'Cycle number' => 'Номер циклу',
+    'Short title' => 'Коротка назва ',
 ];

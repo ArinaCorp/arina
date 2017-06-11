@@ -40,7 +40,8 @@ class WorkPlanController extends Controller implements IAdminController
 
         if ($model->load(Yii::$app->request->post())) {
             $model->attributes = $_POST['WorkPlan'];
-            $model->created = date('Y-m-d', time());
+
+            $model->created = time();
 
             if ($model->save()) {
                 return $this->redirect(['graph', 'id' => $model->id]);
@@ -58,7 +59,9 @@ class WorkPlanController extends Controller implements IAdminController
     {
         $model = WorkPlan::findOne($id);
 
-        if (isset($_POST['yt0'])) {
+        print_r($_POST);
+
+        if (isset($_POST['WorkPlan'])) {
             if (isset(Yii::$app->session['weeks'])) {
                 $model->semesters = Yii::$app->session['weeks'];
                 unset(Yii::$app->session['weeks']);
@@ -180,6 +183,9 @@ class WorkPlanController extends Controller implements IAdminController
         return $this->redirect(['index']);
     }
 
+    /**
+     * @return string
+     */
     public function actionExecuteGraph()
     {
         $semesters = [];
@@ -237,7 +243,7 @@ class WorkPlanController extends Controller implements IAdminController
         }
         Yii::$app->session['weeks'] = $weeks;
         Yii::$app->session['graph'] = $_POST['graph'];
-        return $this->renderPartial('semestersPlan', ['data' => $semestersForGroups, 'errors' => $errors]);
+        return $this->renderPartial('semesters_plan', ['data' => $semestersForGroups, 'errors' => $errors]);
     }
 
     /**

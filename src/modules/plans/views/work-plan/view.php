@@ -18,13 +18,15 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="row">
-    <h1><?= Html::encode($this->title); ?></h1>
+    <h1><?= Html::encode($this->title.' '.$model->getYearTitle()); ?></h1>
 
     <h4><?= $model->getAttributeLabel('created').': '.date('d.m.Y', $model->created); ?></h4>
 
     <?= Html::a(Yii::t('app', 'Export'), Url::toRoute(['work-plan/export', 'id' => $model->id]), ['class' => 'btn btn-success']); ?>
 
     <?= Html::a(Yii::t('app', 'Update'), Url::toRoute(['work-plan/update', 'id' => $model->id]), ['class' => 'btn btn-info']); ?>
+
+    <?= Html::a(Yii::t('plans', 'Update graph'), Url::toRoute(['work-plan/graph', 'id' => $model->id]), ['class' => 'btn btn-warning']); ?>
 
     <?= Html::a(Yii::t('plans', 'Update subjects'), Url::toRoute(['work-plan/update-subjects', 'id' => $model->id]), ['class' => 'btn btn-primary']); ?>
 

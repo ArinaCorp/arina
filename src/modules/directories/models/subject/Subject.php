@@ -101,6 +101,9 @@ class Subject extends ActiveRecord
             'subject_id' => $this->id])->subjectCycle;
     }
 
+    /**
+     * @return array
+     */
     public static function getList()
     {
         return ArrayHelper::map(Subject::find()->all(), 'id', 'title');

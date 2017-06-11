@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="row">
     <h1><?= Html::encode($this->title); ?></h1>
 
-    <h4><?= $model->getAttributeLabel('created').': '.date('d.m.Y', $model->created); ?></h4>
+    <h4><?= $model->getAttributeLabel('created').': '.\Yii::$app->formatter->asDate($model->created);  ?></h4>
 
     <?php Pjax::begin(); ?>
 
