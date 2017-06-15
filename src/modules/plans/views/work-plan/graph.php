@@ -13,7 +13,7 @@ use app\modules\plans\widgets\Graph;
  * @var $model WorkPlan
  * @var $form ActiveForm
  */
-$this->title = Yii::t('plans', 'Work plan creating');
+$this->title = Yii::t('plans', 'Work plan graph generation');
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('plans', 'Work plans'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
@@ -21,6 +21,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="row">
     <h1><?= Html::encode($this->title); ?></h1>
+
+    <h4><?= Html::encode($model->specialityQualification->title.' - '.$model->getYearTitle()); ?></h4>
 
     <h4><?= $model->getAttributeLabel('created').': '.\Yii::$app->formatter->asDate($model->created);  ?></h4>
 

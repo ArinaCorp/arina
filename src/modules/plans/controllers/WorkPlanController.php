@@ -59,9 +59,7 @@ class WorkPlanController extends Controller implements IAdminController
     {
         $model = WorkPlan::findOne($id);
 
-        print_r($_POST);
-
-        if (isset($_POST['WorkPlan'])) {
+        if (Yii::$app->request->post()) {
             if (isset(Yii::$app->session['weeks'])) {
                 $model->semesters = Yii::$app->session['weeks'];
                 unset(Yii::$app->session['weeks']);
@@ -71,7 +69,7 @@ class WorkPlanController extends Controller implements IAdminController
                 unset(Yii::$app->session['graph']);
             }
             if ($model->save()) {
-                return $this->redirect(Url::to('subjects', ['id' => $model->id]));
+                return $this->redirect(['view', 'id' => $model->id]);
             }
         }
         return $this->render('graph', ['model' => $model]);
@@ -95,7 +93,7 @@ class WorkPlanController extends Controller implements IAdminController
     {
         $model = WorkPlan::findOne($id);
 
-        if (isset($_POST['WorkPlan'])) {
+        if (Yii::$app->request->post()) {
             $model->attributes = $_POST['WorkPlan'];
             if (isset(Yii::$app->session['weeks'])) {
                 $model->semesters = Yii::$app->session['weeks'];
@@ -106,7 +104,7 @@ class WorkPlanController extends Controller implements IAdminController
                 unset(Yii::$app->session['graph']);
             }
             if ($model->save()) {
-                return $this->redirect(['index']);
+                return $this->redirect(['view', 'id' => $model->id]);
             }
         }
 
@@ -131,14 +129,14 @@ class WorkPlanController extends Controller implements IAdminController
     public function actionEditSubjects($id)
     {
         $model = WorkPlan::findOne($id);
-        return $this->render('edit_subjects', ['model' => $model]);
+        return $this->render('update_subject', ['model' => $model]);
     }
 
     /**
      * @param $id
      * @return string
      */
-    public function actionAddSubject($id)
+    public function actionCreateSubject($id)
     {
         $model = new WorkSubject();
         $model->work_plan_id = $id;
@@ -146,10 +144,10 @@ class WorkPlanController extends Controller implements IAdminController
         if (isset($_POST['WorkSubject'])) {
             $model->attributes = $_POST['WorkSubject'];
             if ($model->save())
-                return $this->redirect(Url::to('subjects', ['id' => $id]));
+                return $this->redirect(['view', 'id' => $model->work_plan_id]);
         }
 
-        return $this->render('subject_form', ['model' => $model, 'plan' => WorkPlan::findOne($id)]);
+        return $this->render('create_subject', ['model' => $model]);
     }
 
     /**

@@ -1,14 +1,18 @@
 <?php
 
-use yii\web\View;
-
-use app\modules\plans\models\WorkPlan;
+use yii\data\ActiveDataProvider;
+use yii\grid\GridView;
+use app\modules\plans\models\WorkSubject;
+use yii\grid\ActionColumn;
+use yii\helpers\Html;
+use yii\helpers\Url;
 
 /**
- * @var View $this
- * @var integer $course
- * @var WorkPlan $model
+ * @var $model WorkSubject
+ * @var $subjectDataProvider ActiveDataProvider
+ * @var $course integer
  */
+
 switch ($course) {
     case 1:
         $fall = 0;
@@ -31,6 +35,11 @@ switch ($course) {
         $spring = 1;
 }
 ?>
-<table class="table table-bordered">
-    <?= 'kekee'?>
-</table>
+
+<?= GridView::widget([
+    'dataProvider' => $subjectDataProvider,
+    'columns' => [
+        'subject_id'
+    ],
+]);
+?>

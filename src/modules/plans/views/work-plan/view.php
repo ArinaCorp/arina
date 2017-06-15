@@ -28,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= Html::a(Yii::t('plans', 'Update graph'), Url::toRoute(['work-plan/graph', 'id' => $model->id]), ['class' => 'btn btn-warning']); ?>
 
-    <?= Html::a(Yii::t('plans', 'Update subjects'), Url::toRoute(['work-plan/update-subjects', 'id' => $model->id]), ['class' => 'btn btn-primary']); ?>
+    <?= Html::a(Yii::t('plans', 'Add subject'), Url::toRoute(['work-plan/create-subject', 'id' => $model->id]), ['class' => 'btn btn-primary']); ?>
 
     <br/><br/>
 
@@ -44,5 +44,5 @@ $this->params['breadcrumbs'][] = $this->title;
             ]
     )?>
 
-    <?php $this->render('_subjects', array('model' => $model)); ?>
+    <?= $this->render('_subjects', ['model' => $model]); ?>
 </div>

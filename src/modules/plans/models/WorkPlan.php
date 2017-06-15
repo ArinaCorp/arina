@@ -7,6 +7,8 @@ use yii\db\ActiveRecord;
 use yii\db\ActiveQuery;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use yii\data\ActiveDataProvider;
+use yii\web\HttpException;
 
 use yii\behaviors\TimestampBehavior;
 use nullref\useful\behaviors\JsonBehavior;
@@ -14,7 +16,7 @@ use nullref\useful\behaviors\JsonBehavior;
 use app\modules\directories\models\StudyYear;
 use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 use app\modules\directories\models\department\Department;
-use yii\web\HttpException;
+use app\modules\directories\models\subject\Subject;
 
 /**
  * This is the model class for table "work_plan".
@@ -165,7 +167,7 @@ class WorkPlan extends ActiveRecord
      */
     public function getWorkSubjects()
     {
-        return $this->hasMany(StudySubject::className(), ['work_plan_id' => 'id']);
+        return $this->hasMany(WorkSubject::className(), ['work_plan_id' => 'id']);
     }
 
     /**
@@ -240,7 +242,7 @@ class WorkPlan extends ActiveRecord
     public function afterSave($insert=false, $attributes=[])
     {
         if (!empty($this->work_plan_origin)) {
-            $this->copyWorkPlan(WorkPlan::findOne(['id'=>$this->work_plan_origin]));
+            $this->copyFromWorkPlan(WorkPlan::findOne(['id' => $this->work_plan_origin]));
             $this->work_plan_origin = null;
             $this->setIsNewRecord(false);
             $this->save(false);
@@ -250,12 +252,13 @@ class WorkPlan extends ActiveRecord
             $this->setIsNewRecord(false);
             $this->save(false);
         }
+        return parent::afterSave($insert=false, $attributes=[]);
     }
 
     /**
      * @param WorkPlan $origin
      */
-    protected function copyWorkPlan($origin)
+    protected function copyFromWorkPlan($origin)
     {
         $this->graph = $origin->graph;
         foreach ($origin->workSubjects as $subject) {
@@ -322,6 +325,42 @@ class WorkPlan extends ActiveRecord
      */
     public function getUpdatedForm() {
         return date('d.m.Y H:i', $this->updated);
+    }
+
+    /**
+     * @return ActiveDataProvider
+     */
+    public function getWorkPlanSubjectProvider()
+    {
+        $query = WorkSubject::find()->where(['work_plan_id' => $this->id]);
+
+        $provider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        return $provider;
+    }
+
+    /**
+     * @return array
+     */
+    public function getUnusedSubjects()
+    {
+        $usedSubjects = ArrayHelper::map($this->workSubjects, 'subject_id', 'id');
+        $allSubjects = Subject::getListForSpecialityQualification($this->speciality_qualification_id);
+        $result = [];
+        foreach ($allSubjects as $cycle => $subject) {
+            $result[$cycle] = [];
+            foreach ($subject as $id => $name) {
+                if (!isset($usedSubjects[$id])) {
+                    $result[$cycle][$id] = $name;
+                }
+            }
+            if (empty($result[$cycle])) {
+                unset($result[$cycle]);
+            }
+        }
+        return $result;
     }
 
 }
