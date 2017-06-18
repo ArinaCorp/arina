@@ -13,6 +13,8 @@ use yii\behaviors\TimestampBehavior;
  * @property string $value
  * @property int $created_at
  * @property int $updated_at
+ *
+ * @property EvaluationSystem $system
  */
 class Evaluation extends \yii\db\ActiveRecord
 {
@@ -60,5 +62,18 @@ class Evaluation extends \yii\db\ActiveRecord
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSystem()
+    {
+        return $this->hasOne(EvaluationSystem::className(), ['id' => 'system_id']);
+    }
+
+    public function getSystemLabel()
+    {
+        return $this->system->title;
     }
 }

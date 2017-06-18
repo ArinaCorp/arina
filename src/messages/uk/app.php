@@ -313,4 +313,10 @@ return [
     'Select evaluation system' => 'Оберіть систему оцінювання',
     'Update Evaluation' => 'Оновити оцінку',
     'Short title' => 'Коротка назва ',
+    'Good reason' => 'Поважна причина',
+    'Percent hours' => 'Відсоток годин',
+    'Not Presence Type' => 'Причина відсутності',
+    'Not Presence Types' => 'Причини відсутності',
+    'Create Not Presence Type'=>'Додати причину відсутності',
+
 ];

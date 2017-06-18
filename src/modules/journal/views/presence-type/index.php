@@ -2,15 +2,16 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use app\modules\journal\models\presence\NotPresenceType;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\modules\journal\models\evaluation\EvaluationSearch */
+/* @var $searchModel app\modules\journal\models\presence\NotPresenceTypeSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Evaluations');
+$this->title = Yii::t('app', 'Not Presence Types');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="evaluation-index">
+<div class="not-presence-type-index">
 
     <div class="row">
         <div class="col-lg-12">
@@ -23,26 +24,24 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a(Yii::t('app', 'Create Evaluation'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('app', 'Create Not Presence Type'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        //'filterModel' => $searchModel,
+        'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-//            'id',
+            'title',
+            'label',
             [
-                'attribute' => 'system_id',
+                'attribute' => 'is_great',
                 'value' => function ($model) {
-                    return $model->systemLabel;
-                }
+                    return $model->greatLabel;
+                },
+                'filter' => NotPresenceType::getGreatList(),
             ],
-            'value',
-//            'created_at',
-//            'updated_at',
-
+            'percent_hours',
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
