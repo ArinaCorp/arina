@@ -39,10 +39,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 'contentOptions' => ['style' => 'width: 750px'],
                 'label' => 'title',
                 'format' => 'raw',
-                'value'=>function ($model) {
-        return Html::a($model->getTitle(), Url::toRoute(['study-plan/view', 'id' => $model->id]));
-    },
-
+                'value' => function ($model) {
+                        return Html::a($model->getTitle(), Url::toRoute(['study-plan/view', 'id' => $model->id]));
+                    },
             ],
             [
                 'header' => Yii::t('app', 'Updated'),

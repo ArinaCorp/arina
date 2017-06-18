@@ -44,6 +44,16 @@ class WorkPlan extends ActiveRecord
     public $study_plan_origin;
     public $work_plan_origin;
 
+    const SCENARIO_GRAPH = 'graph';
+
+    public function scenarios()
+    {
+        $scenarios = parent::scenarios();
+        $scenarios[self::SCENARIO_GRAPH] = ['semesters',];
+        return $scenarios;
+    }
+
+
     /**
      * @return array
      */
@@ -68,15 +78,16 @@ class WorkPlan extends ActiveRecord
     public function rules()
     {
         return [
-            [['speciality_qualification_id', 'study_year_id'], 'required'],
+            [['speciality_qualification_id', 'study_year_id', 'study_plan_origin'], 'required'],
             [['semesters'], 'required',
                 'message' => Yii::t('plans', 'Click "Generate" and check the data'), 'on' => 'graphs'
             ],
-            [['speciality_qualification_id', 'study_year_id'], 'uniqueRecord', 'on' => 'insert'],
+            [['study_year_id'], 'unique', 'targetAttribute' => ['study_year_id', 'speciality_qualification_id']],
             [['speciality_qualification_id',], 'integer'],
             [['created', 'updated'], 'safe'],
             [['id', 'speciality_qualification_id'], 'safe', 'on' => 'search'],
             [['study_plan_origin', 'work_plan_origin'], 'checkOrigin', 'on' => 'insert'],
+            [['semesters', ], 'required', 'on' => self::SCENARIO_GRAPH],
         ];
     }
 
@@ -189,6 +200,7 @@ class WorkPlan extends ActiveRecord
 
     public function uniqueRecord()
     {
+        var_dump('check');
         if (!$this->hasErrors()) {
             $record = self::find()->where([
                 'speciality_qualification_id' => $this->speciality_qualification_id,
@@ -256,6 +268,20 @@ class WorkPlan extends ActiveRecord
     }
 
     /**
+     * @param bool $insert
+     * @return bool
+     * @throws HttpException
+     */
+    /*public function beforeSave($insert=false) {
+        var_dump($this->getScenario());
+        if (!$this->isNewRecord)
+            if ($this->getScenario() == 'graph')
+                if (count($this->semesters) < 8)
+                    throw new HttpException(Yii::t('plans', 'Not enough groups for work plan'));
+        return parent::beforeSave($insert);
+    }*/
+
+    /**
      * @param WorkPlan $origin
      */
     protected function copyFromWorkPlan($origin)
@@ -298,19 +324,6 @@ class WorkPlan extends ActiveRecord
             $model->control = $subject->control;
             $model->save();
         }
-    }
-
-    /**
-     * @param bool $insert
-     * @return bool
-     * @throws HttpException
-     */
-    public function beforeSave($insert=false)
-    {
-        if ($this->getScenario() == 'graph') {
-            if (count($this->semesters) < 8) throw new HttpException(Yii::t('plans', 'No matching groups to plan'));
-        }
-        return parent::beforeSave(false);
     }
 
     /**
@@ -361,6 +374,11 @@ class WorkPlan extends ActiveRecord
             }
         }
         return $result;
+    }
+
+    public function getDocument()
+    {
+        Yii::$app->excel->makeWorkPlan($this);
     }
 
 }

@@ -38,7 +38,7 @@ use app\modules\directories\models\StudyYear;
  * The followings are the available model relations:
  * @property WorkPlan $workPlan
  * @property Subject $subject
- * @property CyclicCommission $cycle_commission
+ * @property CyclicCommission $cyclicCommission
  */
 class WorkSubject extends ActiveRecord
 {
@@ -75,7 +75,7 @@ class WorkSubject extends ActiveRecord
      */
     public function getTitle()
     {
-        return (!(empty($this->diploma_name) && empty($this->certificate_name)) ? '* ' : '') . $this->subject->title . (($this->dual_lab_works || $this->dual_practice) ? ' *' : '');
+        return (!(empty($this->diploma_name) && empty($this->certificate_name)) ? '* ' : '') . $this->subject->title . (($this->dual_lab_work || $this->dual_practice) ? ' *' : '');
     }
 
     /**
@@ -85,12 +85,11 @@ class WorkSubject extends ActiveRecord
     {
         return [
             [['id', 'work_plan_id', 'subject_id', 'cyclic_commission_id', 'project_hours'], 'integer'],
-            [['subject_id'], 'required'],
+            [['subject_id', 'cyclic_commission_id'], 'required'],
             [['certificate_name', 'diploma_name'], 'string', 'max' => 255],
             [['id'], 'unique'],
             [['subject_id', 'total', 'lectures', 'lab_works', 'practices', 'weeks', 'control', 'cyclic_commission_id',
                 'certificate_name', 'diploma_name', 'project_hours'], 'safe'],
-            [['total', 'lectures', 'lab_works', 'practices', ], 'default', 'value' => [0, 0, 0, 0, 0, 0, 0, 0]],
         ];
     }
 
@@ -101,12 +100,12 @@ class WorkSubject extends ActiveRecord
     {
         return [
             'work_plan_id' => Yii::t('plans', 'Work plan'),
-            'subject_id' => Yii::t('app', 'Subject'),
-            'total' => Yii::t('app', 'Total'),
+            'subject_id' => Yii::t('plans', 'Subject'),
+            'total' => Yii::t('plans', 'Total'),
             'lectures' => Yii::t('plans', 'Lectures'),
-            'lab_works' => Yii::t('plans', 'Lab works'),
+            'lab_works' => Yii::t('plans', 'Laboratory works'),
             'practices' => Yii::t('plans', 'Practice works'),
-            'weeks' => Yii::t('app', 'Weeks'),
+            'weeks' => Yii::t('plans', 'Weeks'),
             'control' => Yii::t('plans', 'Control'),
             'cyclic_commission_id' => Yii::t('app', 'Cyclic commission'),
             'certificate_name' => Yii::t('plans', 'Certificate name'),
@@ -115,6 +114,13 @@ class WorkSubject extends ActiveRecord
             'control_hours' => Yii::t('plans', 'Control hours'),
             'dual_lab_work' => Yii::t('plans', 'Dual laboratory work'),
             'dual_practice'=>Yii::t('plans', 'Dual practice work'),
+            'test' => Yii::t('plans', 'Test'),
+            'exam' => Yii::t('plans', 'Exam'),
+            'dpa' => Yii::t('plans', 'DPA'),
+            'da' => Yii::t('plans', 'DA'),
+            'course_work' => Yii::t('plans', 'Course work'),
+            'course_project' => Yii::t('plans', 'Course project'),
+            'classes_week' => Yii::t('plans', 'Classes for week'),
         ];
     }
 
@@ -214,43 +220,4 @@ class WorkSubject extends ActiveRecord
         return ArrayHelper::map($subjects, 'id', 'subject.title');
     }
 
-    /**
-     * @param $params
-     * @return ActiveDataProvider
-     */
-    public function search($params)
-    {
-        $query = WorkSubject::find();
-
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-        ]);
-
-        $this->load($params);
-
-        if (!$this->validate()) {
-            return $dataProvider;
-        }
-
-        $query->andFilterWhere([
-            'id' => $this->id,
-            'work_plan_id' => $this->work_plan_id,
-            'subject_id' => $this->subject_id,
-            'cyclic_commission_id' => $this->cyclic_commission_id,
-            'project_hours' => $this->project_hours,
-            'dual_lab_works' => $this->dual_lab_work,
-            'dual_practice' => $this->dual_practice,
-        ]);
-
-        $query->andFilterWhere(['like', 'total', $this->total])
-            ->andFilterWhere(['like', 'lectures', $this->lectures])
-            ->andFilterWhere(['like', 'lab_works', $this->lab_works])
-            ->andFilterWhere(['like', 'practices', $this->practices])
-            ->andFilterWhere(['like', 'weeks', $this->weeks])
-            ->andFilterWhere(['like', 'control', $this->control])
-            ->andFilterWhere(['like', 'certificate_name', $this->certificate_name])
-            ->andFilterWhere(['like', 'diploma_name', $this->diploma_name])
-            ->andFilterWhere(['like', 'control_hours', $this->control_hours]);
-        return $dataProvider;
-    }
 }

@@ -2,7 +2,6 @@
 
 namespace app\modules\plans\models;
 
-use app\behaviors\StrBehavior;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\data\ActiveDataProvider;

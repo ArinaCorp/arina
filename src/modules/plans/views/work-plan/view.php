@@ -44,5 +44,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ]
     )?>
 
+    <?= $model->checkSubjects(); ?>
+
     <?= $this->render('_subjects', ['model' => $model]); ?>
 </div>

@@ -44,6 +44,7 @@ class WorkPlanController extends Controller implements IAdminController
             $model->created = time();
 
             if ($model->save()) {
+                $model->scenario = WorkPlan::SCENARIO_GRAPH;
                 return $this->redirect(['graph', 'id' => $model->id]);
             }
         }
@@ -124,11 +125,32 @@ class WorkPlanController extends Controller implements IAdminController
 
     /**
      * @param $id
-     * @return string
      */
-    public function actionEditSubjects($id)
+    public function actionExport($id)
     {
-        $model = WorkPlan::findOne($id);
+        /**
+         * @var $model WorkPlan
+         */
+        $model = $this->findModel($id);
+        $model->getDocument();
+    }
+
+    /**
+     * @param $id
+     * @return string|Response
+     */
+    public function actionUpdateSubject($id)
+    {
+        /** @var WorkSubject $model */
+        $model = WorkSubject::findOne($id);
+
+        if (isset($_POST['WorkSubject'])) {
+            $model->setAttributes($_POST['WorkSubject'], false);
+            if ($model->save()) {
+                return $this->redirect(Url::toRoute(['study-plan/view', 'id' => $model->study_plan_id]));
+            }
+        }
+
         return $this->render('update_subject', ['model' => $model]);
     }
 
@@ -148,27 +170,6 @@ class WorkPlanController extends Controller implements IAdminController
         }
 
         return $this->render('create_subject', ['model' => $model]);
-    }
-
-    /**
-     * @param $id
-     * @return string|Response
-     */
-    public function actionEditSubject($id)
-    {
-        /**
-         * @var WorkSubject $model
-         */
-        $model = $this->findModel($id);
-
-        if (isset($_POST['WorkSubject'])) {
-            $model->attributes = $_POST['WorkSubject'];
-            if ($model->save()) {
-                return $this->redirect(Url::to('view', ['id' => $model->work_plan_id]));
-            }
-        }
-
-        return $this->render('subject_form', ['model' => $model, 'plan' => $model->work_plan]);
     }
 
     /**
