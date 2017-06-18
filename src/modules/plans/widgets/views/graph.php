@@ -148,6 +148,7 @@ jQuery('#generate').click(function (e) {
 
     jQuery("div.result").fadeOut();
     loader.show();
+    console.log('generated');
     var done = function (html) {
         loader.fadeOut();
         jQuery("div.result").empty().append(html).fadeIn();

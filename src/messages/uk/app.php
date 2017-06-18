@@ -311,5 +311,6 @@ return [
     'Evaluation' => 'Оцінка',
     'Create Evaluation' => 'Створити оцінку',
     'Select evaluation system' => 'Оберіть систему оцінювання',
-    'Update Evaluation' => 'Оновити оцінку'
+    'Update Evaluation' => 'Оновити оцінку',
+    'Short title' => 'Коротка назва ',
 ];

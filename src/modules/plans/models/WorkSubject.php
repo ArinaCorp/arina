@@ -9,7 +9,6 @@ use yii\helpers\ArrayHelper;
 use yii\data\ActiveDataProvider;
 
 use nullref\useful\behaviors\JsonBehavior;
-use app\behaviors\StrBehavior;
 
 use app\modules\directories\models\subject\Subject;
 use app\modules\directories\models\cyclic_commission\CyclicCommission;
@@ -37,7 +36,7 @@ use app\modules\directories\models\StudyYear;
  * @property bool $dual_practice
  *
  * The followings are the available model relations:
- * @property WorkPlan $work_plan
+ * @property WorkPlan $workPlan
  * @property Subject $subject
  * @property CyclicCommission $cycle_commission
  */
@@ -68,7 +67,15 @@ class WorkSubject extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%wp_subject}}';
+        return '{{%work_subject}}';
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle()
+    {
+        return (!(empty($this->diploma_name) && empty($this->certificate_name)) ? '* ' : '') . $this->subject->title . (($this->dual_lab_works || $this->dual_practice) ? ' *' : '');
     }
 
     /**
@@ -78,10 +85,12 @@ class WorkSubject extends ActiveRecord
     {
         return [
             [['id', 'work_plan_id', 'subject_id', 'cyclic_commission_id', 'project_hours'], 'integer'],
-            [['subject_id', 'dual_lab_work', 'dual_practice'], 'required'],
-            [['total', 'lectures', 'lab_works', 'practices', 'weeks', 'control'], 'default', 'value' => ''],
+            [['subject_id'], 'required'],
             [['certificate_name', 'diploma_name'], 'string', 'max' => 255],
             [['id'], 'unique'],
+            [['subject_id', 'total', 'lectures', 'lab_works', 'practices', 'weeks', 'control', 'cyclic_commission_id',
+                'certificate_name', 'diploma_name', 'project_hours'], 'safe'],
+            [['total', 'lectures', 'lab_works', 'practices', ], 'default', 'value' => [0, 0, 0, 0, 0, 0, 0, 0]],
         ];
     }
 
@@ -126,6 +135,15 @@ class WorkSubject extends ActiveRecord
     }
 
     /**
+     * @return ActiveQuery
+     */
+    public function getWorkPlan()
+    {
+        return $this->hasOne(WorkPlan::className(), ['id' => 'work_plan_id']);
+    }
+
+
+    /**
      * @param $semester
      * @return integer
      */
@@ -140,7 +158,7 @@ class WorkSubject extends ActiveRecord
      */
     public function getClasses($semester)
     {
-        return $this->weeks[$semester] * $this->work_plan->semesters[$semester];
+        return $this->weeks[$semester] * $this->workPlan->semesters[$semester];
     }
 
     /**
@@ -185,13 +203,13 @@ class WorkSubject extends ActiveRecord
         $subjects = [];
 
         if ($onlyProjects) {
-            foreach ($model->work_plans as $plan)
-                foreach ($plan->work_subjects as $subject)
+            foreach ($model->workPlans as $plan)
+                foreach ($plan->workSubjects as $subject)
                     if ($subject->hasProject())
                         $subjects[] = $subject;
         } else {
-            foreach ($model->work_plans as $plan)
-                $subjects = array_merge($subjects, $plan->work_subjects);
+            foreach ($model->workPlans as $plan)
+                $subjects = array_merge($subjects, $plan->workSubjects);
         }
         return ArrayHelper::map($subjects, 'id', 'subject.title');
     }

@@ -60,7 +60,6 @@ class DefaultController extends Controller implements IAdminController
         if ($load) {
             $load->delete();
         }
-        var_dump($year->id);
         foreach ($year->workPlans as $plan) {
             $groups = $plan->specialityQualification->getGroupsByStudyYear($year->id);
             foreach ($plan->workSubjects as $subject) {

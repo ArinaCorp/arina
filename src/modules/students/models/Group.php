@@ -365,7 +365,6 @@ class Group extends ActiveRecord
             $year = StudyYear::getCurrentYear();
         }
         $value = $year->getYearEnd() - $this->studyYear->year_start;
-        var_dump($value);
         return $value;
     }
 
