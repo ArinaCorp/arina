@@ -44,7 +44,7 @@ class SpecialityQualification extends ActiveRecord
     public function rules()
     {
         return [
-            [['title','years_count', 'months_count', 'speciality_id', 'qualification_id'], 'required'],
+            [['title', 'years_count', 'months_count', 'speciality_id', 'qualification_id'], 'required'],
             [['years_count', 'months_count', 'speciality_id', 'qualification_id'], 'integer'],
             [['title'], 'string', 'max' => 255],
         ];
@@ -57,11 +57,11 @@ class SpecialityQualification extends ActiveRecord
 
     public function getCountCourses()
     {
-        $count = $this->years_count;
+        $count = $this->years_count + 0;
         if ($this->months_count > 0) {
             $count++;
         }
-        return $count;
+        return $count + 0;
     }
 
     public function attributeLabels()
@@ -168,7 +168,7 @@ class SpecialityQualification extends ActiveRecord
     /**
      * @return Group[]
      */
-    public function getGroupsActive()
+    public function getGroupsActive($year_id = null)
     {
 
         $array = $this->groups;
@@ -176,7 +176,7 @@ class SpecialityQualification extends ActiveRecord
          * @var Group[] $array
          */
         foreach ($array as $key => $item) {
-            if ($item->active) unset($array[$key]);
+            if (!$item->getActive($year_id)) unset($array[$key]);
         }
         return $array;
     }
@@ -184,9 +184,9 @@ class SpecialityQualification extends ActiveRecord
     /**
      * @return array
      */
-    public function getGroupsActiveList()
+    public function getGroupsActiveList($year_id = null)
     {
-        return ArrayHelper::map($this->getGroupsActive(), 'id', 'title');
+        return ArrayHelper::map($this->getGroupsActive($year_id), 'id', 'title');
     }
 
     /**

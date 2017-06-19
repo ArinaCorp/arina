@@ -94,6 +94,18 @@ class SpecialityQualificationController extends Controller implements IAdminCont
         }
     }
 
+    public function actionViewGroups($id)
+    {
+        $model = $this->findModel($id);
+        if (Yii::$app->request->post('year_id')) {
+            foreach ($model->getGroupsActive(Yii::$app->request->post('year_id')) as $item) {
+                echo $item->title . '<br/>';
+            };
+        } else {
+            return $this->render('groups');
+        }
+    }
+
     /**
      * Deletes an existing SpecialityQualification model.
      * If deletion is successful, the browser will be redirected to the 'index' page.

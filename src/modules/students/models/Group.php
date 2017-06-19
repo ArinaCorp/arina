@@ -234,9 +234,13 @@ class Group extends ActiveRecord
     }
 
     public
-    function getActive()
+    function getActive($year_id)
     {
-        return $this->specialityQualification->getCountCourses() < (StudyYear::getCurrentYear()->year_start - $this->studyYear->year_start);
+        $queryYear = StudyYear::findOne($year_id);
+        if ($queryYear->year_start < $this->studyYear->year_start) {
+            return false;
+        }
+        return $this->specialityQualification->getCountCourses() > ($queryYear->year_start - $this->studyYear->year_start);
     }
 
     public
