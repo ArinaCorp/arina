@@ -2,11 +2,13 @@
 
 namespace app\modules\directories\models\cyclic_commission;
 
-use app\modules\work_subject\models\WorkSubject;
 use Yii;
+use yii\helpers\ArrayHelper;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
-use app\modules\teacher\models\Teacher;
+
+use app\modules\employee\models\Employee;
+use app\modules\plans\models\WorkSubject;
 
 /**
  * This is the model class for table "cyclic_commission".
@@ -16,9 +18,9 @@ use app\modules\teacher\models\Teacher;
  * @property string $title
  * @property integer $head_id
  *
- * @property Teacher[] $teachers
- * @property WorkSubject[] $work_subjects
- * @property Teacher $head
+ * @property Employee[] $employees
+ * @property WorkSubject[] $workSubjects
+ * @property Employee $head
  */
 class CyclicCommission extends ActiveRecord
 {
@@ -55,9 +57,9 @@ class CyclicCommission extends ActiveRecord
     /**
      * @return ActiveQuery
      */
-    public function getTeachers()
+    public function getEmployees()
     {
-        return $this->hasMany(Teacher::className(), ['cyclic_commission_id' => 'id']);
+        return $this->hasMany(Employee::className(), ['cyclic_commission_id' => 'id']);
     }
 
     /**
@@ -65,7 +67,7 @@ class CyclicCommission extends ActiveRecord
      */
     public function getWorkSubjects()
     {
-        return $this->hasMany(WorkSubject::className(), ['subject_id' => 'id']);
+        return $this->hasMany(WorkSubject::className(), ['cyclic_commission_id' => 'id']);
     }
 
     /**
@@ -73,7 +75,7 @@ class CyclicCommission extends ActiveRecord
      */
     public function getHead()
     {
-        return $this->hasOne(Teacher::className(), ['id' => 'head_id']);
+        return $this->hasOne(Employee::className(), ['id' => 'head_id']);
     }
 
     /**
@@ -85,8 +87,17 @@ class CyclicCommission extends ActiveRecord
             'id' => 'ID',
             'title' => Yii::t('terms', 'Title'),
             'head_id' => Yii::t('terms', 'Head'),
-            'teachers'=>Yii::t('terms', 'Teachers'),
+            'employees'=>Yii::t('terms', 'Employees'),
         ];
     }
+
+    /**
+     * @return mixed
+     */
+    public static function getList()
+    {
+        return ArrayHelper::map(self::find()->all(), 'id', 'title');
+    }
+
 
 }

@@ -11,6 +11,7 @@ use yii\web\Response;
 
 use app\modules\plans\models\WorkPlan;
 use app\modules\plans\models\WorkSubject;
+use app\modules\plans\models\StudyPlan;
 use app\modules\plans\models\WorkPlanSearch;
 
 class WorkPlanController extends Controller implements IAdminController
@@ -40,10 +41,14 @@ class WorkPlanController extends Controller implements IAdminController
 
         if ($model->load(Yii::$app->request->post())) {
             $model->attributes = $_POST['WorkPlan'];
-
             $model->created = time();
 
+            $post = Yii::$app->request->post('WorkPlan');
+            $model->study_plan_origin = $post['study_plan_origin'];
+            $model->work_plan_origin = $post['work_plan_origin'];
+
             if ($model->save()) {
+                $model->scenario = WorkPlan::SCENARIO_GRAPH;
                 return $this->redirect(['graph', 'id' => $model->id]);
             }
         }
@@ -124,11 +129,32 @@ class WorkPlanController extends Controller implements IAdminController
 
     /**
      * @param $id
-     * @return string
      */
-    public function actionEditSubjects($id)
+    public function actionExport($id)
     {
-        $model = WorkPlan::findOne($id);
+        /**
+         * @var $model WorkPlan
+         */
+        $model = $this->findModel($id);
+        $model->getDocument();
+    }
+
+    /**
+     * @param $id
+     * @return string|Response
+     */
+    public function actionUpdateSubject($id)
+    {
+        /** @var WorkSubject $model */
+        $model = WorkSubject::findOne($id);
+
+        if (Yii::$app->request->post()) {
+            $model->attributes = $_POST['WorkSubject'];
+            if ($model->save()) {
+                return $this->redirect(['view', 'id' => $model->work_plan_id]);
+            }
+        }
+
         return $this->render('update_subject', ['model' => $model]);
     }
 
@@ -141,7 +167,7 @@ class WorkPlanController extends Controller implements IAdminController
         $model = new WorkSubject();
         $model->work_plan_id = $id;
 
-        if (isset($_POST['WorkSubject'])) {
+        if (Yii::$app->request->post()) {
             $model->attributes = $_POST['WorkSubject'];
             if ($model->save())
                 return $this->redirect(['view', 'id' => $model->work_plan_id]);
@@ -150,35 +176,12 @@ class WorkPlanController extends Controller implements IAdminController
         return $this->render('create_subject', ['model' => $model]);
     }
 
-    /**
-     * @param $id
-     * @return string|Response
-     */
-    public function actionEditSubject($id)
-    {
-        /**
-         * @var WorkSubject $model
-         */
-        $model = $this->findModel($id);
-
-        if (isset($_POST['WorkSubject'])) {
-            $model->attributes = $_POST['WorkSubject'];
-            if ($model->save()) {
-                return $this->redirect(Url::to('view', ['id' => $model->work_plan_id]));
-            }
-        }
-
-        return $this->render('subject_form', ['model' => $model, 'plan' => $model->work_plan]);
-    }
-
-    /**
-     * @param $id
-     * @return Response
-     */
     public function actionDeleteSubject($id)
     {
-        WorkSubject::findOne($id)->delete();
-        return $this->redirect(['index']);
+        $subject = WorkSubject::findOne($id);
+        $planId = $subject->work_plan_id;
+        $subject->delete();
+        return $this->redirect(Url::toRoute(['work-plan/view', 'id' => $planId]));
     }
 
     /**

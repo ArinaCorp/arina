@@ -14,70 +14,7 @@ use app\modules\directories\models\subject\Subject;
  * @var $model StudySubject
  * @var ActiveForm $form
  */
-
-$this->registerJs(<<<JS
-    console.log('loaded');
-JS
-);
 ?>
-<!--<php $js = <<<JS
-
-var weeks = [
-        <php echo implode(', ', StudyPlan::findOne(['id' => $model->study_plan_id])->semesters); ?>
-    ];
-
-
-    function calcClassesWeeks() {
-        var classes_weeks = 0;
-        for (i = 0; i < 8; i++) {
-            var e = "#StudySubject_weeks_" + i;
-            if ($(e).val())
-                classes_weeks += weeks[i] * parseInt($(e).val());
-        }
-        $("#classes_weeks").val(classes_weeks);
-    }
-
-    var flag = false;
-
-    $(function () {
-        var selector = $('#StudySubject_lectures, #StudySubject_labs, #StudySubject_practs');
-
-        function calcClasses() {
-            selector.change(function () {
-                var amount = 0;
-                selector.each(function (i, e) {
-                        var val = $(e).val();
-                        if (val) amount += parseInt(val);
-                    }
-                );
-                $('#classes').val(amount);
-            })
-        }
-        calcClasses();
-        calcClassesWeeks();
-
-        $("input[id^='StudySubject_weeks_']").change(function () {
-            calcClassesWeeks();
-        });
-
-
-        $("input[type='submit']").click(function () {
-            flag = true;
-        });
-
-        window.addEventListener("beforeunload", function (event) {
-            var confirmationMessage = 'Якщо ви не натиснули "Додати" дані не збережуться';
-            if (!flag) {
-                (event || window.event).returnValue = confirmationMessage;     //Firefox, IE
-                return confirmationMessage;                                    //Chrome, Opera, Safari
-            }
-        });
-        console.log('le');
-    });
-JS;
-
-    $this->registerJs($js);
-?>-->
 
 <div class="study-subject-form">
     <?php Pjax::begin(); ?>
@@ -122,7 +59,7 @@ JS;
                 'value' => $model->isNewRecord ? 0 : $model->total,])?>
         </div>
         <div class="col-sm-3">
-            <label class="control-label" for="classesweek-total"><?=$model->getAttributeLabel('classes_week')?></label>
+            <label class="control-label" for="classes_week-total"><?=$model->getAttributeLabel('classes_week')?></label>
             <?= TouchSpin::widget(['disabled' => true, 'name' => 'classes_week'])?>
         </div>
         <div class="col-sm-3">

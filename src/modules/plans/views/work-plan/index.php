@@ -40,7 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => 'title',
                 'format' => 'raw',
                 'value' => function ($model) {
-                    return Html::a($model->getTitle(), Url::toRoute(['work-plan/view', 'id' => $model->id]));
+                    return $model->getTitle();
                 },
             ],
             [

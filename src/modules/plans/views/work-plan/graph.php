@@ -43,7 +43,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= Graph::widget(
         [
             'model' => $model,
-            'field' => '', 'graph' => $model->graph,
+            'field' => '',
+            'graph' => $model->graph,
             'speciality_qualification_id' => $model->speciality_qualification_id,
             'study_year_id' => $model->study_year_id,
             'studyPlan' => false,
