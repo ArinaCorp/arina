@@ -61,7 +61,7 @@ use app\modules\directories\models\subject\Subject;
             <?= $form->field($model, 'cyclic_commission_id')->widget(Select2::className(),
                 [
                     'data' => CyclicCommission::getList(),
-                    'options' =>[ 'placeholder' => Yii::t('plans', 'Select subject')]
+                    'options' =>[ 'placeholder' => Yii::t('plans', 'Select cyclic commission')]
                 ]) ?>
         </div>
 
@@ -75,13 +75,12 @@ use app\modules\directories\models\subject\Subject;
                 ['label' => $model->getAttributeLabel('dual_lab_work')]);?>
         </div>
     </div>
-    </div>
 
     <?php for ($i = 0; $i < 8; $i++): ?>
         <div class="span6 semester" id="semester_<?= $i; ?>">
             <h4><?php echo $i + 1; ?> <?= Yii::t('plans', 'Semester'); ?>:
-                <?= $model->workPlan->semesters[$i]; ?> <?= Yii::t('plans','Weeks');?>
-                (<span class="total">0</span> <?= Yii::t('plans', 'Hours'); ?>)</h4>
+                <?= $model->workPlan->semesters[$i]; ?> <?= Yii::t('plans','OfWeeks');?>
+                (<span class="total">0</span> <?= Yii::t('plans', 'OfHours'); ?>)</h4>
 
             <div class="row">
                 <div class="col-sm-2">
@@ -93,11 +92,11 @@ use app\modules\directories\models\subject\Subject;
                 </div>
 
                 <div class="col-sm-2">
-                    <label class="control-label" for="classes"><?=$model->getAttributeLabel('classes_week')?></label>
+                    <label class="control-label" for="classes"><?=$model->getAttributeLabel('classes')?></label>
                     <?= Html::textInput(
                         "classes_$i",
                         '',
-                        ['type' => 'number', 'min' => 0, 'placeholder' => Yii::t('plans','classes_week'),
+                        ['type' => 'number', 'min' => 0, 'placeholder' => $model->getAttributeLabel('classes'),
                             'readonly' => true, 'style' => 'width:140px']
                     ); ?>
                 </div>

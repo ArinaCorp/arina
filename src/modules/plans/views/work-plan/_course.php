@@ -1,15 +1,11 @@
 <?php
 
-use yii\data\ActiveDataProvider;
-use yii\grid\GridView;
 use app\modules\plans\models\WorkPlan;
-use yii\grid\ActionColumn;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
 /**
  * @var $model WorkPlan
- * @var $subjectDataProvider ActiveDataProvider
  * @var $course integer
  */
 
@@ -90,14 +86,14 @@ switch ($course) {
             <tr>
                 <td><?= Html::a(
                         Yii::t('app', 'Update'),
-                        Url::toRoute(['work-plan/edit-subject', 'id' => $subject->id])
+                        Url::toRoute(['work-plan/update-subject', 'id' => $subject->id])
                     ); ?>
                     <?= Html::a(
                         Yii::t('app', 'Delete'),
                         Url::toRoute(['work-plan/delete-subject', 'id' => $subject->id])
                     ); ?>
                 <td><?= isset($subject->subject) ? $subject->subject->title : $subject->subject_id; ?>:
-                    <b>(<?= array_sum(isset($subject->subject) ? $subject->total : array()); ?> годин)</b>
+                    <b>(<?= array_sum(isset($subject->subject) ? $subject->total : []); ?> годин)</b>
                 </td>
 
                 <td><?= $subject->total[$fall];
@@ -137,25 +133,25 @@ switch ($course) {
         <?php endif; ?>
     <?php endforeach; ?>
     <tr>
-        <td colspan="2"><b>Всього</b></td>
+        <td colspan="2"><b><?= Yii::t('plans', 'Total'); ?></b></td>
 
-        <td><b><?= $fallHours['total']; ?></b></td>
-        <td><b><?= $fallHours['classes']; ?></b></td>
-        <td><b><?= $fallHours['lectures']; ?></b></td>
-        <td><b><?= $fallHours['practices']; ?></b></td>
-        <td><b><?= $fallHours['lab_works']; ?></b></td>
-        <td><b><?= $fallHours['self_work']; ?></b></td>
-        <td><b><?= $fallHours['project']; ?></b></td>
-        <td><b><?= $fallHours['weeks']; ?></b></td>
+        <td><b><?= $fallHours['total']; ?>      </b></td>
+        <td><b><?= $fallHours['classes']; ?>    </b></td>
+        <td><b><?= $fallHours['lectures']; ?>   </b></td>
+        <td><b><?= $fallHours['practices']; ?>  </b></td>
+        <td><b><?= $fallHours['lab_works']; ?>  </b></td>
+        <td><b><?= $fallHours['self_work']; ?>  </b></td>
+        <td><b><?= $fallHours['project']; ?>    </b></td>
+        <td><b><?= $fallHours['weeks']; ?>      </b></td>
 
-        <td><b><?= $springHours['total']; ?></b></td>
-        <td><b><?= $springHours['classes']; ?></b></td>
-        <td><b><?= $springHours['lectures']; ?></b></td>
+        <td><b><?= $springHours['total']; ?>    </b></td>
+        <td><b><?= $springHours['classes']; ?>  </b></td>
+        <td><b><?= $springHours['lectures']; ?> </b></td>
         <td><b><?= $springHours['practices']; ?></b></td>
         <td><b><?= $springHours['lab_works']; ?></b></td>
         <td><b><?= $springHours['self_work']; ?></b></td>
-        <td><b><?= $springHours['project']; ?></b></td>
-        <td><b><?= $springHours['weeks']; ?></b></td>
+        <td><b><?= $springHours['project']; ?>  </b></td>
+        <td><b><?= $springHours['weeks']; ?>    </b></td>
 
         <td></td>
     </tr>

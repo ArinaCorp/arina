@@ -4,8 +4,6 @@ use yii\web\View;
 use yii\bootstrap\ActiveForm;
 use yii\widgets\Pjax;
 use kartik\select2\Select2;
-use yii\helpers\Url;
-use kartik\depdrop\DepDrop;
 
 use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 use app\modules\plans\models\StudyPlan;

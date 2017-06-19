@@ -198,7 +198,8 @@ class SpecialityQualification extends ActiveRecord
         $list = [];
         foreach ($this->groups as $group) {
             /** @var Group $group */
-            $list[$group->getSystemTitle()] = $group->getCourse($yearId);
+            if ($group->getCourse($yearId) < 5)
+                $list[$group->getSystemTitle()] = $group->getCourse($yearId);
         }
         array_multisort($list);
         return $list;

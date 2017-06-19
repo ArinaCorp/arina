@@ -8,7 +8,6 @@ use yii\db\ActiveQuery;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\data\ActiveDataProvider;
-use yii\web\HttpException;
 
 use yii\behaviors\TimestampBehavior;
 use nullref\useful\behaviors\JsonBehavior;
@@ -78,7 +77,7 @@ class WorkPlan extends ActiveRecord
     public function rules()
     {
         return [
-            [['speciality_qualification_id', 'study_year_id', 'study_plan_origin'], 'required'],
+            [['speciality_qualification_id', 'study_year_id', 'study_plan_origin'], 'required', 'on' => 'create'],
             [['semesters'], 'required',
                 'message' => Yii::t('plans', 'Click "Generate" and check the data'), 'on' => 'graphs'
             ],
@@ -88,6 +87,7 @@ class WorkPlan extends ActiveRecord
             [['id', 'speciality_qualification_id'], 'safe', 'on' => 'search'],
             [['study_plan_origin', 'work_plan_origin'], 'checkOrigin', 'on' => 'insert'],
             [['semesters', ], 'required', 'on' => self::SCENARIO_GRAPH],
+
         ];
     }
 
@@ -97,7 +97,7 @@ class WorkPlan extends ActiveRecord
     public function getCourseAmount()
     {
         /** @var StudyPlan $studyPlan */
-        $studyPlan = StudyPlan::find()->where(['speciality_qualification_id' => $this->speciality_qualification_id]);
+        $studyPlan = StudyPlan::findOne(['speciality_qualification_id' => $this->speciality_qualification_id]);
         if ($studyPlan)
             return count($studyPlan->graph);
         else
@@ -198,20 +198,6 @@ class WorkPlan extends ActiveRecord
         ];
     }
 
-    public function uniqueRecord()
-    {
-        var_dump('check');
-        if (!$this->hasErrors()) {
-            $record = self::find()->where([
-                'speciality_qualification_id' => $this->speciality_qualification_id,
-                'study_year_id' => $this->study_year_id
-            ]);
-            if (isset($record)) {
-                $this->addError('study_year_id', Yii::t('plans', 'For this study year work plan has been created'));
-            }
-        }
-    }
-
     /**
      * @return string
      */
@@ -234,63 +220,30 @@ class WorkPlan extends ActiveRecord
      */
     public function checkSubjects()
     {
-        $warnings = array();
+        $warnings = [];
         foreach ($this->workSubjects as $subject) {
             if (abs(array_sum($subject->total) - (isset($subject->control_hours['total']) ?
                         $subject->control_hours['total'] : 0)) > self::HOURS_DIFF) {
                 if (isset($subject->subject))
-                    $warnings[] = Yii::t('app', 'Subject') . $subject->subject->title .
-                        Yii::t('plans', 'The total number of hours is different from the curriculum more than on') .
-                        self::HOURS_DIFF . Yii::t('plans', 'Hours');
+                    $warnings[] = Yii::t('app', 'Subject') .' '. $subject->subject->title . ' '.
+                        Yii::t('plans', 'The total number of hours is different from the curriculum more than on') . ' '.
+                        self::HOURS_DIFF .' '. Yii::t('plans', 'OHours');
             }
         }
         return implode(Html::tag('br'), $warnings);
     }
 
     /**
-     * @param bool $insert
-     * @param array $attributes
-     */
-    public function afterSave($insert=false, $attributes=[])
-    {
-        if (!empty($this->work_plan_origin)) {
-            $this->copyFromWorkPlan(WorkPlan::findOne(['id' => $this->work_plan_origin]));
-            $this->work_plan_origin = null;
-            $this->setIsNewRecord(false);
-            $this->save(false);
-        } elseif (!empty($this->study_plan_origin)) {
-            $this->copyFromStudyPlan(StudyPlan::findOne(['id' => $this->study_plan_origin]));
-            $this->study_plan_origin = null;
-            $this->setIsNewRecord(false);
-            $this->save(false);
-        }
-        return parent::afterSave($insert=false, $attributes=[]);
-    }
-
-    /**
-     * @param bool $insert
-     * @return bool
-     * @throws HttpException
-     */
-    /*public function beforeSave($insert=false) {
-        var_dump($this->getScenario());
-        if (!$this->isNewRecord)
-            if ($this->getScenario() == 'graph')
-                if (count($this->semesters) < 8)
-                    throw new HttpException(Yii::t('plans', 'Not enough groups for work plan'));
-        return parent::beforeSave($insert);
-    }*/
-
-    /**
      * @param WorkPlan $origin
      */
-    protected function copyFromWorkPlan($origin)
+    public function copyFromWorkPlan($origin)
     {
         $this->graph = $origin->graph;
         foreach ($origin->workSubjects as $subject) {
-            $model = new WorkSubject();
-            $model->attributes = $subject->attributes;
+            $model = $subject;
+            $model->id = null;
             $model->work_plan_id = $this->id;
+            $model->isNewRecord = true;
             $model->save(false);
         }
     }
@@ -298,16 +251,16 @@ class WorkPlan extends ActiveRecord
     /**
      * @param StudyPlan $origin
      */
-    protected function copyFromStudyPlan($origin)
+    public function copyFromStudyPlan($origin)
     {
         $groups = $this->specialityQualification->getGroupsByStudyYear($this->study_year_id);
-        $graphs = [];
+        $graph = [];
         foreach ($groups as $course) {
             if (isset($origin->graph[$course - 1])) {
                 $graph[] = $origin->graph[$course - 1];
             }
         }
-        $this->graph = $graphs;
+        $this->graph = $graph;
         foreach ($origin->studySubjects as $subject) {
             $model = new WorkSubject();
             $model->work_plan_id = $this->id;
@@ -322,7 +275,33 @@ class WorkPlan extends ActiveRecord
             $model->control_hours = $control_hours;
             $model->weeks = $subject->weeks;
             $model->control = $subject->control;
-            $model->save();
+            $model->total = ["0","0","0","0","0","0","0","0"];
+            $model->lectures = ["","","","","","","",""];
+            $model->lab_works = ["","","","","","","",""];
+            $model->practices = ["","","","","","","",""];
+            $model->diploma_name = "";
+            $model->certificate_name = "";
+            $model->save(false);
+        }
+    }
+
+    /**
+     * @param bool $insert
+     * @param array $changedAttributes
+     */
+    public function afterSave($insert=false,$changedAttributes=[])
+    {
+        if (!empty($this->work_plan_origin)) {
+            $this->copyFromWorkPlan(WorkPlan::findOne(['id' => $this->work_plan_origin]));
+            $this->work_plan_origin = null;
+            $this->setIsNewRecord(false);
+            $this->save(false);
+        } elseif (!empty($this->study_plan_origin)) {
+            var_dump('hello copying');
+            $this->copyFromStudyPlan(StudyPlan::findOne(['id' => $this->study_plan_origin]));
+            $this->study_plan_origin = null;
+            $this->setIsNewRecord(false);
+            $this->save(false);
         }
     }
 

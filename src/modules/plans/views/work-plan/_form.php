@@ -4,11 +4,9 @@ use yii\web\View;
 use yii\bootstrap\ActiveForm;
 use yii\widgets\Pjax;
 use kartik\select2\Select2;
-use yii\helpers\Url;
 
 use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 use app\modules\plans\models\StudyPlan;
-use app\modules\plans\widgets\Graph;
 use app\modules\directories\models\StudyYear;
 use app\modules\plans\models\WorkPlan;
 
@@ -19,7 +17,7 @@ use app\modules\plans\models\WorkPlan;
  */
 ?>
 
-<div class="study-plan-form">
+<div class="work-plan-form">
     <?php Pjax::begin(); ?>
 
     <?php $form = ActiveForm::begin(
@@ -63,38 +61,31 @@ use app\modules\plans\models\WorkPlan;
     </div>
 
     <?php if ($model->isNewRecord): ?>
-        <label class="control-label"><?= Yii::t('plans', 'Base study plan'); ?></label>
         <div class="row">
             <div class="col-sm-6">
-                <?= Select2::widget(
-                    [
-                        'data' => StudyPlan::getList(),
-                        'id' => 'study_origin',
-                        'name' => 'study_origin',
-                        'options' =>
-                            [
-                                'placeholder' => Yii::t('plans', 'Select copy of study plan')
-                            ]
-                    ]
-                );?>
+                <?= $form->field($model, 'study_plan_origin')->widget(Select2::className(), [
+                    'data' => StudyPlan::getList(),
+                    'id' => 'study_plan_origin',
+                    'name' => 'study_plan_origin',
+                    'options' =>
+                        [
+                            'placeholder' => Yii::t('plans', 'Select copy of study plan')
+                        ]
+                ]);?>
             </div>
         </div>
-        <br/>
 
-        <label class="control-label"><?= Yii::t('plans', 'Base work plan'); ?></label>
         <div class="row">
             <div class="col-sm-6">
-                <?= Select2::widget(
-                    [
-                        'data' => WorkPlan::getList(),
-                        'id' => 'work_origin',
-                        'name' => 'work_origin',
-                        'options' =>
-                            [
-                                'placeholder' => Yii::t('plans', 'Select copy of work plan')
-                            ]
-                    ]
-                );?>
+                <?= $form->field($model, 'work_plan_origin')->widget(Select2::className(), [
+                    'data' => WorkPlan::getList(),
+                    'id' => 'work_plan_origin',
+                    'name' => 'work_plan_origin',
+                    'options' =>
+                        [
+                            'placeholder' => Yii::t('plans', 'Select copy of work plan')
+                        ]
+                ]);?>
             </div>
         </div>
         <br/>

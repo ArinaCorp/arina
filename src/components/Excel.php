@@ -292,7 +292,7 @@ class Excel extends Component
      * @param $plan WorkPlan
      * @return PHPExcel
      */
-    protected function makeWorkPlan($plan)
+    public function makeWorkPlan($plan)
     {
         $tmpfname = Yii::getAlias('@webroot') . "/templates/work-plan.xls";
         $excelReader = PHPExcel_IOFactory::createReaderForFile($tmpfname);;
@@ -314,7 +314,7 @@ class Excel extends Component
         }
         $objPHPExcel->setActiveSheetIndex(0);
         header('Content-Type: application/vnd.ms-excel');
-        $filename = "Study_plan_" . "_" . date("d-m-Y-His") . ".xls";
+        $filename = "Work_plan_" . "_" . date("d-m-Y-His") . ".xls";
         header('Content-Disposition: attachment;filename=' . $filename . ' ');
         header('Cache-Control: max-age=0');
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
@@ -351,7 +351,7 @@ class Excel extends Component
                 $colString = PHPExcel_Cell::stringFromColumnIndex($colNumber + $j);
                 $k = $i + $graphOffset;
                 if (isset($plan->graph[$k][$j])) {
-                    $sheet->setCellValue($colString . $rowIndex, Yii::t('plan', $plan->graph[$k][$j]));
+                    $sheet->setCellValue($colString . $rowIndex, Yii::t('plans', $plan->graph[$k][$j]));
                 }
             }
             $sheet->getStyle("G$rowIndex:BG$rowIndex")->applyFromArray(self::getBorderStyle());
@@ -465,7 +465,7 @@ class Excel extends Component
             $sheet->setCellValue("$index$row", "=SUM($index" . implode("+$index", $totals) . ')');
         }
         $row += 6;
-        $this->setValue($sheet, "AD$row", $plan->specialityQualification->speciality->department->head->getFullName());
+        //$this->setValue($sheet, "AD$row", $plan->specialityQualification->speciality->department->head->getFullName());
     }
 
     /**

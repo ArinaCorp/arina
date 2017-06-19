@@ -2,7 +2,6 @@
 
 namespace app\modules\plans\models;
 
-use app\components\Excel;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\db\ActiveQuery;
@@ -10,7 +9,6 @@ use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
 use nullref\useful\behaviors\JsonBehavior;
 use yii\behaviors\TimestampBehavior;
-use PHPExcel_IOFactory;
 
 use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 use app\modules\directories\models\department\Department;
@@ -71,21 +69,10 @@ class StudyPlan extends ActiveRecord
             [['semesters'], 'required', 'message' => Yii::t('plans', 'Click "Generate" and check the data')],
             [['id', 'speciality_qualification_id'], 'integer'],
             [['created', 'updated'], 'safe'],
+
             [['id', 'speciality_qualification_id'], 'safe', 'on' => 'search'],
             [['id'], 'unique'],
-            [['study_plan_origin'], 'checkOrigin', 'on' => 'insert']
         ];
-    }
-
-    public function checkOrigin()
-    {
-        if (!$this->hasErrors()) {
-            $record = self::model()->find('(speciality_id =:speciality_id) AND ( year_id = :year_id)',
-                array(':speciality_id' => $this->speciality_id, ':year_id' => $this->year_id));
-            if (isset($record)) {
-                $this->addError('year_id', 'Для даного навчального року вже створений робочий план');
-            }
-        }
     }
 
 

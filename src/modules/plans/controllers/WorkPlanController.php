@@ -11,6 +11,7 @@ use yii\web\Response;
 
 use app\modules\plans\models\WorkPlan;
 use app\modules\plans\models\WorkSubject;
+use app\modules\plans\models\StudyPlan;
 use app\modules\plans\models\WorkPlanSearch;
 
 class WorkPlanController extends Controller implements IAdminController
@@ -40,8 +41,11 @@ class WorkPlanController extends Controller implements IAdminController
 
         if ($model->load(Yii::$app->request->post())) {
             $model->attributes = $_POST['WorkPlan'];
-
             $model->created = time();
+
+            $post = Yii::$app->request->post('WorkPlan');
+            $model->study_plan_origin = $post['study_plan_origin'];
+            $model->work_plan_origin = $post['work_plan_origin'];
 
             if ($model->save()) {
                 $model->scenario = WorkPlan::SCENARIO_GRAPH;
@@ -144,10 +148,10 @@ class WorkPlanController extends Controller implements IAdminController
         /** @var WorkSubject $model */
         $model = WorkSubject::findOne($id);
 
-        if (isset($_POST['WorkSubject'])) {
-            $model->setAttributes($_POST['WorkSubject'], false);
+        if (Yii::$app->request->post()) {
+            $model->attributes = $_POST['WorkSubject'];
             if ($model->save()) {
-                return $this->redirect(Url::toRoute(['study-plan/view', 'id' => $model->study_plan_id]));
+                return $this->redirect(['view', 'id' => $model->work_plan_id]);
             }
         }
 
@@ -163,7 +167,7 @@ class WorkPlanController extends Controller implements IAdminController
         $model = new WorkSubject();
         $model->work_plan_id = $id;
 
-        if (isset($_POST['WorkSubject'])) {
+        if (Yii::$app->request->post()) {
             $model->attributes = $_POST['WorkSubject'];
             if ($model->save())
                 return $this->redirect(['view', 'id' => $model->work_plan_id]);
@@ -172,14 +176,12 @@ class WorkPlanController extends Controller implements IAdminController
         return $this->render('create_subject', ['model' => $model]);
     }
 
-    /**
-     * @param $id
-     * @return Response
-     */
     public function actionDeleteSubject($id)
     {
-        WorkSubject::findOne($id)->delete();
-        return $this->redirect(['index']);
+        $subject = WorkSubject::findOne($id);
+        $planId = $subject->work_plan_id;
+        $subject->delete();
+        return $this->redirect(Url::toRoute(['work-plan/view', 'id' => $planId]));
     }
 
     /**

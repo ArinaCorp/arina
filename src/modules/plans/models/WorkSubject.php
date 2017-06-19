@@ -6,7 +6,6 @@ use Yii;
 use yii\db\ActiveRecord;
 use yii\db\ActiveQuery;
 use yii\helpers\ArrayHelper;
-use yii\data\ActiveDataProvider;
 
 use nullref\useful\behaviors\JsonBehavior;
 
@@ -90,6 +89,10 @@ class WorkSubject extends ActiveRecord
             [['id'], 'unique'],
             [['subject_id', 'total', 'lectures', 'lab_works', 'practices', 'weeks', 'control', 'cyclic_commission_id',
                 'certificate_name', 'diploma_name', 'project_hours'], 'safe'],
+            [['lectures', 'lab_works', 'practices',  ], 'default', 'value' => ["","","","","","","",""]],
+            [['total', 'weeks',], 'default', 'value' => ["0","0","0","0","0","0","0","0"]],
+            [['dual_lab_work', 'dual_practice'], 'default', 'value' => 0]
+            //[['total', 'lectures', 'lab_works', 'practices', 'weeks', 'control'], 'each', 'rule' => ['integer']],
         ];
     }
 
@@ -105,7 +108,7 @@ class WorkSubject extends ActiveRecord
             'lectures' => Yii::t('plans', 'Lectures'),
             'lab_works' => Yii::t('plans', 'Laboratory works'),
             'practices' => Yii::t('plans', 'Practice works'),
-            'weeks' => Yii::t('plans', 'Weeks'),
+            'weeks' => Yii::t('plans', 'Hours per week'),
             'control' => Yii::t('plans', 'Control'),
             'cyclic_commission_id' => Yii::t('app', 'Cyclic commission'),
             'certificate_name' => Yii::t('plans', 'Certificate name'),
@@ -120,7 +123,7 @@ class WorkSubject extends ActiveRecord
             'da' => Yii::t('plans', 'DA'),
             'course_work' => Yii::t('plans', 'Course work'),
             'course_project' => Yii::t('plans', 'Course project'),
-            'classes_week' => Yii::t('plans', 'Classes for week'),
+            'classes' => Yii::t('plans', 'Classes'),
         ];
     }
 

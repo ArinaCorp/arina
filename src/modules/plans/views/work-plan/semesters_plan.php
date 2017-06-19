@@ -1,6 +1,6 @@
 <?php
 /**
- * @var array errors
+ * @var array $errors
  * @var array $data
  */
 ?>
@@ -8,7 +8,7 @@
     <div class="alert alert-error">
         <ul>
             <?php foreach ($errors as $error): ?>
-                <li><?php echo $error; ?></li>
+                <li><?= $error; ?></li>
             <?php endforeach; ?>
         </ul>
     </div>
@@ -23,10 +23,10 @@
     </thead>
     <tbody>
     <?php foreach ($data as $i => $v): ?>
-        <tr class="<?php echo (isset($errors[$i]))?'error':''; ?>">
-            <td><?php echo $i; ?></td>
+        <tr class="<?= (isset($errors[$i]))?'error':''; ?>">
+            <td><?= $i; ?></td>
             <?php foreach ($v as $j): ?>
-                <td><?php echo $j; ?></td>
+                <td><?= $j; ?></td>
             <?php endforeach; ?>
         </tr>
     <?php endforeach; ?>
