@@ -36,7 +36,8 @@
         "kartik-v/yii2-widget-select2": "@dev",
         "kartik-v/yii2-widget-datepicker": "@dev",
         "phpoffice/phpexcel": "^1.8",
-        "nepstor/yii2-datetime-compare-validator": "^2.0"
+        "kartik-v/yii2-date-range": "^1.6",
+        "kartik-v/yii2-widget-switchinput": "dev-master"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "*",

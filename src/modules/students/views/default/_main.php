@@ -5,7 +5,11 @@
  * Date: 11.03.2017
  * Time: 8:56
  */
+use app\modules\geo\models\Country;
 use app\modules\students\models\Exemption;
+use kartik\depdrop\DepDrop;
+use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\MaskedInput;
 
 ?>
@@ -72,5 +76,36 @@ use yii\widgets\MaskedInput;
     </div>
     <div class="col-sm-6">
         <?= $form->field($model, 'sseed_id')->textInput() ?>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-4">
+        <?= $form->field($model, 'country_id')
+            ->dropDownList(Country::getDropDownArray(),
+                ['prompt' => Yii::t('app', 'Choose country')]);
+        ?>
+    </div>
+    <div class="col-sm-4">
+        <?= $form->field($model, 'region_id')->widget(DepDrop::classname(), [
+            'options' => ['id' => 'region_id'],
+            'data' => [$model->region_id => 'default'],
+            'pluginOptions'=>[
+                'depends' => [Html::getInputId($model,'country_id')],
+                'initialize' => true,
+                'placeholder' => Yii::t('app', 'Choose region'),
+                'url' => Url::to(['/geo/admin/city/region'])
+            ]
+        ]); ?>
+    </div>
+    <div class="col-sm-4">
+        <?= $form->field($model, 'district_id')->widget(DepDrop::classname(), [
+            'options' => ['id' => 'district_id'],
+            'data' => [$model->district_id => 'default'],
+            'pluginOptions'=>[
+                'depends' => ['region_id'],
+                'placeholder' => Yii::t('app', 'Choose district'),
+                'url' => Url::to(['/geo/admin/city/district'])
+            ]
+        ]); ?>
     </div>
 </div>

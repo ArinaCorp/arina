@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="row">
-    <h1><?= Html::encode($this->title); ?></h1>
+    <h1><?= Html::encode($this->title.' '.$model->getYearTitle()); ?></h1>
 
     <h4><?= $model->getAttributeLabel('created').': '.date('d.m.Y', $model->created); ?></h4>
 
@@ -26,7 +26,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= Html::a(Yii::t('app', 'Update'), Url::toRoute(['work-plan/update', 'id' => $model->id]), ['class' => 'btn btn-info']); ?>
 
-    <?= Html::a(Yii::t('plans', 'Update subjects'), Url::toRoute(['work-plan/update-subjects', 'id' => $model->id]), ['class' => 'btn btn-primary']); ?>
+    <?= Html::a(Yii::t('plans', 'Update graph'), Url::toRoute(['work-plan/graph', 'id' => $model->id]), ['class' => 'btn btn-warning']); ?>
+
+    <?= Html::a(Yii::t('plans', 'Add subject'), Url::toRoute(['work-plan/create-subject', 'id' => $model->id]), ['class' => 'btn btn-primary']); ?>
 
     <br/><br/>
 
@@ -42,5 +44,5 @@ $this->params['breadcrumbs'][] = $this->title;
             ]
     )?>
 
-    <?php $this->render('_subjects', array('model' => $model)); ?>
+    <?= $this->render('_subjects', ['model' => $model]); ?>
 </div>

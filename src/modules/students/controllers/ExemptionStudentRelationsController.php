@@ -65,7 +65,8 @@ class ExemptionStudentRelationsController extends Controller implements IAdminCo
     public function actionCreate()
     {
         $model = new ExemptionStudentRelation();
-
+        $model->date_start = date('Y-m-d');
+        $model->date_end = date('Y-m-d');
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {

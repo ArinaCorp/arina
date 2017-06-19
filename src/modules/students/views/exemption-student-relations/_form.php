@@ -10,6 +10,7 @@ use app\modules\students\models\StudentsHistory;
 use yii\helpers\Url;
 use app\modules\students\models\Exemption;
 use kartik\date\DatePicker;
+use kartik\daterange\DateRangePicker;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\students\models\ExemptionStudentRelation */
@@ -25,7 +26,7 @@ use kartik\date\DatePicker;
             'data' => Group::getActiveGroupsList(),
             'pluginOptions' => [
                 'placeholder' => Yii::t('app', 'Select group'),
-               // 'allowClear' => true
+                // 'allowClear' => true
             ],
             'options' => [
                 'id' => 'group_id',
@@ -54,10 +55,20 @@ use kartik\date\DatePicker;
             'placeholder' => Yii::t('app', 'Select exemption')
         ]
     ]) ?>
-
-    <?= $form->field($model, 'date_start')->widget(DatePicker::className()) ?>
-
-    <?= $form->field($model, 'date_end')->widget(DatePicker::className()) ?>
+    <?= $form->field($model, 'date_range')->widget(DateRangePicker::className(), [
+        'convertFormat' => true,
+        'startAttribute' => 'date_start',
+        'endAttribute' => 'date_end',
+        'pluginOptions' => [
+            'locale' => [
+                'format' => 'Y-m-d'
+            ]
+        ]
+    ]);
+    ?>
+    <!--    --><? //= $form->field($model, 'date_start')->widget(DatePicker::className()) ?>
+    <!---->
+    <!--    --><? //= $form->field($model, 'date_end')->widget(DatePicker::className()) ?>
 
     <?= $form->field($model, 'information')->textarea(['maxlength' => true, 'rows' => 2]) ?>
 

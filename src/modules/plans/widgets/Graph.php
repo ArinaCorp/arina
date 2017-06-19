@@ -40,7 +40,7 @@ class Graph extends Widget
                 throw new Exception(Yii::t('plans', 'Years amount must be set'));
 
             for ($i = 0; $i < $this->yearAmount; $i++) {
-                $this->rows[$i+1] = $i + 1;
+                $this->rows[$i + 1] = $i + 1;
             }
 
             if (isset($this->graph)) {
@@ -62,7 +62,6 @@ class Graph extends Widget
             /** @var SpecialityQualification $specialityQualification */
             $specialityQualification = SpecialityQualification::findOne($this->speciality_qualification_id);
             $this->rows = $specialityQualification->getGroupsByStudyYear($this->study_year_id);
-            //var_dump($this->rows);
 
             if (empty($this->graph)) {
                 $this->map = PlanHelper::getDefaultWorkPlan($this->rows);
