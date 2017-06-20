@@ -12,18 +12,18 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="journal-student-index">
 
-<div class="row">
-    <div class="col-lg-12">
-        <h1 class="page-header">
-            <?= Html::encode($this->title) ?>
-        </h1>
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">
+                <?= Html::encode($this->title) ?>
+            </h1>
+        </div>
     </div>
-</div>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a(Yii::t('app', 'Create Journal Student'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('app', 'Create Journal Student'), ['create', 'load_id' => $load_id], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
@@ -31,9 +31,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
-            'load_id',
             'student_id',
             'type',
             'date',

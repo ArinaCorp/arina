@@ -31,7 +31,7 @@ class JournalStudentController extends Controller implements IAdminController
      * Lists all JournalStudent models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex($load_id)
     {
         $searchModel = new JournalStudentSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -39,6 +39,7 @@ class JournalStudentController extends Controller implements IAdminController
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'load_id' => $load_id
         ]);
     }
 
@@ -59,9 +60,9 @@ class JournalStudentController extends Controller implements IAdminController
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($load_id)
     {
-        $model = new JournalStudent();
+        $model = new JournalStudent(['load_id' => $load_id]);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);

@@ -17,6 +17,9 @@ use Yii;
  */
 class JournalStudent extends \yii\db\ActiveRecord
 {
+    CONST TYPE_ACCEPTED = 1;
+    CONST TYPE_DE_ACCEPTED = 0;
+
     /**
      * @inheritdoc
      */
@@ -50,6 +53,14 @@ class JournalStudent extends \yii\db\ActiveRecord
             'date' => Yii::t('app', 'Date'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
+        ];
+    }
+
+    public static function getListTypes()
+    {
+        return [
+            self::TYPE_DE_ACCEPTED => Yii::t('app', 'De accepted from list'),
+            self::TYPE_ACCEPTED => Yii::t('app', 'Accepted to list'),
         ];
     }
 }
