@@ -36,13 +36,16 @@ class AudienceController extends Controller implements IAdminController
      */
     public function actionIndex()
     {
-        $searchModel = new AudienceSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        var_dump(Yii::$app->admin->can('employee'));
+        if(Yii::$app->admin->can('directories/audience')) {
+            $searchModel = new AudienceSearch();
+            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+            return $this->render('index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+            ]);
+        }
     }
 
     /**

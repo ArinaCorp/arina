@@ -11,6 +11,16 @@ use yii\base\Module as BaseModule;
  */
 class Module extends BaseModule implements IAdminModule
 {
+
+    public function behaviors()
+    {
+        return [
+            'as AccessBehavior' => [
+                'class' => \developeruz\db_rbac\behaviors\AccessBehavior::className(),
+            ]
+        ];
+    }
+
     /**
      * @inheritdoc
      */

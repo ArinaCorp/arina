@@ -37,7 +37,6 @@ if (isset($_COOKIE['active-employee-tab'])) {
     $activeTab = strtr($tab, ['#active-employee-tab' => '']);
 }
 
-
 ?>
 <div class="status-bar row">
     <?php

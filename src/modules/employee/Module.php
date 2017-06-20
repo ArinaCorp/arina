@@ -20,8 +20,21 @@ class Module extends BaseModule implements IAdminModule
     /**
      * @inheritdoc
      */
+    public function behaviors()
+    {
+        return [
+                'as AccessBehavior' => [
+                    'class' => \developeruz\db_rbac\behaviors\AccessBehavior::className(),
+                ]
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
     public static function getAdminMenu()
     {
+
         return [
             'label' => Yii::t('app', 'Employees'),
             'icon' => 'users',

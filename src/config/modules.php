@@ -35,4 +35,11 @@ return array_merge(require(__DIR__ . '/installed_modules.php'), [
     'accounting' => [
         'class' => 'app\modules\accounting\Accounting',
     ],
+    'permit' => [
+        'class' => 'developeruz\db_rbac\Yii2DbRbac',
+        'params' => [
+            'userClass' => 'nullref\admin\Module',
+            //'accessRoles' => ['admin']
+        ]
+    ],
 ]);

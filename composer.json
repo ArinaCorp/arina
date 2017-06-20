@@ -37,7 +37,8 @@
         "kartik-v/yii2-widget-datepicker": "@dev",
         "phpoffice/phpexcel": "^1.8",
         "kartik-v/yii2-date-range": "^1.6",
-        "kartik-v/yii2-widget-switchinput": "dev-master"
+        "kartik-v/yii2-widget-switchinput": "dev-master",
+        "developeruz/yii2-db-rbac": "1.1.2"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "*",
