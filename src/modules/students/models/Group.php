@@ -168,6 +168,11 @@ class Group extends ActiveRecord
         return $this->_students;
     }
 
+    public function getStudentsIds()
+    {
+        return ArrayHelper::getColumn($this->getStudentsArray(), 'id');
+    }
+
 
     /**
      * @return array

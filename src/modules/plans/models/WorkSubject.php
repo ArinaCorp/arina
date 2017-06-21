@@ -89,8 +89,8 @@ class WorkSubject extends ActiveRecord
             [['id'], 'unique'],
             [['subject_id', 'total', 'lectures', 'lab_works', 'practices', 'weeks', 'control', 'cyclic_commission_id',
                 'certificate_name', 'diploma_name', 'project_hours'], 'safe'],
-            [['lectures', 'lab_works', 'practices',  ], 'default', 'value' => ["","","","","","","",""]],
-            [['total', 'weeks',], 'default', 'value' => ["0","0","0","0","0","0","0","0"]],
+            [['lectures', 'lab_works', 'practices',], 'default', 'value' => ["", "", "", "", "", "", "", ""]],
+            [['total', 'weeks',], 'default', 'value' => ["0", "0", "0", "0", "0", "0", "0", "0"]],
             [['dual_lab_work', 'dual_practice'], 'default', 'value' => 0]
             //[['total', 'lectures', 'lab_works', 'practices', 'weeks', 'control'], 'each', 'rule' => ['integer']],
         ];
@@ -113,10 +113,10 @@ class WorkSubject extends ActiveRecord
             'cyclic_commission_id' => Yii::t('app', 'Cyclic commission'),
             'certificate_name' => Yii::t('plans', 'Certificate name'),
             'diploma_name' => Yii::t('plans', 'Diploma name'),
-            'project_hours' => Yii::t('plans','Project hours'),
+            'project_hours' => Yii::t('plans', 'Project hours'),
             'control_hours' => Yii::t('plans', 'Control hours'),
             'dual_lab_work' => Yii::t('plans', 'Dual laboratory work'),
-            'dual_practice'=>Yii::t('plans', 'Dual practice work'),
+            'dual_practice' => Yii::t('plans', 'Dual practice work'),
             'test' => Yii::t('plans', 'Test'),
             'exam' => Yii::t('plans', 'Exam'),
             'dpa' => Yii::t('plans', 'DPA'),
@@ -124,6 +124,19 @@ class WorkSubject extends ActiveRecord
             'course_work' => Yii::t('plans', 'Course work'),
             'course_project' => Yii::t('plans', 'Course project'),
             'classes' => Yii::t('plans', 'Classes'),
+        ];
+    }
+
+
+    public static function getControlLabelList()
+    {
+        return [
+            self::CONTROL_TEST => Yii::t('plans', 'Test'),
+            self::CONTROL_EXAM => Yii::t('plans', 'Exam'),
+            self::CONTROL_DPA => Yii::t('plans', 'DPA'),
+            self::CONTROL_DA => Yii::t('plans', 'DA'),
+            self::CONTROL_WORK => Yii::t('plans', 'Course work'),
+            self::CONTROL_PROJECT => Yii::t('plans', 'Course project'),
         ];
     }
 

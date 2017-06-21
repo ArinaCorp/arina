@@ -5,12 +5,12 @@ namespace app\modules\journal\models\record;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\modules\journal\models\record\JournalStudent;
+use app\modules\journal\models\record\JournalRecordType;
 
 /**
- * JournalStudentSearch represents the model behind the search form about `app\modules\journal\models\record\JournalStudent`.
+ * JournalRecordTypeSearch represents the model behind the search form about `app\modules\journal\models\record\JournalRecordType`.
  */
-class JournalStudentSearch extends JournalStudent
+class JournalRecordTypeSearch extends JournalRecordType
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ class JournalStudentSearch extends JournalStudent
     public function rules()
     {
         return [
-            [['id', 'load_id', 'student_id', 'type', 'created_at', 'updated_at'], 'integer'],
-            [['date'], 'safe'],
+            [['id', 'description', 'homework', 'hours', 'present', 'date', 'n_pp', 'n_in_day', 'ticket', 'is_report', 'report_title', 'work_type_id'], 'integer'],
+            [['title'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class JournalStudentSearch extends JournalStudent
      */
     public function search($params)
     {
-        $query = JournalStudent::find();
+        $query = JournalRecordType::find();
 
         // add conditions that should always apply here
 
@@ -60,16 +60,21 @@ class JournalStudentSearch extends JournalStudent
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'load_id' => $this->load_id,
-            'student_id' => $this->student_id,
-            'type' => $this->type,
+            'description' => $this->description,
+            'homework' => $this->homework,
+            'hours' => $this->hours,
+            'present' => $this->present,
             'date' => $this->date,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'n_pp' => $this->n_pp,
+            'n_in_day' => $this->n_in_day,
+            'ticket' => $this->ticket,
+            'is_report' => $this->is_report,
+            'report_title' => $this->report_title,
+            'work_type_id' => $this->work_type_id,
         ]);
 
-        $query->addOrderBy(['id' => SORT_DESC]);
-        $query->addOrderBy(['date' => SORT_DESC]);
+        $query->andFilterWhere(['like', 'title', $this->title]);
+
         return $dataProvider;
     }
 }

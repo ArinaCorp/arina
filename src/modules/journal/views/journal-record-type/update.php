@@ -3,16 +3,16 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model app\modules\journal\models\record\JournalStudent */
+/* @var $model app\modules\journal\models\record\JournalRecordType */
 
 $this->title = Yii::t('app', 'Update {modelClass}: ', [
-        'modelClass' => 'Journal Student',
-    ]) . ' ' . $model->id;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Journal Students'), 'url' => ['index', 'load_id' => $model->load_id]];
-$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
+    'modelClass' => 'Journal Record Type',
+]) . ' ' . $model->title;
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Journal Record Types'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => $model->title, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 ?>
-<div class="journal-student-update">
+<div class="journal-record-type-update">
 
     <div class="row">
         <div class="col-lg-12">

@@ -4,13 +4,13 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model app\modules\journal\models\record\JournalStudent */
+/* @var $model app\modules\journal\models\record\JournalRecordType */
 
-$this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Journal Students'), 'url' => ['index']];
+$this->title = $model->title;
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Journal Record Types'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="journal-student-view">
+<div class="journal-record-type-view">
 
     <div class="row">
         <div class="col-lg-12">
@@ -21,7 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 
     <p>
-        <?= Html::a(Yii::t('app', 'List'), ['index', 'load_id' => $model->load_id], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('app', 'List'), ['index'], ['class' => 'btn btn-success']) ?>
         <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
@@ -36,12 +36,18 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'load_id',
-            'student_id',
-            'type',
+            'title',
+            'description',
+            'homework',
+            'hours',
+            'present',
             'date',
-            'created_at',
-            'updated_at',
+            'n_pp',
+            'n_in_day',
+            'ticket',
+            'is_report',
+            'report_title',
+            'work_type_id',
         ],
     ]) ?>
 

@@ -2,20 +2,18 @@
 
 namespace app\modules\journal\controllers;
 
-use app\components\DepDropHelper;
 use Yii;
-use app\modules\journal\models\record\JournalStudent;
-use app\modules\journal\models\record\JournalStudentSearch;
-use yii\helpers\Json;
+use app\modules\journal\models\record\JournalRecordType;
+use app\modules\journal\models\record\JournalRecordTypeSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use nullref\core\interfaces\IAdminController;
 
 /**
- * JournalStudentController implements the CRUD actions for JournalStudent model.
+ * JournalRecordTypeController implements the CRUD actions for JournalRecordType model.
  */
-class JournalStudentController extends Controller implements IAdminController
+class JournalRecordTypeController extends Controller implements IAdminController
 {
     public function behaviors()
     {
@@ -30,23 +28,22 @@ class JournalStudentController extends Controller implements IAdminController
     }
 
     /**
-     * Lists all JournalStudent models.
+     * Lists all JournalRecordType models.
      * @return mixed
      */
-    public function actionIndex($load_id)
+    public function actionIndex()
     {
-        $searchModel = new JournalStudentSearch();
+        $searchModel = new JournalRecordTypeSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'load_id' => $load_id
         ]);
     }
 
     /**
-     * Displays a single JournalStudent model.
+     * Displays a single JournalRecordType model.
      * @param integer $id
      * @return mixed
      */
@@ -58,16 +55,16 @@ class JournalStudentController extends Controller implements IAdminController
     }
 
     /**
-     * Creates a new JournalStudent model.
+     * Creates a new JournalRecordType model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate($load_id)
+    public function actionCreate()
     {
-        $model = new JournalStudent(['load_id' => $load_id]);
-        $model->date = date('Y-m-d');
+        $model = new JournalRecordType();
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index', 'load_id' => $load_id]);
+            return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -76,7 +73,7 @@ class JournalStudentController extends Controller implements IAdminController
     }
 
     /**
-     * Updates an existing JournalStudent model.
+     * Updates an existing JournalRecordType model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -95,7 +92,7 @@ class JournalStudentController extends Controller implements IAdminController
     }
 
     /**
-     * Deletes an existing JournalStudent model.
+     * Deletes an existing JournalRecordType model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -108,42 +105,18 @@ class JournalStudentController extends Controller implements IAdminController
     }
 
     /**
-     * Finds the JournalStudent model based on its primary key value.
+     * Finds the JournalRecordType model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return JournalStudent the loaded model
+     * @return JournalRecordType the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = JournalStudent::findOne($id)) !== null) {
+        if (($model = JournalRecordType::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
-        }
-    }
-
-    public function actionGetStudents($load_id)
-    {
-        if (isset($_POST['depdrop_parents'])) {
-            $parents = $_POST['depdrop_parents'];
-            if ($parents != null) {
-                if (!empty($_POST['depdrop_all_params'])) {
-                    $params = $_POST['depdrop_all_params'];
-                    $type = $params['journalstudent-type']; // get the value of input-type-1
-                    if ($type == JournalStudent::TYPE_ACCEPTED) {
-                        $out = DepDropHelper::convertMap(JournalStudent::getAvailableStudentsList($load_id));
-                        echo Json::encode(['output' => $out, 'selected' => Yii::t('app', 'Select teacher')]);
-                        return;
-                    } elseif ($type == JournalStudent::TYPE_DE_ACCEPTED) {
-                        $out = DepDropHelper::convertMap(JournalStudent::getActiveStudentsInLoadList($load_id));
-                        echo Json::encode(['output' => $out, 'selected' => Yii::t('app', 'Select teacher')]);
-                        return;
-                    }
-                }
-            }
-            echo Json::encode(['output' => [], 'selected' => Yii::t('app', 'Select ...')]);
-            return;
         }
     }
 }

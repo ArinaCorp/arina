@@ -65,4 +65,13 @@ class JournalRecord extends \yii\db\ActiveRecord
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
     }
+
+    public static function getByLoadArray($load_id)
+    {
+        $records = self::find()
+            ->where(['load_id' => $load_id])
+            ->orderBy(['date' => SORT_ASC])
+            ->all();
+        return $records;
+    }
 }

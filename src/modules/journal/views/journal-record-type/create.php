@@ -4,13 +4,13 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model app\modules\journal\models\record\JournalStudent */
+/* @var $model app\modules\journal\models\record\JournalRecordType */
 
-$this->title = Yii::t('app', 'Create Journal Student');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Journal Students'), 'url' => ['index']];
+$this->title = Yii::t('app', 'Create Journal Record Type');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Journal Record Types'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="journal-student-create">
+<div class="journal-record-type-create">
 
     <div class="row">
         <div class="col-lg-12">
@@ -21,7 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 
     <p>
-        <?= Html::a(Yii::t('app', 'Configurating list'), ['index', 'load_id' => $model->load_id], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('app', 'List'), ['index'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= $this->render('_form', [
