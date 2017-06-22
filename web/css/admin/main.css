@@ -9,7 +9,8 @@
 }
 
 .journal .column-number {
-    max-width: 20px;
+    min-width: 30px;
+    max-width: 35px;
     width: auto;
 }
 
@@ -21,6 +22,15 @@
 
 .journal .oc {
     min-width: 20px;
-    max-width: 40px;
+    max-width: 90px;
     width: auto;
+}
+
+.journal-wrapper {
+    width: 100%;
+    overflow-x: scroll;
+}
+
+.journal {
+    min-width: 100%;
 }

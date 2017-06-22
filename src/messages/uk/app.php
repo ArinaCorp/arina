@@ -309,6 +309,8 @@ return [
     'Update Evaluation System' => 'Оновити систему оцінювання',
     'Value' => 'Значення',
     'Evaluation' => 'Оцінка',
+    'Retake Evaluation' => 'Оцінка перездачі',
+    'Retake Date' => 'Дата перездачі',
     'Create Evaluation' => 'Створити оцінку',
     'Select evaluation system' => 'Оберіть систему оцінювання',
     'Update Evaluation' => 'Оновити оцінку',
@@ -360,5 +362,15 @@ return [
     'Create Journal Record' => 'Додати запис у журнал',
     'Journal Record' => 'Запис журналу',
     'Mark' => 'Оцінка',
-    'Create Mark' => 'Додати оцінку'
+    'Create Mark' => 'Додати оцінку',
+    'Presence' => 'Присутній',
+    'Not Presence Reason ID' => 'Причина відсутності',
+    'One ticket' => 'Екземенаційний білет',
+    'Retake ticket' => 'Екземенаційний білет перездачі',
+    'Select not presence type' => 'Оберіть причину відсутності',
+    "Set evaluation system" => 'Вкажіть систему оцінювання',
+    'Select mark' => 'Вкажіть оцінку',
+    'Update Mark' => 'Оновити оцінку',
+    'The record date should be greater or equal' => 'Дата запису має бути більша або рівна ',
+    'Report from subject' => 'Звіт по предмету'
 ];

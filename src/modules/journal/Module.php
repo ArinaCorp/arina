@@ -30,7 +30,7 @@ class Module extends BaseModule implements IAdminModule
     {
         return [
             'label' => Yii::t('app', 'Journal'),
-            'icon' => 'users',
+            'icon' => 'book',
             'items' => [
                 [
                     'label' => Yii::t('app', 'Evaluation systems'),
@@ -40,22 +40,22 @@ class Module extends BaseModule implements IAdminModule
                 [
                     'label' => Yii::t('app', 'Evaluations'),
                     'url' => ['/journal/evaluations'],
-                    'icon' => 'tags',
+                    'icon' => 'graduation-cap',
                 ],
                 [
                     'label' => Yii::t('app', 'Journal Record Types'),
                     'url' => ['/journal/journal-record-type'],
-                    'icon' => 'tag',
+                    'icon' => 'bookmark',
                 ],
                 [
                     'label' => Yii::t('app', 'Not Presence Types'),
                     'url' => ['/journal/presence-type'],
-                    'icon' => 'list',
+                    'icon' => 'times-rectangle-o',
                 ],
                 [
                     'label' => Yii::t('app', 'Journal pages'),
                     'url' => ['/journal'],
-                    'icon' => 'icon',
+                    'icon' => 'files-o',
                 ],
             ]
         ];

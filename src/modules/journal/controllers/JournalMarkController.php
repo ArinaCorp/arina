@@ -89,12 +89,13 @@ class JournalMarkController extends Controller implements IAdminController
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+        $type = $model->journalRecord->typeObj;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'type' => $type,
             ]);
         }
     }

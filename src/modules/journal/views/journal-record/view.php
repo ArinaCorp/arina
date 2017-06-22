@@ -60,7 +60,19 @@ $this->params['breadcrumbs'][] = $this->title;
             'number',
             'number_in_day',
             'hours',
-            'audience_id',
+            [
+                'attribute' => 'audience_id',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    /**
+                     * @var $model JournalRecord;
+                     */
+                    if (is_null($model->audience_id)) {
+                        return null;
+                    }
+                    return $model->audience->getLink();
+                }
+            ]
         ],
     ]) ?>
 

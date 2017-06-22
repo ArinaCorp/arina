@@ -6,6 +6,7 @@ use app\components\DepDropHelper;
 use app\modules\directories\models\StudyYear;
 use app\modules\journal\models\record\JournalMark;
 use app\modules\journal\models\record\JournalStudent;
+use app\modules\journal\models\reports\SubjectReport;
 use app\modules\journal\models\SelectForm;
 use nullref\core\interfaces\IAdminController;
 use yii\helpers\Json;
@@ -48,6 +49,11 @@ class DefaultController extends Controller implements IAdminController
             'students' => $students,
             'map' => $map,
         ]);
+    }
+
+    public function actionDocument($id)
+    {
+        return SubjectReport::getReport($id);
     }
 
     public function actionGetGroups()

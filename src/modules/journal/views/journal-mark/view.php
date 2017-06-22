@@ -10,7 +10,7 @@ use app\modules\journal\models\evaluation\Evaluation;
 /* @var $this yii\web\View */
 /* @var $model app\modules\journal\models\record\JournalMark */
 
-$this->title = $model->id;
+$this->title = Yii::t('app', "Mark");
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Journal Marks'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -25,7 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 
     <p>
-        <?= Html::a(Yii::t('app', 'Journal page'), ['default/view', 'id' => $model->journalRecord->load_id], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('app', 'Journal'), ['default/view', 'id' => $model->journalRecord->load_id], ['class' => 'btn btn-success']) ?>
         <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
     </p>
 

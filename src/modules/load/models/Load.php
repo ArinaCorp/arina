@@ -4,6 +4,7 @@ namespace app\modules\load\models;
 
 use app\modules\plans\models\WorkPlan;
 use Yii;
+use yii\bootstrap\Html;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
@@ -576,10 +577,15 @@ class Load extends ActiveRecord
     /**
      * @return string
      */
-    public function getLabelInfo()
+    public function getLabelITitle()
     {
         return
             "<h2>" . Yii::t('app', 'Subject') . ':' . $this->getSubjectName() . '</h2><h3>' . Yii::t('app', 'Teacher ID') . ': ' . $this->getTeacherFullName() . "</h3>";
+    }
+
+    public function getLabelInfo()
+    {
+        return Yii::t('app', 'Subject') . ':' . $this->getSubjectName() . '.' . Yii::t('app', 'Teacher ID') . ': ' . $this->getTeacherFullName();
     }
 
     /**

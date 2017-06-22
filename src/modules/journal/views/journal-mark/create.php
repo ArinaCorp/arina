@@ -21,12 +21,10 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 
     <p>
-        <?= Html::a(Yii::t('app', 'Journal page'), ['default/view', 'id' => $model->journalRecord->load_id], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('app', 'Journal'), ['default/view', 'id' => $model->journalRecord->load_id], ['class' => 'btn btn-success']) ?>
     </p>
-
     <?= $this->render('_form', [
         'model' => $model,
         'type' => $type,
     ]) ?>
-
 </div>

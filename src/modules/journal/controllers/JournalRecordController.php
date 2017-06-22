@@ -104,11 +104,12 @@ class JournalRecordController extends Controller implements IAdminController
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+        $typeObj = JournalRecordType::findOne($model->type);
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
+                'type' => $typeObj,
                 'model' => $model,
             ]);
         }

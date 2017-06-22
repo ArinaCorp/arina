@@ -3,6 +3,7 @@
 namespace app\modules\directories\models\audience;
 
 use Yii;
+use yii\bootstrap\Html;
 use yii\db\ActiveRecord;
 use app\modules\employee\models\Employee;
 use yii\helpers\ArrayHelper;
@@ -121,6 +122,11 @@ class Audience extends ActiveRecord
     public function getLabel()
     {
         return $this->number . ' ' . $this->name;
+    }
+
+    public function getLink()
+    {
+        return Html::a($this->getLabel(), ['/directories/audience/view', 'id' => $this->id], ['target' => '_blank']);
     }
 
     public static function getAudienceList()
