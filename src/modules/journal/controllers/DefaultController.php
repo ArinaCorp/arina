@@ -4,12 +4,16 @@ namespace app\modules\journal\controllers;
 
 use app\components\DepDropHelper;
 use app\modules\directories\models\StudyYear;
+use app\modules\journal\models\record\JournalMark;
+use app\modules\journal\models\record\JournalStudent;
 use app\modules\journal\models\SelectForm;
 use nullref\core\interfaces\IAdminController;
 use yii\helpers\Json;
 use yii\web\Controller;
 use Yii;
 use app\modules\load\models\Load;
+use yii\web\NotFoundHttpException;
+use app\modules\journal\models\record\JournalRecord;
 
 /**
  * Default controller for the `journal` module
@@ -35,8 +39,14 @@ class DefaultController extends Controller implements IAdminController
     public function actionView($id)
     {
         $model = $this->findModel($id);
+        $list = JournalRecord::getByLoadArray($model->id);
+        $students = JournalStudent::getAllStudentByLoad($model->id);
+        $map = JournalMark::getMap($students, $list);
         return $this->render('view', [
             'model' => $model,
+            'list' => $list,
+            'students' => $students,
+            'map' => $map,
         ]);
     }
 
@@ -85,5 +95,10 @@ class DefaultController extends Controller implements IAdminController
     protected function findModel($id)
     {
         if ($id == 228) return Load::getZaglushka();
+        if (($model = Load::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
     }
 }

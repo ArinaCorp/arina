@@ -18,8 +18,8 @@ class JournalRecordTypeSearch extends JournalRecordType
     public function rules()
     {
         return [
-            [['id', 'description', 'homework', 'hours', 'present', 'date', 'n_pp', 'n_in_day', 'ticket', 'is_report', 'report_title', 'work_type_id'], 'integer'],
-            [['title'], 'safe'],
+            [['id', 'description', 'homework', 'hours', 'present', 'date', 'n_pp', 'n_in_day', 'ticket', 'is_report', 'work_type_id'], 'integer'],
+            [['title', 'report_title'], 'safe'],
         ];
     }
 
@@ -69,11 +69,11 @@ class JournalRecordTypeSearch extends JournalRecordType
             'n_in_day' => $this->n_in_day,
             'ticket' => $this->ticket,
             'is_report' => $this->is_report,
-            'report_title' => $this->report_title,
             'work_type_id' => $this->work_type_id,
         ]);
 
-        $query->andFilterWhere(['like', 'title', $this->title]);
+        $query->andFilterWhere(['like', 'title', $this->title])
+            ->andFilterWhere(['like', 'report_title', $this->report_title]);
 
         return $dataProvider;
     }

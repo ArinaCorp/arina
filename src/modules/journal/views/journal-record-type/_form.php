@@ -32,6 +32,13 @@ use app\modules\plans\models\WorkSubject;
                 'offText' => Yii::t('app', 'No'),
             ]
     ]); ?>
+    <?= $form->field($model, 'audience')->widget(SwitchInput::classname(), [
+        'pluginOptions' =>
+            [
+                'onText' => Yii::t('app', 'Yes'),
+                'offText' => Yii::t('app', 'No'),
+            ]
+    ]); ?>
 
     <?= $form->field($model, 'hours')->widget(SwitchInput::classname(), [
         'pluginOptions' =>

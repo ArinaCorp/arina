@@ -35,19 +35,77 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
             'title',
-            'description',
-            'homework',
-            'hours',
-            'present',
-            'date',
-            'n_pp',
-            'n_in_day',
-            'ticket',
-            'is_report',
+            [
+                'attribute' => 'description',
+                'value' => function ($model) {
+                    return ($model->description) ? Yii::t('app', "Yes") : Yii::t('app', 'No');
+                },
+            ],
+            [
+                'attribute' => 'homework',
+                'value' => function ($model) {
+                    return ($model->homework) ? Yii::t('app', "Yes") : Yii::t('app', 'No');
+                },
+            ],
+            [
+                'attribute' => 'audience',
+                'value' => function ($model) {
+                    return ($model->audience) ? Yii::t('app', "Yes") : Yii::t('app', 'No');
+                },
+            ],
+            [
+                'attribute' => 'hours',
+                'value' => function ($model) {
+                    return ($model->homework) ? Yii::t('app', "Yes") : Yii::t('app', 'No');
+                },
+            ],
+            [
+                'attribute' => 'present',
+                'value' => function ($model) {
+                    return ($model->present) ? Yii::t('app', "Yes") : Yii::t('app', 'No');
+                },
+            ],
+            [
+                'attribute' => 'date',
+                'value' => function ($model) {
+                    return ($model->date) ? Yii::t('app', "Yes") : Yii::t('app', 'No');
+                },
+            ],
+            [
+                'attribute' => 'n_pp',
+                'value' => function ($model) {
+                    return ($model->n_pp) ? Yii::t('app', "Yes") : Yii::t('app', 'No');
+                },
+            ],
+            [
+                'attribute' => 'n_in_day',
+                'value' => function ($model) {
+                    return ($model->n_in_day) ? Yii::t('app', "Yes") : Yii::t('app', 'No');
+                },
+            ],
+            [
+                'attribute' => 'ticket',
+                'value' => function ($model) {
+                    return ($model->ticket) ? Yii::t('app', "Yes") : Yii::t('app', 'No');
+                },
+            ],
+            [
+                'attribute' => 'is_report',
+                'value' => function ($model) {
+                    return ($model->is_report) ? Yii::t('app', "Yes") : Yii::t('app', 'No');
+                },
+            ],
             'report_title',
-            'work_type_id',
+            [
+                'attribute' => 'work_type_id',
+                'value' => function ($model) {
+                    if (is_null($model->work_type_id)) {
+                        return null;
+                    }
+                    return \app\modules\plans\models\WorkSubject::getControlLabelList()[$model->id];
+                }
+            ],
         ],
     ]) ?>
 

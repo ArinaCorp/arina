@@ -12,13 +12,13 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="journal-record-type-index">
 
-<div class="row">
-    <div class="col-lg-12">
-        <h1 class="page-header">
-            <?= Html::encode($this->title) ?>
-        </h1>
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">
+                <?= Html::encode($this->title) ?>
+            </h1>
+        </div>
     </div>
-</div>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
@@ -34,19 +34,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'id',
             'title',
-            'description',
-            'homework',
-            'hours',
-            // 'present',
-            // 'date',
-            // 'n_pp',
-            // 'n_in_day',
-            // 'ticket',
-            // 'is_report',
-            // 'report_title',
-            // 'work_type_id',
-
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+            ],
         ],
     ]); ?>
 

@@ -7,6 +7,7 @@ use app\modules\students\models\Group;
 use app\modules\students\models\Student;
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -114,9 +115,43 @@ class JournalStudent extends \yii\db\ActiveRecord
         return $query->all();
     }
 
-    public static function getAllStudentsByLoad($load_id, $dateTo = null, $dateFrom = null)
+    /**
+     * @param $load_id
+     * @param null $dateTo
+     * @param null $dateFrom
+     * @return array
+     */
+    public static function getAllStudentsIdsByLoad($load_id, $dateTo = null, $dateFrom = null)
     {
-        $query = self::find()->select(['student_id'])->groupBy(['student_id'])->asArray()->all();
+        $query = new Query();
+        $query
+            ->from(self::tableName())
+            ->select(['student_id'])
+            ->where(['load_id' => $load_id]);
+        if (!is_null($dateFrom)) {
+            $query->andFilterWhere(['<=', 'data', $dateTo]);
+        };
+        if (!is_null($dateTo)) {
+            $query->andFilterWhere(['>=', 'data', $dateFrom]);
+        };
+        $query->
+        groupBy(['student_id']);
+        return ArrayHelper::getColumn($query->all(), 'student_id');
+    }
+
+    /**
+     * @param $load_id
+     * @param null $dateTo
+     * @param null $dateFrom
+     * @return Student[]
+     */
+    public static function getAllStudentByLoad($load_id, $dateTo = null, $dateFrom = null)
+    {
+        return Student::find()
+            ->where([
+                'id' => self::getAllStudentsIdsByLoad($load_id, $dateTo, $dateFrom)
+            ])
+            ->all();
     }
 
     public static function getAvailableStudentIds($load_id)
@@ -174,8 +209,21 @@ class JournalStudent extends \yii\db\ActiveRecord
         return ArrayHelper::map(self::getActiveStudentsInLoad($load_id, $dateTo), 'id', 'fullName');
     }
 
-    public function getStudentName()
+    public static function checkIsActive($student_id, $load_id, $dateTo)
     {
-
+        /**
+         * @var $record self
+         */
+        $record = self::find()
+            ->andWhere(['student_id' => $student_id, 'load_id' => $load_id])
+            ->andWhere(['<=', 'date', $dateTo])
+            ->orderBy(['date' => SORT_DESC])
+            ->one();
+        if ($record == null) return false;
+        if ($record->type == self::TYPE_ACCEPTED) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

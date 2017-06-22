@@ -24,8 +24,8 @@ class m170621_075956_tbl_record_types extends Migration
                 'n_in_day' => $this->boolean()->defaultValue(0),
                 'ticket' => $this->boolean()->defaultValue(0),
                 'is_report' => $this->boolean()->defaultValue(0),
-                'report_title' => $this->string(182)->notNull(),
-                'work_type_id' => $this->integer()->notNull(),
+                'report_title' => $this->string(182)->null(),
+                'work_type_id' => $this->integer()->null(),
             ],
             $tableOptions
         );

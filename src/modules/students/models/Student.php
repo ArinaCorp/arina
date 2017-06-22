@@ -96,7 +96,7 @@ class Student extends \yii\db\ActiveRecord
     {
         return [
             [['sseed_id', 'user_id', 'gender', 'status', 'created_at', 'updated_at'], 'integer'],
-            [['last_name', 'first_name', 'middle_name', 'gender','country_id', 'region_id', 'district_id'], 'required'],
+            [['last_name', 'first_name', 'middle_name', 'gender', 'country_id', 'region_id', 'district_id'], 'required'],
             [['birth_day', 'passport_issued_date'], 'safe'],
             [['exemption_ids'], 'each', 'rule' => ['integer']],
             [['student_code', 'passport_code', 'birth_certificate'], 'string', 'max' => 12],
@@ -190,7 +190,7 @@ class Student extends \yii\db\ActiveRecord
 
     public function getShortNameInitialFirst()
     {
-        return mb_substr($this->first_name, 0, 1, 'UTF-8') . '.' . mb_substr($this->middle_name, 0, 1, 'UTF-8') . '.' . ' '.$this->last_name;
+        return mb_substr($this->first_name, 0, 1, 'UTF-8') . '.' . mb_substr($this->middle_name, 0, 1, 'UTF-8') . '.' . ' ' . $this->last_name;
     }
 
     public function getFullNameAndBirthDate()
@@ -200,7 +200,7 @@ class Student extends \yii\db\ActiveRecord
 
     public function getLink()
     {
-        return Html::a($this->getFullName(), ['/students/default/view', 'id' => $this->id]);
+        return Html::a($this->getFullName(), ['/students/default/view', 'id' => $this->id], ['target' => '_blank']);
     }
 
     public function getPhoto()
