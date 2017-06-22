@@ -64,11 +64,13 @@ class JournalMarkController extends Controller implements IAdminController
         $model = new JournalMark();
         $model->student_id = $student_id;
         $model->record_id = $record_id;
+        $type = $model->journalRecord->typeObj;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'type'=>$type,
             ]);
         }
     }
