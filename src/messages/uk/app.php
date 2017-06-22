@@ -260,4 +260,10 @@ return [
     'Create subject cycle' => 'Створити предметний цикл',
     'Cycle number' => 'Номер циклу',
     'Short title' => 'Коротка назва ',
+    'First' => 'Перший',
+    'Second' => 'Другий',
+    'Third' => 'Третій',
+    'Fourth' => 'Четвертий',
+    'course' => 'курс',
+
 ];

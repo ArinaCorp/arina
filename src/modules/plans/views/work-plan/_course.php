@@ -37,28 +37,28 @@ switch ($course) {
         <th rowspan="2"></th>
         <th rowspan="2" style="vertical-align: top"><?= Yii::t('plans', 'Subject'); ?></th>
         <th colspan="8"><?= Yii::t('plans', 'Autumn semester').' '.
-            $model->semesters[$fall].' '.Yii::t('plans', 'Weeks'); ?></th>
+            $model->semesters[$fall].' '.Yii::t('plans', 'OfWeeks'); ?></th>
         <th colspan="8"><?= Yii::t('plans', 'Spring semester').' '.
-            $model->semesters[$spring].' '.Yii::t('plans', 'Weeks'); ?></th>
+            $model->semesters[$spring].' '.Yii::t('plans', 'OfWeeks'); ?></th>
     </tr>
     <tr>
-        <th><?= Yii::t('app', 'Total'); ?>                  </th>
-        <th><?= Yii::t('app', 'Classes'); ?>                </th>
-        <th><?= Yii::t('app', 'Lectures'); ?>               </th>
-        <th><?= Yii::t('app', 'Practices'); ?>              </th>
-        <th><?= Yii::t('app', 'Laboratory works'); ?>       </th>
-        <th><?= Yii::t('app', 'Self work'); ?>              </th>
-        <th><?= Yii::t('app', 'Course projects, works'); ?> </th>
-        <th><?= Yii::t('app', 'Hours per week'); ?>         </th>
+        <th><?= Yii::t('plans', 'Total'); ?>                  </th>
+        <th><?= Yii::t('plans', 'Classes'); ?>                </th>
+        <th><?= Yii::t('plans', 'Lectures'); ?>               </th>
+        <th><?= Yii::t('plans', 'Practices'); ?>              </th>
+        <th><?= Yii::t('plans', 'Laboratory works'); ?>       </th>
+        <th><?= Yii::t('plans', 'Self work'); ?>              </th>
+        <th><?= Yii::t('plans', 'Course projects, works'); ?> </th>
+        <th><?= Yii::t('plans', 'Hours per week'); ?>         </th>
 
-        <th><?= Yii::t('app', 'Total'); ?>                  </th>
-        <th><?= Yii::t('app', 'Classes'); ?>                </th>
-        <th><?= Yii::t('app', 'Lectures'); ?>               </th>
-        <th><?= Yii::t('app', 'Practices'); ?>              </th>
-        <th><?= Yii::t('app', 'Laboratory works'); ?>       </th>
-        <th><?= Yii::t('app', 'Self work'); ?>              </th>
-        <th><?= Yii::t('app', 'Course projects, works'); ?> </th>
-        <th><?= Yii::t('app', 'Hours per week'); ?>         </th>
+        <th><?= Yii::t('plans', 'Total'); ?>                  </th>
+        <th><?= Yii::t('plans', 'Classes'); ?>                </th>
+        <th><?= Yii::t('plans', 'Lectures'); ?>               </th>
+        <th><?= Yii::t('plans', 'Practices'); ?>              </th>
+        <th><?= Yii::t('plans', 'Laboratory works'); ?>       </th>
+        <th><?= Yii::t('plans', 'Self work'); ?>              </th>
+        <th><?= Yii::t('plans', 'Course projects, works'); ?> </th>
+        <th><?= Yii::t('plans', 'Hours per week'); ?>         </th>
     </tr>
 
     <?php $fallHours = [
