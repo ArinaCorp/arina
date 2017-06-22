@@ -2,6 +2,7 @@
 
 namespace app\modules\directories\models;
 
+use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
@@ -115,5 +116,14 @@ class StudyYear extends ActiveRecord
     public static function getList()
     {
         return ArrayHelper::map(StudyYear::find()->all(), 'id', 'year_start');
+    }
+
+    public static function getListGroupByYear($speciality_qualification_id, $year_id = null)
+    {
+        $specialityQualification = SpecialityQualification::findOne($speciality_qualification_id);
+        if (is_null($speciality_qualification_id)) {
+            return [];
+        }
+        return $specialityQualification->getGroupsActiveList($year_id);
     }
 }

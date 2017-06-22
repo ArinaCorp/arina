@@ -20,12 +20,19 @@ return array_merge(require(__DIR__ . '/installed_modules.php'), [
     'employee' => [
         'class' => 'app\modules\employee\Module',
     ],
-
+    'geo' => [
+        'class' => 'app\modules\geo\Module',
+    ],
     'plans' => [
         'class' => 'app\modules\plans\Module',
     ],
-
     'load' => [
         'class' => 'app\modules\load\Module',
+    ],
+    'journal' => [
+        'class' => 'app\modules\journal\Module',
+    ],
+    'accounting' => [
+        'class' => 'app\modules\accounting\Accounting',
     ],
 ]);

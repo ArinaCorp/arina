@@ -2,6 +2,7 @@
 
 namespace app\modules\load\models;
 
+use app\modules\plans\models\WorkPlan;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
@@ -435,7 +436,7 @@ class Load extends ActiveRecord
         if ($this->type == self::TYPE_PROJECT) return '';
         $spring = $this->course * 2;
         $fall = $spring - 1;
-        return $this->workSubject->total[$fall-1] + $this->workSubject->total[$spring-1];
+        return $this->workSubject->total[$fall - 1] + $this->workSubject->total[$spring - 1];
     }
 
     /**
@@ -446,7 +447,7 @@ class Load extends ActiveRecord
         if ($this->type == self::TYPE_PROJECT) return '';
         $spring = $this->course * 2;
         $fall = $spring - 1;
-        return $this->workSubject->getClasses($fall-1) + $this->workSubject->getClasses($spring-1);
+        return $this->workSubject->getClasses($fall - 1) + $this->workSubject->getClasses($spring - 1);
     }
 
     /**
@@ -457,7 +458,7 @@ class Load extends ActiveRecord
         if ($this->type == self::TYPE_PROJECT) return '';
         $spring = $this->course * 2;
         $fall = $spring - 1;
-        return $this->workSubject->getSelfwork($fall-1) + $this->workSubject->getSelfwork($spring-1);
+        return $this->workSubject->getSelfwork($fall - 1) + $this->workSubject->getSelfwork($spring - 1);
     }
 
 
@@ -537,5 +538,69 @@ class Load extends ActiveRecord
         }
     }
 
+    /**
+     * @param $group_id
+     * @param null $year_id
+     * @return static[]
+     */
+    public static function getArrayByGroupAndYear($group_id, $year_id = null)
+    {
+        if (is_null($year_id)) {
+            $year_id = StudyYear::getCurrentYear()->id;
+        }
+        if ($year_id == 5 && $group_id == 8) {
+            $models = [];
+            $models[] = self::getZaglushka();
+            return $models;
+        }
+        return [];
+        return self::findAll(['group_id' => $group_id, 'year_id' => $year_id]);
+    }
 
+    /**
+     * @return string
+     */
+    public function getSubjectName()
+    {
+        return $this->workSubject->subject->title;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTeacherFullName()
+    {
+        return $this->employee->getFullName();
+    }
+
+    /**
+     * @return string
+     */
+    public function getLabelInfo()
+    {
+        return
+            "<h2>" . Yii::t('app', 'Subject') . ':' . $this->getSubjectName() . '</h2><h3>' . Yii::t('app', 'Teacher ID') . ': ' . $this->getTeacherFullName() . "</h3>";
+    }
+
+    /**
+     * @param $group_id
+     * @param null $year_id
+     * @return array
+     */
+    public static function getListByGroupAndYear($group_id, $year_id = null)
+    {
+        return ArrayHelper::map(self::getArrayByGroupAndYear($group_id, $year_id), 'id', 'labelInfo');
+    }
+
+    public static function getZaglushka()
+    {
+        WorkSubject::findOne(12);
+        $model = new Load();
+        $model->id = 228;
+        $model->work_subject_id = 3;
+        $model->study_year_id = 5;
+        $model->group_id = 8;
+        $model->employee_id = 1;
+        return $model;
+    }
 }

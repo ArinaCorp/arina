@@ -5,6 +5,7 @@ namespace app\modules\directories\models\audience;
 use Yii;
 use yii\db\ActiveRecord;
 use app\modules\employee\models\Employee;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%directories_audience}}".
@@ -74,6 +75,7 @@ class Audience extends ActiveRecord
     {
         return [
             [['type', 'id_teacher', 'capacity'], 'integer'],
+            [['number', 'name'], 'required'],
             [['number', 'name'], 'string', 'max' => 255],
         ];
     }
@@ -103,7 +105,26 @@ class Audience extends ActiveRecord
         }
     }
 
-    public function getTeacher(){
-        return $this->hasOne(Employee::className(),['id'=>'id_teacher']);
+    public function getTeacher()
+    {
+        return $this->hasOne(Employee::className(), ['id' => 'id_teacher']);
+    }
+
+    /**
+     * @return self[]
+     */
+    public static function getAudienceArray()
+    {
+        return self::find()->all();
+    }
+
+    public function getLabel()
+    {
+        return $this->number . ' ' . $this->name;
+    }
+
+    public static function getAudienceList()
+    {
+        return ArrayHelper::map(self::getAudienceArray(), 'id', 'label');
     }
 }

@@ -7,3 +7,20 @@
 .list-inline {
     margin-left: 0;
 }
+
+.journal .column-number {
+    max-width: 20px;
+    width: auto;
+}
+
+.journal .column-name {
+    min-width: 100px;
+    max-width: 120px;
+    width: auto;
+}
+
+.journal .oc {
+    min-width: 20px;
+    max-width: 40px;
+    width: auto;
+}

@@ -5,7 +5,7 @@ $modules = require(__DIR__ . '/modules.php');
 
 $config = [
     'id' => 'app',
-    'name' => 'Application',
+    'name' => 'АСУ ХПК НУ "ЛП"',
     'basePath' => dirname(__DIR__),
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     'runtimePath' => dirname(dirname(__DIR__)) . '/runtime',

@@ -3,7 +3,7 @@ $(document).ready(function () {
         e.preventDefault();
         var data;
         if ($(this).attr('data-key')) {
-            data = $(this).closest("form").serialize() + "&save=0&" + $(this).attr('data-action') + "=1" + "&data-key="+$(this).attr('data-key');
+            data = $(this).closest("form").serialize() + "&save=0&" + $(this).attr('data-action') + "=1" + "&data-key=" + $(this).attr('data-key');
         } else {
             data = $(this).closest("form").serialize() + "&save=0&" + $(this).attr('data-action') + "=1";
         }
@@ -18,7 +18,7 @@ $(document).ready(function () {
             data: data
         });
     });
-    $(document).on('click','.save-btn',function (event) {
+    $(document).on('click', '.save-btn', function (event) {
         var data = $(this).closest("form").serialize() + "&save=1";
         if (typeof($(this).attr('data-action')) != 'undefined') {
             data += '&stay=1';
@@ -47,11 +47,19 @@ $(document).ready(function () {
         jQuery('.sidebar').removeClass('closed');
         jQuery('#page-wrapper').removeClass('maximized');
     }
+    $(document).on('change', '#not-present-check', function () {
+        var $this = $(this);
+        if ($this.checked() == 1) {
+            $this.hide();
+        } else {
+            $this.show();
+        }
+    });
 });
 
 $(document).ready(function () {
-    $('#employee-is_in_education').on('change',function () {
-        if($(this).val()==0){
+    $('#employee-is_in_education').on('change', function () {
+        if ($(this).val() == 0) {
             $('.field_cyclic_commission_id').addClass('hidden');
         } else {
             $('.field_cyclic_commission_id').removeClass('hidden');

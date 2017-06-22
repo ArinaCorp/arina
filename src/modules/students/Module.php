@@ -52,7 +52,12 @@ class Module extends BaseModule implements IAdminModule
                     'icon' => 'home',
                 ],
                 [
-                    'label' => Yii::t('app', 'Exemptions'),
+                    'label' => Yii::t('app', 'Exemptions journal'),
+                    'url' => ['/students/exemption-student-relations'],
+                    'icon' => 'universal-access',
+                ],
+                [
+                    'label' => Yii::t('app', 'Exemptions types'),
                     'url' => ['/students/exemptions'],
                     'icon' => 'universal-access',
                 ],

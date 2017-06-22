@@ -214,10 +214,12 @@ class StudentsHistory extends \yii\db\ActiveRecord
     public
     static function getActiveStudentByGroup($id)
     {
-        $students = Student::find()->all();
         /**
          * @var $students Student[]
          */
+        if (is_null($id)) {
+            return [];
+        }
         $group = Group::findOne(['id' => $id]);
         return $group->getStudentsArray();
     }
@@ -582,6 +584,7 @@ class StudentsHistory extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Student::className(), ['id' => 'student_id']);
     }
+
     public function getStudentFullName()
     {
         return $this->student->fullName();
