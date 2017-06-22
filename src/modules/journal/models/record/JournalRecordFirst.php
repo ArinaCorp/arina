@@ -10,6 +10,7 @@ namespace app\modules\journal\models\record;
 
 
 use yii\base\Model;
+use Yii;
 
 class JournalRecordFirst extends Model
 {
@@ -20,6 +21,13 @@ class JournalRecordFirst extends Model
     {
         return [
             [['type'], 'required'],
+        ];
+    }
+
+    public function attributeLabels()
+    {
+        return [
+            'type' => Yii::t('app', "Type"),
         ];
     }
 }

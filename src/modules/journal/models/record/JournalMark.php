@@ -4,9 +4,9 @@ namespace app\modules\journal\models\record;
 
 use app\modules\journal\models\evaluation\Evaluation;
 use app\modules\journal\models\evaluation\EvaluationSystem;
+use app\modules\journal\models\presence\NotPresenceType;
 use app\modules\students\models\Student;
 use Yii;
-use yii\behaviors\TimestampBehavior;
 use yii\bootstrap\Html;
 
 /**
@@ -19,8 +19,10 @@ use yii\bootstrap\Html;
  * @property int $not_presence_reason_id
  * @property int $evaluation_system_id
  * @property int $evaluation_id
+ * @property string $ticket
  * @property string $date
  * @property int $retake_evaluation_id
+ * @property string $retake_ticket
  * @property string $retake_date
  * @property string $comment
  *
@@ -29,6 +31,8 @@ use yii\bootstrap\Html;
  * @property Evaluation $retakeEvaluation
  * @property EvaluationSystem $retakeEvaluationSystem
  * @property JournalRecord $journalRecord
+ * @property Student $student
+ * @property NotPresenceType $reason
  */
 class JournalMark extends \yii\db\ActiveRecord
 {
@@ -40,12 +44,6 @@ class JournalMark extends \yii\db\ActiveRecord
         return '{{%journal_mark}}';
     }
 
-    public function behaviors()
-    {
-        return [
-            TimestampBehavior::className(),
-        ];
-    }
 
     /**
      * @inheritdoc
@@ -56,7 +54,7 @@ class JournalMark extends \yii\db\ActiveRecord
             [['record_id', 'student_id'], 'required'],
             [['record_id', 'student_id', 'presence', 'not_presence_reason_id', 'evaluation_system_id', 'evaluation_id', 'retake_evaluation_id'], 'integer'],
             [['date', 'retake_date'], 'safe'],
-            [['comment'], 'string'],
+            [['comment', 'ticket', 'retake_ticket'], 'string'],
         ];
     }
 
@@ -76,6 +74,8 @@ class JournalMark extends \yii\db\ActiveRecord
             'date' => Yii::t('app', 'Date'),
             'retake_evaluation_id' => Yii::t('app', 'Retake Evaluation ID'),
             'retake_date' => Yii::t('app', 'Retake Date'),
+            'ticket' => Yii::t('app', 'Ticket'),
+            'retake_ticket' => Yii::t('app', 'Retake ticket'),
             'comment' => Yii::t('app', 'Comment'),
         ];
     }
@@ -109,9 +109,8 @@ class JournalMark extends \yii\db\ActiveRecord
             return $mark->getLabelLink();
         }
         if (!JournalStudent::checkIsActive($student->id, $record->load_id, $record->date)) {
-            return Html::tag('div', '', ['class' => 'mark not-available', 'style' => 'background-color: gainsboro;']);
+            return Html::tag('div', '', ['class' => 'not-available', 'style' => 'background-color: gainsboro;']);
         } else {
-
             return Html::tag('div',
                 Html::a(
                     Yii::t('app', 'Add mark'),
@@ -120,10 +119,7 @@ class JournalMark extends \yii\db\ActiveRecord
                         'record_id' => $record->id,
                         'student_id' => $student->id,
                     ]
-                ),
-                [
-                    'class' => 'mark'
-                ]
+                )
             );
         }
     }
@@ -140,7 +136,7 @@ class JournalMark extends \yii\db\ActiveRecord
 
     public function getRetakeEvaluation()
     {
-        return $this->hasOne(Evaluation::className(), ['id' => 'evaluation_id']);
+        return $this->hasOne(Evaluation::className(), ['id' => 'retake_evaluation_id']);
     }
 
     public function getRetakeEvaluationSystem()
@@ -153,6 +149,10 @@ class JournalMark extends \yii\db\ActiveRecord
         $label = "";
         if (!$this->presence) {
             $label .= Yii::t('app', "Np");
+            if (isset($this->not_presence_reason_id)) {
+                $reasonLabel = '(' . $this->reason->label . ')';
+                $label .= $reasonLabel;
+            }
         }
         if ($this->evaluation_id) {
             if ($label !== "") {
@@ -166,21 +166,43 @@ class JournalMark extends \yii\db\ActiveRecord
             }
             $label .= $this->retakeEvaluation->value;
         }
+        if (empty($label)) {
+            $label = Yii::t('app', 'Add mark');
+        }
         return Html::tag('div',
             Html::a(
                 $label,
                 [
                     'journal-mark/view',
-                    'record_id' => $this->record_id
+                    'id' => $this->id
                 ]
-            ),
-            [
-                'class' => 'mark'
-            ]
+            )
         );
     }
 
-    public function getJournalRecord(){
-        $this->hasOne(JournalRecord::className(),['id'=>'record_id']);
+    public function getJournalRecord()
+    {
+        return $this->hasOne(JournalRecord::className(), ['id' => 'record_id']);
+    }
+
+    public function beforeSave($insert)
+    {
+        if (boolval($this->evaluation_id) && is_null($this->getOldAttribute('evaluation_id'))) {
+            $this->date = date('Y-m-d');
+        }
+        if (boolval($this->retake_evaluation_id) && is_null($this->getOldAttribute('retake_evaluation_id'))) {
+            $this->retake_date = date('Y-m-d');
+        }
+        return parent::beforeSave($insert); // TODO: Change the autogenerated stub
+    }
+
+    public function getStudent()
+    {
+        return $this->hasOne(Student::className(), ['id' => 'student_id']);
+    }
+
+    public function getReason()
+    {
+        return $this->hasOne(NotPresenceType::className(), ['id' => 'not_presence_reason_id']);
     }
 }

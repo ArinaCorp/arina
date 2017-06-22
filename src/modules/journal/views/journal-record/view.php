@@ -7,7 +7,7 @@ use app\modules\journal\models\record\JournalRecord;
 /* @var $this yii\web\View */
 /* @var $model app\modules\journal\models\record\JournalRecord */
 
-$this->title = $model->id;
+$this->title = Yii::t('app', 'Journal Record');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Journal Records'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 
     <p>
-        <?= Html::a(Yii::t('app', 'Journal page'), ['default/view', 'id' => $model->load_id], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('app', 'Journal'), ['default/view', 'id' => $model->load_id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
@@ -61,8 +61,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'number_in_day',
             'hours',
             'audience_id',
-            'created_at',
-            'updated_at',
         ],
     ]) ?>
 

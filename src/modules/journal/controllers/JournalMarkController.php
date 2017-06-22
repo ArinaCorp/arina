@@ -2,9 +2,13 @@
 
 namespace app\modules\journal\controllers;
 
+use app\components\DepDropHelper;
+use app\modules\journal\models\evaluation\Evaluation;
+use app\modules\journal\models\record\JournalRecordType;
 use Yii;
 use app\modules\journal\models\record\JournalMark;
 use yii\data\ActiveDataProvider;
+use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -64,13 +68,14 @@ class JournalMarkController extends Controller implements IAdminController
         $model = new JournalMark();
         $model->student_id = $student_id;
         $model->record_id = $record_id;
+        $model->presence = true;
         $type = $model->journalRecord->typeObj;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
-                'type'=>$type,
+                'type' => $type,
             ]);
         }
     }
@@ -105,6 +110,26 @@ class JournalMarkController extends Controller implements IAdminController
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    public function actionGetEvaluationList()
+    {
+        if (isset($_POST['depdrop_parents'])) {
+            $parents = $_POST['depdrop_parents'];
+            if ($parents != null) {
+                if (!empty($_POST['depdrop_all_params'])) {
+                    $params = $_POST['depdrop_all_params'];
+                    $system_id = $params['journalmark-evaluation_system_id']; // get the value of input-type-1
+                    if (!is_null($system_id)) {
+                        $out = DepDropHelper::convertMap(Evaluation::getListBySystem($system_id));
+                        echo Json::encode(['output' => $out, 'selected' => Yii::t('app', 'Select teacher')]);
+                        return;
+                    }
+                }
+            }
+            echo Json::encode(['output' => [], 'selected' => Yii::t('app', 'Select ...')]);
+            return;
+        }
     }
 
     /**

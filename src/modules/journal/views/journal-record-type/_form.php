@@ -100,7 +100,7 @@ use app\modules\plans\models\WorkSubject;
 
     <?= $form->field($model, 'work_type_id')->widget(Select2::className(), [
         'data' => WorkSubject::getControlLabelList(),
-        'options' => ['placeholder' => 'Select a state ...'],
+        'options' => ['placeholder' => Yii::t('app','Select a type')],
         'pluginOptions' => [
             'allowClear' => true
         ],

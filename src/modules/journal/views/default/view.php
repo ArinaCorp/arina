@@ -11,7 +11,7 @@ use app\modules\journal\models\record\JournalStudent;
 /* @var $list JournalRecord[] */
 /* @var $map [][]; */
 
-$this->title = $model->getLabelInfo();
+$this->title = $model->getSubjectName();
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Journal Students'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
@@ -21,7 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="row">
         <div class="col-lg-12">
             <h1 class="page-header">
-                <?= Html::encode($this->title) ?>
+                <?= $model->getLabelInfo() ?>
             </h1>
         </div>
     </div>
@@ -31,9 +31,10 @@ $this->params['breadcrumbs'][] = $this->title;
     </p>
     <table class="journal graph table items table-striped table-condensed table-bordered table-hover">
         <tr>
-            <td rowspan="2"><?= Yii::t('terms', 'N p/p'); ?></td>
-            <td class="name" rowspan="2"><?= Yii::t('terms', 'Surname and initials'); ?></td>
-            <td colspan="<?= count($list) + 1; ?> " id="center"><?= Yii::t('terms', 'Day, month') ?></td>
+            <td rowspan="2" class="column-number"><?= Yii::t('app', 'N p/p'); ?></td>
+            <td class="column-name" rowspan="2"><?= Yii::t('app', 'Second name, first name, middle name'); ?></td>
+            <td colspan="<?= count($list) + 1; ?> "
+                id="center"><?= Yii::t('app', 'Day and month or record type name') ?></td>
         </tr>
         <tr>
             <?php
@@ -44,7 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?
             }
             //            if ($t) {
-            echo '<td class="record">' . Html::a(Yii::t('app', 'create'), ['journal-record/create-first', 'load_id' => $model->id]) . '</td>';
+            echo '<td class="oc record">' . Html::a(Yii::t('app', 'Create journal record'), ['journal-record/create-first', 'load_id' => $model->id]) . '</td>';
             //            }
             ?>
         </tr>
@@ -56,18 +57,18 @@ $this->params['breadcrumbs'][] = $this->title;
                 <td>
                     <?php echo $i + 1; ?>
                 </td>
-                <td class="name">
+                <td class="column-name">
                     <?php echo $student->getLink() ?>
                 </td>
                 <?php foreach ($list as $item) { ?>
-                    <td>
+                    <td class="oc">
                         <?= $map[$student->id][$item->id] ?>
                     </td>
 
                     <?
 
                 }
-                if (true) echo '<td></td>';
+                if (true) echo '<td class="oc"></td>';
                 ?>
             </tr>
             <?

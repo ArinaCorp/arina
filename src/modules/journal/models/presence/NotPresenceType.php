@@ -4,6 +4,7 @@ namespace app\modules\journal\models\presence;
 
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%not_presence_type}}".
@@ -77,5 +78,10 @@ class NotPresenceType extends \yii\db\ActiveRecord
             0 => Yii::t('app', 'No'),
             1 => Yii::t('app', "Yes"),
         ];
+    }
+
+    public static function getAllList()
+    {
+        return ArrayHelper::map(self::find()->all(), 'id', 'title');
     }
 }

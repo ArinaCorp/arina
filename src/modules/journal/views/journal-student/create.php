@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\modules\journal\models\record\JournalStudent */
 
-$this->title = Yii::t('app', 'Create Journal Student');
+$this->title = Yii::t('app', 'Configurator list');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Journal Students'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -21,7 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 
     <p>
-        <?= Html::a(Yii::t('app', 'Configurating list'), ['index', 'load_id' => $model->load_id], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('app', 'List configurations'), ['index', 'load_id' => $model->load_id], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= $this->render('_form', [

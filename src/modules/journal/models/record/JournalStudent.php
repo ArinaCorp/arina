@@ -216,9 +216,10 @@ class JournalStudent extends \yii\db\ActiveRecord
          */
         $record = self::find()
             ->andWhere(['student_id' => $student_id, 'load_id' => $load_id])
-            ->andWhere(['<=', 'date', $dateTo])
-            ->orderBy(['date' => SORT_DESC])
+            ->andWhere(['<', 'date', $dateTo])
+            ->orderBy(['id' => SORT_DESC])
             ->one();
+       //var_dump($record);
         if ($record == null) return false;
         if ($record->type == self::TYPE_ACCEPTED) {
             return true;

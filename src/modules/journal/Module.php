@@ -43,12 +43,12 @@ class Module extends BaseModule implements IAdminModule
                     'icon' => 'tags',
                 ],
                 [
-                    'label' => Yii::t('app', 'Journal Record Type'),
+                    'label' => Yii::t('app', 'Journal Record Types'),
                     'url' => ['/journal/journal-record-type'],
                     'icon' => 'tag',
                 ],
                 [
-                    'label' => Yii::t('app', 'Not presence'),
+                    'label' => Yii::t('app', 'Not Presence Types'),
                     'url' => ['/journal/presence-type'],
                     'icon' => 'list',
                 ],

@@ -4,6 +4,7 @@ namespace app\modules\journal\models\evaluation;
 
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%evaluations}}".
@@ -75,5 +76,15 @@ class Evaluation extends \yii\db\ActiveRecord
     public function getSystemLabel()
     {
         return $this->system->title;
+    }
+
+    public static function getArrayBySystem($system_id)
+    {
+        return self::find()->where(['system_id' => $system_id])->all();
+    }
+
+    public static function getListBySystem($system_id)
+    {
+        return ArrayHelper::map(self::getArrayBySystem($system_id), 'id', 'value');
     }
 }

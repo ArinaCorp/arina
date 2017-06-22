@@ -18,5 +18,13 @@ $(document).ready(function () {
             data: data
         });
     });
+    $(document).on('change', '#not-present-check', function () {
+        var $this = $(this);
+        if ($this.checked() == 1) {
+            $this.hide();
+        } else {
+            $this.show();
+        }
+    })
 });
 

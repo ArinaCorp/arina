@@ -5,9 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\modules\journal\models\record\JournalRecord */
 
-$this->title = Yii::t('app', 'Update {modelClass}: ', [
-    'modelClass' => 'Journal Record',
-]) . ' ' . $model->id;
+$this->title = Yii::t('app', 'Journal Record');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Journal Records'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
@@ -23,7 +21,7 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
     </div>
 
     <p>
-        <?= Html::a(Yii::t('app', 'Journal page'), ['default/view', 'id' => $model->load_id], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('app', 'Journal'), ['default/view', 'id' => $model->load_id], ['class' => 'btn btn-primary']) ?>
     </p>
 
     <?= $this->render('_form', [

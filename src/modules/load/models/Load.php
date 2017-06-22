@@ -578,7 +578,8 @@ class Load extends ActiveRecord
      */
     public function getLabelInfo()
     {
-        return $this->getSubjectName() . ' ' . $this->getTeacherFullName();
+        return
+            "<h2>" . Yii::t('app', 'Subject') . ':' . $this->getSubjectName() . '</h2><h3>' . Yii::t('app', 'Teacher ID') . ': ' . $this->getTeacherFullName() . "</h3>";
     }
 
     /**

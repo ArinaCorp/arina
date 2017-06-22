@@ -138,7 +138,7 @@ class JournalRecord extends \yii\db\ActiveRecord
     {
         $label = '';
         $options = [];
-        if ($this->typeObj->date) {
+        if ($this->typeObj->date && !$this->typeObj->is_report) {
             $label = date('d', strtotime($this->date)) . '<br/>' . date('m', strtotime($this->date));
         } else {
             $label = $this->typeObj->title;

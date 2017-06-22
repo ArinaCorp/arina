@@ -13,7 +13,7 @@ use app\modules\load\models\Load;
 /* @var $this yii\web\View */
 /* @var $model \app\modules\journal\models\SelectForm */
 
-$this->title = Yii::t('app', 'Selecting journal list');
+$this->title = Yii::t('app', 'Select journal page');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="journal-student-index">
@@ -57,7 +57,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'pluginOptions' => [
                     'depends' => ['selectform-year_id', 'selectform-speciality_qualification_id'],
                     'url' => Url::to(['get-groups']),
-                    'placeholder' => Yii::t('app', 'Select speciality qualification'),
+                    'placeholder' => Yii::t('app', 'Select group'),
                 ]
             ]) ?>
         <?php
@@ -69,7 +69,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'pluginOptions' => [
                     'depends' => ['selectform-year_id', 'selectform-group_id'],
                     'url' => Url::to(['get-loads']),
-                    'placeholder' => Yii::t('app', 'Select speciality qualification'),
+                    'placeholder' => Yii::t('app', 'Select subject from load'),
                 ]]) ?>
 
         <div class="form-group">

@@ -23,7 +23,7 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
     </div>
 
     <p>
-        <?= Html::a(Yii::t('app', 'List'), ['index'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('app', 'Journal page'), ['default/view', 'id' => $model->journalRecord->load_id], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= $this->render('_form', [

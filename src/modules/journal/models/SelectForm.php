@@ -1,5 +1,8 @@
 <?php
 namespace app\modules\journal\models;
+
+use Yii;
+
 /**
  * Created by PhpStorm.
  * User: user
@@ -17,6 +20,16 @@ class SelectForm extends \yii\base\Model
     {
         return [
             [['year_id', 'speciality_qualification_id', 'group_id', 'load_id'], 'required']
+        ];
+    }
+
+    public function attributeLabels()
+    {
+        return [
+            'year_id' => Yii::t('app', 'Study year'),
+            'speciality_qualification_id' => Yii::t('app', 'Speciality qualification'),
+            'group_id' => Yii::t('app', 'Group'),
+            'load_id' => Yii::t('app', 'Load'),
         ];
     }
 }
