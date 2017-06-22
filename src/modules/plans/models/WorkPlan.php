@@ -297,7 +297,6 @@ class WorkPlan extends ActiveRecord
             $this->setIsNewRecord(false);
             $this->save(false);
         } elseif (!empty($this->study_plan_origin)) {
-            var_dump('hello copying');
             $this->copyFromStudyPlan(StudyPlan::findOne(['id' => $this->study_plan_origin]));
             $this->study_plan_origin = null;
             $this->setIsNewRecord(false);
