@@ -38,7 +38,7 @@ class Module extends BaseModule implements IAdminModule
             'items' => [
                 [
                     'label' => Yii::t('load', 'View loads'),
-                    'url' => ['/load/'],
+                    'url' => ['/load/index'],
                     'icon' => 'th-list',
                 ],
                 [

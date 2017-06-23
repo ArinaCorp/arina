@@ -38,12 +38,12 @@ class Module extends BaseModule implements IAdminModule
             'items' => [
                 [
                     'label' => Yii::t('app', 'Groups'),
-                    'url' => ['/students/group'],
+                    'url' => ['/students/group/index'],
                     'icon' => 'street-view',
                 ],
                 [
                     'label' => Yii::t('app', 'List'),
-                    'url' => ['/students'],
+                    'url' => ['/students/default/index'],
                     'icon' => 'address-book',
                 ],
                 [

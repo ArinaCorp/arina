@@ -41,7 +41,7 @@ class Module extends BaseModule implements IAdminModule
             'items' => [
                 [
                     'label' => Yii::t('app', 'List'),
-                    'url' => ['/employee/index'],
+                    'url' => ['/employee/default/index'],
                     'icon' => 'list',
                 ],
                 [
