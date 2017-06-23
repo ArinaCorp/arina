@@ -16,6 +16,14 @@ class Module extends BaseModule implements IAdminModule
      */
     public $controllerNamespace = 'app\modules\directories\controllers';
 
+    public function behaviors()
+    {
+        return [
+            'as AccessBehavior' => [
+                'class' => \developeruz\db_rbac\behaviors\AccessBehavior::className(),
+            ]
+        ];
+    }
 
     public static function getAdminMenu()
     {

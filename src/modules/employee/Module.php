@@ -41,12 +41,12 @@ class Module extends BaseModule implements IAdminModule
             'items' => [
                 [
                     'label' => Yii::t('app', 'List'),
-                    'url' => ['/employee'],
+                    'url' => ['/employee/index'],
                     'icon' => 'list',
                 ],
                 [
                     'label' => Yii::t('app', 'Cyclic Commissions'),
-                    'url' => ['/employee/cyclic-commission'],
+                    'url' => ['/employee/cyclic-commission/index'],
                     'icon' => 'list',
                 ],
             ]

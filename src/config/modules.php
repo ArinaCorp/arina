@@ -38,7 +38,7 @@ return array_merge(require(__DIR__ . '/installed_modules.php'), [
     'permit' => [
         'class' => 'developeruz\db_rbac\Yii2DbRbac',
         'params' => [
-            'userClass' => 'nullref\admin\Module',
+            'userClass' => 'nullref\admin\models\Admin',
             //'accessRoles' => ['admin']
         ]
     ],
