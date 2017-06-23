@@ -365,5 +365,6 @@ return [
     'Create Journal Record' => 'Додати запис у журнал',
     'Journal Record' => 'Запис журналу',
     'Mark' => 'Оцінка',
-    'Create Mark' => 'Додати оцінку'
+    'Create Mark' => 'Додати оцінку',
+    'Total amount' => 'Загальна кількість'
 ];
