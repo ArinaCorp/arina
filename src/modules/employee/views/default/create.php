@@ -4,9 +4,10 @@ use yii\helpers\Html;
 use yii\web\View;
 use app\modules\employee\models\Employee;
 
-/* @var $this View
- * @var $model Employee */
-/* @var $modelsEducation \app\modules\employee\models\EmployeeEducation[] */
+/* @var $this View 
+ * @var $model Employee 
+ * @var $modelsEducation \app\modules\employee\models\EmployeeEducation[] 
+ */
 
 $this->title = Yii::t('app', 'Create employee');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Employees'), 'url' => ['index']];

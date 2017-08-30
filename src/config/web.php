@@ -22,6 +22,9 @@ $config = [
                 ],
             ],
         ],
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager',
+        ],
         'excel' => [
             'class' => 'app\components\Excel',
         ],
@@ -35,7 +38,8 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass' => 'app\models\User',
+            'class' => 'nullref\admin\components\User',
+            'identityClass' => 'nullref\admin\models\Admin',
             'enableAutoLogin' => true,
         ],
         'errorHandler' => [

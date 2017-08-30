@@ -4,6 +4,7 @@ namespace app\modules\employee\controllers;
 
 use app\modules\employee\models\EmployeeEducation;
 use app\modules\employee\models\EmployeeSearch;
+use nullref\admin\models\Admin;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\base\Model;
@@ -34,19 +35,20 @@ class DefaultController extends Controller implements IAdminController
         ];
     }
 
+
     /**
      * Lists all Employee models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new EmployeeSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+            $searchModel = new EmployeeSearch();
+            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+            return $this->render('index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+            ]);
     }
 
     /**
@@ -119,9 +121,9 @@ class DefaultController extends Controller implements IAdminController
     {
 
         $model = $this->findModel($id);
-        
-        
-       
+
+
+
         if (empty($id)) {
             $model = new Employee();
         } else {
@@ -154,7 +156,7 @@ class DefaultController extends Controller implements IAdminController
                 'modelsEducation' => $model->has_education,
             ]);
         }
-        
+
     }
 
     /**

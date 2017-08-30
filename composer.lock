@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "96ae4565fbb60e98661e4acf9ef35012",
+    "content-hash": "cb15434c4dc1fe5ef69aa31de456fae4",
     "packages": [
         {
             "name": "2amigos/yii2-date-picker-widget",
@@ -371,16 +371,16 @@
             }
         },
         {
-            "name": "bower-asset/metismenu",
+            "name": "bower-asset/metisMenu",
             "version": "1.1.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/onokumus/metismenu.git",
+                "url": "https://github.com/onokumus/metisMenu.git",
                 "reference": "8e179d59f60a593203667c092119779dc36f5171"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/onokumus/metismenu/zipball/8e179d59f60a593203667c092119779dc36f5171",
+                "url": "https://api.github.com/repos/onokumus/metisMenu/zipball/8e179d59f60a593203667c092119779dc36f5171",
                 "reference": "8e179d59f60a593203667c092119779dc36f5171",
                 "shasum": ""
             },
@@ -423,12 +423,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/moment/moment.git",
-                "reference": "b8a7fc310eb3625e83fc0c8f1ea2840fa83c7378"
+                "reference": "f2af24d53ec8bb2ad61626509e529d339217ff96"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/moment/moment/zipball/b8a7fc310eb3625e83fc0c8f1ea2840fa83c7378",
-                "reference": "b8a7fc310eb3625e83fc0c8f1ea2840fa83c7378",
+                "url": "https://api.github.com/repos/moment/moment/zipball/f2af24d53ec8bb2ad61626509e529d339217ff96",
+                "reference": "f2af24d53ec8bb2ad61626509e529d339217ff96",
                 "shasum": ""
             },
             "type": "bower-asset-library",
@@ -458,7 +458,7 @@
             "license": [
                 "MIT"
             ],
-            "time": "2017-03-21 22:54:37"
+            "time": "2017-03-18 21:09:29"
         },
         {
             "name": "bower-asset/punycode",
@@ -494,12 +494,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/smalot/bootstrap-datetimepicker.git",
-                "reference": "32143c8b45575e51c92a8e29997cbe556d1bbba3"
+                "reference": "696fc204d5a1433deeaaae830f579512470a677e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/smalot/bootstrap-datetimepicker/zipball/32143c8b45575e51c92a8e29997cbe556d1bbba3",
-                "reference": "32143c8b45575e51c92a8e29997cbe556d1bbba3",
+                "url": "https://api.github.com/repos/smalot/bootstrap-datetimepicker/zipball/696fc204d5a1433deeaaae830f579512470a677e",
+                "reference": "696fc204d5a1433deeaaae830f579512470a677e",
                 "shasum": ""
             },
             "type": "bower-asset-library",
@@ -614,6 +614,47 @@
                 "markdown-extra"
             ],
             "time": "2017-04-04 09:40:58"
+        },
+        {
+            "name": "developeruz/yii2-db-rbac",
+            "version": "1.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/developeruz/yii2-db-rbac.git",
+                "reference": "0cd8031d56d487a28b967d0af236a82577c0ea51"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/developeruz/yii2-db-rbac/zipball/0cd8031d56d487a28b967d0af236a82577c0ea51",
+                "reference": "0cd8031d56d487a28b967d0af236a82577c0ea51",
+                "shasum": ""
+            },
+            "require": {
+                "yiisoft/yii2": "*"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "developeruz\\db_rbac\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Elvira Sheina",
+                    "email": "elleuz@gmail.com",
+                    "homepage": "http://developer.uz"
+                }
+            ],
+            "description": "Dynamic control of access rights in YII2",
+            "keywords": [
+                "rbac",
+                "yii"
+            ],
+            "time": "2017-03-05T11:58:10+00:00"
         },
         {
             "name": "ezyang/htmlpurifier",
@@ -1314,7 +1355,7 @@
                 "resize",
                 "rotate"
             ],
-            "time": "2015-09-08 22:55:44"
+            "time": "2015-09-08T22:55:44+00:00"
         },
         {
             "name": "nex/yii2-datepicker",
@@ -2226,7 +2267,7 @@
                 "thumb",
                 "upload"
             ],
-            "time": "2016-03-25 05:52:20"
+            "time": "2016-03-25T05:52:20+00:00"
         },
         {
             "name": "yii2tech/ar-position",
@@ -2275,7 +2316,7 @@
                 "sort",
                 "yii2"
             ],
-            "time": "2016-02-06 14:14:56"
+            "time": "2016-02-06T14:14:56+00:00"
         },
         {
             "name": "yiisoft/yii2",
@@ -2283,12 +2324,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-framework.git",
-                "reference": "2fbd92ce20ff2c435c573eb6962084056547d9a6"
+                "reference": "7d0d216781f2121d6b6daf8bcd9bed935b69afe9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/2fbd92ce20ff2c435c573eb6962084056547d9a6",
-                "reference": "2fbd92ce20ff2c435c573eb6962084056547d9a6",
+                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/7d0d216781f2121d6b6daf8bcd9bed935b69afe9",
+                "reference": "7d0d216781f2121d6b6daf8bcd9bed935b69afe9",
                 "shasum": ""
             },
             "require": {
@@ -2375,7 +2416,7 @@
                 "framework",
                 "yii2"
             ],
-            "time": "2017-06-17 11:49:38"
+            "time": "2017-06-18 15:41:17"
         },
         {
             "name": "yiisoft/yii2-bootstrap",
@@ -2585,12 +2626,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twitter/typeahead.js.git",
-                "reference": "588440f66559714280628a4f9799f0c4eb880a4a"
+                "reference": "87de059a7820b1e223f1c704fa12a624dbce3a4f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twitter/typeahead.js/zipball/588440f66559714280628a4f9799f0c4eb880a4a",
-                "reference": "588440f66559714280628a4f9799f0c4eb880a4a",
+                "url": "https://api.github.com/repos/twitter/typeahead.js/zipball/87de059a7820b1e223f1c704fa12a624dbce3a4f",
+                "reference": "87de059a7820b1e223f1c704fa12a624dbce3a4f",
                 "shasum": ""
             },
             "require": {

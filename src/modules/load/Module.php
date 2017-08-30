@@ -11,6 +11,16 @@ use yii\base\Module as BaseModule;
  */
 class Module extends BaseModule implements IAdminModule
 {
+
+    public function behaviors()
+    {
+        return [
+            'as AccessBehavior' => [
+                'class' => \developeruz\db_rbac\behaviors\AccessBehavior::className(),
+            ]
+        ];
+    }
+    
     /**
      * @inheritdoc
      */
@@ -28,7 +38,7 @@ class Module extends BaseModule implements IAdminModule
             'items' => [
                 [
                     'label' => Yii::t('load', 'View loads'),
-                    'url' => ['/load/'],
+                    'url' => ['/load/index'],
                     'icon' => 'th-list',
                 ],
                 [
