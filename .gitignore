@@ -45,3 +45,4 @@ web/uploads/*
 
 #apache log
 error.log
+custom.log

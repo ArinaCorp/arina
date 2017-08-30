@@ -377,5 +377,6 @@ return [
     'Select mark' => 'Вкажіть оцінку',
     'Update Mark' => 'Оновити оцінку',
     'The record date should be greater or equal' => 'Дата запису має бути більша або рівна ',
-    'Report from subject' => 'Звіт по предмету'
+    'Report from subject' => 'Звіт по предмету',
+    'Total amount' => 'Загальна кількість'
 ];

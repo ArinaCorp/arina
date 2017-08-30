@@ -11,6 +11,7 @@ use PHPExcel_IOFactory;
 use PHPExcel_Worksheet;
 use PHPExcel_Style_Border;
 use PHPExcel_Cell;
+use PHPExcel_Calculation;
 
 use app\modules\plans\models\StudyPlan;
 use app\modules\plans\models\StudySubject;
@@ -125,7 +126,6 @@ class Excel extends Component
         $tmpfname = Yii::getAlias('@webroot') . "/templates/study-plan.xls";
         $excelReader = PHPExcel_IOFactory::createReaderForFile($tmpfname);;
         $objPHPExcel = $excelReader->load($tmpfname);
-
         //SHEET #1
         $sheet = $sheet = $objPHPExcel->setActiveSheetIndex(0);
         $sheet->setCellValue("F19", $plan->specialityQualification->speciality->number . ' ' . $plan->specialityQualification->speciality->title);
@@ -267,7 +267,7 @@ class Excel extends Component
                 $jj++;
             }
             $end = $i - 1;
-            $sheet->setCellValue("B$i", Yii::t('base', 'Total'));
+            $sheet->setCellValue("B$i", Yii::t('app', 'Total'));
             $totals[] = $i;
             for ($c = 'G'; $c < 'V'; $c++) {
                 $sheet->setCellValue("$c$i", "=SUM($c$begin:$c$end)");
@@ -276,7 +276,7 @@ class Excel extends Component
             $i++;
             $j++;
         }
-        $sheet->setCellValue("B$i", Yii::t('base', 'Total amount'));
+        $sheet->setCellValue("B$i", Yii::t('app', 'Total amount'));
         for ($c = 'G'; $c < 'V'; $c++) {
             $sheet->setCellValue("$c$i", "=SUM($c" . implode("+$c", $totals) . ')');
         }
@@ -285,6 +285,7 @@ class Excel extends Component
         header('Content-Disposition: attachment;filename=' . $filename . ' ');
         header('Cache-Control: max-age=0');
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        PHPExcel_Calculation::getInstance()->disableCalculationCache();
         return $objWriter->save('php://output');
     }
 
@@ -446,7 +447,7 @@ class Excel extends Component
 
             $end = $row - 1;
 
-            $sheet->setCellValue("C$row", Yii::t('base', 'Total'));
+            $sheet->setCellValue("C$row", Yii::t('app', 'Total'));
             $totals[] = $row;
             for ($c = 14; $c < 45; $c++) {
                 $index = PHPExcel_Cell::stringFromColumnIndex($c);

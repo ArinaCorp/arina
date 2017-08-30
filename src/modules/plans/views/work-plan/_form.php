@@ -37,7 +37,7 @@ use app\modules\plans\models\WorkPlan;
     <div class="row">
         <div class="col-sm-6">
             <?= $form->field($model, 'speciality_qualification_id')->widget(Select2::className(), [
-                'data' => SpecialityQualification::getList(),
+                'data' => SpecialityQualification::getTreeList(),
                 'id' => 'speciality_qualification_id',
                 'options' =>
                     [
