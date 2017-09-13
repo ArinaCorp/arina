@@ -142,7 +142,6 @@ class SpecialityQualification extends ActiveRecord
         $currentSpeciality = $this->speciality;
         $offset = 0;
 
-
         // uasort – сортирует массив, используя пользовательскую функцию mySort
 
         $qualifications = $currentSpeciality->specialityQualifications;

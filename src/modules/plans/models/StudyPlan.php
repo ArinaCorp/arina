@@ -108,11 +108,11 @@ class StudyPlan extends ActiveRecord
         $result = [];
         foreach ($allSubjects as $cycle => $subject) {
             $result[$cycle] = [];
-            foreach ($subject as $id => $name) {
-                if (!isset($usedSubjects[$id])) {
-                    $result[$cycle][$id] = $name;
-                }
-            }
+           foreach ($subject as $id => $name) {
+              if (!isset($usedSubjects[$id])) {
+                   $result[$cycle][$id] = $name;
+               }
+           }
             if (empty($result[$cycle])) {
                 unset($result[$cycle]);
             }

@@ -2,6 +2,7 @@
 
 namespace app\modules\directories\controllers;
 
+use Couchbase\Exception;
 use Yii;
 use nullref\core\interfaces\IAdminController;
 use app\modules\directories\models\subject_relation\SubjectRelation;
@@ -63,14 +64,17 @@ class SubjectRelationController extends Controller implements IAdminController
     public function actionCreate()
     {
         $model = new SubjectRelation();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        //08 september - change param for save = false
+       if ($model->load(Yii::$app->request->post()) && $model->save(false)) {
+            //print_r($model->getErrors());
             return $this->redirect(['view', 'id' => $model->id]);
+
         } else {
             return $this->render('create', [
-                'model' => $model,
-            ]);
+               'model' => $model,
+           ]);
         }
+
     }
 
     /**
