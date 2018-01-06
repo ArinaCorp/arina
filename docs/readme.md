@@ -10,7 +10,7 @@ WIP
     composer global require "fxp/composer-asset-plugin:~1.1.1"
     composer install -o
     ```
-- стоврити базу даних
+- створити базу даних
 - створити файл `.env` на основі файлу `.env.example` вказавши відповідні змінні
 - виконати міграції бд (команда `php yii modules-migrate`)
 - налаштувати вебсервер вказавши як кореневу папку `web`
