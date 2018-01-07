@@ -18,21 +18,12 @@ class Accounting extends BaseModule implements IAdminModule
           //  ]
         ];
     }
-    
+
     /**
      * @inheritdoc
      */
     public $controllerNamespace = 'app\modules\accounting\controllers';
 
-    /**
-     * @inheritdoc
-     */
-   /* public function init()
-    {
-        parent::init();
-
-        // custom initialization code goes here
-    }*/
     public static function getAdminMenu()
     {
         return [

@@ -76,8 +76,7 @@ class Settings extends ActiveRecord
         ];
     }
 
-    public
-    static function saveModel(VkDynamicModel $model)
+    public static function saveModel(VkDynamicModel $model)
     {
         $attributes = self::getSettingsAttributes();
         foreach ($attributes as $setting) {

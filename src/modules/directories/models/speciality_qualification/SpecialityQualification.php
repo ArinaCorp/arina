@@ -2,15 +2,14 @@
 
 namespace app\modules\directories\models\speciality_qualification;
 
-use Yii;
-use yii\helpers\ArrayHelper;
-use yii\db\ActiveRecord;
-
-use app\modules\students\models\Group;
-use app\modules\directories\models\speciality\Speciality;
-use app\modules\directories\models\qualification\Qualification;
 use app\modules\directories\models\department\Department;
+use app\modules\directories\models\qualification\Qualification;
+use app\modules\directories\models\speciality\Speciality;
 use app\modules\directories\models\subject_relation\SubjectRelation;
+use app\modules\students\models\Group;
+use Yii;
+use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "speciality_qualification".
@@ -22,9 +21,9 @@ use app\modules\directories\models\subject_relation\SubjectRelation;
  * @property integer $qualification_id
  * @property integer $speciality_id
  *
- * @property $speciality Speciality
- * @property $qualification Qualification
- * @property $relations SubjectRelation[]
+ * @property Speciality $speciality
+ * @property Qualification $qualification
+ * @property SubjectRelation[] $relations
  * @property Group[] $groups
  */
 class SpecialityQualification extends ActiveRecord
@@ -49,6 +48,9 @@ class SpecialityQualification extends ActiveRecord
         ];
     }
 
+    /**
+     * @return int
+     */
     public function getCountCourses()
     {
         $count = $this->years_count + 0;
@@ -58,6 +60,9 @@ class SpecialityQualification extends ActiveRecord
         return $count + 0;
     }
 
+    /**
+     * @return array
+     */
     public function attributeLabels()
     {
         return [
@@ -70,16 +75,25 @@ class SpecialityQualification extends ActiveRecord
         ];
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getQualification()
     {
         return $this->hasOne(Qualification::className(), ['id' => 'qualification_id']);
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getSpeciality()
     {
         return $this->hasOne(Speciality::className(), ['id' => 'speciality_id']);
     }
 
+    /**
+     * @return array
+     */
     public static function getTreeList()
     {
         $list = [];
@@ -98,22 +112,21 @@ class SpecialityQualification extends ActiveRecord
         return $list;
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getSubjectRelation()
     {
         return $this->hasMany(SubjectRelation::className(), ['speciality_qualification_id' => 'id']);
     }
 
     /**
-     * @param $f1
-     * @param $f2
+     * @param $f1 SpecialityQualification
+     * @param $f2 SpecialityQualification
      * @return int
      */
     public function compare($f1, $f2)
     {
-        /**
-         * @var $f1 SpecialityQualification
-         * @var $f2 SpecialityQualification
-         */
         if ($f1->qualification->sort_order < $f2->qualification->sort_order) {
             return -1;
         } elseif ($f1->qualification->sort_order > $f2->qualification->sort_order) {
@@ -128,20 +141,12 @@ class SpecialityQualification extends ActiveRecord
      */
     public function getOffsetYears()
     {
-        /**
-         * @var $currentSpeciality Speciality;
-         */
         $currentSpeciality = $this->speciality;
         $offset = 0;
-
-        // uasort – сортирует массив, используя пользовательскую функцию mySort
 
         $qualifications = $currentSpeciality->specialityQualifications;
         usort($qualifications, [$this, 'compare']);
         foreach ($qualifications as $qualification) {
-            /**
-             * @var $qualification SpecialityQualification
-             */
             if ($qualification->id == $this->id) return $offset;
             $offset += $qualification->getCountCourses();
         }
