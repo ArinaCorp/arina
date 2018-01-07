@@ -86,7 +86,7 @@ class WorkPlan extends ActiveRecord
             [['created', 'updated'], 'safe'],
             [['id', 'speciality_qualification_id'], 'safe', 'on' => 'search'],
             [['study_plan_origin', 'work_plan_origin'], 'checkOrigin', 'on' => 'insert'],
-            [['semesters', ], 'required', 'on' => self::SCENARIO_GRAPH],
+            [['semesters',], 'required', 'on' => self::SCENARIO_GRAPH],
 
         ];
     }
@@ -120,9 +120,9 @@ class WorkPlan extends ActiveRecord
     {
         $list = [];
         foreach ($this->workSubjects as $item) {
-            if ($item->presentIn($course)){
+            if ($item->presentIn($course)) {
                 $cycle = $item->subject->getCycle($this->speciality_qualification_id);
-                $name = $cycle->id .' '. $cycle->title;
+                $name = $cycle->id . ' ' . $cycle->title;
                 if (isset($list[$name])) {
                     $list[$name][] = $item;
                 } else {
@@ -137,7 +137,7 @@ class WorkPlan extends ActiveRecord
      * @param $id
      * @return array
      */
-    public static function getList($id=NULL)
+    public static function getList($id = NULL)
     {
         if (isset($id)) {
             /**
@@ -203,7 +203,7 @@ class WorkPlan extends ActiveRecord
      */
     public function getTitle()
     {
-        return $this->specialityQualification->title . ' - ' . $this->studyYear->getFullName();
+        return $this->getSpecialityQualificationTitle() . ' - ' . $this->getYearTitle();
     }
 
     public function checkOrigin()
@@ -225,9 +225,9 @@ class WorkPlan extends ActiveRecord
             if (abs(array_sum($subject->total) - (isset($subject->control_hours['total']) ?
                         $subject->control_hours['total'] : 0)) > self::HOURS_DIFF) {
                 if (isset($subject->subject))
-                    $warnings[] = Yii::t('app', 'Subject') .' '. $subject->subject->title . ' '.
-                        Yii::t('plans', 'The total number of hours is different from the curriculum more than on') . ' '.
-                        self::HOURS_DIFF .' '. Yii::t('plans', 'OHours');
+                    $warnings[] = Yii::t('app', 'Subject') . ' ' . $subject->subject->title . ' ' .
+                        Yii::t('plans', 'The total number of hours is different from the curriculum more than on') . ' ' .
+                        self::HOURS_DIFF . ' ' . Yii::t('plans', 'OHours');
             }
         }
         return implode(Html::tag('br'), $warnings);
@@ -275,10 +275,10 @@ class WorkPlan extends ActiveRecord
             $model->control_hours = $control_hours;
             $model->weeks = $subject->weeks;
             $model->control = $subject->control;
-            $model->total = ["0","0","0","0","0","0","0","0"];
-            $model->lectures = ["","","","","","","",""];
-            $model->lab_works = ["","","","","","","",""];
-            $model->practices = ["","","","","","","",""];
+            $model->total = ["0", "0", "0", "0", "0", "0", "0", "0"];
+            $model->lectures = ["", "", "", "", "", "", "", ""];
+            $model->lab_works = ["", "", "", "", "", "", "", ""];
+            $model->practices = ["", "", "", "", "", "", "", ""];
             $model->diploma_name = "";
             $model->certificate_name = "";
             $model->save(false);
@@ -289,7 +289,7 @@ class WorkPlan extends ActiveRecord
      * @param bool $insert
      * @param array $changedAttributes
      */
-    public function afterSave($insert=false,$changedAttributes=[])
+    public function afterSave($insert = false, $changedAttributes = [])
     {
         if (!empty($this->work_plan_origin)) {
             $this->copyFromWorkPlan(WorkPlan::findOne(['id' => $this->work_plan_origin]));
@@ -307,14 +307,19 @@ class WorkPlan extends ActiveRecord
     /**
      * @return string
      */
-    public function getYearTitle (){
-        return $this->studyYear->getFullName();
+    public function getYearTitle()
+    {
+        if (isset($this->studyYear)) {
+            return $this->studyYear->getFullName();
+        }
+        return '';
     }
 
     /**
      * @return false|string
      */
-    public function getUpdatedForm() {
+    public function getUpdatedForm()
+    {
         return date('d.m.Y H:i', $this->updated);
     }
 
@@ -357,6 +362,17 @@ class WorkPlan extends ActiveRecord
     public function getDocument()
     {
         Yii::$app->excel->makeWorkPlan($this);
+    }
+
+    /**
+     * @return string
+     */
+    public function getSpecialityQualificationTitle()
+    {
+        if (!empty($this->specialityQualification)) {
+            return $this->specialityQualification->title;
+        }
+        return '';
     }
 
 }

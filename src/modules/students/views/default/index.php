@@ -15,12 +15,19 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="student-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">
+                <?= Html::encode($this->title) ?>
+            </h1>
+        </div>
+    </div>
+
     <?php //echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <div class="col-lg-8">
+    <p>
         <?= Html::a(Yii::t('app', 'Create Student'), ['update'], ['class' => 'btn btn-success']) ?>
-    </div>
+    </p>
     <?php Pjax::begin(); ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -47,4 +54,4 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]); ?>
     <?php Pjax::end(); ?>
-</div> 
+</div>
