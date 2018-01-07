@@ -58,6 +58,10 @@
             ],
             "vcs-driver-options": {
                 "github-no-api": true
+            },
+            "installer-paths": {
+                "npm-asset-library": "vendor/npm",
+                "bower-asset-library": "vendor/bower"
             }
         }
     },
@@ -79,10 +83,6 @@
             "generateCookieValidationKey": [
                 "src/config/web.php"
             ]
-        },
-        "asset-installer-paths": {
-          "npm-asset-library": "vendor/npm",
-          "bower-asset-library": "vendor/bower"
         }
     }
 }
