@@ -6,12 +6,14 @@ class m180107_194604_rename_family_relation_table extends Migration
 {
     public function up()
     {
-        $this->renameTable('{{%family_ties}}','family_relations');
+        $this->renameTable('{{%family_ties}}','{{%family_relation}}');
+        $this->renameTable('{{%family_ties_types}}','{{%family_relation_type}}');
     }
 
     public function down()
     {
-        $this->renameTable('{{%family_relations}}','family_ties');
+        $this->renameTable('{{%family_relation_type}}','{{%family_ties_types}}');
+        $this->renameTable('{{%family_relation}}','{{%family_ties}}');
     }
 
     /*

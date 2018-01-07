@@ -8,7 +8,7 @@ use yii\helpers\ArrayHelper;
 use yii\web\BadRequestHttpException;
 
 /**
- * This is the model class for table "family_ties".
+ * This is the model class for table "family_relation".
  *
  * @property integer $id
  * @property integer $student_id
@@ -39,7 +39,7 @@ class FamilyRelation extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'family_ties';
+        return 'family_relation';
     }
 
     /**
@@ -81,7 +81,7 @@ class FamilyRelation extends \yii\db\ActiveRecord
 
     public function getType()
     {
-        return $this->hasOne(FamilyTiesType::className(), ['id' => 'type_id']);
+        return $this->hasOne(FamilyRelationType::className(), ['id' => 'type_id']);
     }
 
     public function getStudent()

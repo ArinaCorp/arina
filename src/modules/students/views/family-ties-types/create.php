@@ -4,7 +4,7 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model app\modules\students\models\FamilyTiesType */
+/* @var $model app\modules\students\models\FamilyRelationType */
 
 $this->title = Yii::t('app', 'Create Family Ties Type');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Family Ties Types'), 'url' => ['index']];

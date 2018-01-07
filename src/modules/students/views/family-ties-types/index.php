@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\modules\students\models\FamilyTiesTypeSearch */
+/* @var $searchModel app\modules\students\models\FamilyRelationTypeSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = Yii::t('app', 'Family Ties Types');

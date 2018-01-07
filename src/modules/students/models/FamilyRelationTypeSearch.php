@@ -5,12 +5,12 @@ namespace app\modules\students\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\modules\students\models\FamilyTiesType;
+use app\modules\students\models\FamilyRelationType;
 
 /**
- * FamilyTiesTypeSearch represents the model behind the search form about `app\modules\students\models\FamilyTiesType`.
+ * FamilyRelationTypeSearch represents the model behind the search form about `app\modules\students\models\FamilyRelationType`.
  */
-class FamilyTiesTypeSearch extends FamilyTiesType
+class FamilyRelationTypeSearch extends FamilyRelationType
 {
     /**
      * @inheritdoc
@@ -41,7 +41,7 @@ class FamilyTiesTypeSearch extends FamilyTiesType
      */
     public function search($params)
     {
-        $query = FamilyTiesType::find();
+        $query = FamilyRelationType::find();
 
         // add conditions that should always apply here
 

@@ -11,7 +11,7 @@
  */
 
 use yii\bootstrap\Html;
-use app\modules\students\models\FamilyTiesType;
+use app\modules\students\models\FamilyRelationType;
 use yii\widgets\MaskedInput;
 
 ?>
@@ -46,7 +46,7 @@ use yii\widgets\MaskedInput;
                                 echo Html::activeHiddenInput($modelFamily, "[{$index}]id");
                             }
                             ?>
-                            <?= $form->field($modelFamily, "[{$index}]type_id")->dropDownList(FamilyTiesType::getList(), [
+                            <?= $form->field($modelFamily, "[{$index}]type_id")->dropDownList(FamilyRelationType::getList(), [
                                 'prompt' => Yii::t('app', 'Select') . ' ' . Yii::t('app', 'Family tie type'),
                             ]); ?>
 

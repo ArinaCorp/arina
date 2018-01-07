@@ -3,7 +3,7 @@
 use wbraganca\dynamicform\DynamicFormWidget;
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
-use app\modules\students\models\FamilyTiesType;
+use app\modules\students\models\FamilyRelationType;
 use yii\widgets\MaskedInput;
 use app\modules\students\models\Exemption;
 use yii\widgets\Pjax;

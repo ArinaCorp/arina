@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\modules\students\models\FamilyTiesTypeSearch */
+/* @var $model app\modules\students\models\FamilyRelationTypeSearch */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 

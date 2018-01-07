@@ -3,17 +3,17 @@
 namespace app\modules\students\controllers;
 
 use Yii;
-use app\modules\students\models\FamilyTiesType;
-use app\modules\students\models\FamilyTiesTypeSearch;
+use app\modules\students\models\FamilyRelationType;
+use app\modules\students\models\FamilyRelationTypeSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use nullref\core\interfaces\IAdminController;
 
 /**
- * FamilyTiesTypesController implements the CRUD actions for FamilyTiesType model.
+ * FamilyRelationTypeController implements the CRUD actions for FamilyRelationType model.
  */
-class FamilyTiesTypesController extends Controller implements IAdminController
+class FamilyRelationTypeController extends Controller implements IAdminController
 {
     public function behaviors()
     {
@@ -28,12 +28,12 @@ class FamilyTiesTypesController extends Controller implements IAdminController
     }
 
     /**
-     * Lists all FamilyTiesType models.
+     * Lists all FamilyRelationType models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new FamilyTiesTypeSearch();
+        $searchModel = new FamilyRelationTypeSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -43,7 +43,7 @@ class FamilyTiesTypesController extends Controller implements IAdminController
     }
 
     /**
-     * Displays a single FamilyTiesType model.
+     * Displays a single FamilyRelationType model.
      * @param integer $id
      * @return mixed
      */
@@ -55,13 +55,13 @@ class FamilyTiesTypesController extends Controller implements IAdminController
     }
 
     /**
-     * Creates a new FamilyTiesType model.
+     * Creates a new FamilyRelationType model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new FamilyTiesType();
+        $model = new FamilyRelationType();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -73,7 +73,7 @@ class FamilyTiesTypesController extends Controller implements IAdminController
     }
 
     /**
-     * Updates an existing FamilyTiesType model.
+     * Updates an existing FamilyRelationType model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -92,7 +92,7 @@ class FamilyTiesTypesController extends Controller implements IAdminController
     }
 
     /**
-     * Deletes an existing FamilyTiesType model.
+     * Deletes an existing FamilyRelationType model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -105,15 +105,15 @@ class FamilyTiesTypesController extends Controller implements IAdminController
     }
 
     /**
-     * Finds the FamilyTiesType model based on its primary key value.
+     * Finds the FamilyRelationType model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return FamilyTiesType the loaded model
+     * @return FamilyRelationType the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = FamilyTiesType::findOne($id)) !== null) {
+        if (($model = FamilyRelationType::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
