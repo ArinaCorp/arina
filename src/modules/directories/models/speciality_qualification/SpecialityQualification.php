@@ -25,7 +25,7 @@ use app\modules\directories\models\subject_relation\SubjectRelation;
  * @property $speciality Speciality
  * @property $qualification Qualification
  * @property $relations SubjectRelation[]
- * @property $groups Group[]
+ * @property Group[] $groups
  */
 class SpecialityQualification extends ActiveRecord
 {
@@ -40,7 +40,6 @@ class SpecialityQualification extends ActiveRecord
     /**
      * @inheritdoc
      */
-
     public function rules()
     {
         return [
@@ -49,11 +48,6 @@ class SpecialityQualification extends ActiveRecord
             [['title'], 'string', 'max' => 255],
         ];
     }
-
-    /**
-     * @inheritdoc
-     */
-
 
     public function getCountCourses()
     {
@@ -90,20 +84,14 @@ class SpecialityQualification extends ActiveRecord
     {
         $list = [];
 
-        $department = Department::find()->all();
-        foreach ($department as $item) {
-            /* @var $item Department */
-            $list[$item->title] = [];
-            foreach ($item->specialities as $speciality) {
-                /**
-                 * @var $speciality Speciality
-                 */
-                $list[$item->title][$speciality->title] = [];
+        /* @var $departments Department[] */
+        $departments = Department::find()->all();
+        foreach ($departments as $department) {
+            $list[$department->title] = [];
+            foreach ($department->specialities as $speciality) {
+                $list[$department->title][$speciality->title] = [];
                 foreach ($speciality->specialityQualifications as $specialityQualification) {
-                    /**
-                     * @var $specialityQualification SpecialityQualification
-                     */
-                    $list[$item->title][$speciality->title][$specialityQualification->id] = $specialityQualification->title;
+                    $list[$department->title][$speciality->title][$specialityQualification->id] = $specialityQualification->title;
                 }
             }
         }
@@ -126,9 +114,13 @@ class SpecialityQualification extends ActiveRecord
          * @var $f1 SpecialityQualification
          * @var $f2 SpecialityQualification
          */
-        if ($f1->qualification->sort_order < $f2->qualification->sort_order) return -1;
-        elseif ($f1->qualification->sort_order > $f2->qualification->sort_order) return 1;
-        else return 0;
+        if ($f1->qualification->sort_order < $f2->qualification->sort_order) {
+            return -1;
+        } elseif ($f1->qualification->sort_order > $f2->qualification->sort_order) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
     /**
@@ -165,22 +157,25 @@ class SpecialityQualification extends ActiveRecord
     }
 
     /**
+     * @param null $year_id
      * @return Group[]
      */
     public function getGroupsActive($year_id = null)
     {
-
         $array = $this->groups;
         /**
          * @var Group[] $array
          */
         foreach ($array as $key => $item) {
-            if (!$item->getActive($year_id)) unset($array[$key]);
+            if (!$item->getActive($year_id)) {
+                unset($array[$key]);
+            }
         }
         return $array;
     }
 
     /**
+     * @param null $year_id
      * @return array
      */
     public function getGroupsActiveList($year_id = null)
@@ -196,9 +191,9 @@ class SpecialityQualification extends ActiveRecord
     {
         $list = [];
         foreach ($this->groups as $group) {
-            /** @var Group $group */
-            if ($group->getCourse($yearId) < 5)
+            if ($group->getCourse($yearId) < 5) {
                 $list[$group->getSystemTitle()] = $group->getCourse($yearId);
+            }
         }
         array_multisort($list);
         return $list;

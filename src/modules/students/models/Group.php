@@ -205,12 +205,9 @@ class Group extends ActiveRecord
         return $result;
     }
 
-    public
-    static function getActiveGroups()
+    public static function getActiveGroups()
     {
-        /**
-         * @var Group[] $groups
-         */
+        /** @var Group[] $groups */
         $groups = self::find()->all();
         foreach ($groups as $key => $group) {
             if ($group->active) {
@@ -220,26 +217,22 @@ class Group extends ActiveRecord
         return $groups;
     }
 
-    public
-    static function getAllGroups()
+    public static function getAllGroups()
     {
         return self::find()->all();
     }
 
-    public
-    static function getActiveGroupsList()
+    public static function getActiveGroupsList()
     {
         return ArrayHelper::map(self::getActiveGroups(), 'id', 'title');
     }
 
-    public
-    static function getAllGroupsList()
+    public static function getAllGroupsList()
     {
         return ArrayHelper::map(self::getAllGroups(), 'id', 'title');
     }
 
-    public
-    function getActive($year_id)
+    public function getActive($year_id)
     {
         $queryYear = StudyYear::findOne($year_id);
         if ($queryYear->year_start < $this->studyYear->year_start) {
@@ -248,8 +241,7 @@ class Group extends ActiveRecord
         return $this->specialityQualification->getCountCourses() > ($queryYear->year_start - $this->studyYear->year_start);
     }
 
-    public
-    function getCoursesList()
+    public function getCoursesList()
     {
         $count = $this->specialityQualification->getCountCourses();
         $data = [];
@@ -259,14 +251,12 @@ class Group extends ActiveRecord
         return $data;
     }
 
-    public
-    static function getTitleById($id)
+    public static function getTitleById($id)
     {
         return self::find()->where(['id' => $id])->one()->title;
     }
 
-    public
-    static function getRelatedGroupById($id)
+    public static function getRelatedGroupById($id)
     {
         $current = Group::findOne(['id' => $id]);
         $all = Group::find()->where(
@@ -281,20 +271,17 @@ class Group extends ActiveRecord
     }
 
 
-    public
-    static function getRelatedGroupListById($id)
+    public static function getRelatedGroupListById($id)
     {
         return ArrayHelper::map(self::getRelatedGroupById($id), 'id', 'title');
     }
 
-    public
-    function getGroupLeaderFullName()
+    public function getGroupLeaderFullName()
     {
         return (is_null($this->group_leader_id)) ? Yii::t('app', 'Not assigned') : $this->groupLeader->getFullName();
     }
 
-    public
-    function getCuratorFullName()
+    public function getCuratorFullName()
     {
         return ($this->getCuratorId() === false) ? Yii::t('app', 'Not assigned') : $this->getCurator()->getFullName();
     }
@@ -309,16 +296,21 @@ class Group extends ActiveRecord
         return ($this->getCuratorId() === false) ? Yii::t('app', 'Not assigned') : $this->getCurator()->getShortNameInitialFirst();
     }
 
-    public
-    function getGroupLeaderLink()
+    public function getGroupLeaderLink()
     {
         if (!$this->groupLeader) return Yii::t('app', 'Not assigned');
         return $this->groupLeader->getLink();
     }
 
+    /**
+     * @throws \PHPExcel_Exception
+     * @throws \PHPExcel_Reader_Exception
+     * @throws \PHPExcel_Writer_Exception
+     *
+     * @TODO move to excel export component
+     */
     public function getDocument()
     {
-
         $tmpfname = Yii::getAlias('@webroot') . "/templates/group.xls";
         $excelReader = PHPExcel_IOFactory::createReaderForFile($tmpfname);;
         $excelObj = $excelReader->load($tmpfname);

@@ -84,7 +84,7 @@ class DefaultController extends Controller implements IAdminController
         $modelsPhones = [new StudentsPhone()];
         /**
          * @var $modelsFamily FamilyTie[]
-         * @var $modelsPhones StudentsPhones[]
+         * @var $modelsPhones StudentsPhone[]
          */
         if ($model->load(Yii::$app->request->post())) {
             $modelsFamily = Student::createMultiple(FamilyTie::classname());
@@ -137,8 +137,7 @@ class DefaultController extends Controller implements IAdminController
      * @param integer $id
      * @return mixed
      */
-    public
-    function actionUpdate($id = null)
+    public function actionUpdate($id = null)
     {
         if (empty($id)) {
             $model = new Student();
@@ -165,7 +164,7 @@ class DefaultController extends Controller implements IAdminController
             } else {
                 Yii::$app->session->setFlash('save-record-student', Yii::t('app', 'Student record is saved!'));
                 if ($newRecord) {
-                    return $this->redirect(['/students/update', 'id' => $model->primaryKey]);
+                    return $this->redirect(['update', 'id' => $model->primaryKey]);
                 } else {
                     return $this->refresh();
                 }
@@ -190,8 +189,7 @@ class DefaultController extends Controller implements IAdminController
      * @param integer $id
      * @return mixed
      */
-    public
-    function actionDelete($id)
+    public function actionDelete($id)
     {
         $this->findModel($id)->delete();
 
@@ -205,8 +203,7 @@ class DefaultController extends Controller implements IAdminController
      * @return Student the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected
-    function findModel($id)
+    protected function findModel($id)
     {
         if (($model = Student::findOne($id)) !== null) {
             return $model;

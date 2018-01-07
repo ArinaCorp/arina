@@ -35,34 +35,37 @@ if (isset($_COOKIE['active-student-tab'])) {
 
 
 ?>
-<div class="status-bar row">
-    <?php
-    if (!$model->isNewRecord) {
-        echo Html::a(FA::icon('eye'), \yii\helpers\Url::to(['/students/default/view', 'id' => $model->primaryKey]), [
-            'title' => Yii::t('app', 'View'),
-            'data-toggle' => 'tooltip',
-            'class' => 'btn btn-default cancel-btn'
-        ]);
-    }
-    echo Html::a(FA::icon('undo'), \yii\helpers\Url::to(['/students/default']), [
-        'title' => Yii::t('app', 'Cancel'),
-        'data-toggle' => 'tooltip',
-        'class' => 'btn btn-default cancel-btn'
-    ]);
+<div class="row">
+    <div class="col-md-12">
+        <p>
+            <?php
+            if (!$model->isNewRecord) {
+                echo Html::a(FA::icon('eye'), \yii\helpers\Url::to(['/students/default/view', 'id' => $model->primaryKey]), [
+                    'title' => Yii::t('app', 'View'),
+                    'data-toggle' => 'tooltip',
+                    'class' => 'btn btn-default cancel-btn'
+                ]);
+            }
+            echo Html::a(FA::icon('undo'), \yii\helpers\Url::to(['/students/default']), [
+                'title' => Yii::t('app', 'Cancel'),
+                'data-toggle' => 'tooltip',
+                'class' => 'btn btn-default cancel-btn'
+            ]);
 
-    echo Html::button(FA::icon('save'), [
-        'title' => Yii::t('app', 'Save'),
-        'data-toggle' => 'tooltip',
-        'class' => 'btn btn-primary save-btn',
-    ]);
-    echo Html::button(FA::icon('floppy-o'), [
-        'title' => Yii::t('app', 'Save and stay here'),
-        'data-toggle' => 'tooltip',
-        'data-action' => 'stay',
-        'class' => 'btn btn-info save-btn',
-    ]);
-    ?>
-    <div class="clearfix"></div>
+            echo Html::button(FA::icon('save'), [
+                'title' => Yii::t('app', 'Save'),
+                'data-toggle' => 'tooltip',
+                'class' => 'btn btn-primary save-btn',
+            ]);
+            echo Html::button(FA::icon('floppy-o'), [
+                'title' => Yii::t('app', 'Save and stay here'),
+                'data-toggle' => 'tooltip',
+                'data-action' => 'stay',
+                'class' => 'btn btn-info save-btn',
+            ]);
+            ?>
+        </p>
+    </div>
 </div>
 <?php
 if (Yii::$app->session->hasFlash('save-student')) {
@@ -76,45 +79,46 @@ if (Yii::$app->session->hasFlash('save-student')) {
 }
 ?>
 <?= $form->errorSummary($model) ?>
-<div class="row product-card">
-    <?= Tabs::widget([
-        'id' => 'product-tabs',
-        'items' => [
-            [
-                'label' => Yii::t('app', 'General'),
-                'content' =>
-                    $this->render('_main', [
+<div class="row">
+    <div class="col-md-12">
+        <?= Tabs::widget([
+            'id' => 'student-tabs',
+            'items' => [
+                [
+                    'label' => Yii::t('app', 'General'),
+                    'content' =>
+                        $this->render('_main', [
+                            'model' => $model,
+                            'form' => $form,
+                        ]),
+                    'active' => $activeTab == 0 ? true : false,
+                    'options' => [
+                        'id' => 'general'
+                    ],
+                ],
+                [
+                    'label' => Yii::t('app', 'Family'),
+                    'content' => $this->render('_family', [
                         'model' => $model,
+                        'modelsFamily' => $modelsFamily,
                         'form' => $form,
                     ]),
-                'active' => $activeTab == 0 ? true : false,
-                'options' => [
-                    'id' => 'general'
+                    'active' => $activeTab == 1 ? true : false,
+                    'options' => [
+                        'id' => 'family'
+                    ],
                 ],
-            ],
-            [
-                'label' => Yii::t('app', 'Family'),
-                'content' => $this->render('_family', [
-                    'model' => $model,
-                    'modelsFamily' => $modelsFamily,
-                    'form' => $form,
-                ]),
-                'active' => $activeTab == 1 ? true : false,
-                'options' => [
-                    'id' => 'family'
+                [
+                    'label' => Yii::t('app', 'Contacts'),
+                    'content' => $this->render('_contacts', [
+                        'model' => $model,
+                        'modelsPhones' => $modelsPhones,
+                        'modelsEmails' => $modelsEmails,
+                        'modelsSocials' => $modelsSocials,
+                        'form' => $form,
+                    ]),
+                    'active' => $activeTab == 2 ? true : false,
                 ],
-            ],
-            [
-                'label' => Yii::t('app', 'Contacts'),
-                'content' => $this->render('_contacts', [
-                    'model' => $model,
-                    'modelsPhones' => $modelsPhones,
-                    'modelsEmails' => $modelsEmails,
-                    'modelsSocials' => $modelsSocials,
-                    'form' => $form,
-                ]),
-                'active' => $activeTab == 2 ? true : false,
-            ],
 //            [
 //                'label' => Yii::t('app', 'Options'),
 //                'content' => $this->render('_options', [
@@ -146,16 +150,14 @@ if (Yii::$app->session->hasFlash('save-student')) {
 //                ]),
 //                'active' => $activeTab == 5 ? true : false,
 //            ],
-        ],
-        'navType' => 'nav-tabs',
-        'options' => [
-            'class' => 'row'
-        ],
-        'itemOptions' => [
-            'class' => 'student-tab'
-        ],
-        'encodeLabels' => false
-    ]) ?>
+            ],
+            'navType' => 'nav-tabs',
+            'itemOptions' => [
+                'class' => 'student-tab'
+            ],
+            'encodeLabels' => false
+        ]) ?>
+    </div>
 </div>
 <?php
 ActiveForm::end();
