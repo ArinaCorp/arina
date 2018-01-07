@@ -7,7 +7,7 @@
  */
 
 /**
- * @var $modelsFamily \app\modules\students\models\FamilyTie[]
+ * @var $modelsFamily \app\modules\students\models\FamilyRelation[]
  */
 
 use yii\bootstrap\Html;

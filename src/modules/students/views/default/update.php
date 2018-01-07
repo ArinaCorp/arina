@@ -4,7 +4,7 @@ use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\students\models\Student */
-/* @var $modelsFamily \app\modules\students\models\FamilyTie[] */
+/* @var $modelsFamily \app\modules\students\models\FamilyRelation[] */
 /* @author VasyaKog */
 if (!$model->isNewRecord) {
     $this->title = Yii::t('app', 'Update student: ', [

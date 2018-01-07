@@ -3,7 +3,7 @@
 namespace app\modules\students\controllers;
 
 /* @author VasyaKog */
-use app\modules\students\models\FamilyTie;
+use app\modules\students\models\FamilyRelation;
 use app\modules\students\models\StudentCharacteristic;
 use app\modules\students\models\StudentsEmail;
 use app\modules\students\models\StudentsHistory;
@@ -80,14 +80,14 @@ class DefaultController extends Controller implements IAdminController
     public function actionCreate()
     {
         $model = new Student();
-        $modelsFamily = [new FamilyTie()];
+        $modelsFamily = [new FamilyRelation()];
         $modelsPhones = [new StudentsPhone()];
         /**
-         * @var $modelsFamily FamilyTie[]
+         * @var $modelsFamily FamilyRelation[]
          * @var $modelsPhones StudentsPhone[]
          */
         if ($model->load(Yii::$app->request->post())) {
-            $modelsFamily = Student::createMultiple(FamilyTie::classname());
+            $modelsFamily = Student::createMultiple(FamilyRelation::classname());
             $modelsPhones = Student::createMultiple(StudentsPhone::className());
             Model::loadMultiple($modelsPhones, Yii::$app->request->post());
             Model::loadMultiple($modelsFamily, Yii::$app->request->post());
@@ -125,7 +125,7 @@ class DefaultController extends Controller implements IAdminController
 
         return $this->render('create', [
             'model' => $model,
-            'modelsFamily' => (empty($modelsFamily)) ? [new FamilyTie()] : $modelsFamily,
+            'modelsFamily' => (empty($modelsFamily)) ? [new FamilyRelation()] : $modelsFamily,
             'modelsPhones' => (empty($modelsPhones)) ? [new StudentsPhone()] : $modelsPhones,
         ]);
     }
@@ -146,14 +146,14 @@ class DefaultController extends Controller implements IAdminController
         }
 
 
-        $model->has_family = FamilyTie::getList($id, $model);
+        $model->has_family = FamilyRelation::getList($id, $model);
         $model->has_phones = StudentsPhone::getList($id, $model);
         $model->has_emails = StudentsEmail::getList($id, $model);
         $model->has_socials = StudentSocialNetwork::getList($id, $model);
         $model->has_characteristics = StudentCharacteristic::getList($id, $model);
 
         /**
-         * @var $modelsFamily FamilyTie[]
+         * @var $modelsFamily FamilyRelation[]
          */
 
         $saveAction = Yii::$app->request->post('save');
@@ -210,5 +210,13 @@ class DefaultController extends Controller implements IAdminController
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+    public function actionTest($id)
+    {
+        $model = $this->findModel($id);
+
+        echo '<pre>';
+        print_r($model->emails);
     }
 }

@@ -24,7 +24,7 @@ use yii\web\BadRequestHttpException;
  * @property integer $created_at
  * @property integer $updated_at
  */
-class FamilyTie extends \yii\db\ActiveRecord
+class FamilyRelation extends \yii\db\ActiveRecord
 {
 
     public function behaviors()
@@ -97,7 +97,7 @@ class FamilyTie extends \yii\db\ActiveRecord
         ]);
         $list = $query->all();
         /**
-         * @var $list FamilyTie[];
+         * @var $list FamilyRelation[];
          */
         foreach ($list as $key => $familyTie) {
             if ($familyTie->isNewRecord) {
@@ -108,7 +108,7 @@ class FamilyTie extends \yii\db\ActiveRecord
         if ($params && is_array($params)) {
             $list = [];
             for ($i = 0; $i < count($params); $i++) {
-                $model = new FamilyTie();
+                $model = new FamilyRelation();
                 $model->setAttributes($params[$i]);
                 $list[] = $model;
             }
@@ -116,7 +116,7 @@ class FamilyTie extends \yii\db\ActiveRecord
             $list = [];
         }
         if (Yii::$app->request->post('add-family-tie')) {
-            $list[] = new FamilyTie();;
+            $list[] = new FamilyRelation();;
         }
         if (Yii::$app->request->post('remove-family-tie')) {
             unset($list[Yii::$app->request->post('data-key')]);
@@ -139,7 +139,7 @@ class FamilyTie extends \yii\db\ActiveRecord
         $success = true;
         $modelsFamily = $student->has_family;
         /**
-         * @var $modelsFamily FamilyTie[];
+         * @var $modelsFamily FamilyRelation[];
          */
         foreach ($modelsFamily as $model) {
             $success = $success && $model->validate();

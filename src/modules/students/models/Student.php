@@ -42,7 +42,7 @@ use yii\web\UploadedFile;
  *
  * @property string $fullName
  *
- * @property FamilyTie[] $family
+ * @property FamilyRelation[] $familyRelations
  * @property Exemption[] $exemptions
  * @property StudentsPhone[] $phones
  * @property StudentsEmail[] $emails
@@ -80,6 +80,16 @@ class Student extends \yii\db\ActiveRecord
                     'exemption_ids' => 'exemptions',
                 ],
             ],
+
+            'related' => [
+                'class' => RelatedBehavior::className(),
+                'fields' => [
+                    'familyRelations' => FamilyRelation::className(),
+                    'phones' => StudentsPhone::className(),
+                    'emails' => StudentsEmail::className(),
+                    'socialNetworks' => StudentSocialNetwork::className(),
+                ]
+            ]
         ];
 
     }
@@ -319,9 +329,9 @@ class Student extends \yii\db\ActiveRecord
 
     }
 
-    public function getFamily()
+    public function getFamilyRelations()
     {
-        return $this->hasMany(FamilyTie::className(), ['student_id' => 'id']);
+        return $this->hasMany(FamilyRelation::className(), ['student_id' => 'id']);
     }
 
     public function getPhones()
@@ -418,7 +428,7 @@ class Student extends \yii\db\ActiveRecord
     {
         $saved = parent::save($runValidation, $attributeNames);
         if ($saved && $withAllParams) {
-            FamilyTie::saveSt($this->id, $this);
+            FamilyRelation::saveSt($this->id, $this);
             StudentsPhone::saveSt($this->id, $this);
             StudentsEmail::saveSt($this->id, $this);
             StudentSocialNetwork::saveSt($this->id, $this);
@@ -430,7 +440,7 @@ class Student extends \yii\db\ActiveRecord
     {
         $success = parent::validate($attributeNames, $clearErrors);
         if (!empty($this->has_family)) {
-            $familyValidation = FamilyTie::validateSt($this);
+            $familyValidation = FamilyRelation::validateSt($this);
             if (!$familyValidation) {
                 $success = false;
             }

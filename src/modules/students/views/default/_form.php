@@ -13,7 +13,7 @@ use yii\bootstrap\Tabs;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\students\models\Student */
-/* @var $modelsFamily \app\modules\students\models\FamilyTie[] */
+/* @var $modelsFamily \app\modules\students\models\FamilyRelation[] */
 /* @var $modelsPhones \app\modules\students\models\StudentsPhones[] */
 /* @var $form \yii\bootstrap\ActiveForm */
 /* @author VasyaKog */

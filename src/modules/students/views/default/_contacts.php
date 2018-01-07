@@ -7,7 +7,7 @@
  */
 
 /**
- * @var $modelsFamily \app\modules\students\models\FamilyTie[]
+ * @var $modelsFamily \app\modules\students\models\FamilyRelation[]
  * @var $modelsPhones \app\modules\students\models\StudentsPhone[]
  * @var $modelsEmails \app\modules\students\models\StudentsEmail[]
  * @var $modelsSocials \app\modules\students\models\$modelsSocials[]
