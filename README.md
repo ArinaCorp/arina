@@ -84,3 +84,7 @@ ServerName localhost
 Include /etc/phpmyadmin/apache.conf #for phpmyadmin
 ```
 
+## System view
+
+![Screenshot](https://github.com/ArinaCorp/arina/raw/master/docs/screenshot.png)
+
