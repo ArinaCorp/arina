@@ -4,7 +4,6 @@ namespace app\modules\students\models;
 
 use Yii;
 use yii\behaviors\TimestampBehavior;
-use yii\helpers\ArrayHelper;
 use yii\web\BadRequestHttpException;
 
 /**
@@ -48,6 +47,7 @@ class FamilyRelation extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            ['id', 'safe'],
             [['student_id', 'type_id', 'created_at', 'updated_at'], 'integer'],
             [['last_name', 'first_name', 'middle_name', 'type_id'], 'required'],
             [['last_name', 'first_name', 'middle_name', 'work_place', 'work_position'], 'string', 'max' => 255],

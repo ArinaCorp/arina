@@ -6,7 +6,6 @@ use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\students\models\Student */
-/* @author VasyaKog */
 
 $this->title = $model->getFullName();
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Students'), 'url' => ['index']];
@@ -69,7 +68,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="clearfix"></div>
         </div>
         <div class="panel-body container-items"><!-- widgetContainer -->
-            <?php foreach ($model->family as $index => $modelFamily): ?>
+            <?php foreach ($model->familyRelations as $index => $modelFamily): ?>
                 <div class="item panel panel-default"><!-- widgetBody -->
                     <div class="panel-heading">
                         <span class="panel-title-address"><?= Yii::t('app', 'Family tie') ?>: <?= ($index + 1) ?></span>

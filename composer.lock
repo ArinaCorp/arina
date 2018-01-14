@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "cb15434c4dc1fe5ef69aa31de456fae4",
+    "content-hash": "aa0e0c3fa0dc203dc43ff8b309f2f48e",
     "packages": [
         {
             "name": "2amigos/yii2-date-picker-widget",
@@ -872,12 +872,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/kartik-v/bootstrap-fileinput.git",
-                "reference": "47c634744659a47a61d78acdc49324990f941c4a"
+                "reference": "af82b0872939237aab7a831bd916cd11c12b529f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/bootstrap-fileinput/zipball/47c634744659a47a61d78acdc49324990f941c4a",
-                "reference": "47c634744659a47a61d78acdc49324990f941c4a",
+                "url": "https://api.github.com/repos/kartik-v/bootstrap-fileinput/zipball/af82b0872939237aab7a831bd916cd11c12b529f",
+                "reference": "af82b0872939237aab7a831bd916cd11c12b529f",
                 "shasum": ""
             },
             "type": "library",
@@ -917,7 +917,7 @@
                 "progress",
                 "upload"
             ],
-            "time": "2017-12-09T05:49:47+00:00"
+            "time": "2018-01-12T10:12:45+00:00"
         },
         {
             "name": "kartik-v/dependent-dropdown",
@@ -2134,6 +2134,55 @@
             "time": "2017-12-17T16:08:10+00:00"
         },
         {
+            "name": "unclead/yii2-multiple-input",
+            "version": "2.13.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/unclead/yii2-multiple-input.git",
+                "reference": "983178c8b2eab2aa5ee44ad62366931305ef7141"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/unclead/yii2-multiple-input/zipball/983178c8b2eab2aa5ee44ad62366931305ef7141",
+                "reference": "983178c8b2eab2aa5ee44ad62366931305ef7141",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0",
+                "yiisoft/yii2": ">=2.0.13"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "5.7.*"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "unclead\\multipleinput\\examples\\": "examples/",
+                    "unclead\\multipleinput\\": "src/",
+                    "unclead\\multipleinput\\tests\\": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Eugene Tupikov",
+                    "email": "unclead.nsk@gmail.com"
+                }
+            ],
+            "description": "Widget for handle multiple inputs for an attribute of Yii2 framework model",
+            "keywords": [
+                "yii2",
+                "yii2 array input",
+                "yii2 multiple field",
+                "yii2 multiple input",
+                "yii2 tabular input"
+            ],
+            "time": "2018-01-08T20:19:38+00:00"
+        },
+        {
             "name": "vlucas/phpdotenv",
             "version": "1.1.x-dev",
             "source": {
@@ -2445,12 +2494,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-framework.git",
-                "reference": "fd191628dbd873aadd8d28a2e1f02adee3183660"
+                "reference": "2fb0bc759e4d45637046ef38f1963e7d0bbd42c0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/fd191628dbd873aadd8d28a2e1f02adee3183660",
-                "reference": "fd191628dbd873aadd8d28a2e1f02adee3183660",
+                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/2fb0bc759e4d45637046ef38f1963e7d0bbd42c0",
+                "reference": "2fb0bc759e4d45637046ef38f1963e7d0bbd42c0",
                 "shasum": ""
             },
             "require": {
@@ -2537,7 +2586,7 @@
                 "framework",
                 "yii2"
             ],
-            "time": "2018-01-06T08:40:09+00:00"
+            "time": "2018-01-12T13:30:21+00:00"
         },
         {
             "name": "yiisoft/yii2-bootstrap",
@@ -2545,12 +2594,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-bootstrap.git",
-                "reference": "c330c0e2c1fe67c489041180db0f2a94f5def22e"
+                "reference": "b89e9f4bc78255839a74a64dc4cd06daf1a3d7ec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-bootstrap/zipball/c330c0e2c1fe67c489041180db0f2a94f5def22e",
-                "reference": "c330c0e2c1fe67c489041180db0f2a94f5def22e",
+                "url": "https://api.github.com/repos/yiisoft/yii2-bootstrap/zipball/b89e9f4bc78255839a74a64dc4cd06daf1a3d7ec",
+                "reference": "b89e9f4bc78255839a74a64dc4cd06daf1a3d7ec",
                 "shasum": ""
             },
             "require": {
@@ -2574,8 +2623,22 @@
             ],
             "authors": [
                 {
+                    "name": "Paul Klimov",
+                    "email": "klimov.paul@gmail.com"
+                },
+                {
+                    "name": "Alexander Makarov",
+                    "email": "sam@rmcreative.ru",
+                    "homepage": "http://rmcreative.ru/"
+                },
+                {
+                    "name": "Antonio Ramirez",
+                    "email": "amigo.cobos@gmail.com"
+                },
+                {
                     "name": "Qiang Xue",
-                    "email": "qiang.xue@gmail.com"
+                    "email": "qiang.xue@gmail.com",
+                    "homepage": "http://www.yiiframework.com/"
                 }
             ],
             "description": "The Twitter Bootstrap extension for the Yii framework",
@@ -2583,7 +2646,7 @@
                 "bootstrap",
                 "yii2"
             ],
-            "time": "2017-10-19T10:18:15+00:00"
+            "time": "2018-01-12T15:11:42+00:00"
         },
         {
             "name": "yiisoft/yii2-composer",
@@ -2766,12 +2829,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fzaninotto/Faker.git",
-                "reference": "a39ec0abd28cde2337b7fbe06885231edd99d34a"
+                "reference": "251ec160bcbb54141cb0d707fd56898fd01bdbdb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/a39ec0abd28cde2337b7fbe06885231edd99d34a",
-                "reference": "a39ec0abd28cde2337b7fbe06885231edd99d34a",
+                "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/251ec160bcbb54141cb0d707fd56898fd01bdbdb",
+                "reference": "251ec160bcbb54141cb0d707fd56898fd01bdbdb",
                 "shasum": ""
             },
             "require": {
@@ -2808,7 +2871,7 @@
                 "faker",
                 "fixtures"
             ],
-            "time": "2017-12-30T09:39:42+00:00"
+            "time": "2018-01-08T16:49:22+00:00"
         },
         {
             "name": "phpspec/php-diff",

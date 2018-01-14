@@ -2,7 +2,6 @@
 
 namespace app\modules\students\models;
 
-use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\helpers\ArrayHelper;
@@ -307,18 +306,16 @@ class StudentsHistory extends \yii\db\ActiveRecord
      * @param $id
      * @return array
      */
-    public
-    static function getGroupArray($id)
+    public static function getGroupArray($id)
     {
-        $array = null;
+        $array = [];
         foreach (self::getParents($id) as $item) {
             $array[$item->data['current']['group_id']] = $item->data['current']['payment_type'];
         }
         return $array;
     }
 
-    public
-    static function getAlumnusGroupArray($id)
+    public static function getAlumnusGroupArray($id)
     {
         $array = [];
         foreach (self::getParents($id) as $item) {
@@ -334,8 +331,7 @@ class StudentsHistory extends \yii\db\ActiveRecord
      * @param $object2 StudentsHistory
      * @return StudentsHistory
      */
-    public
-    static function mergeHistoriesData($data1, $data2)
+    public static function mergeHistoriesData($data1, $data2)
     {
         if (!is_null($data2['current'])) {
             foreach ($data2['current'] as $key => $value) {
@@ -354,8 +350,7 @@ class StudentsHistory extends \yii\db\ActiveRecord
     }
 
 
-    public
-    static function getAlumnusStudentByGroup($id)
+    public static function getAlumnusStudentByGroup($id)
     {
         /**
          * @var $students Student[]
@@ -368,14 +363,12 @@ class StudentsHistory extends \yii\db\ActiveRecord
         return $students;
     }
 
-    public
-    static function getAlumnusStudentByGroupList($id)
+    public static function getAlumnusStudentByGroupList($id)
     {
         return ArrayHelper::map(self::getAlumnusStudentByGroup($id), 'id', 'fullNameAndCode');
     }
 
-    public
-    static function getStudentParents($id)
+    public static function getStudentParents($id)
     {
         $data = [];
         $parents = self::getParents($id);
@@ -386,22 +379,19 @@ class StudentsHistory extends \yii\db\ActiveRecord
         return $data;
     }
 
-    public
-    static function getInformationById($id)
+    public static function getInformationById($id)
     {
         $empty = StudentsHistory::findOne(['id' => $id]);
         $history = self::getFromHistory($empty);
 
     }
 
-    public
-    static function getStudentParentsList($id)
+    public static function getStudentParentsList($id)
     {
         return ArrayHelper::map(self::getStudentParents($id), 'id', 'text');
     }
 
-    public
-    function getInformation()
+    public function getInformation()
     {
         $text = "";
         if (!$this->isAnalized)
@@ -488,15 +478,13 @@ class StudentsHistory extends \yii\db\ActiveRecord
         return $text;
     }
 
-    public
-    static function getPaymentTitleById($id)
+    public static function getPaymentTitleById($id)
     {
         $arr = self::getPayments();
         return $arr[$id];
     }
 
-    public
-    static function getPermittedActionList($action_id)
+    public static function getPermittedActionList($action_id)
     {
         $parent = self::findOne(['id' => $action_id]);
         $array = [];
@@ -532,8 +520,7 @@ class StudentsHistory extends \yii\db\ActiveRecord
         return $array;
     }
 
-    public
-    function getCurrentGroup()
+    public function getCurrentGroup()
     {
         $parents = self::getParents($this->student_id);
         foreach ($parents as $parent) {
@@ -548,15 +535,13 @@ class StudentsHistory extends \yii\db\ActiveRecord
      * @param $id
      * @return bool|Group
      */
-    public
-    static function getCurrentGroupById($id)
+    public static function getCurrentGroupById($id)
     {
 
         return self::findOne(['id' => $id])->getCurrentGroup();
     }
 
-    public
-    function validateSpeciality($attribute, $params)
+    public function validateSpeciality($attribute, $params)
     {
         switch ($this->action_type) {
             case StudentsHistory::$TYPE_INCLUDE :

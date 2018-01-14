@@ -13,6 +13,26 @@
             }
         });
     }
+    if (!String.prototype.replaceAll) {
+        Object.defineProperty(String.prototype, 'replaceAll', {
+            enumerable: false,
+            configurable: false,
+            writable: false,
+            value: function (search, replace) {
+                return this.split(search).join(replace);
+            }
+        });
+    }
+    String.prototype.hashCode = function () {
+        var hash = 0, char;
+        if (this.length === 0) return hash;
+        for (var i = 0; i < this.length; i++) {
+            char = this.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash;
+        }
+        return hash;
+    };
     String.prototype.addUrlParam = function (key, value) {
         return tools.addUrlParam(this, key, value);
     };
@@ -40,6 +60,32 @@
  * @section tools object
  */
 var tools = {
+    numberToString: function (num) {
+        var e;
+        var numStr = String(num);
+
+        if (Math.abs(num) < 1.0) {
+            e = parseInt(num.toString().split('e-')[1]);
+            if (e) {
+                var negative = num < 0;
+                if (negative) num *= -1
+                num *= Math.pow(10, e - 1);
+                numStr = '0.' + (new Array(e)).join('0') + num.toString().substring(2);
+                if (negative) {
+                    numStr = "-" + numStr;
+                }
+            }
+        } else {
+            e = parseInt(num.toString().split('+')[1]);
+            if (e > 20) {
+                e -= 20;
+                num /= Math.pow(10, e);
+                numStr = num.toString() + (new Array(e + 1)).join('0');
+            }
+        }
+
+        return numStr;
+    },
     isString: function (obj) {
         return typeof obj === 'string';
     },

@@ -3,23 +3,13 @@
 namespace app\modules\students\controllers;
 
 /* @author VasyaKog */
-use app\modules\students\models\FamilyRelation;
-use app\modules\students\models\StudentCharacteristic;
-use app\modules\students\models\StudentsEmail;
-use app\modules\students\models\StudentsHistory;
-use app\modules\students\models\StudentSocialNetwork;
-use app\modules\students\models\StudentsPhone;
-use yii\base\Exception;
-use yii\base\Model;
-use yii\filters\VerbFilter;
-use yii\helpers\ArrayHelper;
-use yii\web\Controller;
-use app\modules\students\models\StudentSearch;
 use app\modules\students\models\Student;
-use yii\web\NotFoundHttpException;
-
+use app\modules\students\models\StudentSearch;
 use nullref\core\interfaces\IAdminController;
 use Yii;
+use yii\filters\VerbFilter;
+use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 
 /**
  * Default controller for the `students` module
@@ -63,9 +53,6 @@ class DefaultController extends Controller implements IAdminController
      */
     public function actionView($id)
     {
-        /**
-         * @var $model Student
-         */
         $model = $this->findModel($id);
         return $this->render('view', [
             'model' => $model,
@@ -73,113 +60,64 @@ class DefaultController extends Controller implements IAdminController
     }
 
     /**
-     * Creates a new Student model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
+     * @return string|\yii\web\Response
      */
     public function actionCreate()
     {
         $model = new Student();
-        $modelsFamily = [new FamilyRelation()];
-        $modelsPhones = [new StudentsPhone()];
-        /**
-         * @var $modelsFamily FamilyRelation[]
-         * @var $modelsPhones StudentsPhone[]
-         */
-        if ($model->load(Yii::$app->request->post())) {
-            $modelsFamily = Student::createMultiple(FamilyRelation::classname());
-            $modelsPhones = Student::createMultiple(StudentsPhone::className());
-            Model::loadMultiple($modelsPhones, Yii::$app->request->post());
-            Model::loadMultiple($modelsFamily, Yii::$app->request->post());
-            $valid = $model->validate();
-            $valid = Model::validateMultiple($modelsFamily) && Model::validateMultiple($modelsPhones) && $valid;
-            if ($valid) {
-                $transaction = \Yii::$app->db->beginTransaction();
-                try {
-                    if ($flag = $model->save(false)) {
-                        foreach ($modelsFamily as $modelFamily) {
-                            $modelFamily->student_id = $model->id;
-                            if (!($flag = $modelFamily->save(false))) {
-                                $transaction->rollBack();
-                                break;
-                            }
-                        }
-                        foreach ($modelsPhones as $modelPhone) {
-                            $modelPhone->student_id = $model->id;
-                            if (!($flag = $modelPhone->save(false))) {
-                                $transaction->rollBack();
-                                break;
-                            }
-                        }
-                    }
-                    if ($flag) {
-                        $transaction->commit();
-                        return $this->redirect(['view', 'id' => $model->id]);
-                    }
-                } catch (Exception $e) {
-                    $transaction->rollBack();
-                }
+
+        $default = Yii::$app->request->isPost ? [
+            'FamilyRelation' => [],
+            'StudentsPhone' => [],
+            'StudentsEmail' => [],
+            'StudentSocialNetwork' => [],
+        ] : [];
+        if ($model->loadWithRelations(array_merge($default, Yii::$app->request->post()))
+            && $model->validateWithRelations()
+            && $model->save(false)) {
+            if (!Yii::$app->request->post('stay')) {
+                return $this->redirect(['/students/default']);
+            } else {
+                Yii::$app->session->setFlash('success', Yii::t('app', 'Student record is saved!'));
+                return $this->redirect(['/students/default/update', 'id' => $model->id]);
             }
-            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('create', [
             'model' => $model,
-            'modelsFamily' => (empty($modelsFamily)) ? [new FamilyRelation()] : $modelsFamily,
-            'modelsPhones' => (empty($modelsPhones)) ? [new StudentsPhone()] : $modelsPhones,
+            'activeTab' => (int)Yii::$app->request->post('activeTab', 0),
         ]);
     }
 
-
     /**
-     * Updates an existing Student model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
+     * @param $id
+     * @return string|\yii\web\Response
+     * @throws NotFoundHttpException
      */
-    public function actionUpdate($id = null)
+    public function actionUpdate($id)
     {
-        if (empty($id)) {
-            $model = new Student();
-        } else {
-            $model = $this->findModel($id);
-        }
+        $model = $this->findModel($id);
 
-
-        $model->has_family = FamilyRelation::getList($id, $model);
-        $model->has_phones = StudentsPhone::getList($id, $model);
-        $model->has_emails = StudentsEmail::getList($id, $model);
-        $model->has_socials = StudentSocialNetwork::getList($id, $model);
-        $model->has_characteristics = StudentCharacteristic::getList($id, $model);
-
-        /**
-         * @var $modelsFamily FamilyRelation[]
-         */
-
-        $saveAction = Yii::$app->request->post('save');
-        $newRecord = $model->isNewRecord;
-        if ($model->load(Yii::$app->request->post()) && $saveAction && $model->save()) {
+        $default = Yii::$app->request->isPost ? [
+            'FamilyRelation' => [],
+            'StudentsPhone' => [],
+            'StudentsEmail' => [],
+            'StudentSocialNetwork' => [],
+        ] : [];
+        if ($model->loadWithRelations(array_merge($default, Yii::$app->request->post()))
+            && $model->validateWithRelations()
+            && $model->save(false)) {
             if (!Yii::$app->request->post('stay')) {
-                return $this->redirect(Yii::$app->user->getReturnUrl(['/students/default']));
+                return $this->redirect(['/students/default']);
             } else {
-                Yii::$app->session->setFlash('save-record-student', Yii::t('app', 'Student record is saved!'));
-                if ($newRecord) {
-                    return $this->redirect(['update', 'id' => $model->primaryKey]);
-                } else {
-                    return $this->refresh();
-                }
+                Yii::$app->session->setFlash('success', Yii::t('app', 'Student record is saved!'));
             }
-        } else {
-
-            return $this->render('update', [
-                'model' => $model,
-                'modelsFamily' => $model->has_family,
-                'modelsPhones' => $model->has_phones,
-                'modelsEmails' => $model->has_emails,
-                'modelsSocials' => $model->has_socials,
-                'modelsCharacteristics' => $model->has_characteristics,
-            ]);
         }
+
+        return $this->render('update', [
+            'model' => $model,
+            'activeTab' => (int)Yii::$app->request->post('activeTab', 0),
+        ]);
     }
 
 

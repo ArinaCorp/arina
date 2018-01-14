@@ -7,38 +7,50 @@
  */
 
 /**
- * @var $modelsFamily \app\modules\students\models\FamilyRelation[]
- * @var $modelsPhones \app\modules\students\models\StudentsPhone[]
- * @var $modelsEmails \app\modules\students\models\StudentsEmail[]
- * @var $modelsSocials \app\modules\students\models\$modelsSocials[]
+ * @var \app\modules\students\models\Student $model
  */
 
 use app\modules\students\models\SocialNetwork;
-use yii\bootstrap\Html;
-use app\modules\students\models\StudentsEmail;
 use app\modules\students\models\StudentSocialNetwork;
+use app\widgets\DynamicFormWidget;
+use yii\bootstrap\Html;
 
 ?>
 <div class="row">
     <div class="col-xs-4">
-        <div class="panel panel-default phones ">
+
+        <?php DynamicFormWidget::begin([
+            'widgetContainer' => 'phone_wrapper',
+            'widgetBody' => '.container-items-phone',
+            'widgetItem' => '.item-phone',
+            'limit' => 4,
+            'min' => 0,
+            'insertButton' => '.add-item-phone',
+            'deleteButton' => '.remove-item-phone',
+            'model' => $model->phonesList[0],
+            'formId' => 'studentForm',
+            'formFields' => [
+                'phone',
+                'comment',
+            ],
+        ]); ?>
+
+        <div class="panel panel-default">
             <div class="panel-heading">
                 <i class="fa fa-phone"></i> <?= Yii::t('app', 'Phones') ?>
-                <button type="button" class="pull-right add-item btn btn-success btn-xs action-button"
+                <button type="button" class="pull-right add-item-phone btn btn-success btn-xs "
                         data-action="add-students-phone">
                     <i class="fa fa-plus"></i>
                     <?= Yii::t('app', 'Add phone') ?>
                 </button>
                 <div class="clearfix"></div>
             </div>
-            <div class="panel-body container-items">
-                <?php foreach ($modelsPhones as $index => $modelPhone): ?>
-                    <div class="item panel panel-default">
+            <div class="panel-body container-items-phone">
+                <?php foreach ($model->phonesList as $index => $modelPhone): ?>
+                    <div class="item-phone panel panel-default">
                         <div class="panel-heading">
-                            <span class="panel-title-phone"><?= Yii::t('app', 'Phone') ?>: <?= ($index + 1) ?></span>
-                            <button type="button" class="pull-right remove-item btn btn-danger btn-xs action-button"
-                                    data-key="<?= $index ?>"
-                                    data-action="remove-students-phone">
+                            <button type="button" class="pull-right remove-item-phone btn btn-danger btn-xs "
+                                    data-key="<?= $index ?>">
                                 <i class="fa fa-minus"></i>
                             </button>
                             <div class="clearfix"></div>
@@ -47,12 +59,11 @@ use app\modules\students\models\StudentSocialNetwork;
                             <?php if (!$modelPhone->isNewRecord): ?>
                                 <?= Html::activeHiddenInput($modelPhone, "[{$index}]id") ?>
                             <?php endif ?>
-
-                            <div class="">
+                            <div>
                                 <?= $form->field($modelPhone, "[{$index}]phone")->textInput() ?>
                             </div>
 
-                            <div class="">
+                            <div>
                                 <?= $form->field($modelPhone, "[{$index}]comment")->textInput() ?>
                             </div>
                         </div>
@@ -60,39 +71,52 @@ use app\modules\students\models\StudentSocialNetwork;
                 <?php endforeach; ?>
             </div>
         </div>
+
+        <?php DynamicFormWidget::end(); ?>
     </div>
     <div class="col-xs-4">
-        <div class="panel panel-default phones">
+
+        <?php DynamicFormWidget::begin([
+            'widgetContainer' => 'email_wrapper',
+            'widgetBody' => '.container-items-email',
+            'widgetItem' => '.item-email',
+            'limit' => 4,
+            'min' => 0,
+            'insertButton' => '.add-item-email',
+            'deleteButton' => '.remove-item-email',
+            'model' => $model->emailsList[0],
+            'formId' => 'studentForm',
+            'formFields' => [
+                'email',
+                'comment',
+            ],
+        ]); ?>
+        <div class="panel panel-default">
             <div class="panel-heading">
                 <i class="fa fa-phone"></i> <?= Yii::t('app', 'Emails') ?>
-                <button type="button" class="pull-right add-item btn btn-success btn-xs action-button"
-                        data-action="add-<?= StudentsEmail::shortClassName() ?>"><i
-                            class="fa fa-plus"></i> <?= Yii::t('app', 'Add email') ?></button>
+                <button type="button" class="pull-right add-item-email btn btn-success btn-xs">
+                    <i class="fa fa-plus"></i>
+                    <?= Yii::t('app', 'Add email') ?>
+                </button>
                 <div class="clearfix"></div>
             </div>
-            <div class="panel-body container-items"><!-- widgetContainer -->
-                <?php foreach ($modelsEmails as $index => $modelEmail): ?>
-                    <div class="item panel panel-default"><!-- widgetBody -->
+            <div class="panel-body container-items-email">
+                <?php foreach ($model->emailsList as $index => $modelEmail): ?>
+                    <div class="item-email panel panel-default">
                         <div class="panel-heading">
-                            <span class="panel-title-phone"><?= Yii::t('app', 'Email') ?>: <?= ($index + 1) ?></span>
-                            <button type="button"
-                                    class="pull-right remove-item btn btn-danger btn-xs action-button"
-                                    data-key="<?= $index ?>"
-                                    data-action="remove-<?= StudentsEmail::shortClassName() ?>"><i
-                                        class="fa fa-minus"></i></button>
+                            <button type="button" class="pull-right remove-item-email btn btn-danger btn-xs">
+                                <i class="fa fa-minus"></i>
+                            </button>
                             <div class="clearfix"></div>
                         </div>
                         <div class="panel-body">
-                            <?php
-                            // necessary for update action.
-                            if (!$modelEmail->isNewRecord) {
-                                echo Html::activeHiddenInput($modelEmail, "[{$index}]id");
-                            }
-                            ?>
-                            <div class="">
+                            <?php if (!$modelEmail->isNewRecord): ?>
+                                <?= Html::activeHiddenInput($modelEmail, "[{$index}]id"); ?>
+                            <?php endif ?>
+                            <div>
                                 <?= $form->field($modelEmail, "[{$index}]email")->textInput() ?>
                             </div>
-                            <div class="">
+                            <div>
                                 <?= $form->field($modelEmail, "[{$index}]comment")->textInput() ?>
                             </div>
                         </div>
@@ -100,38 +124,49 @@ use app\modules\students\models\StudentSocialNetwork;
                 <?php endforeach; ?>
             </div>
         </div>
+        <?php DynamicFormWidget::end(); ?>
     </div>
     <div class="col-xs-4">
-        <div class="panel panel-default phones">
+        <?php DynamicFormWidget::begin([
+            'widgetContainer' => 'social_wrapper',
+            'widgetBody' => '.container-items-social',
+            'widgetItem' => '.item-social',
+            'limit' => 4,
+            'min' => 0,
+            'insertButton' => '.add-item-social',
+            'deleteButton' => '.remove-item-social',
+            'model' => $model->socialNetworksList[0],
+            'formId' => 'studentForm',
+            'formFields' => [
+                'network_id',
+                'url',
+            ],
+        ]); ?>
+        <div class="panel panel-default">
             <div class="panel-heading">
                 <i class="fa fa-phone"></i> <?= Yii::t('app', 'Social networks') ?>
-                <button type="button" class="pull-right add-item btn btn-success btn-xs action-button"
-                        data-action="add-<?= StudentSocialNetwork::shortClassName() ?>"><i
-                            class="fa fa-plus"></i> <?= Yii::t('app', 'Add network') ?></button>
+                <button type="button" class="pull-right add-item-social btn btn-success btn-xs"
+                <i class="fa fa-plus"></i>
+                <?= Yii::t('app', 'Add network') ?>
+                </button>
                 <div class="clearfix"></div>
             </div>
-            <div class="panel-body container-items">
-                <?php foreach ($modelsSocials as $index => $modelSocial): ?>
-                    <div class="item panel panel-default">
+            <div class="panel-body container-items-social">
+                <?php foreach ($model->socialNetworksList as $index => $modelSocial): ?>
+                    <div class="item-social panel panel-default">
                         <div class="panel-heading">
-                        <span class="panel-title-phone"><?= Yii::t('app', 'Social network') ?>
-                            : <?= ($index + 1) ?></span>
                             <button type="button"
-                                    class="pull-right remove-item btn btn-danger btn-xs action-button"
-                                    data-key="<?= $index ?>"
+                                    class="pull-right remove-item-social btn btn-danger btn-xs "
                                     data-action="remove-<?= StudentSocialNetwork::shortClassName() ?>"><i
                                         class="fa fa-minus"></i></button>
                             <div class="clearfix"></div>
                         </div>
                         <div class="panel-body">
-                            <?php
-                            // necessary for update action.
-                            if (!$modelSocial->isNewRecord) {
-                                echo Html::activeHiddenInput($modelSocial, "[{$index}]id");
-                            }
-                            ?>
+                            <?php if (!$modelSocial->isNewRecord) : ?>
+                                <?php Html::activeHiddenInput($modelSocial, "[{$index}]id"); ?>
+                            <?php endif ?>
                             <div class="col-xs-12">
-                                <?= $form->field($modelSocial, "[{$index}]network_id")->dropDownList(SocialNetwork::getList(), ['prompt' => Yii::t('app', 'Select') . ' ' . Yii::t('app', 'Social network')]); ?>
+                                <?= $form->field($modelSocial, "[{$index}]network_id")->dropDownList(SocialNetwork::getMap('title'), ['prompt' => Yii::t('app', 'Select') . ' ' . Yii::t('app', 'Social network')]); ?>
                             </div>
                             <div class="col-xs-12">
                                 <?= $form->field($modelSocial, "[{$index}]url")->textInput() ?>
@@ -141,5 +176,7 @@ use app\modules\students\models\StudentSocialNetwork;
                 <?php endforeach; ?>
             </div>
         </div>
+
+        <?php DynamicFormWidget::end(); ?>
     </div>
 </div>

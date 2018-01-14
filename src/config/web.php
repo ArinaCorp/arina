@@ -81,6 +81,7 @@ if (YII_ENV_DEV) {
         [
             'class' => 'yii\debug\Module',
             'allowedIPs' => ['*'],
+            'enableDebugLogs' => true,
         ];
 }
 

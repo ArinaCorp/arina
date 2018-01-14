@@ -6,7 +6,12 @@ return array_merge(require(__DIR__ . '/installed_modules.php'), [
     ],
 
     'admin' => [
-        'class' => 'nullref\admin\Module'
+        'class' => 'nullref\admin\Module',
+        'components' => [
+            'menuBuilder' => [
+                'class' => 'app\components\MenuBuilder',
+            ],
+        ],
     ],
 
     'students' => [

@@ -34,3 +34,27 @@
 .journal {
     min-width: 100%;
 }
+
+.tab-content {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-top: none;
+}
+
+.submenu li a {
+    padding-left: 15px;
+}
+
+.error-summary {
+    color: #a94442;
+}
+
+.nav-tabs > li.active > a.tab-error,
+.nav-tabs > li > a.tab-error {
+    color: #a94442;
+    background-color: #f2dede;
+}
+
+.form-template {
+    display: none;
+}

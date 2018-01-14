@@ -1,12 +1,9 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: user
- * Date: 11.03.2017
- * Time: 8:56
+ * @var \app\modules\students\models\Student $model
  */
+
 use app\modules\geo\models\Country;
-use app\modules\students\models\Exemption;
 use kartik\depdrop\DepDrop;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -15,8 +12,7 @@ use yii\widgets\MaskedInput;
 ?>
 <div class="row">
     <div class="col-sm-6">
-        <?= $form->field($model, 'photo')->fileInput();
-        ?>
+        <?= $form->field($model, 'photo')->fileInput(); ?>
         <?= $model->getThumbFileUrl('photo', 'thumb'); ?>
     </div>
     <div class="col-sm-6">

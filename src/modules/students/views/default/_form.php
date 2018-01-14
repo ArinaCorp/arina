@@ -1,88 +1,103 @@
 <?php
 
-use wbraganca\dynamicform\DynamicFormWidget;
-use yii\helpers\Html;
-use yii\bootstrap\ActiveForm;
-use app\modules\students\models\FamilyRelationType;
-use yii\widgets\MaskedInput;
-use app\modules\students\models\Exemption;
-use yii\widgets\Pjax;
 use rmrevin\yii\fontawesome\FA;
-use yii\bootstrap\Alert;
+use yii\bootstrap\ActiveForm;
 use yii\bootstrap\Tabs;
+use yii\helpers\Html;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\students\models\Student */
 /* @var $modelsFamily \app\modules\students\models\FamilyRelation[] */
-/* @var $modelsPhones \app\modules\students\models\StudentsPhones[] */
+/* @var $modelsPhones \app\modules\students\models\StudentsPhone[] */
 /* @var $form \yii\bootstrap\ActiveForm */
-/* @author VasyaKog */
+/* @var $activeTab integer */
 
-Pjax::begin([
-    'id' => 'pjax-container',
-    'formSelector' => '#student-form',
-    'timeout' => 3000,
-]);
 $form = ActiveForm::begin([
-    'id' => 'product-form',
-    'enableClientValidation' => false,
+    'id' => 'studentForm',
+    //'enableClientValidation' => false,
 ]);
 
-if (isset($_COOKIE['active-student-tab'])) {
-    $tab = $_COOKIE['active-student-tab'];
-    $activeTab = strtr($tab, ['#active-student-tab' => '']);
+
+$this->registerJs(<<<JS
+var form = jQuery('#studentForm');
+jQuery('.save-btn').on('click', function (e) {
+    var btn = jQuery(this);
+    form.find('[name="' + btn.data('action') + '"]').prop('disabled', false);
+    form.submit();
+    e.preventDefault(e);
+    return false;
+});
+
+var tabs = jQuery('#studentTabs');
+tabs.on('shown.bs.tab', function () {
+    var activeTab = tabs.find('li').index(tabs.find('.active'));
+    form.find('[name="activeTab"]').val(activeTab);
+});
+
+function updateTabsErrors() {
+    tabs.find('li').each(function (index, tabEl) {
+        var tab = jQuery(tabEl);
+        var link = tab.find('a');
+        var tabContent = jQuery(link.attr('href'));
+        if (tabContent.find('.has-error').length) {
+            if (link.find('.fa-warning').length === 0) {
+                link.html('<i class="fa fa-warning"></i> ' + link.html());
+            }
+            link.addClass('tab-error');
+        } else {
+            link.find('.fa-warning').remove();
+            link.removeClass('tab-error');
+        }
+    });
 }
 
+form.on('afterValidate', function () {
+    updateTabsErrors();
+});
+
+JS
+);
 
 ?>
 <div class="row">
     <div class="col-md-12">
         <p>
-            <?php
-            if (!$model->isNewRecord) {
-                echo Html::a(FA::icon('eye'), \yii\helpers\Url::to(['/students/default/view', 'id' => $model->primaryKey]), [
+            <?php if (!$model->isNewRecord): ?>
+                <?= Html::a(FA::icon('eye'), Url::to(['/students/default/view', 'id' => $model->primaryKey]), [
                     'title' => Yii::t('app', 'View'),
                     'data-toggle' => 'tooltip',
                     'class' => 'btn btn-default cancel-btn'
-                ]);
-            }
-            echo Html::a(FA::icon('undo'), \yii\helpers\Url::to(['/students/default']), [
+                ]) ?>
+            <?php endif ?>
+            <?= Html::a(FA::icon('arrow-left'), Url::to(['/students/default']), [
                 'title' => Yii::t('app', 'Cancel'),
-                'data-toggle' => 'tooltip',
-                'class' => 'btn btn-default cancel-btn'
-            ]);
-
-            echo Html::button(FA::icon('save'), [
+                'class' => 'btn btn-success'
+            ]) ?>
+            <?= Html::hiddenInput('save', 1, ['disabled' => true]) ?>
+            <?= Html::submitButton(FA::icon('save'), [
                 'title' => Yii::t('app', 'Save'),
-                'data-toggle' => 'tooltip',
+                'data-action' => 'save',
                 'class' => 'btn btn-primary save-btn',
-            ]);
-            echo Html::button(FA::icon('floppy-o'), [
+            ]) ?>
+            <?= Html::hiddenInput('stay', 1, ['disabled' => true]) ?>
+            <?= Html::submitButton(FA::icon('floppy-o'), [
                 'title' => Yii::t('app', 'Save and stay here'),
-                'data-toggle' => 'tooltip',
                 'data-action' => 'stay',
                 'class' => 'btn btn-info save-btn',
-            ]);
-            ?>
+            ]) ?>
         </p>
     </div>
 </div>
-<?php
-if (Yii::$app->session->hasFlash('save-student')) {
-    echo Alert::widget([
-        'id' => 'success-alert',
-        'type' => 0,
-        'body' => Yii::$app->session->getFlash('save-student'),
-        'closeButton' => [],
-        'delay' => 1000
-    ]);
-}
-?>
-<?= $form->errorSummary($model) ?>
+
 <div class="row">
     <div class="col-md-12">
+        <?= Html::hiddenInput('activeTab', $activeTab) ?>
         <?= Tabs::widget([
-            'id' => 'student-tabs',
+            'id' => 'studentTabs',
+            'linkOptions' => [
+                'data-pjax' => 0,
+            ],
             'items' => [
                 [
                     'label' => Yii::t('app', 'General'),
@@ -100,7 +115,6 @@ if (Yii::$app->session->hasFlash('save-student')) {
                     'label' => Yii::t('app', 'Family'),
                     'content' => $this->render('_family', [
                         'model' => $model,
-                        'modelsFamily' => $modelsFamily,
                         'form' => $form,
                     ]),
                     'active' => $activeTab == 1 ? true : false,
@@ -108,48 +122,14 @@ if (Yii::$app->session->hasFlash('save-student')) {
                         'id' => 'family'
                     ],
                 ],
-                [
-                    'label' => Yii::t('app', 'Contacts'),
-                    'content' => $this->render('_contacts', [
-                        'model' => $model,
-                        'modelsPhones' => $modelsPhones,
-                        'modelsEmails' => $modelsEmails,
-                        'modelsSocials' => $modelsSocials,
-                        'form' => $form,
-                    ]),
-                    'active' => $activeTab == 2 ? true : false,
-                ],
-//            [
-//                'label' => Yii::t('app', 'Options'),
-//                'content' => $this->render('_options', [
-//                    'model' => $model,
-//                    'dataProvider' => $optionsDataProvider,
-//                    'form' => $form,
-//                ]),
-//                'active' => $activeTab == 3 ? true : false,
-//            ],
-//            [
-//                'label' => Yii::t('app', 'In stock'),
-//                'content' => $this->render('_stock', [
-//                    'model' => $model,
-//                    'dataProvider' => $inStockDataProvider,
-//                    'columns' => $columns,
-//                    'total' => $total,
-//                    'form' => $form,
-//                ]),
-//                'active' => $activeTab == 4 ? true : false,
-//            ],
-//            [
-//                'label' => Yii::t('app', 'Images'),
-//                'content' => $this->render('_images', [
-//                    'model' => $model,
-//                    'dataProvider' => $imageDataProvider,
-//                    'thumbsDataProvider' => $thumbsDataProvider,
-//                    'columns' => $imageColumns,
-//                    'form' => $form,
-//                ]),
-//                'active' => $activeTab == 5 ? true : false,
-//            ],
+//                [
+//                    'label' => Yii::t('app', 'Contacts'),
+//                    'content' => $this->render('_contacts', [
+//                        'model' => $model,
+//                        'form' => $form,
+//                    ]),
+//                    'active' => $activeTab == 2 ? true : false,
+//                ],
             ],
             'navType' => 'nav-tabs',
             'itemOptions' => [
@@ -159,8 +139,5 @@ if (Yii::$app->session->hasFlash('save-student')) {
         ]) ?>
     </div>
 </div>
-<?php
-ActiveForm::end();
-Pjax::end();
-?>
+<?php ActiveForm::end() ?>
 
