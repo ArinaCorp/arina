@@ -1655,12 +1655,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/NullRefExcep/yii2-useful.git",
-                "reference": "5acbf6c275469cccdc6d63e995a231c341e7756f"
+                "reference": "f4eddab23ebcc402932023d3a8b84ddd809f6387"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/NullRefExcep/yii2-useful/zipball/5acbf6c275469cccdc6d63e995a231c341e7756f",
-                "reference": "5acbf6c275469cccdc6d63e995a231c341e7756f",
+                "url": "https://api.github.com/repos/NullRefExcep/yii2-useful/zipball/f4eddab23ebcc402932023d3a8b84ddd809f6387",
+                "reference": "f4eddab23ebcc402932023d3a8b84ddd809f6387",
                 "shasum": ""
             },
             "require": {
@@ -1696,7 +1696,7 @@
                 "framework",
                 "yii2"
             ],
-            "time": "2017-09-20T21:52:16+00:00"
+            "time": "2018-01-14T21:39:14+00:00"
         },
         {
             "name": "phpoffice/phpexcel",
@@ -2494,12 +2494,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-framework.git",
-                "reference": "2fb0bc759e4d45637046ef38f1963e7d0bbd42c0"
+                "reference": "73ea556bbbf4393d0728f8c976d3c669889f9387"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/2fb0bc759e4d45637046ef38f1963e7d0bbd42c0",
-                "reference": "2fb0bc759e4d45637046ef38f1963e7d0bbd42c0",
+                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/73ea556bbbf4393d0728f8c976d3c669889f9387",
+                "reference": "73ea556bbbf4393d0728f8c976d3c669889f9387",
                 "shasum": ""
             },
             "require": {
@@ -2586,7 +2586,7 @@
                 "framework",
                 "yii2"
             ],
-            "time": "2018-01-12T13:30:21+00:00"
+            "time": "2018-01-13T23:13:24+00:00"
         },
         {
             "name": "yiisoft/yii2-bootstrap",

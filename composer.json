@@ -47,6 +47,7 @@
         "yiisoft/yii2-faker": "*"
     },
     "config": {
+        "sort-packages": true,
         "process-timeout": 1800,
         "fxp-asset":{
             "pattern-skip-version": "(-build|-patch)",

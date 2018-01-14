@@ -2,18 +2,16 @@
 
 namespace app\modules\employee\controllers;
 
+use app\modules\employee\models\Employee;
 use app\modules\employee\models\EmployeeEducation;
 use app\modules\employee\models\EmployeeSearch;
-use nullref\admin\models\Admin;
-use yii\filters\VerbFilter;
-use yii\web\Controller;
-use yii\base\Model;
-use yii\base\Exception;
-use yii\helpers\ArrayHelper;
-use app\modules\employee\models\Employee;
-use yii\web\NotFoundHttpException;
 use nullref\core\interfaces\IAdminController;
 use Yii;
+use yii\base\Exception;
+use yii\base\Model;
+use yii\filters\VerbFilter;
+use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 
 /**
  * Default controller for the `employee` module

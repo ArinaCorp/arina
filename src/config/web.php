@@ -17,7 +17,10 @@ $config = [
                 'nullref\admin\assets\AdminAsset' => [
                     'js' => [
                         'js/tools.js',
-                        'js/admin/scripts.js',
+                        'js/scripts.js',
+                    ],
+                    'css' => [
+                        'css/main.css',
                     ],
                 ],
             ],
