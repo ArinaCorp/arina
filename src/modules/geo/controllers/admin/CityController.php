@@ -12,6 +12,7 @@ use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * CityController implements the CRUD actions for City model.
@@ -58,7 +59,7 @@ class CityController extends Controller implements IAdminController
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => call_user_func([$this->modelClass, 'find'])->joinWith(['country','region','district']),
+            'query' => call_user_func([$this->modelClass, 'find'])->joinWith(['country', 'region', 'district']),
             'sort' => [
                 'attributes' => [
                     'name' => [
@@ -183,17 +184,16 @@ class CityController extends Controller implements IAdminController
 
     public function actionRegion()
     {
-        $out = [];
+        Yii::$app->response->format = Response::FORMAT_JSON;
         if (isset($_POST['depdrop_parents'])) {
             $parents = $_POST['depdrop_parents'];
             if ($parents != null) {
                 $country_id = $parents[0];
                 $out = self::getRegions($country_id);
-                echo Json::encode(['output' => $out, 'selected' => '']);
-                return;
+                return ['output' => $out, 'selected' => ''];
             }
         }
-        echo Json::encode(['output' => '', 'selected' => '']);
+        return ['output' => '', 'selected' => ''];
     }
 
     public function getDistricts($region_id)
@@ -211,17 +211,16 @@ class CityController extends Controller implements IAdminController
 
     public function actionDistrict()
     {
-        $out = [];
+        Yii::$app->response->format = Response::FORMAT_JSON;
         if (isset($_POST['depdrop_parents'])) {
             $parents = $_POST['depdrop_parents'];
             if ($parents != null) {
                 $district_id = $parents[0];
                 $out = self::getDistricts($district_id);
-                echo Json::encode(['output' => $out, 'selected' => '']);
-                return;
+                return ['output' => $out, 'selected' => ''];
             }
         }
-        echo Json::encode(['output' => '', 'selected' => '']);
+        return ['output' => '', 'selected' => ''];
     }
 
 }

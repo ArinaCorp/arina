@@ -46,7 +46,7 @@ JS
                     <?= $this->render('_family_item', [
                         'model' => $modelFamily,
                         'form' => $form,
-                        'index' => $modelFamily->isNewRecord ? $index : $modelFamily->id,
+                        'index' => $index,
                     ]) ?>
                 <?php endforeach; ?>
             </div>

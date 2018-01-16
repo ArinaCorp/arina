@@ -15,7 +15,6 @@ use yii\helpers\Url;
 
 $form = ActiveForm::begin([
     'id' => 'studentForm',
-    //'enableClientValidation' => false,
 ]);
 
 
@@ -122,14 +121,14 @@ JS
                         'id' => 'family'
                     ],
                 ],
-//                [
-//                    'label' => Yii::t('app', 'Contacts'),
-//                    'content' => $this->render('_contacts', [
-//                        'model' => $model,
-//                        'form' => $form,
-//                    ]),
-//                    'active' => $activeTab == 2 ? true : false,
-//                ],
+                [
+                    'label' => Yii::t('app', 'Contacts'),
+                    'content' => $this->render('_contacts', [
+                        'model' => $model,
+                        'form' => $form,
+                    ]),
+                    'active' => $activeTab == 2 ? true : false,
+                ],
             ],
             'navType' => 'nav-tabs',
             'itemOptions' => [
