@@ -8,7 +8,6 @@ use yii\widgets\Pjax;
 /* @var $searchModel app\modules\students\models\StudentSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-/* @author VasyaKog */
 
 $this->title = Yii::t('app', 'Students');
 $this->params['breadcrumbs'][] = $this->title;
@@ -26,7 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php //echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a(Yii::t('app', 'Create Student'), ['update'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('app', 'Create Student'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
     <?php Pjax::begin(); ?>
     <?= GridView::widget([

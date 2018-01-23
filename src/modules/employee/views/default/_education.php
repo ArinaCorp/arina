@@ -1,75 +1,49 @@
 <?php
 
-use yii\bootstrap\Html;
+use app\assets\DynamicFormAsset;
 use app\modules\employee\models\EmployeeEducation;
 
 /**
  * @var $modelsEducation \app\modules\employee\models\EmployeeEducation[]
+ * @var \app\modules\employee\models\Employee $model
  */
 
+DynamicFormAsset::register($this);
+
+$this->registerJs(<<<JS
+jQuery('#educationForm').dynamicForm();
+JS
+);
 ?>
+<div class="row">
+    <div class="col-md-12">
 
-<div class="panel panel-default education">
-    <div class="panel-heading">
-        <i class="fa fa-users"></i> <?= Yii::t('app', 'Education') ?>
-        <button data-action="add-<?=EmployeeEducation::shortClassName()?>" type="button"
-                class="pull-right action-button add-item btn btn-success btn-xs"><i
-                    class="fa fa-plus"></i> <?= Yii::t('app', 'Add education') ?></button>
-        <div class="clearfix"></div>
-    </div>
-
-    <div class="panel-body container-items"><!-- widgetContainer -->
-        <?php
-        if (is_array($modelsEducation) || is_object($modelsEducation)) {
-            foreach ($modelsEducation as $index => $modelEducation):
-            ?>
-        <div class="item panel panel-default"><!-- widgetBody -->
+        <div class="panel panel-default" id="educationForm">
             <div class="panel-heading">
-                    <span class="panel-title-address"><?= Yii::t('app', 'Education') ?>
-                        : <?= ($index + 1) ?></span>
-                <button type="button" class="pull-right action-button remove-item btn btn-danger btn-xs"
-                        data-key="<?= $index ?>"
-                        data-action="remove-<?=EmployeeEducation::shortClassName()?>"><i
-                        class="fa fa-minus"> </i></button>
+                <i class="fa fa-users"></i> <?= Yii::t('app', 'Education') ?>
+                <button data-pjax="0" class="pull-right add-item btn btn-success btn-xs">
+                    <i class="fa fa-plus"></i>
+                    <?= Yii::t('app', 'Add educations') ?>
+                </button>
                 <div class="clearfix"></div>
             </div>
-            <div class="panel-body">
 
-                <?php
-                // necessary for update action.
-                if (!$modelEducation->isNewRecord) {
-                    echo Html::activeHiddenInput($modelEducation, "[{$index}]id");
-                }
-                ?>
-
-                <div class="row">
-                    <div class="col-sm-4">
-                        <?= $form->field($modelEducation, "[{$index}]name_of_institution")->textInput() ?>
-                    </div>
-                    <div class="col-sm-4">
-                        <?= $form->field($modelEducation, "[{$index}]document")->textInput() ?>
-                    </div>
-                    <div class="col-sm-4">
-                        <?= $form->field($modelEducation, "[{$index}]graduation_year")->textInput() ?>
-                    </div>
-                </div><!-- end:row -->
-
-                <div class="row">
-                    <div class="col-sm-6">
-                        <?= $form->field($modelEducation, "[{$index}]speciality")->textInput() ?>
-                    </div>
-                    <div class="col-sm-6">
-                        <?= $form->field($modelEducation, "[{$index}]qualification")->textInput() ?>
-                    </div>
-                </div><!-- end:row -->
-
-                <div class="row">
-                    <div class="col-sm-4">
-                        <?= $form->field($modelEducation, "[{$index}]education_form")->textInput() ?>
-                    </div>
+            <div class="panel-body items">
+                <div class="form-template">
+                    <?= $this->render('_education_item', [
+                        'model' => new EmployeeEducation(),
+                        'form' => $form,
+                        'index' => 'new_ITEM_INDEX',
+                    ]) ?>
                 </div>
-            </div><!-- end:row -->
+                <?php foreach ($model->employeeEducationList as $index => $modelEducation): ?>
+                    <?= $this->render('_education_item', [
+                        'model' => $modelEducation,
+                        'form' => $form,
+                        'index' => $index,
+                    ]) ?>
+                <?php endforeach; ?>
+            </div>
         </div>
-        <?php endforeach;} ?>
     </div>
 </div>

@@ -17,7 +17,10 @@ $config = [
                 'nullref\admin\assets\AdminAsset' => [
                     'js' => [
                         'js/tools.js',
-                        'js/admin/scripts.js',
+                        'js/scripts.js',
+                    ],
+                    'css' => [
+                        'css/main.css',
                     ],
                 ],
             ],
@@ -81,6 +84,7 @@ if (YII_ENV_DEV) {
         [
             'class' => 'yii\debug\Module',
             'allowedIPs' => ['*'],
+            'enableDebugLogs' => true,
         ];
 }
 

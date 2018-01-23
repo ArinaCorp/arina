@@ -7,14 +7,14 @@ use yii\behaviors\TimestampBehavior;
 use yii\helpers\ArrayHelper;
 
 /**
- * This is the model class for table "family_ties_types".
+ * This is the model class for table "family_relation_type".
  *
  * @property integer $id
  * @property string $title
  * @property integer $created_at
  * @property integer $updated_at
  */
-class FamilyTiesType extends \yii\db\ActiveRecord
+class FamilyRelationType extends \yii\db\ActiveRecord
 {
     public function behaviors()
     {
@@ -28,7 +28,7 @@ class FamilyTiesType extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'family_ties_types';
+        return 'family_relation_type';
     }
 
     /**

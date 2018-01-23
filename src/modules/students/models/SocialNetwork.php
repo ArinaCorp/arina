@@ -2,6 +2,7 @@
 
 namespace app\modules\students\models;
 
+use nullref\useful\traits\Mappable;
 use Yii;
 use yii\helpers\ArrayHelper;
 
@@ -15,6 +16,8 @@ use yii\helpers\ArrayHelper;
  */
 class SocialNetwork extends \yii\db\ActiveRecord
 {
+    use Mappable;
+
     /**
      * @inheritdoc
      */
@@ -46,11 +49,5 @@ class SocialNetwork extends \yii\db\ActiveRecord
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
-    }
-
-    public static function getList()
-    {
-        $models = self::find()->all();
-        return ArrayHelper::map($models, 'id', 'title');
     }
 }

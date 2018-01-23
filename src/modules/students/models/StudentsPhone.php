@@ -4,7 +4,6 @@ namespace app\modules\students\models;
 
 use Yii;
 use yii\behaviors\TimestampBehavior;
-use yii\web\BadRequestHttpException;
 
 /**
  * This is the model class for table "{{%students_phones}}".
@@ -41,7 +40,8 @@ class StudentsPhone extends \yii\db\ActiveRecord
     {
         return [
             [['student_id', 'created_at', 'updated_at'], 'integer'],
-            [['phone', 'comment'], 'string'],
+            ['phone', 'match','pattern' => '/^\([0-9]{3}\) ?[0-9]{3}-[0-9]{4}$/'],
+            [['phone'], 'string'],
             [['phone'], 'required'],
         ];
     }
@@ -60,97 +60,5 @@ class StudentsPhone extends \yii\db\ActiveRecord
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
-    }
-
-    public static function getList($student_id, $student)
-    {
-        $query = self::find();
-        $query->andWhere([
-            'student_id' => $student_id,
-        ]);
-        $list = $query->all();
-        /**
-         * @var $list self[];
-         */
-        foreach ($list as $key => $familyTie) {
-            if ($familyTie->isNewRecord) {
-                $list[$key]->id = null;
-            }
-        };
-        $params = Yii::$app->request->post('StudentsPhone');
-        if ($params && is_array($params)) {
-            $list = [];
-            for ($i = 0; $i < count($params); $i++) {
-                $model = new self();
-                $model->setAttributes($params[$i]);
-                $list[] = $model;
-            }
-        } elseif (Yii::$app->request->isPost) {
-            $list = [];
-        }
-        if (Yii::$app->request->post('add-students-phone')) {
-            $list[] = new self();;
-        }
-        if (Yii::$app->request->post('remove-students-phone')) {
-            unset($list[Yii::$app->request->post('data-key')]);
-            $oldList = $list;
-            $list = [];
-            foreach ($oldList as $familyTie) {
-                $list[] = $familyTie;
-            }
-        }
-        return $list;
-    }
-
-    /**
-     * @param $student Student;
-     * @return mixed
-     */
-
-    public static function validateSt($student)
-    {
-        $success = true;
-        $modelsFamily = $student->has_phones;
-        /**
-         * @var $modelsFamily self[];
-         */
-        foreach ($modelsFamily as $model) {
-            $success = $success && $model->validate();
-        }
-        return $success;
-    }
-
-    public static function saveSt($student_id, $student)
-    {
-        if (empty($student_id)) {
-            throw new BadRequestHttpException(Yii::t('app', 'Bad Request'));
-        }
-        $query = self::find()->select('id');
-        $query->andWhere([
-            'student_id' => $student_id
-        ]);
-        $ids = $query->asArray()->column();
-        $list = self::getList($student_id, $student);
-        foreach ($list as $params) {
-            if (isset($params->id) && !empty($params->id)) {
-                $attr = self::findOne($params->id);
-                $key = array_search($params->id, $ids);
-
-                if ($key !== false) {
-                    unset($ids[$key]);
-                }
-            } else {
-                $attr = new self();
-                $attr->student_id = $student_id;
-            }
-            $new_atrib = array_filter($params->getAttributes());
-            $attr->setAttributes($new_atrib);
-            if (!$attr->save()) {
-                $attr->delete();
-            }
-        }
-        if (count($ids) > 0) {
-            self::deleteAll(['in', 'id', $ids]);
-        }
     }
 }

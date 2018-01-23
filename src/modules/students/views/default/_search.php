@@ -6,7 +6,6 @@ use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $model app\modules\students\models\StudentSearch */
 /* @var $form yii\widgets\ActiveForm */
-/* @author VasyaKog */
 ?>
 
 <div class="student-search">

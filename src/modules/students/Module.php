@@ -37,14 +37,14 @@ class Module extends BaseModule implements IAdminModule
             'icon' => 'users',
             'items' => [
                 [
-                    'label' => Yii::t('app', 'Groups'),
-                    'url' => ['/students/group/index'],
-                    'icon' => 'street-view',
-                ],
-                [
                     'label' => Yii::t('app', 'List'),
                     'url' => ['/students/default/index'],
                     'icon' => 'address-book',
+                ],
+                [
+                    'label' => Yii::t('app', 'Groups'),
+                    'url' => ['/students/group/index'],
+                    'icon' => 'street-view',
                 ],
                 [
                     'label' => Yii::t('app', 'Students history'),
@@ -58,7 +58,7 @@ class Module extends BaseModule implements IAdminModule
                 ],
                 [
                     'label' => Yii::t('app', 'Family ties types'),
-                    'url' => ['/students/family-ties-types'],
+                    'url' => ['/students/family-relation-type'],
                     'icon' => 'home',
                 ],
                 [

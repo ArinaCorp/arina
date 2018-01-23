@@ -1,10 +1,10 @@
 <?php
 
+use app\modules\directories\models\position\Position;
+use app\modules\employee\models\Employee;
+use yii\grid\GridView;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use yii\grid\GridView;
-use app\modules\directories\models\position\Position;
-use app\modules\employee\models\cyclic_commission\CyclicCommission;
 
 /** @var $this yii\web\View
  * @var $model app\modules\employee\models\Employee
@@ -30,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?= Html::a(Yii::t('app', 'Create employee'), ['create'], ['class' => 'btn btn-success']) ?>
-        <?= Html::a(Yii::t('app', 'Get Excel document'), ['document', 'id' => $model->id], ['class' => 'btn btn-info']) ?>
+        <?= Html::a(Yii::t('app', 'Get Excel document'), ['document'], ['class' => 'btn btn-info']) ?>
     </p>
 
     <?= GridView::widget([
@@ -55,8 +55,8 @@ $this->params['breadcrumbs'][] = $this->title;
             //'gender',
             [
                 'attribute' => 'cyclic_commission_id',
-                'value' => function ($model) {
-                    return CyclicCommission::findOne(['id' => $model->cyclic_commission_id])->title;
+                'value' => function (Employee $model) {
+                    return $model->getCyclicCommissionTitle();
                 }
             ],
             //'birth_date',

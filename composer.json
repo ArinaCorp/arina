@@ -38,7 +38,8 @@
         "phpoffice/phpexcel": "^1.8",
         "kartik-v/yii2-date-range": "^1.6",
         "kartik-v/yii2-widget-switchinput": "dev-master",
-        "developeruz/yii2-db-rbac": "1.1.2"
+        "developeruz/yii2-db-rbac": "1.1.2",
+        "unclead/yii2-multiple-input": "~2.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "*",
@@ -46,16 +47,10 @@
         "yiisoft/yii2-faker": "*"
     },
     "config": {
+        "sort-packages": true,
         "process-timeout": 1800,
         "fxp-asset":{
             "pattern-skip-version": "(-build|-patch)",
-            "repositories": [
-                {
-                    "type": "bower-git",
-                    "url": "https://github.com/adobe-webplatform/eve.git",
-                    "name": "bower-asset/eve"
-                }
-            ],
             "vcs-driver-options": {
                 "github-no-api": true
             },

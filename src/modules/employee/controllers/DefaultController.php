@@ -2,18 +2,13 @@
 
 namespace app\modules\employee\controllers;
 
-use app\modules\employee\models\EmployeeEducation;
-use app\modules\employee\models\EmployeeSearch;
-use nullref\admin\models\Admin;
-use yii\filters\VerbFilter;
-use yii\web\Controller;
-use yii\base\Model;
-use yii\base\Exception;
-use yii\helpers\ArrayHelper;
 use app\modules\employee\models\Employee;
-use yii\web\NotFoundHttpException;
+use app\modules\employee\models\EmployeeSearch;
 use nullref\core\interfaces\IAdminController;
 use Yii;
+use yii\filters\VerbFilter;
+use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 
 /**
  * Default controller for the `employee` module
@@ -64,99 +59,59 @@ class DefaultController extends Controller implements IAdminController
     }
 
     /**
-     * Creates a new Employee model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
+     * @return string|\yii\web\Response
      */
     public function actionCreate()
     {
         $model = new Employee();
-        $modelsEducation = [new EmployeeEducation()];
 
-        /**
-         * @var $modelsEducation EmployeeEducation[]
-         */
-
-        if ($model->load(Yii::$app->request->post())) {
-            $modelsEducation = Employee::createMultiple(Employee::classname());
-            Model::loadMultiple($modelsEducation, Yii::$app->request->post());
-            $valid = $model->validate();
-            $valid = Model::validateMultiple($modelsEducation) && $valid;
-            if ($valid) {
-                $transaction = \Yii::$app->db->beginTransaction();
-                try {
-                    if ($flag = $model->save(false)) {
-                        foreach ($modelsEducation as $modelEducation) {
-                            $modelEducation->employee_id = $model->id;
-                            if (!($flag = $modelEducation->save(false))) {
-                                $transaction->rollBack();
-                                break;
-                            }
-                        }
-                    }
-                    if ($flag) {
-                        $transaction->commit();
-                        return $this->redirect(['view', 'id' => $model->id]);
-                    }
-                } catch (Exception $e) {
-                    $transaction->rollBack();
-                }
+        $default = Yii::$app->request->isPost ? [
+            'EmployeeEducation' => [],
+        ] : [];
+        if ($model->loadWithRelations(array_merge($default, Yii::$app->request->post()))
+            && $model->validateWithRelations()
+            && $model->save(false)) {
+            if (!Yii::$app->request->post('stay')) {
+                return $this->redirect(['/employee/default']);
+            } else {
+                Yii::$app->session->setFlash('success', Yii::t('app', 'Employee record is saved!'));
+                return $this->redirect(['/employee/default/update', 'id' => $model->id]);
             }
-            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('create', [
             'model' => $model,
-            'modelsEducation' => (empty($modelsEducation)) ? [new EmployeeEducation()] : $modelsEducation,
+            'activeTab' => (int)Yii::$app->request->post('activeTab', 0),
         ]);
     }
 
+
     /**
-     * Updates an existing Employee model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
+     * @param $id
+     * @return string|\yii\web\Response
+     * @throws NotFoundHttpException
      */
     public function actionUpdate($id)
     {
-
         $model = $this->findModel($id);
 
-
-
-        if (empty($id)) {
-            $model = new Employee();
-        } else {
-            $model = $this->findModel($id);
-        }
-
-        $model->has_education = EmployeeEducation::getList($id, $model);
-
-        /**
-         * @var $modelsEducation EmployeeEducation[]
-         **/
-
-        $saveAction = Yii::$app->request->post('save');
-        $newRecord = $model->isNewRecord;
-        if ($model->load(Yii::$app->request->post()) && $saveAction && $model->save()) {
+        $default = Yii::$app->request->isPost ? [
+            'EmployeeEducation' => [],
+        ] : [];
+        if ($model->loadWithRelations(array_merge($default, Yii::$app->request->post()))
+            && $model->validateWithRelations()
+            && $model->save(false)) {
             if (!Yii::$app->request->post('stay')) {
-                return $this->redirect(['index']);
+                return $this->redirect(['/employee/default']);
             } else {
-                Yii::$app->session->setFlash('save-record-employee', Yii::t('app', 'Employee record is saved!'));
-                if ($newRecord) {
-                    return $this->redirect(['/employee/update', 'id' => $model->primaryKey]);
-                } else {
-                    return $this->refresh();
-                }
+                Yii::$app->session->setFlash('success', Yii::t('app', 'Employee record is saved!'));
             }
-        } else {
-
-            return $this->render('update', [
-                'model' => $model,
-                'modelsEducation' => $model->has_education,
-            ]);
         }
 
+        return $this->render('update', [
+            'model' => $model,
+            'activeTab' => (int)Yii::$app->request->post('activeTab', 0),
+        ]);
     }
 
     /**
@@ -189,7 +144,7 @@ class DefaultController extends Controller implements IAdminController
 
     public function actionDocument()
     {
-         Employee::getDocument();
+         return Employee::getDocument();
     }
 
 }
