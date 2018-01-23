@@ -1,12 +1,11 @@
 <?php
 
-use app\modules\employee\models\Employee;
-use yii\helpers\Html;
-use yii\widgets\DetailView;
-use yii\web\View;
 use app\modules\directories\models\position\Position;
 use app\modules\directories\models\qualification\Qualification;
-use app\modules\employee\models\cyclic_commission\CyclicCommission;
+use app\modules\employee\models\Employee;
+use yii\helpers\Html;
+use yii\web\View;
+use yii\widgets\DetailView;
 
 /* @var $this View
  * @var $model Employee
@@ -66,8 +65,8 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute' => 'cyclic_commission_id',
-                'value' => function ($model) {
-                    return CyclicCommission::findOne(['id' => $model->cyclic_commission_id])->title;
+                'value' => function (Employee $model) {
+                    return $model->getCyclicCommissionTitle();
                 }
             ],
             'birth_date',

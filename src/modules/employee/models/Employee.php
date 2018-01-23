@@ -2,21 +2,18 @@
 
 namespace app\modules\employee\models;
 
+use app\modules\directories\models\position\Position;
+use app\modules\employee\models\cyclic_commission\CyclicCommission;
 use app\modules\students\models\CuratorGroup;
 use app\modules\students\models\Group;
 use nullref\useful\behaviors\RelatedBehavior;
+use nullref\useful\traits\Mappable;
+use PHPExcel_IOFactory;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\behaviors\TimestampBehavior;
-use voskobovich\linker\LinkerBehavior;
-use app\modules\directories\models\position\Position;
-use app\modules\employee\models\cyclic_commission\CyclicCommission;
-
-use PHPExcel;
-use PHPExcel_IOFactory;
 
 /**
  * This is the model class for table "employee".
@@ -35,16 +32,16 @@ use PHPExcel_IOFactory;
  * @property string $passport_issued_by
  * @property string $passport_issued_date
  * @property string $start_date
- * 
+ *
  * @property EmployeeEducation[] $education
  * @property EmployeeEducation[] $employeeEducationList
  */
 class Employee extends ActiveRecord
 {
+    use Mappable;
 
     public $data;
     public $has_education;
-    
 
 
     public function behaviors()
@@ -76,7 +73,7 @@ class Employee extends ActiveRecord
         return [
             [['id', 'position_id', 'category_id', 'is_in_education', 'gender', 'type', 'cyclic_commission_id'], 'integer'],
             [['last_name', 'first_name', 'middle_name', 'position_id', 'is_in_education',
-                'gender', 'passport', 'birth_date', 'passport_issued_by', 'start_date', 'passport_issued_date'], 'required'],
+                'gender', 'passport', 'birth_date', 'passport_issued_by', 'start_date', 'passport_issued_date', 'category_id'], 'required'],
             [['birth_date','cyclic_commission_id', 'passport', 'passport_issued_by'], 'safe'],
             [['passport', 'id'], 'unique'],
         ];
@@ -128,7 +125,7 @@ class Employee extends ActiveRecord
     {
         return mb_substr($this->first_name, 0, 1, 'UTF-8') . '.' . mb_substr($this->middle_name, 0, 1, 'UTF-8') . '.' . ' '.$this->last_name;
     }
-    
+
     public function getStartDate()
     {
         return $this->start_date;
@@ -197,9 +194,13 @@ class Employee extends ActiveRecord
         return Position::findOne(['id' => $this->position_id])->title;
     }
 
-    public  function getCyclicCommission()
+    public  function getCyclicCommissionTitle()
     {
-        return CyclicCommission::findOne(['id' => $this->cyclic_commission_id])->title;
+        $cyclicCommission = CyclicCommission::findOne(['id' => $this->cyclic_commission_id]);
+        if ($cyclicCommission) {
+            return $cyclicCommission->title;
+        }
+        return null;
     }
 
     public static function getAllTeacherList()
@@ -241,27 +242,13 @@ class Employee extends ActiveRecord
         return Html::a($this->getFullName(), Url::to(['/employee/default/view', 'id' => $this->id]));
     }
 
-    public function save($runValidation = true, $attributeNames = null, $withAllParams = true)
-    {
-        $saved = parent::save($runValidation, $attributeNames);
-        if ($saved && $withAllParams) {
-            EmployeeEducation::saveSt($this->id, $this);
-        }
-        return $saved;
-    }
-
-    public function validate($attributeNames = null, $clearErrors = true)
-    {
-        $success = parent::validate($attributeNames, $clearErrors);
-        if (!empty($this->has_education)) {
-            $educationValidation = EmployeeEducation::validateSt($this);
-            if (!$educationValidation) {
-                $success = false;
-            }
-        }
-        return $success;
-    }
-
+    /**
+     * @TODO move to component
+     *
+     * @throws \PHPExcel_Exception
+     * @throws \PHPExcel_Reader_Exception
+     * @throws \PHPExcel_Writer_Exception
+     */
     public static function getDocument()
     {
         $tmpfname = Yii::getAlias('@webroot') . "/templates/employee.xls";
@@ -287,7 +274,7 @@ class Employee extends ActiveRecord
                 $excelObj->getActiveSheet()->setCellValue('B' . $current, $i);
                 $excelObj->getActiveSheet()->setCellValue('C' . $current, $employee->getPosition());
                 $excelObj->getActiveSheet()->setCellValue('E' . $current, $employee->getFullName());
-                $excelObj->getActiveSheet()->setCellValue('J' . $current, $employee->getCyclicCommission());
+                $excelObj->getActiveSheet()->setCellValue('J' . $current, $employee->getCyclicCommissionTitle());
                 $excelObj->getActiveSheet()->setCellValue('M' . $current, $employee->getStartDate());
                 $i++;
                 $current++;
@@ -300,11 +287,7 @@ class Employee extends ActiveRecord
         header('Cache-Control: max-age=0');
         $objWriter = PHPExcel_IOFactory::createWriter($excelObj, 'Excel2007');
         $objWriter->save('php://output');
-    }
-
-    public static function getListArray()
-    {
-        ArrayHelper::map(self::getList(), 'id', 'fullName');
+        exit();
     }
 
     public function getEmployeeEducation()

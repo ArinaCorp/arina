@@ -5,8 +5,8 @@ use yii\web\View;
 use app\modules\employee\models\Employee;
 
 /* @var $this View 
- * @var $model Employee 
- * @var $modelsEducation \app\modules\employee\models\EmployeeEducation[] 
+ * @var $model Employee
+ * @var $activeTab integer
  */
 
 $this->title = Yii::t('app', 'Create employee');
@@ -25,13 +25,9 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
 
-    <p>
-        <?= Html::a(Yii::t('app', 'List'), ['index'], ['class' => 'btn btn-success']) ?>
-    </p>
-
     <?= $this->render('_form', [
         'model' => $model,
-        'modelsEducation' => $modelsEducation,
+        'activeTab' => $activeTab,
     ]) ?>
 
 </div>

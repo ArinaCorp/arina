@@ -20,7 +20,7 @@ use yii\bootstrap\Tabs;
 /* @var $this View
  * @var $model Employee
  * @var $form \yii\widgets\ActiveForm
- * @var $modelsEducation \app\modules\employee\models\EmployeeEducation[]
+ * @var $activeTab integer
  */
 
 $form = ActiveForm::begin([
@@ -79,7 +79,7 @@ JS
                     'class' => 'btn btn-default cancel-btn'
                 ]) ?>
             <?php endif ?>
-            <?= Html::a(FA::icon('arrow-left'), Url::to(['/students/default']), [
+            <?= Html::a(FA::icon('arrow-left'), Url::to(['/employee/default']), [
                 'title' => Yii::t('app', 'Cancel'),
                 'class' => 'btn btn-success'
             ]) ?>
