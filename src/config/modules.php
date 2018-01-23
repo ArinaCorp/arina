@@ -44,4 +44,7 @@ return array_merge(require(__DIR__ . '/installed_modules.php'), [
             //'accessRoles' => ['admin']
         ]
     ],
+    'user' => [
+        'class' => 'dektrium\user\Module',
+    ],
 ]);
