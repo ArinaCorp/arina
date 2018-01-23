@@ -20,7 +20,17 @@ DynamicFormAsset::register($this);
 
 $this->registerJs(<<<JS
 jQuery('#EmailForm').dynamicForm();
-jQuery('#PhoneForm').dynamicForm();
+var phoneForm = jQuery('#PhoneForm');phoneForm.dynamicForm();
+phoneForm.on('after-add.dynamic-form',function(e, arg) {
+  initMask(arg.item);
+});
+function initMask(item) {
+  jQuery(item).find('[data-mask]').each(function(){
+      var input = jQuery(this);
+      input.inputmask({mask: input.data('mask')});
+  })
+}
+initMask(initMask);
 jQuery('#SocialNetworkForm').dynamicForm();
 JS
 );

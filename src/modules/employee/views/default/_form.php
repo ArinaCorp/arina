@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\MaskedInput;
 use yii\web\View;
 use app\modules\employee\models\Employee;
@@ -22,95 +23,121 @@ use yii\bootstrap\Tabs;
  * @var $modelsEducation \app\modules\employee\models\EmployeeEducation[]
  */
 
-Pjax::begin([
-    'id' => 'pjax-container',
-    'formSelector' => '#employee-form',
-    'timeout' => 3000,
-]);
 $form = ActiveForm::begin([
-    'id' => 'product-form',
-    'enableClientValidation' => false,
+    'id' => 'employeeForm',
 ]);
 
-if (isset($_COOKIE['active-employee-tab'])) {
-    $tab = $_COOKIE['active-employee-tab'];
-    $activeTab = strtr($tab, ['#active-employee-tab' => '']);
+
+$this->registerJs(<<<JS
+var form = jQuery('#employeeForm');
+jQuery('.save-btn').on('click', function (e) {
+    var btn = jQuery(this);
+    form.find('[name="' + btn.data('action') + '"]').prop('disabled', false);
+    form.submit();
+    e.preventDefault(e);
+    return false;
+});
+
+var tabs = jQuery('#employeeTabs');
+tabs.on('shown.bs.tab', function () {
+    var activeTab = tabs.find('li').index(tabs.find('.active'));
+    form.find('[name="activeTab"]').val(activeTab);
+});
+
+function updateTabsErrors() {
+    tabs.find('li').each(function (index, tabEl) {
+        var tab = jQuery(tabEl);
+        var link = tab.find('a');
+        var tabContent = jQuery(link.attr('href'));
+        if (tabContent.find('.has-error').length) {
+            if (link.find('.fa-warning').length === 0) {
+                link.html('<i class="fa fa-warning"></i> ' + link.html());
+            }
+            link.addClass('tab-error');
+        } else {
+            link.find('.fa-warning').remove();
+            link.removeClass('tab-error');
+        }
+    });
 }
 
+form.on('afterValidate', function () {
+    updateTabsErrors();
+});
+
+JS
+);
+
 ?>
-<div class="status-bar row">
-    <?php
-    echo Html::a(FA::icon('undo'), Yii::$app->user->getReturnUrl(['/employee']), [
-        'title' => Yii::t('app', 'Cancel'),
-        'data-toggle' => 'tooltip',
-        'class' => 'btn btn-default cancel-btn'
-    ]);
-    echo Html::button(FA::icon('save'), [
-        'title' => Yii::t('app', 'Save'),
-        'data-toggle' => 'tooltip',
-        'class' => 'btn btn-primary save-btn',
-    ]);
-    echo Html::button(FA::icon('floppy-o'), [
-        'title' => Yii::t('app', 'Save and stay here'),
-        'data-toggle' => 'tooltip',
-        'data-action' => 'stay',
-        'class' => 'btn btn-info save-btn',
-    ]);
-    ?>
-    <div class="clearfix"></div>
+<div class="row">
+    <div class="col-md-12">
+        <p>
+            <?php if (!$model->isNewRecord): ?>
+                <?= Html::a(FA::icon('eye'), Url::to(['/employee/default/view', 'id' => $model->primaryKey]), [
+                    'title' => Yii::t('app', 'View'),
+                    'data-toggle' => 'tooltip',
+                    'class' => 'btn btn-default cancel-btn'
+                ]) ?>
+            <?php endif ?>
+            <?= Html::a(FA::icon('arrow-left'), Url::to(['/students/default']), [
+                'title' => Yii::t('app', 'Cancel'),
+                'class' => 'btn btn-success'
+            ]) ?>
+            <?= Html::hiddenInput('save', 1, ['disabled' => true]) ?>
+            <?= Html::submitButton(FA::icon('save'), [
+                'title' => Yii::t('app', 'Save'),
+                'data-action' => 'save',
+                'class' => 'btn btn-primary save-btn',
+            ]) ?>
+            <?= Html::hiddenInput('stay', 1, ['disabled' => true]) ?>
+            <?= Html::submitButton(FA::icon('floppy-o'), [
+                'title' => Yii::t('app', 'Save and stay here'),
+                'data-action' => 'stay',
+                'class' => 'btn btn-info save-btn',
+            ]) ?>
+        </p>
+    </div>
 </div>
-<?php
-if (Yii::$app->session->hasFlash('save-employee')) {
-    echo Alert::widget([
-        'id' => 'success-alert',
-        'type' => 0,
-        'body' => Yii::$app->session->getFlash('save-employee'),
-        'closeButton' => [],
-        'delay' => 1000
-    ]);
-}
-?>
-<?= $form->errorSummary($model) ?>
-<div class="row product-card">
-    <?= Tabs::widget([
-        'id' => 'product-tabs',
-        'items' => [
-            [
-                'label' => Yii::t('app', 'General'),
-                'content' =>
-                    $this->render('_main', [
+
+<div class="row">
+    <div class="col-md-12">
+        <?= Html::hiddenInput('activeTab', $activeTab) ?>
+        <?= Tabs::widget([
+            'id' => 'employeeTabs',
+            'linkOptions' => [
+                'data-pjax' => 0,
+            ],
+            'items' => [
+                [
+                    'label' => Yii::t('app', 'General'),
+                    'content' =>
+                        $this->render('_main', [
+                            'model' => $model,
+                            'form' => $form,
+                        ]),
+                    'active' => $activeTab == 0 ? true : false,
+                    'options' => [
+                        'id' => 'general'
+                    ],
+                ],
+                [
+                    'label' => Yii::t('app', 'Education'),
+                    'content' => $this->render('_education', [
                         'model' => $model,
                         'form' => $form,
                     ]),
-                'active' => $activeTab == 0 ? true : false,
-                'options' => [
-                    'id' => 'general'
+                    'active' => $activeTab == 1 ? true : false,
+                    'options' => [
+                        'id' => 'education'
+                    ],
                 ],
             ],
-            [
-                'label' => Yii::t('app', 'Education'),
-                'content' => $this->render('_education', [
-                    'model' => $model,
-                    'modelsEducation' => $modelsEducation,
-                    'form' => $form,
-                ]),
-                'active' => $activeTab == 1 ? true : false,
-                'options' => [
-                    'id' => 'education'
-                ],
+            'navType' => 'nav-tabs',
+            'itemOptions' => [
+                'class' => 'employee-tab'
             ],
-        ],
-        'navType' => 'nav-tabs',
-        'options' => [
-            'class' => 'row'
-        ],
-        'itemOptions' => [
-            'class' => 'employee-tab'
-        ],
-        'encodeLabels' => false
-    ]) ?>
+            'encodeLabels' => false
+        ]) ?>
+    </div>
 </div>
-<?php
-ActiveForm::end();
-Pjax::end();
-?>
+<?php ActiveForm::end() ?>

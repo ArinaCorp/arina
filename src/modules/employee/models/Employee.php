@@ -4,6 +4,7 @@ namespace app\modules\employee\models;
 
 use app\modules\students\models\CuratorGroup;
 use app\modules\students\models\Group;
+use nullref\useful\behaviors\RelatedBehavior;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
@@ -36,6 +37,7 @@ use PHPExcel_IOFactory;
  * @property string $start_date
  * 
  * @property EmployeeEducation[] $education
+ * @property EmployeeEducation[] $employeeEducationList
  */
 class Employee extends ActiveRecord
 {
@@ -44,6 +46,19 @@ class Employee extends ActiveRecord
     public $has_education;
     
 
+
+    public function behaviors()
+    {
+        return [
+            'related' => [
+                'class' => RelatedBehavior::className(),
+                'mappedType' => RelatedBehavior::MAPPED_TYPE_PK_FIELD,
+                'fields' => [
+                    'employeeEducation' => EmployeeEducation::className(),
+                ],
+            ]
+        ];
+    }
 
     /**
      * @return string the associated database table name
@@ -290,5 +305,10 @@ class Employee extends ActiveRecord
     public static function getListArray()
     {
         ArrayHelper::map(self::getList(), 'id', 'fullName');
+    }
+
+    public function getEmployeeEducation()
+    {
+        return $this->hasMany(EmployeeEducation::className(),['employee_id'=>'id']);
     }
 }

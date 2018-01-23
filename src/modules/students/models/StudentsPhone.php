@@ -4,7 +4,6 @@ namespace app\modules\students\models;
 
 use Yii;
 use yii\behaviors\TimestampBehavior;
-use yii\web\BadRequestHttpException;
 
 /**
  * This is the model class for table "{{%students_phones}}".
@@ -41,7 +40,8 @@ class StudentsPhone extends \yii\db\ActiveRecord
     {
         return [
             [['student_id', 'created_at', 'updated_at'], 'integer'],
-            [['phone'], 'integer'],
+            ['phone', 'match','pattern' => '/^\([0-9]{3}\) ?[0-9]{3}-[0-9]{4}$/'],
+            [['phone'], 'string'],
             [['phone'], 'required'],
         ];
     }
