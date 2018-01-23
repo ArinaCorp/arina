@@ -40,11 +40,6 @@ $config = [
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
-        'user' => [
-            'class' => 'nullref\admin\components\User',
-            'identityClass' => 'nullref\admin\models\Admin',
-            'enableAutoLogin' => true,
-        ],
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],

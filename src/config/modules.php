@@ -7,6 +7,7 @@ return array_merge(require(__DIR__ . '/installed_modules.php'), [
 
     'admin' => [
         'class' => 'nullref\admin\Module',
+        'adminComponent' => 'user',
         'components' => [
             'menuBuilder' => [
                 'class' => 'app\components\MenuBuilder',
@@ -45,6 +46,7 @@ return array_merge(require(__DIR__ . '/installed_modules.php'), [
         ]
     ],
     'user' => [
-        'class' => 'dektrium\user\Module',
+        'class' => 'app\modules\user\Module',
+        'admins' => ['admin'],
     ],
 ]);
