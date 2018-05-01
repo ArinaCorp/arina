@@ -17,7 +17,6 @@
         "2amigos/yii2-date-picker-widget": "~1.0",
         "2amigos/yii2-date-time-picker-widget": "*",
         "dektrium/yii2-user": "^0.9.0@dev",
-        "developeruz/yii2-db-rbac": "1.1.2",
         "kartik-v/yii2-date-range": "^1.6",
         "kartik-v/yii2-widget-datepicker": "@dev",
         "kartik-v/yii2-widget-depdrop": "@dev",

@@ -41,12 +41,15 @@ return array_merge(require(__DIR__ . '/installed_modules.php'), [
     'permit' => [
         'class' => 'developeruz\db_rbac\Yii2DbRbac',
         'params' => [
-            'userClass' => 'nullref\admin\models\Admin',
+            'userClass' => 'app\modules\user\models\User',
             //'accessRoles' => ['admin']
         ]
     ],
     'user' => [
         'class' => 'app\modules\user\Module',
         'admins' => ['admin'],
+        'modelMap' => [
+            'User' => 'app\modules\user\models\User',
+        ],
     ],
 ]);
