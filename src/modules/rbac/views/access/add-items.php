@@ -27,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="row">
         <div class="col-lg-12">
             <h4>
-                <?= $actionAccess->module .' / '. $actionAccess->controller .' / '. $actionAccess->action ?>
+                <?= $actionAccess->module . ' / ' . $actionAccess->controller . ' / ' . $actionAccess->action ?>
             </h4>
         </div>
     </div>

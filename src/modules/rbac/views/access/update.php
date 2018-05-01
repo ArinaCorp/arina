@@ -6,8 +6,8 @@ use yii\helpers\Html;
 /* @var $model app\modules\rbac\models\ActionAccess */
 
 $this->title = Yii::t('rbac', 'Update {modelClass}: ', [
-    'modelClass' => 'Action Access',
-]) . ' ' . $model->id;
+        'modelClass' => 'Action Access',
+    ]) . ' ' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('rbac', 'Action Accesses'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = Yii::t('rbac', 'Update');
@@ -25,7 +25,7 @@ $this->params['breadcrumbs'][] = Yii::t('rbac', 'Update');
     <div class="row">
         <div class="col-lg-12">
             <h4>
-                <?= $model->module .' / '. $model->controller .' / '. $model->action ?>
+                <?= $model->module . ' / ' . $model->controller . ' / ' . $model->action ?>
             </h4>
         </div>
     </div>

@@ -4,6 +4,7 @@ namespace app\modules\employee\controllers;
 
 use app\modules\employee\models\Employee;
 use app\modules\employee\models\EmployeeSearch;
+use app\modules\rbac\filters\AccessControl;
 use nullref\core\interfaces\IAdminController;
 use Yii;
 use yii\filters\VerbFilter;
@@ -21,8 +22,12 @@ class DefaultController extends Controller implements IAdminController
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::class,
+                'controller' => $this,
+            ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
                 ],

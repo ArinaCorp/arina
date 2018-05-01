@@ -36,7 +36,7 @@ use yii\widgets\MaskedInput;
         <?= $form->field($model, 'gender')->dropDownList([0 => Yii::t('app', 'Male'), 1 => Yii::t('app', 'Female')], ['prompt' => Yii::t('app', 'Select gender')]); ?>
     </div>
     <div class="col-sm-6">
-        <?= $form->field($model, 'birth_day')->widget(dosamigos\datepicker\DatePicker::className(), [
+        <?= $form->field($model, 'birth_day')->widget(dosamigos\datepicker\DatePicker::className(), [ //@TODO change to kartik-v/yii2-widget-datepicker
             'language' => 'uk',
             'clientOptions' => [
                 'autoclose' => true,
@@ -53,7 +53,7 @@ use yii\widgets\MaskedInput;
         <?= $form->field($model, 'passport_issued')->textInput(['maxlength' => true, 'placeholder' => $model->getAttributeLabel('passport_issued')]) ?>
     </div>
     <div class="col-sm-3">
-        <?= $form->field($model, 'passport_issued_date')->widget(dosamigos\datepicker\DatePicker::className(), [
+        <?= $form->field($model, 'passport_issued_date')->widget(dosamigos\datepicker\DatePicker::className(), [ //@TODO change to kartik-v/yii2-widget-datepicker
             'language' => 'uk',
             'clientOptions' => [
                 'autoclose' => true,

@@ -20,6 +20,14 @@ class ActionAccessItem extends \yii\db\ActiveRecord
         return '{{%action_access_item}}';
     }
 
+    public static function getActionItems($actionId)
+    {
+        return self::find()
+            ->select(['auth_item_name'])
+            ->where(['action_access_id' => $actionId])
+            ->column();
+    }
+
     /**
      * @inheritdoc
      */
@@ -41,13 +49,5 @@ class ActionAccessItem extends \yii\db\ActiveRecord
             'action_access_id' => Yii::t('rbac', 'Action Access ID'),
             'auth_item_name' => Yii::t('rbac', 'Auth Item Name'),
         ];
-    }
-
-    public static function getActionItems($actionId)
-    {
-        return self::find()
-            ->select(['auth_item_name'])
-            ->where(['action_access_id' => $actionId])
-            ->column();
     }
 }

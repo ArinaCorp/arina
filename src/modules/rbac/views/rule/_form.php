@@ -14,14 +14,14 @@
  * @var $model \dektrium\rbac\models\Rule
  */
 
-use yii\widgets\ActiveForm;
 use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 
 ?>
 
 <?php $form = ActiveForm::begin([
     'enableClientValidation' => false,
-    'enableAjaxValidation'   => true,
+    'enableAjaxValidation' => true,
 ]) ?>
 
 <?= $form->field($model, 'name') ?>

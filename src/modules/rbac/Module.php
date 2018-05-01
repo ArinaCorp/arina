@@ -17,7 +17,7 @@ class Module extends BaseModule implements IAdminModule
         '@dektrium/rbac/controllers',
     ];
 
-    public $controllerNamespace = 'dektrium\rbac\controllers';
+    public $controllerNamespace = 'app\modules\rbac\controllers';
 
     public $enableFlashMessages = true;
 

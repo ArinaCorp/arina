@@ -2,8 +2,6 @@
 
 namespace app\modules\rbac\models;
 
-use Yii;
-
 /**
  * This is the model class for table "auth_rule".
  *

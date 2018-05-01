@@ -17,82 +17,6 @@ class ActionReader
         $this->map = self::getControllersAndActions();
     }
 
-    public function getModules()
-    {
-        $items = [];
-        foreach (array_keys($this->map) as $val) {
-            $items[$val] = $val;
-        }
-        return $items;
-    }
-
-    public function getModulesJs()
-    {
-        $items = [];
-        foreach ($this->getModules() as $key => $val) {
-            $items[$key] = [
-                'id' => $val,
-                'name' => $val,
-            ];
-        }
-        return $items;
-    }
-
-    public function getControllers($module)
-    {
-        $items = [];
-        if ($module) {
-            if (isset($this->map[$module])) {
-                foreach (array_keys($this->map[$module]) as $val) {
-                    $items[$val] = $val;
-                }
-            }
-        }
-        return $items;
-    }
-
-    public function getControllersJs($module)
-    {
-        $items = [];
-        if ($module) {
-            foreach ($this->getControllers($module) as $key => $val) {
-                $items[$key] = [
-                    'id' => $val,
-                    'name' => $val,
-                ];
-            }
-        }
-        return $items;
-    }
-
-    public function getActions($module, $controller)
-    {
-        $items = [];
-        if ($module && $controller) {
-            if (isset($this->map[$module][$controller])) {
-                foreach ($this->map[$module][$controller] as $val) {
-                    $items[$val] = $val;
-                }
-            }
-
-        }
-        return $items;
-    }
-
-    public function getActionsJs($module, $controller)
-    {
-        $items = [];
-        if ($module && $controller) {
-            foreach ($this->getActions($module, $controller) as $key => $val) {
-                $items[$key] = [
-                    'id' => $val,
-                    'name' => $val,
-                ];
-            }
-        }
-        return $items;
-    }
-
     public static function getControllersAndActions()
     {
         $aliases = self::prepareAliases();
@@ -152,7 +76,7 @@ class ActionReader
 
         $modules = Yii::$app->modules;
         foreach ($modules as $moduleName => $module) {
-            $module = Yii::$app->getModule($moduleName, false);
+            $module = Yii::$app->getModule($moduleName);
             if ($module) {
                 if (isset($module->controllerAliases)) {
                     foreach ($module->controllerAliases as $alias) {
@@ -167,5 +91,81 @@ class ActionReader
         }
 
         return $aliases;
+    }
+
+    public function getModulesJs()
+    {
+        $items = [];
+        foreach ($this->getModules() as $key => $val) {
+            $items[$key] = [
+                'id' => $val,
+                'name' => $val,
+            ];
+        }
+        return $items;
+    }
+
+    public function getModules()
+    {
+        $items = [];
+        foreach (array_keys($this->map) as $val) {
+            $items[$val] = $val;
+        }
+        return $items;
+    }
+
+    public function getControllersJs($module)
+    {
+        $items = [];
+        if ($module) {
+            foreach ($this->getControllers($module) as $key => $val) {
+                $items[$key] = [
+                    'id' => $val,
+                    'name' => $val,
+                ];
+            }
+        }
+        return $items;
+    }
+
+    public function getControllers($module)
+    {
+        $items = [];
+        if ($module) {
+            if (isset($this->map[$module])) {
+                foreach (array_keys($this->map[$module]) as $val) {
+                    $items[$val] = $val;
+                }
+            }
+        }
+        return $items;
+    }
+
+    public function getActionsJs($module, $controller)
+    {
+        $items = [];
+        if ($module && $controller) {
+            foreach ($this->getActions($module, $controller) as $key => $val) {
+                $items[$key] = [
+                    'id' => $val,
+                    'name' => $val,
+                ];
+            }
+        }
+        return $items;
+    }
+
+    public function getActions($module, $controller)
+    {
+        $items = [];
+        if ($module && $controller) {
+            if (isset($this->map[$module][$controller])) {
+                foreach ($this->map[$module][$controller] as $val) {
+                    $items[$val] = $val;
+                }
+            }
+
+        }
+        return $items;
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace app\modules\rbac\widgets;
 
 use app\modules\rbac\models\ActionAccess;

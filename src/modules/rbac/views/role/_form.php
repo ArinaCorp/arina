@@ -8,11 +8,11 @@
  * file that was distributed with this source code.
  */
 
+use dektrium\rbac\models\Role;
 use kartik\select2\Select2;
-use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 use yii\web\View;
-use dektrium\rbac\models\Role;
+use yii\widgets\ActiveForm;
 
 /**
  * @var $this View

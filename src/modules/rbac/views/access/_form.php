@@ -21,11 +21,11 @@ $modules = $reader->getModules();
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'module')->dropDownList($reader->getModules(), [
+    <?= $form->field($model, 'module')->dropDownList($modules, [
         'prompt' => Yii::t('rbac', 'Choose module'),
     ]) ?>
 
-    <?= $form->field($model, 'controller')->widget(DepDrop::classname(), [
+    <?= $form->field($model, 'controller')->widget(DepDrop::class, [
         'options' => ['id' => 'controller'],
         'value' => $model->controller,
         'pluginOptions' => [
@@ -35,7 +35,7 @@ $modules = $reader->getModules();
         ]
     ]); ?>
 
-    <?= $form->field($model, 'action')->widget(DepDrop::classname(), [
+    <?= $form->field($model, 'action')->widget(DepDrop::class, [
         'options' => ['id' => 'action'],
         'value' => $model->action,
         'pluginOptions' => [

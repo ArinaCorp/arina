@@ -16,6 +16,7 @@
         "php": ">=5.4.0",
         "2amigos/yii2-date-picker-widget": "~1.0",
         "2amigos/yii2-date-time-picker-widget": "*",
+        "dektrium/yii2-rbac": "^1.0@dev",
         "dektrium/yii2-user": "^0.9.0@dev",
         "kartik-v/yii2-date-range": "^1.6",
         "kartik-v/yii2-widget-datepicker": "@dev",
@@ -25,10 +26,9 @@
         "kartik-v/yii2-widget-spinner": "@dev",
         "kartik-v/yii2-widget-switchinput": "dev-master",
         "kartik-v/yii2-widget-touchspin": "*",
-        "nex/yii2-datepicker": "*",
-        "nullref/yii2-admin": "dev-master",
-        "nullref/yii2-core": "dev-master",
-        "nullref/yii2-useful": "dev-master",
+        "nullref/yii2-admin": ">=0.0.2",
+        "nullref/yii2-core": ">=0.0.3",
+        "nullref/yii2-useful": ">=0.0.4",
         "phpoffice/phpexcel": "^1.8",
         "unclead/yii2-multiple-input": "~2.0",
         "vlucas/phpdotenv": "~1.0@dev",
@@ -36,7 +36,7 @@
         "wbraganca/yii2-dynamicform": "dev-master",
         "yii-dream-team/yii2-upload-behavior": "*",
         "yii2tech/ar-position": "^1.0",
-        "yiisoft/yii2": ">=2.0.4",
+        "yiisoft/yii2": ">=2.0.13",
         "yiisoft/yii2-bootstrap": "*",
         "yiisoft/yii2-jui": "^2.0",
         "yiisoft/yii2-swiftmailer": "*"
@@ -47,9 +47,11 @@
         "yiisoft/yii2-faker": "*"
     },
     "config": {
+        "optimize-autoloader": true,
         "sort-packages": true,
         "process-timeout": 1800,
         "fxp-asset":{
+            "enabled": false,
             "pattern-skip-version": "(-build|-patch)",
             "vcs-driver-options": {
                 "github-no-api": true

@@ -40,7 +40,7 @@ use yii\widgets\ActiveForm;
                 'id' => 'items',
                 'multiple' => true
             ],
-        ])->label(Yii::t('rbac','Items')) ?>
+        ])->label(Yii::t('rbac', 'Items')) ?>
 
         <?= Html::submitButton(Yii::t('rbac', 'Update items'), ['class' => 'btn btn-success btn-block']) ?>
 

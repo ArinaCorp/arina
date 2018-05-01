@@ -42,7 +42,7 @@ use kartik\select2\Select2;
         </div>
 
         <div class="col-sm-6">
-            <?= $form->field($model, 'accreditation_date')->widget(dosamigos\datepicker\DatePicker::className(), [
+            <?= $form->field($model, 'accreditation_date')->widget(dosamigos\datepicker\DatePicker::className(), [ //@TODO change to kartik-v/yii2-widget-datepicker
                 'language' => 'uk',
                 'clientOptions' => [
                     'autoclose' => true,

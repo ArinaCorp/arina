@@ -9,14 +9,9 @@
 namespace app\modules\user\models;
 
 
-use developeruz\db_rbac\interfaces\UserRbacInterface;
-use nullref\admin\models\Admin;
+use dektrium\user\models\User as BaseUser;
 
-class User extends \dektrium\user\models\User implements UserRbacInterface
+class User extends BaseUser
 {
 
-    public function getUserName()
-    {
-        return $this->username;
-    }
 }

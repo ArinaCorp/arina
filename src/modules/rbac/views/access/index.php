@@ -1,7 +1,7 @@
 <?php
 
-use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -11,13 +11,13 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="action-access-index">
 
-<div class="row">
-    <div class="col-lg-12">
-        <h1 class="page-header">
-            <?= Html::encode($this->title) ?>
-        </h1>
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">
+                <?= Html::encode($this->title) ?>
+            </h1>
+        </div>
     </div>
-</div>
 
 
     <p>
@@ -26,30 +26,30 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="table-responsive">
         <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+            'dataProvider' => $dataProvider,
+            'columns' => [
+                ['class' => 'yii\grid\SerialColumn'],
 
-            'module',
-            'controller',
-            'action',
+                'module',
+                'controller',
+                'action',
 
-            [
-                'class' => 'yii\grid\ActionColumn',
-                'template' => '{view} {update} {delete} {addItems}',
-                'buttons' => [
-                    'addItems' => function ($url, $model) {
-                        return Html::a('<span class="glyphicon glyphicon-list"></span>', ['add-items',
-                            'id' => $model->id,
-                        ], [
-                            'title' => Yii::t('app', 'Add items'),
-                            'aria-label' => Yii::t('app', 'Add items'),
-                            'data-method' => 'post',
-                        ]);
-                    }
+                [
+                    'class' => 'yii\grid\ActionColumn',
+                    'template' => '{view} {update} {delete} {addItems}',
+                    'buttons' => [
+                        'addItems' => function ($url, $model) {
+                            return Html::a('<span class="glyphicon glyphicon-list"></span>', ['add-items',
+                                'id' => $model->id,
+                            ], [
+                                'title' => Yii::t('app', 'Add items'),
+                                'aria-label' => Yii::t('app', 'Add items'),
+                                'data-method' => 'post',
+                            ]);
+                        }
+                    ],
                 ],
             ],
-        ],
-    ]); ?>
+        ]); ?>
     </div>
 </div>

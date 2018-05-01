@@ -1,18 +1,15 @@
 <?php
 
-namespace app\modules\rbac\migrations;
-
 use app\modules\rbac\models\AuthItem;
 use app\modules\rbac\models\AuthItemChild;
 use app\modules\rbac\models\AuthRule;
 use app\modules\rbac\models\rules\ProjectRule;
 use app\modules\rbac\models\rules\TaskRule;
 use app\modules\user\models\User;
-use Yii;
 use yii\db\Migration;
 use yii\rbac\Item;
 
-class M170417145342Create_basic_roles extends Migration
+class m170417_145342_create_basic_roles extends Migration
 {
     public function up()
     {

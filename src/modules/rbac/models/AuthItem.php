@@ -3,7 +3,6 @@
 namespace app\modules\rbac\models;
 
 use nullref\useful\DropDownTrait;
-use Yii;
 use yii\db\ActiveRecord;
 
 /**

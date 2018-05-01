@@ -1,11 +1,9 @@
 <?php
 
-namespace app\modules\rbac\migrations;
-
 use nullref\core\traits\MigrationTrait;
 use yii\db\Migration;
 
-class M170424141836Create_dynamic_access_rule_tables extends Migration
+class m170424_141836_create_dynamic_access_rule_tables extends Migration
 {
     use MigrationTrait;
 

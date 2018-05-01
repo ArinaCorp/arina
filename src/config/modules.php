@@ -38,15 +38,11 @@ return array_merge(require(__DIR__ . '/installed_modules.php'), [
     'accounting' => [
         'class' => 'app\modules\accounting\Accounting',
     ],
-    'permit' => [
-        'class' => 'developeruz\db_rbac\Yii2DbRbac',
-        'params' => [
-            'userClass' => 'app\modules\user\models\User',
-            //'accessRoles' => ['admin']
-        ]
+    'rbac' => [
+        'class' => app\modules\rbac\Module::class,
     ],
     'user' => [
-        'class' => 'app\modules\user\Module',
+        'class' => app\modules\user\Module::class,
         'admins' => ['admin'],
         'modelMap' => [
             'User' => 'app\modules\user\models\User',

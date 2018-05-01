@@ -1,34 +1,13 @@
 <?php
 
-namespace app\modules\rbac\migrations;
-
-use Yii;
+use nullref\core\traits\MigrationTrait;
 use yii\base\InvalidConfigException;
 use yii\db\Migration;
 use yii\rbac\DbManager;
 
-class M170416034027Rbac_init extends Migration
+class m170416_034027_rbac_init extends Migration
 {
-    /**
-     * @throws InvalidConfigException
-     * @return DbManager
-     */
-    protected function getAuthManager()
-    {
-        $authManager = Yii::$app->getAuthManager();
-        if (!$authManager instanceof DbManager) {
-            throw new InvalidConfigException('You should configure "authManager" component to use database before executing this migration.');
-        }
-        return $authManager;
-    }
-
-    /**
-     * @return bool
-     */
-    protected function isMSSQL()
-    {
-        return $this->db->driverName === 'mssql' || $this->db->driverName === 'sqlsrv' || $this->db->driverName === 'dblib';
-    }
+    use MigrationTrait;
 
     /**
      * @inheritdoc
@@ -38,18 +17,13 @@ class M170416034027Rbac_init extends Migration
         $authManager = $this->getAuthManager();
         $this->db = $authManager->db;
 
-        $tableOptions = null;
-        if ($this->db->driverName === 'mysql') {
-            $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
-        }
-
         $this->createTable($authManager->ruleTable, [
             'name' => $this->string(64)->notNull(),
             'data' => $this->binary(),
             'created_at' => $this->integer(),
             'updated_at' => $this->integer(),
             'PRIMARY KEY (name)',
-        ], $tableOptions);
+        ], $this->getTableOptions());
 
         $this->createTable($authManager->itemTable, [
             'name' => $this->string(64)->notNull(),
@@ -60,20 +34,20 @@ class M170416034027Rbac_init extends Migration
             'created_at' => $this->integer(),
             'updated_at' => $this->integer(),
             'PRIMARY KEY (name)',
-            'FOREIGN KEY (rule_name) REFERENCES ' . $authManager->ruleTable . ' (name)'.
+            'FOREIGN KEY (rule_name) REFERENCES ' . $authManager->ruleTable . ' (name)' .
             ($this->isMSSQL() ? '' : ' ON DELETE SET NULL ON UPDATE CASCADE'),
-        ], $tableOptions);
+        ], $this->getTableOptions());
         $this->createIndex('idx-auth_item-type', $authManager->itemTable, 'type');
 
         $this->createTable($authManager->itemChildTable, [
             'parent' => $this->string(64)->notNull(),
             'child' => $this->string(64)->notNull(),
             'PRIMARY KEY (parent, child)',
-            'FOREIGN KEY (parent) REFERENCES ' . $authManager->itemTable . ' (name)'.
+            'FOREIGN KEY (parent) REFERENCES ' . $authManager->itemTable . ' (name)' .
             ($this->isMSSQL() ? '' : ' ON DELETE CASCADE ON UPDATE CASCADE'),
-            'FOREIGN KEY (child) REFERENCES ' . $authManager->itemTable . ' (name)'.
+            'FOREIGN KEY (child) REFERENCES ' . $authManager->itemTable . ' (name)' .
             ($this->isMSSQL() ? '' : ' ON DELETE CASCADE ON UPDATE CASCADE'),
-        ], $tableOptions);
+        ], $this->getTableOptions());
 
         $this->createTable($authManager->assignmentTable, [
             'item_name' => $this->string(64)->notNull(),
@@ -81,7 +55,7 @@ class M170416034027Rbac_init extends Migration
             'created_at' => $this->integer(),
             'PRIMARY KEY (item_name, user_id)',
             'FOREIGN KEY (item_name) REFERENCES ' . $authManager->itemTable . ' (name) ON DELETE CASCADE ON UPDATE CASCADE',
-        ], $tableOptions);
+        ], $this->getTableOptions());
 
         if ($this->isMSSQL()) {
             $this->execute("CREATE TRIGGER dbo.trigger_auth_item_child
@@ -119,6 +93,27 @@ class M170416034027Rbac_init extends Migration
                     END
             END;");
         }
+    }
+
+    /**
+     * @throws InvalidConfigException
+     * @return DbManager
+     */
+    protected function getAuthManager()
+    {
+        $authManager = Yii::$app->getAuthManager();
+        if (!$authManager instanceof DbManager) {
+            throw new InvalidConfigException('You should configure "authManager" component to use database before executing this migration.');
+        }
+        return $authManager;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isMSSQL()
+    {
+        return $this->db->driverName === 'mssql' || $this->db->driverName === 'sqlsrv' || $this->db->driverName === 'dblib';
     }
 
     /**

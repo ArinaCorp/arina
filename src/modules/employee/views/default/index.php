@@ -29,7 +29,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a(Yii::t('app', 'Create employee'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?php if (Yii::$app->user->can('administrator')): ?>
+            <?= Html::a(Yii::t('app', 'Create employee'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?php endif ?>
         <?= Html::a(Yii::t('app', 'Get Excel document'), ['document'], ['class' => 'btn btn-info']) ?>
     </p>
 
@@ -63,7 +65,13 @@ $this->params['breadcrumbs'][] = $this->title;
             //'passport',
             //'passport_issued_by',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'visibleButtons' => [
+                    'update' => \Yii::$app->user->can('administrator'),
+                    'delete' => \Yii::$app->user->can('administrator'),
+                ],
+            ],
         ],
     ]); ?>
 

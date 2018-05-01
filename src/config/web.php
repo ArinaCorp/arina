@@ -25,9 +25,6 @@ $config = [
                 ],
             ],
         ],
-        'authManager' => [
-            'class' => 'yii\rbac\DbManager',
-        ],
         'excel' => [
             'class' => 'app\components\Excel',
         ],
