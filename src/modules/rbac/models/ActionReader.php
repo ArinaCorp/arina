@@ -6,6 +6,7 @@
 namespace app\modules\rbac\models;
 
 
+use app\modules\rbac\interfaces\IAccessibleModule;
 use Yii;
 
 class ActionReader
@@ -17,6 +18,9 @@ class ActionReader
         $this->map = self::getControllersAndActions();
     }
 
+    /**
+     * @return array
+     */
     public static function getControllersAndActions()
     {
         $aliases = self::prepareAliases();
@@ -70,29 +74,55 @@ class ActionReader
         return $fullList;
     }
 
+    /**
+     * Get controller aliases for module if possible
+     *
+     * @param $module
+     * @return bool|array
+     */
+    protected static function getAccessibleControllerAliases($module)
+    {
+        $methodName = 'getAccessibleControllerAliases';
+
+        if ($module instanceof IAccessibleModule) {
+            return $module::getAccessibleControllerAliases();
+        } elseif (is_array($module) && isset($module['class']) && method_exists($module['class'], $methodName)) {
+            $reflection = new \ReflectionMethod($module['class'], $methodName);
+            if ($reflection->isStatic() && $reflection->isPublic()) {
+
+                return call_user_func(array($module['class'], $methodName));
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @return array
+     */
     public static function prepareAliases()
     {
         $aliases = [];
 
         $modules = Yii::$app->modules;
-        foreach ($modules as $moduleName => $module) {
-            $module = Yii::$app->getModule($moduleName);
-            if ($module) {
-                if (isset($module->controllerAliases)) {
-                    foreach ($module->controllerAliases as $alias) {
-                        $aliases[] =
-                            [
-                                'alias' => $alias,
-                                'module' => $moduleName,
-                            ];
-                    }
+        foreach ($modules as $id => $module) {
+            $result = self::getAccessibleControllerAliases($module);
+            if ($result) {
+                foreach ($result as $alias) {
+                    $aliases[] = [
+                        'alias' => $alias,
+                        'module' => $id,
+                    ];
                 }
             }
+
         }
 
         return $aliases;
     }
 
+    /**
+     * @return array
+     */
     public function getModulesJs()
     {
         $items = [];
@@ -105,6 +135,9 @@ class ActionReader
         return $items;
     }
 
+    /**
+     * @return array
+     */
     public function getModules()
     {
         $items = [];
@@ -114,6 +147,10 @@ class ActionReader
         return $items;
     }
 
+    /**
+     * @param $module
+     * @return array
+     */
     public function getControllersJs($module)
     {
         $items = [];

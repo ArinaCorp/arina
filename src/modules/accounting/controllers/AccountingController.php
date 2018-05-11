@@ -4,13 +4,14 @@ namespace app\modules\accounting\controllers;
 
 use app\modules\accounting\models\AccountingMounth;
 use app\modules\accounting\models\AccountingMounthSearch;
-use nullref\core\interfaces\IAdminController;
-use Yii;
 use app\modules\employee\models\Employee;
 use app\modules\employee\models\EmployeeSearch;
+use app\modules\rbac\filters\AccessControl;
+use nullref\core\interfaces\IAdminController;
+use Yii;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * AccountingController implements the CRUD actions for Employee model.
@@ -28,6 +29,10 @@ class AccountingController  extends Controller implements IAdminController
                 'actions' => [
                     'delete' => ['POST'],
                 ],
+            ],
+            'access' => [
+                'class' => AccessControl::class,
+                'controller' => $this,
             ],
         ];
     }

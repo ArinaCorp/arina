@@ -5,18 +5,14 @@
 
 namespace app\modules\rbac;
 
+use app\modules\rbac\interfaces\IAccessibleModule;
 use dektrium\rbac\RbacWebModule as BaseModule;
 use nullref\core\interfaces\IAdminModule;
 use rmrevin\yii\fontawesome\FA;
 use Yii;
 
-class Module extends BaseModule implements IAdminModule
+class Module extends BaseModule implements IAdminModule, IAccessibleModule
 {
-    public $controllerAliases = [
-        '@app/modules/rbac/controllers',
-        '@dektrium/rbac/controllers',
-    ];
-
     public $controllerNamespace = 'app\modules\rbac\controllers';
 
     public $enableFlashMessages = true;
@@ -56,4 +52,14 @@ class Module extends BaseModule implements IAdminModule
         return [];
     }
 
+    /**
+     * @return array
+     */
+    public static function getAccessibleControllerAliases()
+    {
+        return [
+            '@app/modules/rbac/controllers',
+            '@dektrium/rbac/controllers',
+        ];
+    }
 }

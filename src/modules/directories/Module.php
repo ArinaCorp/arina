@@ -81,7 +81,8 @@ class Module extends BaseModule implements IAdminModule
                     'url' => ['/directories/subject-cycle'],
                     'icon' => 'flag',
                 ],
-            ]
+            ],
+            'roles' => ['directories'],
         ];
     }
 }

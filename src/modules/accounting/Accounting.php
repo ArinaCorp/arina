@@ -1,21 +1,24 @@
 <?php
 
 namespace app\modules\accounting;
+
+use app\modules\rbac\interfaces\IAccessibleModule;
 use nullref\core\interfaces\IAdminModule;
 use Yii;
 use yii\base\Module as BaseModule;
+
 /**
  * accounting module definition class
  */
-class Accounting extends BaseModule implements IAdminModule
+class Accounting extends BaseModule implements IAdminModule, IAccessibleModule
 {
 
     public function behaviors()
     {
         return [
-           // 'as AccessBehavior' => [
-           //     'class' => \developeruz\db_rbac\behaviors\AccessBehavior::className(),
-          //  ]
+            // 'as AccessBehavior' => [
+            //     'class' => \developeruz\db_rbac\behaviors\AccessBehavior::className(),
+            //  ]
         ];
     }
 
@@ -50,7 +53,18 @@ class Accounting extends BaseModule implements IAdminModule
                     'url' => ['/accounting/accounting-ye'],
                     'icon' => 'list',
                 ],
-            ]
+            ],
+            'roles' => ['accounting'],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public static function getAccessibleControllerAliases()
+    {
+        return [
+            '@app/modules/accounting/controllers',
         ];
     }
 }

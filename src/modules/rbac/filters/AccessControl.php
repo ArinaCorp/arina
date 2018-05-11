@@ -40,7 +40,7 @@ class AccessControl extends BaseAccessControl
             }
             Yii::$app->session->setFlash('warning', Yii::t('rbac', 'You don\'t have permission to')
                 . ' ' . Yii::t('rbac', 'do this action'));
-            return $controller->redirect(Yii::$app->request->referrer);
+            return $controller->redirect(Yii::$app->request->referrer ?? Yii::$app->homeUrl);
         };
         parent::init();
     }
