@@ -21,28 +21,26 @@ class m170417_145342_create_basic_roles extends Migration
         $this->batchInsert($authManager->itemTable, ['name', 'type', 'description', 'rule_name', 'data', 'created_at', 'updated_at'], [
             //Administrator
             ['administrator', Item::TYPE_ROLE, 'Адміністратор', null, null, $time, $time],
-            //Dash board
-            ['dashboard', Item::TYPE_ROLE, 'Панель управління', null, null, $time, $time],
-            //Users management
-            ['user-manager', Item::TYPE_ROLE, 'Користувачі', null, null, $time, $time],
-            //Projects management
-            ['project-manager', Item::TYPE_ROLE, 'Проекти', null, null, $time, $time],
-            //Developer
-            ['developer', Item::TYPE_ROLE, 'Розробник', null, null, $time, $time],
-            //Access management
-            ['access-management', Item::TYPE_ROLE, 'Контроль доступами', null, null, $time, $time],
+            //Head of department
+            ['head-of-department', Item::TYPE_ROLE, 'Завідувач відділення', null, null, $time, $time],
+            //Curator
+            ['curator', Item::TYPE_ROLE, 'Куратор', null, null, $time, $time],
+            //Student
+            ['student', Item::TYPE_ROLE, 'Студент', null, null, $time, $time],
+            //Staff office
+            ['staff-office', Item::TYPE_ROLE, 'Відділ кадрів', null, null, $time, $time],
+            //Cyclic commission
+            ['cyclic-commission', Item::TYPE_ROLE, 'Циклова комісія', null, null, $time, $time],
 
         ]);
 
         $this->batchInsert($authManager->itemChildTable, ['parent', 'child'], [
             //Administrator has
-            ['administrator', 'dashboard'],
-            ['administrator', 'user-manager'],
-            ['administrator', 'project-manager'],
-            ['administrator', 'access-management'],
-
-            ////Project manager has
-            ['project-manager', 'developer'],
+            ['administrator', 'head-of-department'],
+            ['administrator', 'curator'],
+            ['administrator', 'student'],
+            ['administrator', 'staff-office'],
+            ['administrator', 'cyclic-commission'],
         ]);
 
         //Add rules
@@ -53,46 +51,46 @@ class m170417_145342_create_basic_roles extends Migration
 
         //Permissions
         $this->batchInsert($authManager->itemTable, ['name', 'type', 'description', 'rule_name', 'data', 'created_at', 'updated_at'], [
-            //Project permissions for project-manager
-            ['indexProject', Item::TYPE_PERMISSION, 'Перегляд проектів', null, null, $time, $time],
-            ['createProject', Item::TYPE_PERMISSION, 'Створення проекту', null, null, $time, $time],
-            ['viewProject', Item::TYPE_PERMISSION, 'Перегляд проекту', null, null, $time, $time],
-            ['updateProject', Item::TYPE_PERMISSION, 'Оновлення проекту', null, null, $time, $time],
-            ['deleteProject', Item::TYPE_PERMISSION, 'Видалення проекту', null, null, $time, $time],
-            ['updateOwnProject', Item::TYPE_PERMISSION, 'Оновлення власного проекту', $projectRule->name, null, $time, $time],
-            ['deleteOwnProject', Item::TYPE_PERMISSION, 'Видалення власного проекту', $projectRule->name, null, $time, $time],
-            //Task permissions for developer
-            ['indexTask', Item::TYPE_PERMISSION, 'Перегляд завдань', null, null, $time, $time],
-            ['createTask', Item::TYPE_PERMISSION, 'Створення завдання', null, null, $time, $time],
-            ['createTaskForProject', Item::TYPE_PERMISSION, 'Створення завдання до проекту', $projectRule->name, null, $time, $time],
-            ['viewTask', Item::TYPE_PERMISSION, 'Перегляд завдання', null, null, $time, $time],
-            ['updateTask', Item::TYPE_PERMISSION, 'Оновлення завдання', null, null, $time, $time],
-            ['deleteTask', Item::TYPE_PERMISSION, 'Видалення завдання', null, null, $time, $time],
-            ['updateOwnTask', Item::TYPE_PERMISSION, 'Оновлення власного завдання', $taskRule->name, null, $time, $time],
-            ['deleteOwnTask', Item::TYPE_PERMISSION, 'Видалення власного завдання', $taskRule->name, null, $time, $time],
+//            //Project permissions for project-manager
+//            ['indexProject', Item::TYPE_PERMISSION, 'Перегляд проектів', null, null, $time, $time],
+//            ['createProject', Item::TYPE_PERMISSION, 'Створення проекту', null, null, $time, $time],
+//            ['viewProject', Item::TYPE_PERMISSION, 'Перегляд проекту', null, null, $time, $time],
+//            ['updateProject', Item::TYPE_PERMISSION, 'Оновлення проекту', null, null, $time, $time],
+//            ['deleteProject', Item::TYPE_PERMISSION, 'Видалення проекту', null, null, $time, $time],
+//            ['updateOwnProject', Item::TYPE_PERMISSION, 'Оновлення власного проекту', $projectRule->name, null, $time, $time],
+//            ['deleteOwnProject', Item::TYPE_PERMISSION, 'Видалення власного проекту', $projectRule->name, null, $time, $time],
+//            //Task permissions for developer
+//            ['indexTask', Item::TYPE_PERMISSION, 'Перегляд завдань', null, null, $time, $time],
+//            ['createTask', Item::TYPE_PERMISSION, 'Створення завдання', null, null, $time, $time],
+//            ['createTaskForProject', Item::TYPE_PERMISSION, 'Створення завдання до проекту', $projectRule->name, null, $time, $time],
+//            ['viewTask', Item::TYPE_PERMISSION, 'Перегляд завдання', null, null, $time, $time],
+//            ['updateTask', Item::TYPE_PERMISSION, 'Оновлення завдання', null, null, $time, $time],
+//            ['deleteTask', Item::TYPE_PERMISSION, 'Видалення завдання', null, null, $time, $time],
+//            ['updateOwnTask', Item::TYPE_PERMISSION, 'Оновлення власного завдання', $taskRule->name, null, $time, $time],
+//            ['deleteOwnTask', Item::TYPE_PERMISSION, 'Видалення власного завдання', $taskRule->name, null, $time, $time],
         ]);
 
 
         $this->batchInsert($authManager->itemChildTable, ['parent', 'child'], [
-            //Bind permissions to roles
-            ['project-manager', 'indexProject'],
-            ['project-manager', 'createProject'],
-            ['project-manager', 'viewProject'],
-            ['project-manager', 'updateProject'],
-            ['project-manager', 'deleteProject'],
-            ['developer', 'indexProject'],
-            ['developer', 'viewProject'],
-            ['developer', 'indexTask'],
-            ['developer', 'createTask'],
-            ['developer', 'viewTask'],
-            ['developer', 'updateTask'],
-            ['developer', 'deleteTask'],
-            //Bind permissions to permissions
-            ['updateProject', 'updateOwnProject'],
-            ['deleteProject', 'deleteOwnProject'],
-            ['createTask', 'createTaskForProject'],
-            ['updateTask', 'updateOwnTask'],
-            ['deleteTask', 'deleteOwnTask'],
+//            //Bind permissions to roles
+//            ['project-manager', 'indexProject'],
+//            ['project-manager', 'createProject'],
+//            ['project-manager', 'viewProject'],
+//            ['project-manager', 'updateProject'],
+//            ['project-manager', 'deleteProject'],
+//            ['developer', 'indexProject'],
+//            ['developer', 'viewProject'],
+//            ['developer', 'indexTask'],
+//            ['developer', 'createTask'],
+//            ['developer', 'viewTask'],
+//            ['developer', 'updateTask'],
+//            ['developer', 'deleteTask'],
+//            //Bind permissions to permissions
+//            ['updateProject', 'updateOwnProject'],
+//            ['deleteProject', 'deleteOwnProject'],
+//            ['createTask', 'createTaskForProject'],
+//            ['updateTask', 'updateOwnTask'],
+//            ['deleteTask', 'deleteOwnTask'],
         ]);
 
         /** @var User $user */

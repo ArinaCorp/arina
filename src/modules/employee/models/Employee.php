@@ -48,7 +48,7 @@ class Employee extends ActiveRecord
     {
         return [
             'related' => [
-                'class' => RelatedBehavior::className(),
+                'class' => RelatedBehavior::class,
                 'mappedType' => RelatedBehavior::MAPPED_TYPE_PK_FIELD,
                 'fields' => [
                     'employeeEducation' => EmployeeEducation::className(),

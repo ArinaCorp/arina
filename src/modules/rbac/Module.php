@@ -28,18 +28,19 @@ class Module extends BaseModule implements IAdminModule, IAccessibleModule
                     'label' => Yii::t('rbac', 'Roles'),
                     'icon' => FA::_CHILD,
                     'url' => '/rbac/role/',
-                    'roles' => ['access-management'],
+                    'roles' => ['administrator'],
                 ],
                 [
                     'label' => \Yii::t('rbac', 'Permissions'),
                     'icon' => FA::_HAND_STOP_O,
                     'url' => '/rbac/permission/',
-                    'roles' => ['access-management'],
+                    'roles' => ['administrator'],
                 ],
                 [
                     'label' => \Yii::t('rbac', 'Actions access'),
                     'icon' => FA::_HAND_STOP_O,
                     'url' => '/rbac/access/',
+                    'roles' => ['administrator'],
                 ],
 
             ]

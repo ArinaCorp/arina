@@ -68,11 +68,10 @@ class AccessController extends Controller implements IAdminController
             if ($parents != null) {
                 $module = $parents[0];
                 $out = $reader->getControllersJs($module);
-                echo Json::encode(['output' => $out, 'selected' => 0]);
-                return;
+                return Json::encode(['output' => $out, 'selected' => 0]);
             }
         }
-        echo Json::encode(['output' => '', 'selected' => '']);
+        return Json::encode(['output' => '', 'selected' => '']);
     }
 
     public function actionActions()
@@ -85,11 +84,10 @@ class AccessController extends Controller implements IAdminController
                 $module = $parents[0];
                 $controller = $parents[1];
                 $out = $reader->getActionsJs($module, $controller);
-                echo Json::encode(['output' => $out, 'selected' => 0]);
-                return;
+                return Json::encode(['output' => $out, 'selected' => 0]);
             }
         }
-        echo Json::encode(['output' => '', 'selected' => '']);
+        return Json::encode(['output' => '', 'selected' => '']);
     }
 
     /**

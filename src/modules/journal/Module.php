@@ -11,6 +11,9 @@ use yii\base\Module as BaseModule;
  */
 class Module extends BaseModule implements IAdminModule
 {
+    public $controllerAliases = [
+        '@app/modules/journal/controllers',
+    ];
 
     public function behaviors()
     {

@@ -65,13 +65,7 @@ $this->params['breadcrumbs'][] = $this->title;
             //'passport',
             //'passport_issued_by',
 
-            [
-                'class' => 'yii\grid\ActionColumn',
-                'visibleButtons' => [
-                    'update' => \Yii::$app->user->can('administrator'),
-                    'delete' => \Yii::$app->user->can('administrator'),
-                ],
-            ],
+            ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
 

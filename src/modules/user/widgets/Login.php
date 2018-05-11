@@ -32,7 +32,7 @@ class Login extends Widget
     public function run()
     {
         return $this->render('login', [
-            'model' => \Yii::createObject(LoginForm::className()),
+            'model' => \Yii::createObject(LoginForm::class()),
         ]);
     }
 }
