@@ -22,10 +22,6 @@ class DefaultController extends Controller implements IAdminController
     public function behaviors()
     {
         return [
-            'access' => [
-                'class' => AccessControl::class,
-                'controller' => $this,
-            ],
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => [

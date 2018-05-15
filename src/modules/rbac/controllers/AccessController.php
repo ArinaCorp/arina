@@ -2,7 +2,6 @@
 
 namespace app\modules\rbac\controllers;
 
-use app\modules\rbac\filters\AccessControl;
 use app\modules\rbac\models\ActionAccess;
 use app\modules\rbac\models\ActionReader;
 use nullref\core\interfaces\IAdminController;
@@ -21,10 +20,6 @@ class AccessController extends Controller implements IAdminController
     public function behaviors()
     {
         return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'controller' => $this,
-            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -34,6 +29,11 @@ class AccessController extends Controller implements IAdminController
         ];
     }
 
+    /**
+     * @param $id
+     * @return string
+     * @throws NotFoundHttpException
+     */
     public function actionAddItems($id)
     {
         $actionAccess = $this->findModel($id);

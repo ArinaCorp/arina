@@ -6,7 +6,6 @@ use app\modules\accounting\models\AccountingMounth;
 use app\modules\accounting\models\AccountingMounthSearch;
 use app\modules\employee\models\Employee;
 use app\modules\employee\models\EmployeeSearch;
-use app\modules\rbac\filters\AccessControl;
 use nullref\core\interfaces\IAdminController;
 use Yii;
 use yii\filters\VerbFilter;
@@ -25,14 +24,10 @@ class AccountingController  extends Controller implements IAdminController
     {
         return [
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
                 ],
-            ],
-            'access' => [
-                'class' => AccessControl::class,
-                'controller' => $this,
             ],
         ];
     }

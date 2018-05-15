@@ -18,12 +18,10 @@ use yii\web\Response;
 
 class AccessControl extends BaseAccessControl
 {
-    public $controller;
-
-    public function init()
+    public function attach($owner)
     {
         /** @var Controller $controller */
-        $controllerClass = $this->controller;
+        $controllerClass = $owner;
         $module = $controllerClass->module->id;
         $controller = $controllerClass->id;
         $action = $controllerClass->action->id;
@@ -43,8 +41,15 @@ class AccessControl extends BaseAccessControl
             return $controller->redirect(Yii::$app->request->referrer ?? Yii::$app->homeUrl);
         };
         parent::init();
+        parent::attach($owner);
     }
 
+    /**
+     * @param $module
+     * @param $controller
+     * @param $action
+     * @return array
+     */
     public function getRules($module, $controller, $action)
     {
         $rules = $this->rules;

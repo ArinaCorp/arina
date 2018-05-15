@@ -16,7 +16,7 @@ return [
     'components' => [
         'db' => require(__DIR__ . '/db.php'),
         'authManager' => [
-            'class' => \dektrium\rbac\components\DbManager::class(),
+            'class' => \dektrium\rbac\components\DbManager::class,
         ],
     ],
 ];

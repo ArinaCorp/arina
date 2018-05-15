@@ -13,6 +13,9 @@ return array_merge(require(__DIR__ . '/installed_modules.php'), [
                 'class' => 'app\components\MenuBuilder',
             ],
         ],
+        'accessControl' => [
+            'class' => app\modules\rbac\filters\AccessControl::class,
+        ],
     ],
 
     'students' => [

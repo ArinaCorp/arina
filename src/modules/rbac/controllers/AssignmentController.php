@@ -6,7 +6,6 @@
 namespace app\modules\rbac\controllers;
 
 
-use app\modules\rbac\filters\AccessControl;
 use dektrium\rbac\controllers\AssignmentController as BaseAssignmentController;
 use dektrium\rbac\models\Assignment;
 use dektrium\rbac\widgets\Assignments as AssignmentsWidget;
@@ -19,10 +18,6 @@ class AssignmentController extends BaseAssignmentController
     public function behaviors()
     {
         return ArrayHelper::merge([
-            'access' => [
-                'class' => AccessControl::class,
-                'controller' => $this,
-            ],
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => [

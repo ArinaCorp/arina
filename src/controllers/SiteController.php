@@ -2,8 +2,9 @@
 
 namespace app\controllers;
 
+use app\modules\rbac\filters\AccessControl;
 use nullref\core\interfaces\IAdminController;
-use Yii;
+use yii\filters\AccessRule;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 
@@ -13,9 +14,22 @@ class SiteController extends Controller implements IAdminController
     {
         return [
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'logout' => ['post'],
+                ],
+            ],
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'class' => AccessRule::class,
+                        'allow' => true,
+                        'roles' => '@',
+                        'actions' => [
+                            'logout'
+                        ],
+                    ],
                 ],
             ],
         ];

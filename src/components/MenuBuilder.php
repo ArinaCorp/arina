@@ -21,6 +21,8 @@ class MenuBuilder extends BaseMenuBuilder
      *
      * @param array $items
      * @return array
+     * @throws \Exception
+     * @throws \Throwable
      */
     public function build($items)
     {
@@ -40,7 +42,7 @@ class MenuBuilder extends BaseMenuBuilder
             $userId = Yii::$app->user->identity->getId();
             /** @var User $user */
             $user = User::findOne(['id' => $userId]);
-            $roles = $user->roles;
+            $roles = UserHelper::getUserFullRoleList($user);
         }
 
         return $this->filterByRole($items, $roles);
