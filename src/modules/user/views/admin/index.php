@@ -33,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 </div>
 
-<?= $this->render('/_alert', ['module' => Yii::$app->getModule('user')]) ?>
+
 
 <!-- @todo remove menu, add default styles like buttons, etc.. -->
 <?= $this->render('/admin/_menu') ?>

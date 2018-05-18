@@ -18,7 +18,6 @@ class Module extends \dektrium\user\Module implements IAdminModule
             'url' => ['/user/admin'],
             'icon' => 'users',
             'order' => 1,
-            'roles' => ['administrator'],
         ];
     }
 }

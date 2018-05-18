@@ -11,6 +11,10 @@ $config = [
     'runtimePath' => dirname(dirname(__DIR__)) . '/runtime',
     'bootstrap' => ['log'],
     'language' => 'uk',
+    'aliases' => [
+        '@bower' => '@vendor/bower-asset',
+        '@npm'   => '@vendor/npm-asset',
+    ],
     'components' => [
         'assetManager' => [
             'bundles' => [

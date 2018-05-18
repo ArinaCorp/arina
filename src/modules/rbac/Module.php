@@ -41,7 +41,6 @@ class Module extends BaseModule implements IAdminModule, IAccessibleModule
                 ],
 
             ],
-            'roles' => ['administrator'],
         ];
     }
 

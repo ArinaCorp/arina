@@ -82,7 +82,6 @@ class Module extends BaseModule implements IAdminModule
                     'icon' => 'flag',
                 ],
             ],
-            'roles' => ['administrator'],
         ];
     }
 }
