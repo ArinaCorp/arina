@@ -20,7 +20,7 @@ class m170417_145342_create_basic_roles extends Migration
         $time = time();
         $this->batchInsert($authManager->itemTable, ['name', 'type', 'description', 'rule_name', 'data', 'created_at', 'updated_at'], [
             //Administrator
-            ['administrator', Item::TYPE_ROLE, 'Адміністратор', null, null, $time, $time],
+            ['admin', Item::TYPE_ROLE, 'Адміністратор', null, null, $time, $time],
             //Head of department
             ['head-of-department', Item::TYPE_ROLE, 'Завідувач відділення', null, null, $time, $time],
             //Curator
@@ -36,11 +36,11 @@ class m170417_145342_create_basic_roles extends Migration
 
         $this->batchInsert($authManager->itemChildTable, ['parent', 'child'], [
             //Administrator has
-            ['administrator', 'head-of-department'],
-            ['administrator', 'curator'],
-            ['administrator', 'student'],
-            ['administrator', 'staff-office'],
-            ['administrator', 'cyclic-commission'],
+            ['admin', 'head-of-department'],
+            ['admin', 'curator'],
+            ['admin', 'student'],
+            ['admin', 'staff-office'],
+            ['admin', 'cyclic-commission'],
         ]);
 
         //Add rules
@@ -100,7 +100,7 @@ class m170417_145342_create_basic_roles extends Migration
         ]);
 
         $this->insert($authManager->assignmentTable, [
-            'item_name' => 'administrator',
+            'item_name' => 'admin',
             'user_id' => $user->id,
             'created_at' => $time,
         ]);

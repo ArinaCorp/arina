@@ -18,8 +18,17 @@ use yii\web\Response;
 
 class AccessControl extends BaseAccessControl
 {
+    /**
+     * Default allow
+     * @var bool
+     */
     public $defaultAllow = false;
 
+    /**
+     * Load rules form db and call parent init()
+     *
+     * @param $owner
+     */
     public function attach($owner)
     {
         /** @var Controller $controller */
@@ -46,8 +55,16 @@ class AccessControl extends BaseAccessControl
         parent::attach($owner);
     }
 
+    /**
+     * Allows all if admin user
+     * and skip parent init() call
+     */
     public function init()
     {
+        if (!Yii::$app->user->isGuest && Yii::$app->user->identity->isAdmin) {
+            $this->defaultAllow = true;
+        }
+        //skip init() to call it in attach()
     }
 
     /**

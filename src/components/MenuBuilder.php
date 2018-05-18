@@ -39,9 +39,11 @@ class MenuBuilder extends BaseMenuBuilder
         $roles = [];
 
         if (!Yii::$app->user->isGuest) {
-            $userId = Yii::$app->user->identity->getId();
             /** @var User $user */
-            $user = User::findOne(['id' => $userId]);
+            $user = Yii::$app->user->identity;
+            if ($user->isAdmin) {
+                return $items;
+            }
             $roles = array_values(UserHelper::getUserFullRoleList($user));
         }
 
@@ -64,17 +66,19 @@ class MenuBuilder extends BaseMenuBuilder
         $result = [];
         foreach ($menu as $key => $item) {
             $allow = false;
-            if (isset($item[$paramName]) && is_array($item[$paramName])) {
+            if (isset($item[$paramName])) {
                 $itemRoles = $item[$paramName];
-                if (is_array($roles) && count(array_intersect($roles, $itemRoles))
-                    || in_array($roles, $itemRoles)) {
-                    $allow = true;
+                if (is_array($itemRoles)) {
+                    if (is_array($roles) && count(array_intersect($roles, $itemRoles))
+                        || in_array($roles, $itemRoles)) {
+                        $allow = true;
+                    }
                 }
             }
             if ($allow) {
                 if (isset($item['items'])) {
                     $result[$key] = $item;
-                    $result[$key]['items'] = $this->filterByRole($result[$key]['items'], $roles, $paramName);
+                    $result[$key]['items'] = $this->filterByRole($result[$key]['items'], $roles, $paramName, $itemRoles);
                 } else {
                     $result[$key] = $item;
                 }

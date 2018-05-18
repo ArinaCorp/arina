@@ -82,7 +82,7 @@ class Module extends BaseModule implements IAdminModule, IAccessibleModule
                 [
                     'label' => Yii::t('app', 'Social Networks'),
                     'url' => ['/students/social-networks'],
-                    'icon' => 'users'
+                    'icon' => 'users',
                 ],
                 [
                     'label' => Yii::t('app', 'Characteristics Types'),
@@ -90,7 +90,7 @@ class Module extends BaseModule implements IAdminModule, IAccessibleModule
                     'icon' => 'file-text-o',
                 ]
             ],
-            'roles' => ['administrator', 'head-of-department'],
+            'roles' => ['head-of-department'],
         ];
     }
 
