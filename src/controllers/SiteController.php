@@ -25,9 +25,9 @@ class SiteController extends Controller implements IAdminController
                     [
                         'class' => AccessRule::class,
                         'allow' => true,
-                        'roles' => '@',
+                        'roles' => ['@'],
                         'actions' => [
-                            'logout'
+                            'logout', 'index'
                         ],
                     ],
                 ],

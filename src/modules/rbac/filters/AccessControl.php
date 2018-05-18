@@ -18,6 +18,8 @@ use yii\web\Response;
 
 class AccessControl extends BaseAccessControl
 {
+    public $defaultAllow = false;
+
     public function attach($owner)
     {
         /** @var Controller $controller */
@@ -42,6 +44,10 @@ class AccessControl extends BaseAccessControl
         };
         parent::init();
         parent::attach($owner);
+    }
+
+    public function init()
+    {
     }
 
     /**
@@ -115,7 +121,7 @@ class AccessControl extends BaseAccessControl
                 }
             } else {
                 $rules[] = [
-                    'allow' => true,
+                    'allow' => $this->defaultAllow,
                     'actions' => [
                         $action
                     ],
@@ -123,7 +129,7 @@ class AccessControl extends BaseAccessControl
             }
             if (!count($rules) && !Yii::$app->user->isGuest) {
                 $rules[] = [
-                    'allow' => true,
+                    'allow' => $this->defaultAllow,
                     'actions' => [
                         $action
                     ],

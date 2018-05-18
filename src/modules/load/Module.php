@@ -20,7 +20,7 @@ class Module extends BaseModule implements IAdminModule
 //            ]
         ];
     }
-    
+
     /**
      * @inheritdoc
      */
@@ -46,7 +46,8 @@ class Module extends BaseModule implements IAdminModule
                     'url' => ['/load/default/create'],
                     'icon' => 'plus',
                 ],
-            ]
+            ],
+            'roles' => ['administrator'],
         ];
     }
 }

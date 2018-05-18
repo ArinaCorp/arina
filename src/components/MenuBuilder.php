@@ -42,9 +42,10 @@ class MenuBuilder extends BaseMenuBuilder
             $userId = Yii::$app->user->identity->getId();
             /** @var User $user */
             $user = User::findOne(['id' => $userId]);
-            $roles = UserHelper::getUserFullRoleList($user);
+            $roles = array_values(UserHelper::getUserFullRoleList($user));
         }
-
+//        print_r($roles);
+//        die;
         return $this->filterByRole($items, $roles);
     }
 

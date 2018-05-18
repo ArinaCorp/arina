@@ -28,6 +28,16 @@ class DefaultController extends Controller implements IAdminController
                     'delete' => ['POST'],
                 ],
             ],
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['view'],
+                        'roles' => ['staff-office'],
+                    ]
+                ]
+            ]
         ];
     }
 
@@ -38,13 +48,13 @@ class DefaultController extends Controller implements IAdminController
      */
     public function actionIndex()
     {
-            $searchModel = new EmployeeSearch();
-            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $searchModel = new EmployeeSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-            return $this->render('index', [
-                'searchModel' => $searchModel,
-                'dataProvider' => $dataProvider,
-            ]);
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
     }
 
     /**
@@ -145,7 +155,7 @@ class DefaultController extends Controller implements IAdminController
 
     public function actionDocument()
     {
-         return Employee::getDocument();
+        return Employee::getDocument();
     }
 
 }

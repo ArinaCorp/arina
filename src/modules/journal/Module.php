@@ -18,12 +18,12 @@ class Module extends BaseModule implements IAdminModule
     public function behaviors()
     {
         return [
- //           'as AccessBehavior' => [
- //               'class' => \developeruz\db_rbac\behaviors\AccessBehavior::className(),
- //           ]
+            //           'as AccessBehavior' => [
+            //               'class' => \developeruz\db_rbac\behaviors\AccessBehavior::className(),
+            //           ]
         ];
     }
-    
+
     /**
      * @inheritdoc
      */
@@ -70,7 +70,8 @@ class Module extends BaseModule implements IAdminModule
                     'url' => ['/journal'],
                     'icon' => 'files-o',
                 ],
-            ]
+            ],
+            'roles' => ['staff-office'],
         ];
     }
 }

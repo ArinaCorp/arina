@@ -55,8 +55,9 @@ class Module extends BaseModule implements IAdminModule
                     'label' => Yii::t('plans', 'Create work plan'),
                     'url' => ['/plans/work-plan/create'],
                     'icon' => 'plus',
-                ],
-            ]
+                ]
+            ],
+            'roles' => ['head-of-department'],
         ];
     }
 }

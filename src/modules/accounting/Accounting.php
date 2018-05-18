@@ -54,7 +54,7 @@ class Accounting extends BaseModule implements IAdminModule, IAccessibleModule
                     'icon' => 'list',
                 ],
             ],
-            'roles' => ['accounting'],
+            'roles' => ['staff-office'],
         ];
     }
 

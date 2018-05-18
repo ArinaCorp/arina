@@ -649,12 +649,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/lexer.git",
-                "reference": "b4f2b2fe5d5726e08a7d46fe3149b577e738463a"
+                "reference": "c0970c7889bfd33504c4fa54f35451c27897381d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/lexer/zipball/b4f2b2fe5d5726e08a7d46fe3149b577e738463a",
-                "reference": "b4f2b2fe5d5726e08a7d46fe3149b577e738463a",
+                "url": "https://api.github.com/repos/doctrine/lexer/zipball/c0970c7889bfd33504c4fa54f35451c27897381d",
+                "reference": "c0970c7889bfd33504c4fa54f35451c27897381d",
                 "shasum": ""
             },
             "require": {
@@ -698,7 +698,7 @@
                 "lexer",
                 "parser"
             ],
-            "time": "2018-04-24T03:37:48+00:00"
+            "time": "2018-05-14T15:49:16+00:00"
         },
         {
             "name": "egulias/email-validator",
@@ -1469,12 +1469,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/NullRefExcep/yii2-admin.git",
-                "reference": "d2b13021aa0db84ccb357b71a64b5c50cbaa6583"
+                "reference": "842d5d0781e51b9ee511ea5679a70b1567e885d8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/NullRefExcep/yii2-admin/zipball/d2b13021aa0db84ccb357b71a64b5c50cbaa6583",
-                "reference": "d2b13021aa0db84ccb357b71a64b5c50cbaa6583",
+                "url": "https://api.github.com/repos/NullRefExcep/yii2-admin/zipball/842d5d0781e51b9ee511ea5679a70b1567e885d8",
+                "reference": "842d5d0781e51b9ee511ea5679a70b1567e885d8",
                 "shasum": ""
             },
             "require": {
@@ -1500,7 +1500,7 @@
             "license": [
                 "MIT"
             ],
-            "time": "2018-05-11T16:12:03+00:00"
+            "time": "2018-05-15T11:10:22+00:00"
         },
         {
             "name": "nullref/yii2-core",
@@ -1508,12 +1508,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/NullRefExcep/yii2-core.git",
-                "reference": "95c36dabd3b4bdb8754d282aa9aa616ffb867b3e"
+                "reference": "4987d3cb5c39a033a5294f82df9ad8ba00393e64"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/NullRefExcep/yii2-core/zipball/95c36dabd3b4bdb8754d282aa9aa616ffb867b3e",
-                "reference": "95c36dabd3b4bdb8754d282aa9aa616ffb867b3e",
+                "url": "https://api.github.com/repos/NullRefExcep/yii2-core/zipball/4987d3cb5c39a033a5294f82df9ad8ba00393e64",
+                "reference": "4987d3cb5c39a033a5294f82df9ad8ba00393e64",
                 "shasum": ""
             },
             "require": {
@@ -1536,7 +1536,7 @@
             "license": [
                 "MIT"
             ],
-            "time": "2018-04-25T10:48:24+00:00"
+            "time": "2018-05-15T11:15:25+00:00"
         },
         {
             "name": "nullref/yii2-sb-admin-2",
@@ -2489,12 +2489,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-framework.git",
-                "reference": "29b85ab52c0724e4e8100d26133ba34a5df0e95c"
+                "reference": "43664ea4d72315b48c82b7c5a70fe3389b04e9cb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/29b85ab52c0724e4e8100d26133ba34a5df0e95c",
-                "reference": "29b85ab52c0724e4e8100d26133ba34a5df0e95c",
+                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/43664ea4d72315b48c82b7c5a70fe3389b04e9cb",
+                "reference": "43664ea4d72315b48c82b7c5a70fe3389b04e9cb",
                 "shasum": ""
             },
             "require": {
@@ -2581,7 +2581,7 @@
                 "framework",
                 "yii2"
             ],
-            "time": "2018-05-11T09:50:56+00:00"
+            "time": "2018-05-14T10:28:34+00:00"
         },
         {
             "name": "yiisoft/yii2-authclient",
@@ -2755,12 +2755,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-httpclient.git",
-                "reference": "7702d471bf5def9a2d7fd32e8987790bb7d6b336"
+                "reference": "24a03b9264ea10234fde5188add50a382cb97e7f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-httpclient/zipball/7702d471bf5def9a2d7fd32e8987790bb7d6b336",
-                "reference": "7702d471bf5def9a2d7fd32e8987790bb7d6b336",
+                "url": "https://api.github.com/repos/yiisoft/yii2-httpclient/zipball/24a03b9264ea10234fde5188add50a382cb97e7f",
+                "reference": "24a03b9264ea10234fde5188add50a382cb97e7f",
                 "shasum": ""
             },
             "require": {
@@ -2794,7 +2794,7 @@
                 "httpclient",
                 "yii2"
             ],
-            "time": "2018-05-04T06:54:33+00:00"
+            "time": "2018-05-14T09:51:03+00:00"
         },
         {
             "name": "yiisoft/yii2-jui",
@@ -3027,12 +3027,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-debug.git",
-                "reference": "7d7d1ecf4ecebb066afad5c14930da3643329fee"
+                "reference": "9634019f7f9590943427d0bafe6a40da3143ac43"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-debug/zipball/7d7d1ecf4ecebb066afad5c14930da3643329fee",
-                "reference": "7d7d1ecf4ecebb066afad5c14930da3643329fee",
+                "url": "https://api.github.com/repos/yiisoft/yii2-debug/zipball/9634019f7f9590943427d0bafe6a40da3143ac43",
+                "reference": "9634019f7f9590943427d0bafe6a40da3143ac43",
                 "shasum": ""
             },
             "require": {
@@ -3066,7 +3066,7 @@
                 "debugger",
                 "yii2"
             ],
-            "time": "2018-05-04T15:44:20+00:00"
+            "time": "2018-05-12T18:29:46+00:00"
         },
         {
             "name": "yiisoft/yii2-faker",

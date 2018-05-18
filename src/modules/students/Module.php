@@ -2,6 +2,7 @@
 /* @author VasyaKog */
 namespace app\modules\students;
 
+use app\modules\rbac\interfaces\IAccessibleModule;
 use nullref\core\interfaces\IAdminModule;
 use Yii;
 use yii\base\Module as BaseModule;
@@ -9,11 +10,8 @@ use yii\base\Module as BaseModule;
 /**
  * students module definition class
  */
-class Module extends BaseModule implements IAdminModule
+class Module extends BaseModule implements IAdminModule, IAccessibleModule
 {
-    public $controllerAliases = [
-        '@app/modules/students/controllers',
-    ];
 
     public function behaviors()
     {
@@ -43,11 +41,13 @@ class Module extends BaseModule implements IAdminModule
                     'label' => Yii::t('app', 'List'),
                     'url' => ['/students/default/index'],
                     'icon' => 'address-book',
+                    'roles' => ['head-of-department'],
                 ],
                 [
                     'label' => Yii::t('app', 'Groups'),
                     'url' => ['/students/group/index'],
                     'icon' => 'street-view',
+                    'roles' => ['head-of-department'],
                 ],
                 [
                     'label' => Yii::t('app', 'Students history'),
@@ -89,7 +89,18 @@ class Module extends BaseModule implements IAdminModule
                     'url' => ['/students/characteristics-type'],
                     'icon' => 'file-text-o',
                 ]
-            ]
+            ],
+            'roles' => ['head-of-department'],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public static function getAccessibleControllerAliases()
+    {
+        return [
+            '@app/modules/students/controllers',
         ];
     }
 }

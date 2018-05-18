@@ -26,13 +26,13 @@ use yii\widgets\Pjax;
 $this->title = Yii::t('user', 'Manage users');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-    <div class="row">
-        <div class="col-lg-12">
-            <h1 class="page-header">
-                <?= Html::encode($this->title) ?>
-            </h1>
-        </div>
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">
+            <?= Html::encode($this->title) ?>
+        </h1>
     </div>
+</div>
 
 <?= $this->render('/_alert', ['module' => Yii::$app->getModule('user')]) ?>
 
@@ -53,9 +53,13 @@ $this->params['breadcrumbs'][] = $this->title;
         [
             'header' => Yii::t('user', 'Permision'),
             'value' => function ($model) {
-                return $model->id == null
-                    ? Assignments::widget(['userId' => $model->id])
-                    : '<span class="not-set">' . Yii::t('user', '(not set)') . '</span>';
+                $items = Yii::$app->authManager->getRolesByUser($model->id);
+                $html = '<ul class="list-unstyled">';
+                foreach ($items as $item) {
+                    $html .= "<li class='badge badge-primary'>" . $item->name . "</li>";
+                }
+                $html .= "</ul>";
+                return $html;
             },
             'format' => 'html',
         ],
