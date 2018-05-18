@@ -44,6 +44,9 @@ return array_merge(require(__DIR__ . '/installed_modules.php'), [
     'rbac' => [
         'class' => app\modules\rbac\Module::class,
     ],
+    'load' => [
+        'class' => app\modules\load\Module::class,
+    ],
     'user' => [
         'class' => app\modules\user\Module::class,
         'admins' => ['admin'],
