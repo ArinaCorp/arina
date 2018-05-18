@@ -1,7 +1,7 @@
 <?php
 
-use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\modules\directories\models\speciality\SpecialitySearch */
@@ -40,7 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'department_id',
                 'format' => 'raw',
                 'value' => function ($model, $key, $index, $widget) {
-                    return $model->department->title;
+                    return $model->department ? $model->department->title : '';
                 }
 
             ],

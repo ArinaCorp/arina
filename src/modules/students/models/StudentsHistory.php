@@ -138,7 +138,7 @@ class StudentsHistory extends \yii\db\ActiveRecord
 
     public static function getStudentHistory($id)
     {
-        if (is_null(self::$_HISTORY[$id])) {
+        if (!isset(self::$_HISTORY[$id])) {
             $trees = [];
             $rows = StudentsHistory::findAll(['student_id' => $id, 'parent_id' => null]);
             foreach ($rows as $row) {

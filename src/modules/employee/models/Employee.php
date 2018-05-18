@@ -2,6 +2,7 @@
 
 namespace app\modules\employee\models;
 
+use app\modules\directories\models\department\Department;
 use app\modules\directories\models\position\Position;
 use app\modules\employee\models\cyclic_commission\CyclicCommission;
 use app\modules\students\models\CuratorGroup;
@@ -35,6 +36,7 @@ use yii\helpers\Url;
  *
  * @property EmployeeEducation[] $education
  * @property EmployeeEducation[] $employeeEducationList
+ * @property Department department
  */
 class Employee extends ActiveRecord
 {
@@ -290,8 +292,19 @@ class Employee extends ActiveRecord
         exit();
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getEmployeeEducation()
     {
         return $this->hasMany(EmployeeEducation::className(),['employee_id'=>'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getDepartment()
+    {
+        return $this->hasOne(Department::class, ['head_id' => 'id']);
     }
 }

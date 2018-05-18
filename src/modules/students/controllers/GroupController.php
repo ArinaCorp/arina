@@ -2,17 +2,18 @@
 
 namespace app\modules\students\controllers;
 
+use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 use app\modules\rbac\filters\AccessControl;
+use app\modules\students\models\Group;
 use app\modules\user\helpers\UserHelper;
 use app\modules\user\models\User;
 use nullref\core\interfaces\IAdminController;
 use Yii;
-use app\modules\students\models\Group;
 use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * GroupController implements the CRUD actions for Group model.
@@ -51,16 +52,26 @@ class GroupController extends Controller implements IAdminController
     public function actionIndex()
     {
         $query = Group::find();
+
         if (!Yii::$app->user->isGuest) {
             /** @var User $user */
             $user = Yii::$app->user->identity;
 
             if (UserHelper::hasRole($user, 'head-of-department')) {
-                if ($user->employee){
-
+                if ($user->employee && $user->employee->department) {
+                    $spQIds = SpecialityQualification::find()
+                        ->andWhere([
+                            'speciality_id' => $user->employee->department->getSpecialities()
+                                ->select('id')
+                                ->column(),
+                        ])
+                        ->select('id')
+                        ->column();
+                    $query->andWhere(['speciality_qualifications_id' => $spQIds]);
                 }
             }
         }
+
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);

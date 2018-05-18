@@ -76,6 +76,6 @@ class UserHelper
 
     public static function hasRole(User $user, $role)
     {
-        return in_array($role, UserHelper::getRoles($user));
+        return in_array($role, array_keys(UserHelper::getRoles($user)));
     }
 }
