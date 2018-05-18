@@ -90,7 +90,7 @@ class Module extends BaseModule implements IAdminModule, IAccessibleModule
                     'icon' => 'file-text-o',
                 ]
             ],
-            'roles' => ['head-of-department'],
+            'roles' => ['administrator', 'head-of-department'],
         ];
     }
 

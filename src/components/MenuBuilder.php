@@ -44,9 +44,43 @@ class MenuBuilder extends BaseMenuBuilder
             $user = User::findOne(['id' => $userId]);
             $roles = array_values(UserHelper::getUserFullRoleList($user));
         }
-//        print_r($roles);
-//        die;
+
         return $this->filterByRole($items, $roles);
+    }
+
+    /**
+     * Filter menu items by specified roles
+     *
+     * @param $menu
+     * @param $roles
+     * @param string $paramName
+     * @return array
+     */
+    public function filterByRole($menu, $roles, $paramName = 'roles')
+    {
+        if ($roles === null) {
+            return [];
+        }
+        $result = [];
+        foreach ($menu as $key => $item) {
+            $allow = false;
+            if (isset($item[$paramName]) && is_array($item[$paramName])) {
+                $itemRoles = $item[$paramName];
+                if (is_array($roles) && count(array_intersect($roles, $itemRoles))
+                    || in_array($roles, $itemRoles)) {
+                    $allow = true;
+                }
+            }
+            if ($allow) {
+                if (isset($item['items'])) {
+                    $result[$key] = $item;
+                    $result[$key]['items'] = $this->filterByRole($result[$key]['items'], $roles, $paramName);
+                } else {
+                    $result[$key] = $item;
+                }
+            }
+        }
+        return $result;
     }
 
     /**
