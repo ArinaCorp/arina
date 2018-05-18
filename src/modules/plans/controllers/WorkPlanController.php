@@ -2,7 +2,9 @@
 
 namespace app\modules\plans\controllers;
 
+use app\modules\rbac\filters\AccessControl;
 use Yii;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\helpers\Url;
 use nullref\core\interfaces\IAdminController;
@@ -16,6 +18,31 @@ use app\modules\plans\models\WorkPlanSearch;
 
 class WorkPlanController extends Controller implements IAdminController
 {
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'delete' => ['POST'],
+                ],
+            ],
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => [],
+                        'roles' => ['head-of-department'],
+                    ]
+                ]
+            ]
+        ];
+    }
+
     public $name = 'Work plan';
 
     /**

@@ -3,6 +3,8 @@
 namespace app\modules\students\controllers;
 
 use app\modules\rbac\filters\AccessControl;
+use app\modules\user\helpers\UserHelper;
+use app\modules\user\models\User;
 use nullref\core\interfaces\IAdminController;
 use Yii;
 use app\modules\students\models\Group;
@@ -34,7 +36,7 @@ class GroupController extends Controller implements IAdminController
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['index', 'view', 'create', 'update', 'delete', 'document'],
+                        'actions' => [],
                         'roles' => ['head-of-department'],
                     ]
                 ]
@@ -48,8 +50,19 @@ class GroupController extends Controller implements IAdminController
      */
     public function actionIndex()
     {
+        $query = Group::find();
+        if (!Yii::$app->user->isGuest) {
+            /** @var User $user */
+            $user = Yii::$app->user->identity;
+
+            if (UserHelper::hasRole($user, 'head-of-department')) {
+                if ($user->employee){
+
+                }
+            }
+        }
         $dataProvider = new ActiveDataProvider([
-            'query' => Group::find(),
+            'query' => $query,
         ]);
 
         return $this->render('index', [

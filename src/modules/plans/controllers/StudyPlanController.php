@@ -3,7 +3,9 @@
 namespace app\modules\plans\controllers;
 
 use app\modules\plans\models\StudyPlanSearch;
+use app\modules\rbac\filters\AccessControl;
 use Yii;
+use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\web\Response;
 use yii\web\Controller;
@@ -18,6 +20,31 @@ use app\modules\plans\models\StudySubject;
 
 class StudyPlanController extends Controller implements IAdminController
 {
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'delete' => ['POST'],
+                ],
+            ],
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => [],
+                        'roles' => ['head-of-department'],
+                    ]
+                ]
+            ]
+        ];
+    }
+
     /**
      * @return string
      */

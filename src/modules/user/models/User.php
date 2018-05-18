@@ -9,6 +9,7 @@
 namespace app\modules\user\models;
 
 
+use app\modules\employee\models\Employee;
 use dektrium\user\models\User as BaseUser;
 use Yii;
 
@@ -16,6 +17,7 @@ use Yii;
  * Class User
  *
  * @property integer $employee_id
+ * @property Employee $employee
  *
  * @package app\modules\user\models
  */
@@ -48,5 +50,13 @@ class User extends BaseUser
     public function getRoles()
     {
         return Yii::$app->authManager->getRolesByUser($this->id);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getEmployee()
+    {
+        return $this->hasOne(Employee::class, ['id' => 'employee_id']);
     }
 }

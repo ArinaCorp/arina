@@ -40,21 +40,25 @@ class Module extends BaseModule implements IAdminModule
                     'label' => Yii::t('plans', 'Study plans'),
                     'url' => ['/plans/study-plan/index'],
                     'icon' => 'th-list',
+                    'roles' => ['head-of-department'],
                 ],
                 [
                     'label' => Yii::t('plans', 'Create study plan'),
                     'url' => ['/plans/study-plan/create'],
                     'icon' => 'plus',
+                    'roles' => ['head-of-department'],
                 ],
                 [
                     'label' => Yii::t('plans', 'Work plans'),
                     'url' => ['/plans/work-plan/index'],
                     'icon' => 'th-list',
+                    'roles' => ['head-of-department'],
                 ],
                 [
                     'label' => Yii::t('plans', 'Create work plan'),
                     'url' => ['/plans/work-plan/create'],
                     'icon' => 'plus',
+                    'roles' => ['head-of-department'],
                 ]
             ],
             'roles' => ['head-of-department'],

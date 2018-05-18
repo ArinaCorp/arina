@@ -73,4 +73,9 @@ class UserHelper
             'curator' => Yii::t('user', 'curator'),
         ];
     }
+
+    public static function hasRole(User $user, $role)
+    {
+        return in_array($role, UserHelper::getRoles($user));
+    }
 }
