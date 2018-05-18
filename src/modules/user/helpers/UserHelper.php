@@ -25,16 +25,16 @@ class UserHelper
                     'label' => Yii::t('user', 'Look at profile'),
                     'icon' => FA::_USER_CIRCLE_O,
                     'url' => '/user/profile/',
-                    'roles' => ['access-management'],
+                    'roles' => ['@'],
                 ],
                 [
                     'label' => \Yii::t('user', 'Account settings'),
                     'icon' => FA::_USER_SECRET,
                     'url' => '/user/settings/',
-                    'roles' => ['access-management'],
+                    'roles' => ['@'],
                 ],
-
-            ]
+            ],
+            'roles' => ['@'],
         ];
     }
 

@@ -5,7 +5,9 @@
 namespace app\components;
 
 
-use app\modules\user\helpers\UserHelper;
+use nullref\useful\helpers\Memoize;
+use Yii;
+use yii\rbac\Role;
 
 class Formatter extends \yii\i18n\Formatter
 {
@@ -23,9 +25,14 @@ class Formatter extends \yii\i18n\Formatter
         return $html;
     }
 
+    /**
+     * @param $role
+     * @return string
+     */
     public static function asRole($role)
     {
-        $result = UserHelper::getRoleLabels();
-        return $result[$role];
+        /** @var Role $result */
+        $result = Memoize::call([Yii::$app->authManager, 'getRole'], [$role]);
+        return $result->description;
     }
 }

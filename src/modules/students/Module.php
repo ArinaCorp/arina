@@ -12,16 +12,6 @@ use yii\base\Module as BaseModule;
  */
 class Module extends BaseModule implements IAdminModule, IAccessibleModule
 {
-
-    public function behaviors()
-    {
-        return [
-          //  'as AccessBehavior' => [
-          //      'class' => \developeruz\db_rbac\behaviors\AccessBehavior::className(),
-          //  ]
-        ];
-    }
-
     /**
      * @inheritdoc
      */
@@ -30,7 +20,6 @@ class Module extends BaseModule implements IAdminModule, IAccessibleModule
     /**
      * @inheritdoc
      */
-
     public static function getAdminMenu()
     {
         return [

@@ -12,7 +12,6 @@
 use yii\grid\GridView;
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\web\View;
 use yii\widgets\Pjax;
 
 
@@ -36,6 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?= $this->render('/_alert', ['module' => Yii::$app->getModule('user')]) ?>
 
+<!-- @todo remove menu, add default styles like buttons, etc.. -->
 <?= $this->render('/admin/_menu') ?>
 
 <?php Pjax::begin() ?>
