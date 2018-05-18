@@ -11,10 +11,14 @@
 
 /**
  * @var yii\widgets\ActiveForm $form
- * @var dektrium\user\models\User $user
+ * @var \app\modules\user\models\User $user
  */
+
+use app\modules\employee\models\Employee;
+
 ?>
 
 <?= $form->field($user, 'email')->textInput(['maxlength' => 255]) ?>
 <?= $form->field($user, 'username')->textInput(['maxlength' => 255]) ?>
 <?= $form->field($user, 'password')->passwordInput() ?>
+<?= $form->field($user, 'employee_id')->dropDownList(Employee::getMap('fullName', 'id', [], false), ['prompt' => '']) ?>

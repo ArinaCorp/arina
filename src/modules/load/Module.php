@@ -47,7 +47,6 @@ class Module extends BaseModule implements IAdminModule
                     'icon' => 'plus',
                 ],
             ],
-            'roles' => ['administrator'],
         ];
     }
 }
