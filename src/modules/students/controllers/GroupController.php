@@ -2,6 +2,7 @@
 
 namespace app\modules\students\controllers;
 
+use app\modules\rbac\filters\AccessControl;
 use nullref\core\interfaces\IAdminController;
 use Yii;
 use app\modules\students\models\Group;
@@ -28,6 +29,16 @@ class GroupController extends Controller implements IAdminController
                     'delete' => ['POST'],
                 ],
             ],
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['index', 'view', 'create', 'update', 'delete', 'document'],
+                        'roles' => ['head-of-department'],
+                    ]
+                ]
+            ]
         ];
     }
 

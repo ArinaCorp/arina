@@ -3,6 +3,7 @@
 namespace app\modules\students\controllers;
 
 /* @author VasyaKog */
+use app\modules\rbac\filters\AccessControl;
 use app\modules\students\models\Student;
 use app\modules\students\models\StudentSearch;
 use nullref\core\interfaces\IAdminController;
@@ -23,11 +24,21 @@ class DefaultController extends Controller implements IAdminController
     {
         return [
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
                 ],
             ],
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => [],
+                        'roles' => ['head-of-department'],
+                    ]
+                ]
+            ]
         ];
     }
 
