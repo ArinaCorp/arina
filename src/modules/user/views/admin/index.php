@@ -52,16 +52,8 @@ $this->params['breadcrumbs'][] = $this->title;
         'username',
         [
             'header' => Yii::t('user', 'Permision'),
-            'value' => function ($model) {
-                $items = Yii::$app->authManager->getRolesByUser($model->id);
-                $html = '<ul class="list-unstyled">';
-                foreach ($items as $item) {
-                    $html .= "<li class='badge badge-primary'>" . $item->name . "</li>";
-                }
-                $html .= "</ul>";
-                return $html;
-            },
-            'format' => 'html',
+            'attribute' => 'roles',
+            'format' => 'roles',
         ],
         'email:email',
         [

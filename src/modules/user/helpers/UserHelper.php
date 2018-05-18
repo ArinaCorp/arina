@@ -64,4 +64,13 @@ class UserHelper
     {
         return Yii::$app->authManager->getRolesByUser($user->id);
     }
+
+    public static function getRoleLabels()
+    {
+        return [
+            'administrator' => Yii::t('user', 'administrator'),
+            'head-of-department' => Yii::t('user', 'head-of-department'),
+            'curator' => Yii::t('user', 'curator'),
+        ];
+    }
 }

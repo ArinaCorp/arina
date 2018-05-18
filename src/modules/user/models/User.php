@@ -10,6 +10,7 @@ namespace app\modules\user\models;
 
 
 use dektrium\user\models\User as BaseUser;
+use Yii;
 
 /**
  * Class User
@@ -19,5 +20,8 @@ use dektrium\user\models\User as BaseUser;
  */
 class User extends BaseUser
 {
-
+    public function getRoles()
+    {
+        return Yii::$app->authManager->getRolesByUser($this->id);
+    }
 }
