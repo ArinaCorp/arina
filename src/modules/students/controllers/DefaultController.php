@@ -3,11 +3,16 @@
 namespace app\modules\students\controllers;
 
 /* @author VasyaKog */
+use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 use app\modules\rbac\filters\AccessControl;
+use app\modules\students\models\Group;
 use app\modules\students\models\Student;
 use app\modules\students\models\StudentSearch;
+use app\modules\user\helpers\UserHelper;
+use app\modules\user\models\User;
 use nullref\core\interfaces\IAdminController;
 use Yii;
+use yii\data\ActiveDataProvider;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -49,7 +54,36 @@ class DefaultController extends Controller implements IAdminController
     public function actionIndex()
     {
         $searchModel = new StudentSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        //$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        $query = Group::find();
+
+        if (!Yii::$app->user->isGuest) {
+            /** @var User $user */
+            $user = Yii::$app->user->identity;
+
+            if (UserHelper::hasRole($user, 'head-of-department')) {
+                if ($user->employee && $user->employee->department) {
+                    $spQIds = SpecialityQualification::find()
+                        ->andWhere([
+                            'speciality_id' => $user->employee->department->getSpecialities()
+                                ->select('id')
+                                ->column(),
+                        ])
+                        ->select('id')
+                        ->column();
+                    $query->andWhere(['speciality_qualifications_id' => $spQIds]);
+                }
+            }
+        }
+
+        $students = Student::find()
+            ->joinWith('studentsHistory')
+            ->andWhere(['group_id' => $query->column()]);
+        $dataProvider = new ActiveDataProvider([
+            'query' => $students,
+        ]);
+
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -61,6 +95,7 @@ class DefaultController extends Controller implements IAdminController
      * Displays a single Student model.
      * @param integer $id
      * @return mixed
+     * @throws NotFoundHttpException
      */
     public function actionView($id)
     {

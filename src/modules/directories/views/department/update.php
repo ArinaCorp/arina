@@ -20,6 +20,10 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
         </div>
     </div>
 
+    <p>
+        <?= Html::a(Yii::t('app', 'List'), ['index'], ['class' => 'btn btn-success']) ?>
+    </p>
+
     <?= $this->render('_form', [
         'model' => $model,
     ]) ?>

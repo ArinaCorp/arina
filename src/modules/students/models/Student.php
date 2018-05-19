@@ -330,6 +330,11 @@ class Student extends \yii\db\ActiveRecord
 
     }
 
+    public function getStudentsHistory()
+    {
+        return $this->hasMany(StudentsHistory::class, ['student_id' => 'id']);
+    }
+
     public function getFamilyRelations()
     {
         return $this->hasMany(FamilyRelation::className(), ['student_id' => 'id']);
