@@ -162,15 +162,15 @@ class StudentsHistoryController extends Controller implements IAdminController
                     $params = $_POST['depdrop_all_params'];
                     $category_id = $params['studentshistorybefore-category_id']; // get the value of input-type-1
                     switch ($category_id) {
-                        case StudentsHistory::$CATEGORY_NEW: {
+                        case StudentsHistory::CATEGORY_NEW: {
                             $out[] = ['id' => 1, 'name' => Yii::t('app', 'All')];
                             break;
                         }
-                        case StudentsHistory::$CATEGORY_ACTIVE: {
+                        case StudentsHistory::CATEGORY_ACTIVE: {
                             $out = DepDropHelper::convertMap(Group::getActiveGroupsList());
                             break;
                         }
-                        case StudentsHistory::$CATEGORY_ALUMNUS: {
+                        case StudentsHistory::CATEGORY_ALUMNUS: {
                             $out = DepDropHelper::convertMap(Group::getAllGroupsList());
                             break;
                         }
@@ -199,15 +199,15 @@ class StudentsHistoryController extends Controller implements IAdminController
                     $category_id = $params['studentshistorybefore-category_id'];
                     $group_id = $params['studentshistorybefore-group_search_id'];
                     switch ($category_id) {
-                        case StudentsHistory::$CATEGORY_NEW: {
+                        case StudentsHistory::CATEGORY_NEW: {
                             $out = DepDropHelper::convertMap(StudentsHistory::getNewStudentList());
                             break;
                         }
-                        case StudentsHistory::$CATEGORY_ACTIVE: {
+                        case StudentsHistory::CATEGORY_ACTIVE: {
                             $out = DepDropHelper::convertMap(StudentsHistory::getActiveStudentByGroupList($group_id));
                             break;
                         }
-                        case StudentsHistory::$CATEGORY_ALUMNUS: {
+                        case StudentsHistory::CATEGORY_ALUMNUS: {
                             $out = DepDropHelper::convertMap(StudentsHistory::getAlumnusStudentByGroupList($group_id));
                             break;
                         }

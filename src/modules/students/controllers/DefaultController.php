@@ -8,6 +8,7 @@ use app\modules\rbac\filters\AccessControl;
 use app\modules\students\models\Group;
 use app\modules\students\models\Student;
 use app\modules\students\models\StudentSearch;
+use app\modules\students\models\StudentsHistory;
 use app\modules\user\helpers\UserHelper;
 use app\modules\user\models\User;
 use nullref\core\interfaces\IAdminController;
@@ -54,7 +55,7 @@ class DefaultController extends Controller implements IAdminController
     public function actionIndex()
     {
         $searchModel = new StudentSearch();
-        //$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
 
         $query = Group::find();
 
@@ -77,9 +78,9 @@ class DefaultController extends Controller implements IAdminController
             }
         }
 
+        $groupIds = $query->column();
         $students = Student::find()
-            ->joinWith('studentsHistory')
-            ->andWhere(['group_id' => $query->column()]);
+            ->andWhere(['id' => StudentsHistory::getActiveStudentsIdsByGroups($groupIds)]);
         $dataProvider = new ActiveDataProvider([
             'query' => $students,
         ]);

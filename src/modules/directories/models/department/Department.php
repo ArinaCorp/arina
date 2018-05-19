@@ -2,14 +2,13 @@
 
 namespace app\modules\directories\models\department;
 
-use Yii;
+use app\modules\directories\models\speciality\Speciality;
 use app\modules\employee\models\Employee;
+use Yii;
+use yii\db\ActiveQuery;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\db\ActiveQuery;
-use app\modules\directories\models\speciality\Speciality;
-
 
 
 /**
@@ -72,7 +71,7 @@ class Department extends \yii\db\ActiveRecord
      * @return ActiveQuery
      */
     public function getSpecialities(){
-        return $this->hasMany(Speciality::className(), ['department_id' => 'id']);
+        return $this->hasMany(Speciality::class, ['department_id' => 'id']);
     }
 
     /**
@@ -81,7 +80,7 @@ class Department extends \yii\db\ActiveRecord
     public function getSpecialitiesListLinks(){
         $string="";
         foreach ($this->specialities as $speciality) {
-         $string.=Html::a($speciality->title,Url::to(['speciality/view','id'=>$speciality->id])).'</br>';
+            $string.=Html::a($speciality->title,Url::to(['speciality/view','id'=>$speciality->id])).'</br>';
         }
         return $string;
     }
