@@ -98,7 +98,7 @@ class StudyYear extends ActiveRecord
      */
     public function getWorkPlans()
     {
-        return $this->hasMany(WorkPlan::className(), ['study_year_id' => 'id'])->via('workPlans');
+        return $this->hasMany(WorkPlan::className(), ['study_year_id' => 'id'])->alias('workPlans');
     }
 
     /**

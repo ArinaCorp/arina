@@ -2,16 +2,15 @@
 
 namespace app\modules\load\controllers;
 
-use Yii;
-use yii\web\Controller;
-use nullref\core\interfaces\IAdminController;
-use yii\helpers\Url;
-
-use app\modules\load\models\Load;
-use app\modules\directories\models\StudyYearSearch;
 use app\modules\directories\models\StudyYear;
+use app\modules\directories\models\StudyYearSearch;
+use app\modules\load\models\Load;
 use app\modules\plans\models\WorkSubject;
 use app\modules\students\models\Group;
+use nullref\core\interfaces\IAdminController;
+use Yii;
+use yii\helpers\Url;
+use yii\web\Controller;
 
 class DefaultController extends Controller implements IAdminController
 {

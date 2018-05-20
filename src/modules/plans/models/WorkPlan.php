@@ -60,11 +60,11 @@ class WorkPlan extends ActiveRecord
     {
         return [
             'JsonBehavior' => [
-                'class' => JsonBehavior::className(),
+                'class' => JsonBehavior::class,
                 'fields' => ['graph', 'semesters'],
             ],
             'TimestampBehavior' => [
-                'class' => TimestampBehavior::className(),
+                'class' => TimestampBehavior::class,
                 'createdAtAttribute' => 'created',
                 'updatedAtAttribute' => 'updated',
             ]
@@ -162,7 +162,7 @@ class WorkPlan extends ActiveRecord
      */
     public function getSpecialityQualification()
     {
-        return $this->hasOne(SpecialityQualification::className(), ['id' => 'speciality_qualification_id']);
+        return $this->hasOne(SpecialityQualification::class, ['id' => 'speciality_qualification_id']);
     }
 
     /**
@@ -170,7 +170,7 @@ class WorkPlan extends ActiveRecord
      */
     public function getStudyYear()
     {
-        return $this->hasOne(StudyYear::className(), ['id' => 'study_year_id']);
+        return $this->hasOne(StudyYear::class, ['id' => 'study_year_id']);
     }
 
     /**
@@ -178,7 +178,7 @@ class WorkPlan extends ActiveRecord
      */
     public function getWorkSubjects()
     {
-        return $this->hasMany(WorkSubject::className(), ['work_plan_id' => 'id']);
+        return $this->hasMany(WorkSubject::class, ['work_plan_id' => 'id']);
     }
 
     /**
@@ -361,6 +361,7 @@ class WorkPlan extends ActiveRecord
 
     public function getDocument()
     {
+        //@TODO move to component
         Yii::$app->excel->makeWorkPlan($this);
     }
 
