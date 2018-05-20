@@ -7,6 +7,8 @@ use app\modules\directories\models\qualification\Qualification;
 use app\modules\directories\models\speciality\Speciality;
 use app\modules\directories\models\subject_relation\SubjectRelation;
 use app\modules\students\models\Group;
+use app\modules\user\helpers\UserHelper;
+use app\modules\user\models\User;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
@@ -99,7 +101,19 @@ class SpecialityQualification extends ActiveRecord
         $list = [];
 
         /* @var $departments Department[] */
+
         $departments = Department::find()->all();
+
+        if (!Yii::$app->user->isGuest) {
+            /** @var User $user */
+            $user = Yii::$app->user->identity;
+            if (UserHelper::hasRole($user, 'head-of-department')) {
+                $departments = Department::find()
+                ->andWhere(['head_id'=>$user->employee->id])
+                ->all();
+            }
+        }
+
         foreach ($departments as $department) {
             $list[$department->title] = [];
             foreach ($department->specialities as $speciality) {

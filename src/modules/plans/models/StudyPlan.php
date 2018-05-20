@@ -2,6 +2,8 @@
 
 namespace app\modules\plans\models;
 
+use app\modules\user\helpers\UserHelper;
+use app\modules\user\models\User;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\db\ActiveQuery;
@@ -84,17 +86,38 @@ class StudyPlan extends ActiveRecord
     {
         /** @var Department $department */
         if (isset($id)) {
-            $department = Department::find()->where(['head_id'=>$id])->all();
+            $department = Department::find()->where(['head_id' => $id])->all();
             if (isset($department)) {
                 $list = [];
-                foreach($department->specialities as $speciality){
-                    $list[$speciality->title] = ArrayHelper::map($speciality->studyPlans, 'id','title');
+                foreach ($department->specialities as $speciality) {
+                    $list[$speciality->title] = ArrayHelper::map($speciality->studyPlans, 'id', 'title');
                 }
                 return $list;
             }
             return [];
         } else {
-            return ArrayHelper::map(StudyPlan::find()->all(),'id', 'title');
+            if (!Yii::$app->user->isGuest) {
+                /** @var User $user */
+                $user = Yii::$app->user->identity;
+
+                if (UserHelper::hasRole($user, 'head-of-department')) {
+                    if ($user->employee && $user->employee->department) {
+                        $spQIds = SpecialityQualification::find()
+                            ->andWhere([
+                                'speciality_id' => $user->employee->department->getSpecialities()
+                                    ->select('id')
+                                    ->column(),
+                            ])
+                            ->select('id')
+                            ->column();
+                        return ArrayHelper::map(StudyPlan::find()
+                            ->andWhere(['speciality_qualification_id' => $spQIds])
+                            ->all(), 'id', 'title');
+                    }
+                } else {
+                    return ArrayHelper::map(StudyPlan::find()->all(), 'id', 'title');
+                }
+            }
         }
     }
 
@@ -108,11 +131,11 @@ class StudyPlan extends ActiveRecord
         $result = [];
         foreach ($allSubjects as $cycle => $subject) {
             $result[$cycle] = [];
-           foreach ($subject as $id => $name) {
-              if (!isset($usedSubjects[$id])) {
-                   $result[$cycle][$id] = $name;
-               }
-           }
+            foreach ($subject as $id => $name) {
+                if (!isset($usedSubjects[$id])) {
+                    $result[$cycle][$id] = $name;
+                }
+            }
             if (empty($result[$cycle])) {
                 unset($result[$cycle]);
             }
@@ -145,7 +168,7 @@ class StudyPlan extends ActiveRecord
         $list = [];
         foreach ($this->studySubjects as $item) {
             $cycle = $item->subject->getCycle($this->speciality_qualification_id);
-            $name = $cycle->id .' '. $cycle->title;
+            $name = $cycle->id . ' ' . $cycle->title;
             if (isset($list[$name])) {
                 $list[$name][] = $item;
             } else {

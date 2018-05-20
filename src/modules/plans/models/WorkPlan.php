@@ -2,6 +2,8 @@
 
 namespace app\modules\plans\models;
 
+use app\modules\user\helpers\UserHelper;
+use app\modules\user\models\User;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\db\ActiveQuery;
@@ -153,7 +155,28 @@ class WorkPlan extends ActiveRecord
             }
             return [];
         } else {
-            return ArrayHelper::map(self::find()->all(), 'id', 'title');
+            if (!Yii::$app->user->isGuest) {
+                /** @var User $user */
+                $user = Yii::$app->user->identity;
+
+                if (UserHelper::hasRole($user, 'head-of-department')) {
+                    if ($user->employee && $user->employee->department) {
+                        $spQIds = SpecialityQualification::find()
+                            ->andWhere([
+                                'speciality_id' => $user->employee->department->getSpecialities()
+                                    ->select('id')
+                                    ->column(),
+                            ])
+                            ->select('id')
+                            ->column();
+                        return ArrayHelper::map(WorkPlan::find()
+                            ->andWhere(['speciality_qualification_id' => $spQIds])
+                            ->all(), 'id', 'title');
+                    }
+                } else {
+                    return ArrayHelper::map(WorkPlan::find()->all(), 'id', 'title');
+                }
+            }
         }
     }
 

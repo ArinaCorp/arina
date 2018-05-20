@@ -2,9 +2,13 @@
 
 namespace app\modules\plans\controllers;
 
+use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 use app\modules\plans\models\StudyPlanSearch;
 use app\modules\rbac\filters\AccessControl;
+use app\modules\user\helpers\UserHelper;
+use app\modules\user\models\User;
 use Yii;
+use yii\data\ActiveDataProvider;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\web\Response;
@@ -38,7 +42,7 @@ class StudyPlanController extends Controller implements IAdminController
                     [
                         'allow' => true,
                         'actions' => [],
-                        'roles' => ['head-of-department',  'cyclic-commission'],
+                        'roles' => ['head-of-department', 'cyclic-commission'],
                     ]
                 ]
             ]
@@ -51,7 +55,32 @@ class StudyPlanController extends Controller implements IAdminController
     public function actionIndex()
     {
         $searchModel = new StudyPlanSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        //$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        $query = StudyPlan::find();
+
+        if (!Yii::$app->user->isGuest) {
+            /** @var User $user */
+            $user = Yii::$app->user->identity;
+
+            if (UserHelper::hasRole($user, 'head-of-department')) {
+                if ($user->employee && $user->employee->department) {
+                    $spQIds = SpecialityQualification::find()
+                        ->andWhere([
+                            'speciality_id' => $user->employee->department->getSpecialities()
+                                ->select('id')
+                                ->column(),
+                        ])
+                        ->select('id')
+                        ->column();
+                    $query->andWhere(['speciality_qualification_id' => $spQIds]);
+                }
+            }
+        }
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
