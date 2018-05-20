@@ -1,14 +1,14 @@
 <?php
 
-use yii\helpers\Html;
-use yii\web\View;
-use yii\grid\GridView;
-use yii\widgets\Pjax;
+use app\modules\directories\models\StudyYear;
+use app\modules\load\models\LoadSearch;
 use yii\data\ActiveDataProvider;
 use yii\grid\ActionColumn;
+use yii\grid\GridView;
+use yii\helpers\Html;
 use yii\helpers\Url;
-
-use app\modules\load\models\LoadSearch;
+use yii\web\View;
+use yii\widgets\Pjax;
 
 /* @var $this View
  * @var $searchModel LoadSearch;
@@ -42,20 +42,18 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn',
                 'contentOptions' => ['style' => 'width: 50px']],
 
-            /*[
-
+            [
                 'attribute' => 'study_year_id',
                 'format' => 'raw',
-                'value' => function ($model, $key, $index, $widget) {
-                    return $model->studyYear->start;
+                'value' => function (StudyYear $model, $key, $index, $widget) {
+                    return $model->year_start;
                 }
-
-            ],*/
+            ],
             [
                 'header' => Yii::t('app', 'Actions'),
-                'class' => ActionColumn::className(),
+                'class' => ActionColumn::class,
                 'contentOptions' => ['style' => 'width: 90px'],
-                'template' => '{view} {update} {export} {delete}',
+                'template' => '{view} {export}',
                 'buttons' => [
                     'export' => function ($url, $model) {
                         $options = [

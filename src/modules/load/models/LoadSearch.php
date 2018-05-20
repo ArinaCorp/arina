@@ -8,22 +8,6 @@ use yii\data\ActiveDataProvider;
 class LoadSearch extends Load
 {
     /**
-     * @inheritdoc
-     */
-    public function rules()
-    {
-        parent::rules();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function scenarios()
-    {
-        return parent::scenarios();
-    }
-
-    /**
      * Creates data provider instance with search query applied
      *
      * @param array $params

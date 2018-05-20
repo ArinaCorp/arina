@@ -1,74 +1,73 @@
 <?php
 
 /**
- * @var StudyYear $year
- * @var CActiveDataProvider $dataProvider
- * @var Load $model
- * @var TbActiveForm $form
+ * @var \app\modules\directories\models\StudyYear $year
+ * @var \yii\data\ActiveDataProvider $dataProvider
+ * @var \app\modules\load\models\Load $model
+ * @var \yii\bootstrap\ActiveForm $form
+ * @var \yii\web\View $this
  */
-$this->breadcrumbs = array(
-    Yii::t('base', 'Load') => $this->createUrl('index'),
-    $year->title
-);
 
-$this->menu = array(
-    array(
-        'label' => 'Генерувати навантаження',
-        'url' => $this->createUrl('generate', array('id' => $year->id)),
-        'type' => 'primary',
-    ),
-    array(
-        'label' => 'Розподілити курсові роботи, проекти',
-        'url' => $this->createUrl('project', array('id' => $year->id)),
-        'type' => 'info'
-    ),
-    array(
-        'label' => 'Генерувати документ',
-        'url' => $this->createUrl('doc', array('id' => $year->id)),
-        'type'=>'info',
-    ),
-);
-Yii::app()->clientScript->registerScript(
-    'load-buttons',
-    '
-       function toggleSection(section, sender) {
+
+use app\modules\directories\models\cyclic_commission\CyclicCommission;
+use yii\bootstrap\ActiveForm;
+use yii\helpers\Html;
+use yii\helpers\Url;
+
+//$this->breadcrumbs = array(
+//    Yii::t('base', 'Load') => $this->createUrl('index'),
+//    $year->title
+//);
+
+//$this->menu = array(
+//    array(
+//        'label' => 'Генерувати навантаження',
+//        'url' => Url::to('generate', array('id' => $year->id)),
+//        'type' => 'primary',
+//    ),
+//    array(
+//        'label' => 'Розподілити курсові роботи, проекти',
+//        'url' => Url::to('project', array('id' => $year->id)),
+//        'type' => 'info'
+//    ),
+//    array(
+//        'label' => 'Генерувати документ',
+//        'url' => Url::to('doc', array('id' => $year->id)),
+//        'type'=>'info',
+//    ),
+//);
+$this->registerJs('
+    window.toggleSection = function(section, sender) {
            $("."+section).toggle();
            $(sender).toggleClass("btn-info");
            $(sender).toggleClass("btn-warning");
        }
-   ',
-    CClientScript::POS_END
-);
+   ');
 ?>
 <div class="well">
 <h2>Навантаження на <?php echo $year->title; ?> навчальний рік</h2>
 
-<?php $form = $this->beginWidget(BoosterHelper::FORM, array('id' => 'load-filter-form', 'method' => 'GET')); ?>
-<?php echo $form->dropDownListRow(
-    $model,
-    'commissionId',
-    CyclicCommission::getList(),
-    array(
+    <?php $form = ActiveForm::begin(['id' => 'load-filter-form', 'method' => 'GET']); ?>
+    <?php echo $form->field($model, 'commissionId')->dropDownList(CyclicCommission::getList(), [
         'class' => 'span6',
         'empty' => '',
-        'ajax' => array(
+        'ajax' => [
             'type' => 'GET',
-            'url' => $this->createUrl('/teacher/listByCycle'), //url to call.
+            'url' => Url::to('/teacher/listByCycle'), //url to call.
             'update' => '#Load_teacher_id',
-            'data' => array('id' => 'js:this.value'),
-        )
-    )
-); ?>
-<?php echo $form->dropDownListRow($model, 'teacher_id', array(), array('empty' => '', 'class' => 'span6')); ?>
+            'data' => ['id' => 'js:this.value'],
+        ],
+    ]); ?>
+<?php echo $form->field($model, 'teacher_id')->dropDownList([], ['empty' => '', 'class' => 'span6']); ?>
 <div class="form-actions">
-    <?php echo TbHtml::submitButton('Фільтрувати', array('class' => 'btn-success')); ?>
-    <?php echo TbHtml::link(
+    <?php echo Html::submitButton('Фільтрувати', ['class' => 'btn-success']); ?>
+    <?php echo Html::a(
         'Скасувати фільтр',
-        $this->createUrl('view', array('id' => $year->id)),
+        Url::to('view', array('id' => $year->id)),
         array('class' => 'btn btn-danger')
     ); ?>
 </div>
-<?php $this->endWidget(); ?>
+<?php ActiveForm::end(); ?>
 <hr/>
 
 <div class="form-actions">
@@ -77,7 +76,7 @@ Yii::app()->clientScript->registerScript(
     <button onclick="toggleSection('spring', this)" class="btn btn-info">Весняний семестр</button>
 </div>
 
-    <?php $this->renderPartial('_subjects', array('model' => $model, 'dataProvider' => $dataProvider)); ?>
+    <?= $this->render('_subjects', ['model' => $model, 'dataProvider' => $dataProvider]); ?>
 
 </div>
 

@@ -37,9 +37,9 @@ switch ($course) {
         <th rowspan="2"></th>
         <th rowspan="2" style="vertical-align: top"><?= Yii::t('plans', 'Subject'); ?></th>
         <th colspan="8"><?= Yii::t('plans', 'Autumn semester').' '.
-            $model->semesters[$fall].' '.Yii::t('plans', 'OfWeeks'); ?></th>
+            ($model->semesters[$fall] ?? '') . ' ' . Yii::t('plans', 'OfWeeks'); ?></th>
         <th colspan="8"><?= Yii::t('plans', 'Spring semester').' '.
-            $model->semesters[$spring].' '.Yii::t('plans', 'OfWeeks'); ?></th>
+            ($model->semesters[$spring] ?? '') . ' ' . Yii::t('plans', 'OfWeeks'); ?></th>
     </tr>
     <tr>
         <th><?= Yii::t('plans', 'Total'); ?>                  </th>

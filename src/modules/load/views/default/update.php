@@ -1,42 +1,48 @@
 <?php
 /**
- * @var MainController $this
- * @var Load $model
- * @var TbActiveForm $form
+ * @var \yii\web\View $this
+ * @var \app\modules\load\models\Load $model
+ * @var ActiveForm $form
  */
-$this->breadcrumbs = array(
-    Yii::t('base', 'Load') => $this->createUrl('index'),
-    $model->studyYear->title => $this->createUrl('view', array('id' => $model->study_year_id)),
-    $model->planSubject->subject->title . ' для ' . $model->group->title
-);
+
+use app\modules\employee\models\Teacher;
+use yii\bootstrap\ActiveForm;
+use yii\helpers\Html;
+
+//$this->breadcrumbs = array(
+//    Yii::t('base', 'Load') => $this->createUrl('index'),
+//    $model->studyYear->title => $this->createUrl('view', array('id' => $model->study_year_id)),
+//    $model->planSubject->subject->title . ' для ' . $model->group->title
+//);
 ?>
-<?php $form = $this->beginWidget(
-    BoosterHelper::FORM,
-    array(
+<?php $form = ActiveForm::begin([
         'id' => 'load-update-form',
-        'type' => 'horizontal',
-        'htmlOptions' => array('class' => 'well'),
-    )
-); ?>
-<h2><?php echo $model->planSubject->subject->title . ' для ' . $model->group->title; ?></h2>
+    'layout' => 'horizontal',
+    'options' => ['class' => 'well'],
+]);
+?>
+<h2><?php echo $model->workSubject->subject->title . ' для ' . $model->group->title; ?></h2>
 
 <?php echo $form->errorSummary($model); ?>
 
-<?php echo $form->dropDownListRow(
-    $model,
-    'teacher_id',
-    Teacher::getListByCycle($model->planSubject->cyclic_commission_id),
-    array('empty' => 'Оберіть викладача', 'class'=>'span6'), array('labelOptions'=>array('class'=>'label-width'))
+<?php echo $form->field($model, 'teacher_id')->dropDownList(Teacher::getListByCycle($model->workSubject->cyclic_commission_id),
+    ['prompt' => 'Оберіть викладача', 'class' => 'span6'], ['labelOptions' => ['class' => 'label-width']]
 ); ?>
 <h3 class="central-header">Осінній семестр</h3>
-<?php echo $form->numberFieldRow($model, 'fall_hours[0]', array('class'=>'span6'), array('labelOptions'=>array('class'=>'label-width'))); ?>
-<?php echo $form->numberFieldRow($model, 'fall_hours[1]', array('class'=>'span6'), array('labelOptions'=>array('class'=>'label-width'))); ?>
-<?php echo $form->numberFieldRow($model, 'consult[0]', array('class'=>'span6'), array('labelOptions'=>array('class'=>'label-width'))); ?>
+<?php echo $form->field($model, 'fall_hours[0]')->textInput(array('class' => 'span6', 'labelOptions' => array('class' => 'label-width'))); ?>
+<?php echo $form->field($model, 'fall_hours[1]')->textInput(array('class' => 'span6', 'labelOptions' => array('class' => 'label-width'))); ?>
+<?php echo $form->field($model, 'consult[0]')->textInput(array('class' => 'span6', 'labelOptions' => array('class' => 'label-width'))); ?>
 <h3 class="central-header">Весняний семестр</h3>
-<?php echo $form->numberFieldRow($model, 'spring_hours[0]', array('class'=>'span6'), array('labelOptions'=>array('class'=>'label-width'))); ?>
-<?php echo $form->numberFieldRow($model, 'spring_hours[1]', array('class'=>'span6'), array('labelOptions'=>array('class'=>'label-width'))); ?>
-<?php echo $form->numberFieldRow($model, 'consult[1]', array('class'=>'span6'), array('labelOptions'=>array('class'=>'label-width'))); ?>
+<?php echo $form->field($model, 'spring_hours[0]')->textInput(array('class' => 'span6', 'labelOptions' => array('class' => 'label-width'))); ?>
+<?php echo $form->field($model, 'spring_hours[1]')->textInput(array('class' => 'span6', 'labelOptions' => array('class' => 'label-width'))); ?>
+<?php echo $form->field($model, 'consult[1]')->textInput(array('class' => 'span6', 'labelOptions' => array('class' => 'label-width'))); ?>
 
-
-<?php $this->renderPartial('//formButtons', array('model' => $model)); ?>
-<?php $this->endWidget(); ?>
+<div class="form-actions">
+    <?php echo Html::submitButton($model->isNewRecord ? Yii::t('base', 'Create') : Yii::t('base', 'Save'), [
+        'buttonType' => 'submit',
+        'type' => 'primary',
+    ]); ?>
+    <?php echo Html::resetButton(Yii::t('base', 'Cancel')); ?>
+    <?php echo Html::a('Повернутись', Yii::$app->request->getReferrer(), array('class' => 'btn btn-info')); ?>
+</div>
+<?php ActiveForm::end(); ?>

@@ -1,9 +1,14 @@
 <?php
 /**
- * @var CActiveDataProvider $dataProvider
+ * @var \yii\data\ActiveDataProvider $dataProvider
  * @var integer $course
- * @var WorkPlan $model
+ * @var \app\modules\plans\models\WorkPlan $model
  */
+
+use app\modules\load\models\Load;
+use yii\helpers\Html;
+use yii\helpers\Url;
+
 ?>
 
     <div class="tab-content">
@@ -121,7 +126,7 @@ $totals['contract'] = 0;
 
 <?php
 /** @var Load $data */
-foreach ($dataProvider->getData() as $data):
+foreach ($dataProvider->getModels() as $data):
 if($data->course==$course){
 $springSemester = $data->course * 2;
 $fallSemester = $springSemester - 1;
@@ -129,11 +134,11 @@ $fallSemester = $springSemester - 1;
             <tr>
                 <td>
                     <?php if ($data->type == Load::TYPE_PROJECT) {
-                        echo CHtml::link('редагувати', $this->createUrl('edit', array('id' => $data->id))) . '<br>';
-                        echo CHtml::link('видалити', $this->createUrl('delete', array('id' => $data->id)));
-                    } else echo CHtml::link('редагувати', $this->createUrl('update', array('id' => $data->id))); ?>
+                        echo Html::a('редагувати', Url::to(array('edit', 'id' => $data->id))) . '<br>';
+                        echo Html::a('видалити', Url::to(array('delete', 'id' => $data->id)));
+                    } else echo Html::a('редагувати', Url::to(array('update', 'id' => $data->id))); ?>
                 </td>
-                <td><b><?php echo $data->planSubject->subject->title; ?></b></td>
+                <td><b><?php echo $data->workSubject->subject->title; ?></b></td>
                 <td><b><?php echo isset($data->teacher) ? $data->teacher->getFullName() :
                             '<span style="color: red">не призначено</span>'; ?></b></td>
                 <td class="general"><?php echo $data->course; ?></td>
@@ -167,7 +172,7 @@ $fallSemester = $springSemester - 1;
                     $fall['labs'] += intval($labs); ?>
                 </td>
                 <td class="fall">
-                    <?php echo $practs = $data->getPracts($fallSemester-1);
+                    <?php echo $practs = $data->getPractices($fallSemester - 1);
                     $fall['practs'] += intval($practs); ?>
                 </td>
                 <td class="fall">
@@ -228,7 +233,7 @@ $fallSemester = $springSemester - 1;
                     $spring['labs'] += intval($labs); ?>
                 </td>
                 <td class="spring">
-                    <?php echo $practs = $data->getPracts($springSemester-1);
+                    <?php echo $practs = $data->getPractices($springSemester - 1);
                     $spring['practs'] += intval($practs); ?>
                 </td>
                 <td class="spring">
@@ -283,8 +288,8 @@ $fallSemester = $springSemester - 1;
                 </td>
                 <td>
                     <?php if ($data->type == Load::TYPE_PROJECT)
-                        echo CHtml::link('видалити', $this->createUrl('delete', array('id' => $data->id)));
-                    else echo CHtml::link('редагувати', $this->createUrl('update', array('id' => $data->id))); ?>
+                        echo Html::a('видалити', Url::to(['delete', 'id' => $data->id]));
+                    else echo Html::a('редагувати', Url::to(['update', 'id' => $data->id])); ?>
                 </td>
             </tr>
             <?php } endforeach; ?>

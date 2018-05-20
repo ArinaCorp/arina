@@ -3,12 +3,11 @@
 namespace app\modules\directories\models;
 
 use app\modules\directories\models\speciality_qualification\SpecialityQualification;
+use app\modules\plans\models\WorkPlan;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
-
-use app\modules\plans\models\WorkPlan;
 
 /**
  * This is the model class for table "study_years".
@@ -39,6 +38,12 @@ class StudyYear extends ActiveRecord
             [['year_start'], 'integer'],
             ['active', 'boolean'],
         ];
+    }
+
+    public function getTitle()
+    {
+        $yearEnd = $this->year_start + 1;
+        return "$this->year_start/$yearEnd";
     }
 
     /**

@@ -1,9 +1,7 @@
 <?php
 
-use yii\helpers\Html;
-use yii\widgets\DetailView;
 use app\modules\journal\models\record\JournalRecord;
-use app\modules\journal\models\record\JournalStudent;
+use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $model \app\modules\load\models\Load */
@@ -44,7 +42,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 foreach ($list as $key) {
                     $krecords++; ?>
                     <td class="oc record" align="center"><?php echo $key->label ?></td>
-                    <?
+                    <?php
                 }
                 //            if ($t) {
                 echo '<td class="oc record">' . Html::a(Yii::t('app', 'Create journal record'), ['journal-record/create-first', 'load_id' => $model->id]) . '</td>';
@@ -67,17 +65,13 @@ $this->params['breadcrumbs'][] = $this->title;
                             <?= $map[$student->id][$item->id] ?>
                         </td>
 
-                        <?
+                        <?php
 
                     }
-                    if (true) echo '<td class="oc"></td>';
-                    ?>
+                    if (true) echo '<td class="oc"></td>'; ?>
                 </tr>
-                <?
-
-                $i++;
-            }
-            ?>
+                <?php $i++;
+            } ?>
         </table>
     </div>
 

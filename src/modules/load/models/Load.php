@@ -2,19 +2,16 @@
 
 namespace app\modules\load\models;
 
-use app\modules\plans\models\WorkPlan;
+use app\modules\directories\models\StudyYear;
+use app\modules\employee\models\Employee;
+use app\modules\plans\models\WorkSubject;
+use app\modules\students\models\Group;
+use nullref\useful\JsonBehavior;
 use Yii;
-use yii\bootstrap\Html;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
-use nullref\useful\JsonBehavior;
 use yii\web\NotFoundHttpException;
-
-use app\modules\directories\models\StudyYear;
-use app\modules\students\models\Group;
-use app\modules\employee\models\Employee;
-use app\modules\plans\models\WorkSubject;
 
 /**
  *
@@ -23,6 +20,7 @@ use app\modules\plans\models\WorkSubject;
  * The followings are the available columns in table 'load':
  * @property integer $id
  * @property integer $study_year_id
+ * @property integer $teacher_id
  * @property integer $employee_id
  * @property integer $group_id
  * @property integer $work_subject_id
@@ -76,9 +74,9 @@ class Load extends ActiveRecord
     public function rules()
     {
         return [
-            [['fall_hours'], 'default', 'setOnEmpty' => false, 'safe' => true,
+            [['fall_hours'], 'default', 'skipOnEmpty' => false,
                 'value' => !empty($this->fall_hours) ? ArrayHelper::merge(self::$HOURS, $this->fall_hours) : self::$HOURS],
-            [['spring_hours'], 'default', 'setOnEmpty' => false, 'safe' => true,
+            [['spring_hours'], 'default', 'skipOnEmpty' => false,
                 'value' => !empty($this->spring_hours) ? ArrayHelper::merge(self::$HOURS, $this->spring_hours) : self::$HOURS],
             [['consult'], 'validateConsultation'],
             [['teacher_id'], 'required', 'on' => 'project'],

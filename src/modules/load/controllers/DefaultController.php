@@ -5,6 +5,7 @@ namespace app\modules\load\controllers;
 use app\modules\directories\models\StudyYear;
 use app\modules\directories\models\StudyYearSearch;
 use app\modules\load\models\Load;
+use app\modules\load\models\LoadSearch;
 use app\modules\plans\models\WorkSubject;
 use app\modules\students\models\Group;
 use nullref\core\interfaces\IAdminController;
@@ -46,7 +47,10 @@ class DefaultController extends Controller implements IAdminController
     }
 
     /**
-     * @param integer $studyYear
+     * @param $studyYear
+     * @throws \Exception
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     protected function generateLoadFor($studyYear)
     {
@@ -65,7 +69,7 @@ class DefaultController extends Controller implements IAdminController
                 foreach ($groups as $title => $course) {
                     $spring = $course * 2;
                     $fall = $spring - 1;
-                    $group = Group::findOne("title='$title'");
+                    $group = Group::findOne(['title' => $title]);
                     if (!empty($subject->total[$fall-1]) || !empty($subject->total[$spring-1])) {
                         $this->getNewLoad($year, $subject, $group, $course, Load::TYPE_LECTURES);
 
@@ -129,15 +133,14 @@ class DefaultController extends Controller implements IAdminController
 
     public function actionView($id)
     {
-        $model = new Load();
+        $model = new LoadSearch();
 
         if (isset($_GET['Load'])) {
             $model->setAttributes($_GET['Load'], false);
             $model->commissionId = $_GET['Load']['commissionId'];
         }
 
-        $searchModel = new StudyYearSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = $model->search(Yii::$app->request->queryParams);
         $year = StudyYear::findOne($id);
         return $this->render('view', ['model' => $model, 'dataProvider' => $dataProvider, 'year' => $year]);
     }
