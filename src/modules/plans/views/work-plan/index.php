@@ -18,14 +18,19 @@ use app\modules\plans\models\StudyPlanSearch;
 $this->title = Yii::t('plans', 'Work plans');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="row">
+<div class="work-plan-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <div class="col-lg-8">
-        <?= Html::a(Yii::t('plans', 'Create work plan'), ['create'], ['class' => 'btn btn-success']) ?>
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">
+                <?= Html::encode($this->title) ?>
+            </h1>
+        </div>
     </div>
-    <br/><br/>
+
+    <p>
+        <?= Html::a(Yii::t('plans', 'Create work plan'), ['create'], ['class' => 'btn btn-success']) ?>
+    </p>
 
     <?php Pjax::begin(); ?>
 
@@ -50,7 +55,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'header' => Yii::t('app', 'Actions'),
                 'class' => ActionColumn::className(),
-                'contentOptions' => ['style'=>'width: 90px'],
+                'contentOptions' => ['style' => 'width: 90px'],
                 'template' => '{view} {update} {export} {delete}',
                 'buttons' => [
                     'export' => function ($url, $model) {

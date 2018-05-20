@@ -1,6 +1,6 @@
 <?php
+
 /**
- * @var MainController $this
  * @var StudyYear $year
  * @var CActiveDataProvider $dataProvider
  * @var Load $model

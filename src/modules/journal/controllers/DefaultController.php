@@ -8,7 +8,9 @@ use app\modules\journal\models\record\JournalMark;
 use app\modules\journal\models\record\JournalStudent;
 use app\modules\journal\models\reports\SubjectReport;
 use app\modules\journal\models\SelectForm;
+use app\modules\rbac\filters\AccessControl;
 use nullref\core\interfaces\IAdminController;
+use yii\filters\VerbFilter;
 use yii\helpers\Json;
 use yii\web\Controller;
 use Yii;
@@ -21,6 +23,28 @@ use app\modules\journal\models\record\JournalRecord;
  */
 class DefaultController extends Controller implements IAdminController
 {
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'verbs' => [
+                'class' => VerbFilter::class,
+            ],
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => [],
+                        'roles' => ['head-of-department'],
+                    ]
+                ]
+            ]
+        ];
+    }
     /**
      * Renders the index view for the module
      * @return string
@@ -67,13 +91,11 @@ class DefaultController extends Controller implements IAdminController
                     $speciality_qualification_id = $params['selectform-speciality_qualification_id']; // get the value of input-type-1
                     if ($year_id && $speciality_qualification_id) {
                         $out = DepDropHelper::convertMap(StudyYear::getListGroupByYear($speciality_qualification_id, $year_id));
-                        echo Json::encode(['output' => $out, 'selected' => Yii::t('app', 'Select teacher')]);
-                        return;
+                        return Json::encode(['output' => $out, 'selected' => Yii::t('app', 'Select teacher')]);
                     }
                 }
             }
-            echo Json::encode(['output' => [], 'selected' => Yii::t('app', 'Select ...')]);
-            return;
+            return Json::encode(['output' => [], 'selected' => Yii::t('app', 'Select ...')]);
         }
     }
 
@@ -88,13 +110,11 @@ class DefaultController extends Controller implements IAdminController
                     $group_id = $params['selectform-group_id']; // get the value of input-type-1
                     if ($year_id && $group_id) {
                         $out = DepDropHelper::convertMap(Load::getListByGroupAndYear($group_id, $year_id));
-                        echo Json::encode(['output' => $out, 'selected' => Yii::t('app', 'Select teacher')]);
-                        return;
+                        return Json::encode(['output' => $out, 'selected' => Yii::t('app', 'Select teacher')]);
                     }
                 }
             }
-            echo Json::encode(['output' => [], 'selected' => Yii::t('app', 'Select ...')]);
-            return;
+            return Json::encode(['output' => [], 'selected' => Yii::t('app', 'Select ...')]);
         }
     }
 

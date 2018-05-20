@@ -29,9 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?php if (Yii::$app->user->can('administrator')): ?>
-            <?= Html::a(Yii::t('app', 'Create employee'), ['create'], ['class' => 'btn btn-success']) ?>
-        <?php endif ?>
+        <?= Html::a(Yii::t('app', 'Create employee'), ['create'], ['class' => 'btn btn-success']) ?>
         <?= Html::a(Yii::t('app', 'Get Excel document'), ['document'], ['class' => 'btn btn-info']) ?>
     </p>
 

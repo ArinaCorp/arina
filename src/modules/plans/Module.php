@@ -40,13 +40,13 @@ class Module extends BaseModule implements IAdminModule
                     'label' => Yii::t('plans', 'Study plans'),
                     'url' => ['/plans/study-plan/index'],
                     'icon' => 'th-list',
-                    'roles' => ['head-of-department'],
+                    'roles' => ['head-of-department', 'cyclic-commission'],
                 ],
                 [
                     'label' => Yii::t('plans', 'Create study plan'),
                     'url' => ['/plans/study-plan/create'],
                     'icon' => 'plus',
-                    'roles' => ['head-of-department'],
+                    'roles' => ['head-of-department', 'cyclic-commission'],
                 ],
                 [
                     'label' => Yii::t('plans', 'Work plans'),
@@ -61,7 +61,7 @@ class Module extends BaseModule implements IAdminModule
                     'roles' => ['head-of-department'],
                 ]
             ],
-            'roles' => ['head-of-department'],
+            'roles' => ['head-of-department', 'cyclic-commission'],
         ];
     }
 }
