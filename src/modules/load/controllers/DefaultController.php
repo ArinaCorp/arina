@@ -168,10 +168,6 @@ class DefaultController extends Controller implements IAdminController
     {
         $model = new LoadSearch();
 
-        if (isset($_GET['Load'])) {
-            $model->setAttributes($_GET['Load'], false);
-            $model->commissionId = $_GET['Load']['commissionId'];
-        }
 
         $dataProvider = $model->search(Yii::$app->request->queryParams);
         $year = StudyYear::findOne($id);
@@ -234,17 +230,18 @@ class DefaultController extends Controller implements IAdminController
         return $this->render('doc', ['model' => $model, 'year'=>$year]);
     }
 
-    public function getEmployees()
+    /**
+     * @return string
+     */
+    public function actionGetEmployees()
     {
-        if (isset($_POST['depdrop_parents'])) {
-            $parents = $_POST['depdrop_parents'];
-            if ($parents != null) {
-                if (!empty($_POST['depdrop_all_params'])) {
-                    $commission_id = $parents[0]; // get the value of input-type-1
-                    if ($commission_id) {
-                        $out = DepDropHelper::convertMap(CyclicCommission::getEmployeeByCyclicCommission($commission_id));
-                        return Json::encode(['output' => $out, 'selected' => Yii::t('app', 'Select teacher')]);
-                    }
+        if ($parents = Yii::$app->request->post('depdrop_parents')) {
+
+            if (Yii::$app->request->post('depdrop_all_params')) {
+                $commissionId = $parents[0]; // get the value of input-type-1
+                if ($commissionId) {
+                    $out = DepDropHelper::convertMap(CyclicCommission::getEmployeeByCyclicCommissionMap($commissionId));
+                    return Json::encode(['output' => $out, 'selected' => Yii::t('app', 'Select teacher')]);
                 }
             }
             return Json::encode(['output' => [], 'selected' => Yii::t('app', 'Select ...')]);

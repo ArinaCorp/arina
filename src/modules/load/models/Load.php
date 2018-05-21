@@ -20,7 +20,7 @@ use yii\web\NotFoundHttpException;
  * The followings are the available columns in table 'load':
  * @property integer $id
  * @property integer $study_year_id
- * @property integer $teacher_id
+ * @property integer $teacher_id //@TODO remove
  * @property integer $employee_id
  * @property integer $group_id
  * @property integer $work_subject_id
@@ -53,8 +53,6 @@ class Load extends ActiveRecord
     protected $WORK_RATE = [1, 1, 1];
     protected $PROJECT_RATE = [2, 1, 1];
     protected $DIPLOMA_RATE = [4, 4, 4];
-
-    public $commissionId;
 
     public $workType;
 

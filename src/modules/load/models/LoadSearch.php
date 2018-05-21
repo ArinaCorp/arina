@@ -2,11 +2,23 @@
 
 namespace app\modules\load\models;
 
-use yii\base\Model;
 use yii\data\ActiveDataProvider;
 
 class LoadSearch extends Load
 {
+    public $commission_id;
+
+    /**
+     * @return array
+     */
+    public function rules()
+    {
+        return [
+            [['commission_id', 'employee_id'], 'safe'],
+        ];
+    }
+
+
     /**
      * Creates data provider instance with search query applied
      *
@@ -35,7 +47,6 @@ class LoadSearch extends Load
             'work_subject_id' => $this->work_subject_id,
             'type' => $this->type,
             'course' => $this->course,
-
         ]);
 
         $query->andFilterWhere(['like', 'consult', $this->consult])

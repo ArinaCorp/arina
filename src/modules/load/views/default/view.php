@@ -3,14 +3,13 @@
 /**
  * @var \app\modules\directories\models\StudyYear $year
  * @var \yii\data\ActiveDataProvider $dataProvider
- * @var \app\modules\load\models\Load $model
+ * @var \app\modules\load\models\LoadSearch $model
  * @var \yii\bootstrap\ActiveForm $form
  * @var \yii\web\View $this
  */
 
 
 use app\modules\directories\models\cyclic_commission\CyclicCommission;
-use app\modules\employee\models\Employee;
 use kartik\depdrop\DepDrop;
 use kartik\select2\Select2;
 use yii\bootstrap\ActiveForm;
@@ -65,19 +64,20 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="row">
         <div class="col-sm-4">
-            <?= $form->field($model, 'commissionId')->widget(Select2::class, [
+            <?= $form->field($model, 'commission_id')
+                ->widget(Select2::class, [
                 'data' => CyclicCommission::getList(),
                 'id' => 'commissionId',
-                'options' =>
-                    [
+                    'options' => [
                         'placeholder' => Yii::t('app', 'Choose cyclic commission')
-                    ]
-            ]); ?>
+                    ],
+                ]);
+            ?>
         </div>
     </div>
 
     <?php
-    $employeeData = CyclicCommission::getEmployeeByCyclicCommission($model->commissionId);
+    $employeeData = CyclicCommission::getEmployeeByCyclicCommissionMap($model->commission_id);
     ?>
 
     <div class="row">
@@ -85,9 +85,9 @@ $this->params['breadcrumbs'][] = $this->title;
             <?= $form->field($model, 'employee_id')->widget(DepDrop::class,
                 [
                     'data' => $employeeData,
-                    'type' => 2,
+                    'type' => DepDrop::TYPE_SELECT2,
                     'pluginOptions' => [
-                        'depends' => ['commissionId'],
+                        'depends' => ['loadsearch-commission_id'],
                         'url' => Url::to(['get-employees']),
                         'placeholder' => Yii::t('app', 'Choose employee'),
                     ]
@@ -95,18 +95,6 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-sm-4">
-            <?= $form->field($model, 'employee_id')->widget(Select2::class, [
-                'data' => [],
-                'id' => 'commissionId',
-                'options' =>
-                    [
-                        'placeholder' => Yii::t('app', 'Choose employee')
-                    ]
-            ]); ?>
-        </div>
-    </div>
 
     <div class="form-group">
         <?= Html::submitButton('Фільтрувати', ['class' => 'btn btn-success']); ?>

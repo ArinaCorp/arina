@@ -2,13 +2,12 @@
 
 namespace app\modules\directories\models\cyclic_commission;
 
-use Yii;
-use yii\helpers\ArrayHelper;
-use yii\db\ActiveQuery;
-use yii\db\ActiveRecord;
-
 use app\modules\employee\models\Employee;
 use app\modules\plans\models\WorkSubject;
+use Yii;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "cyclic_commission".
@@ -99,9 +98,13 @@ class CyclicCommission extends ActiveRecord
         return ArrayHelper::map(self::find()->all(), 'id', 'title');
     }
 
-    public static function getEmployeeByCyclicCommission($commissionId)
+    /**
+     * @param $commissionId
+     * @return Employee[]|array
+     */
+    public static function getEmployeeByCyclicCommissionMap($commissionId)
     {
-        return Employee::find()->andWhere(['cyclic_commission_id' => $commissionId])->all();
+        return Employee::getMap('nameWithInitials', 'id', ['cyclic_commission_id' => $commissionId], false);
     }
 
 
