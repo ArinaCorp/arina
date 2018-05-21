@@ -5,7 +5,7 @@ use yii\grid\GridView;
 use app\modules\employee\models\Employee;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\modules\employee\models\cyclic_commission\CyclicCommissionSearch */
+/* @var $searchModel app\modules\employee\models\CyclicCommissionSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = Yii::t('app', 'Cyclic Commissions');

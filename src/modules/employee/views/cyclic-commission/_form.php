@@ -6,7 +6,7 @@ use kartik\select2\Select2;
 use app\modules\employee\models\Employee;
 
 /* @var $this yii\web\View */
-/* @var $model app\modules\employee\models\cyclic_commission\CyclicCommission */
+/* @var $model app\modules\employee\models\CyclicCommission */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 

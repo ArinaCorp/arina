@@ -6,7 +6,7 @@ use app\modules\employee\models\Employee;
 use app\modules\directories\models\position\Position;
 
 /* @var $this yii\web\View */
-/* @var $model app\modules\employee\models\cyclic_commission\CyclicCommission */
+/* @var $model app\modules\employee\models\CyclicCommission */
 
 $this->title = Yii::t('app', 'Cyclic Commission ') . $model->title;
 $this->params['breadcrumbs'][] = ['label' => 'Cyclic Commissions', 'url' => ['index']];

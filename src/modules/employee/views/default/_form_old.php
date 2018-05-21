@@ -1,20 +1,13 @@
 <?php
 
-use yii\helpers\Html;
-use yii\widgets\MaskedInput;
-use yii\web\View;
 use app\modules\employee\models\Employee;
-use kartik\select2\Select2;
-use kartik\date\DatePicker;
-use app\modules\directories\models\position\Position;
-use app\modules\directories\models\qualification\Qualification;
-use app\modules\employee\models\cyclic_commission\CyclicCommission;
-use yii\widgets\ActiveForm;
-use wbraganca\dynamicform\DynamicFormWidget;
-use yii\widgets\Pjax;
 use rmrevin\yii\fontawesome\FA;
 use yii\bootstrap\Alert;
 use yii\bootstrap\Tabs;
+use yii\helpers\Html;
+use yii\web\View;
+use yii\widgets\ActiveForm;
+use yii\widgets\Pjax;
 
 /* @var $this View
  * @var $model Employee

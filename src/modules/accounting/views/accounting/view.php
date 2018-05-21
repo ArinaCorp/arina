@@ -2,9 +2,8 @@
 
 use app\modules\directories\models\position\Position;
 use app\modules\directories\models\subject\Subject;
-use app\modules\employee\models\cyclic_commission\CyclicCommission;
+use app\modules\employee\models\CyclicCommission;
 use app\modules\students\models\Group;
-use kartik\select2\Select2;
 use yii\bootstrap\Tabs;
 use yii\grid\GridView;
 use yii\helpers\Html;

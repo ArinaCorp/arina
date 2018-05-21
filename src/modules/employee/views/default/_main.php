@@ -1,11 +1,12 @@
 <?php
 
-use yii\widgets\MaskedInput;
-use kartik\select2\Select2;
-use kartik\date\DatePicker;
-use app\modules\employee\models\cyclic_commission\CyclicCommission;
 use app\modules\directories\models\position\Position;
 use app\modules\directories\models\qualification\Qualification;
+use app\modules\employee\models\CyclicCommission;
+use kartik\date\DatePicker;
+use kartik\select2\Select2;
+use yii\widgets\MaskedInput;
+
 ?>
 
 <div class="row">

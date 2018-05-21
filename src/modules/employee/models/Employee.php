@@ -4,7 +4,6 @@ namespace app\modules\employee\models;
 
 use app\modules\directories\models\department\Department;
 use app\modules\directories\models\position\Position;
-use app\modules\employee\models\cyclic_commission\CyclicCommission;
 use app\modules\students\models\CuratorGroup;
 use app\modules\students\models\Group;
 use nullref\useful\behaviors\RelatedBehavior;
@@ -143,10 +142,13 @@ class Employee extends ActiveRecord
         return $this->is_in_education ? Yii::t('app', 'Take part in education') : Yii::t('app', 'Not take part in education');
     }
 
-    public static function getAllTeacher()
+    public static function getAllTeacher($cyclicCommissionId = false)
     {
         $query = self::find();
         $query->andWhere(['is_in_education' => 1]);
+        if ($cyclicCommissionId) {
+            $query->andWhere(['cyclic_commission_id' => $cyclicCommissionId]);
+        }
         $query->addOrderBy(['first_name' => SORT_ASC, 'middle_name' => SORT_ASC, 'last_name' => SORT_ASC]);
         return $query->all();
     }
@@ -156,11 +158,6 @@ class Employee extends ActiveRecord
         $query = self::find();
         $query->addOrderBy(['first_name' => SORT_ASC, 'middle_name' => SORT_ASC, 'last_name' => SORT_ASC]);
         return $query->all();
-    }
-
-    public function getCyclicCommissionArray()
-    {
-        return CyclicCommission::getCyclicCommissionArray();
     }
 
     public function getEducation()

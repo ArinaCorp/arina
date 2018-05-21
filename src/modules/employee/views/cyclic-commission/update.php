@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model app\modules\employee\models\cyclic_commission\CyclicCommission */
+/* @var $model app\modules\employee\models\CyclicCommission */
 
 $this->title = Yii::t('app', 'Update Cyclic Commission: ') . $model->title;
 $this->params['breadcrumbs'][] = ['label' => 'Cyclic Commissions', 'url' => ['index']];

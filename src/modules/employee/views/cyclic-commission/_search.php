@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\modules\employee\models\cyclic_commission\CyclicCommissionSearch */
+/* @var $model app\modules\employee\models\CyclicCommissionSearch */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 

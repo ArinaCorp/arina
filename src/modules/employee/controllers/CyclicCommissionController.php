@@ -2,17 +2,18 @@
 
 namespace app\modules\employee\controllers;
 
+use app\modules\employee\models\CyclicCommission;
+use app\modules\employee\models\CyclicCommissionSearch;
 use nullref\core\interfaces\IAdminController;
 use Yii;
-use app\modules\employee\models\cyclic_commission\CyclicCommission;
-use app\modules\employee\models\cyclic_commission\CyclicCommissionSearch;
+use yii\data\ArrayDataProvider;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
-use yii\data\ActiveDataProvider;
-use yii\data\ArrayDataProvider;
 
 /**
+ * @TODO move CRUD actions to directories module, keep only document's generation
+ *
  * CyclicCommissionController implements the CRUD actions for CyclicCommission model.
  */
 class CyclicCommissionController extends Controller implements IAdminController
@@ -39,9 +40,7 @@ class CyclicCommissionController extends Controller implements IAdminController
     public function actionIndex()
     {
         $searchModel = new CyclicCommissionSearch();
-        $dataProvider = new ActiveDataProvider([
-            'query' => CyclicCommission::find(),
-        ]);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -50,19 +49,20 @@ class CyclicCommissionController extends Controller implements IAdminController
     }
 
     /**
-     * Displays a single CyclicCommission model.
-     * @param integer $id
-     * @return mixed
+     * @param $id
+     * @return string
+     * @throws NotFoundHttpException
      */
     public function actionView($id)
     {
+        $cyclicCommission = $this->findModel($id);
         $dataProvider = new ArrayDataProvider([
-            'allModels' => $this->findModel($id)->getEmployeeArray($id),
+            'allModels' => $cyclicCommission->getEmployees()
         ]);
         
         return $this->render('view', [
             'dataProvider' => $dataProvider,
-            'model' => $this->findModel($id),
+            'model' => $cyclicCommission,
         ]);
     }
 

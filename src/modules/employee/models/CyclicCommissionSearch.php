@@ -1,14 +1,12 @@
 <?php
 
-namespace app\modules\employee\models\cyclic_commission;
+namespace app\modules\employee\models;
 
-use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\modules\employee\models\cyclic_commission\CyclicCommission;
 
 /**
- * CyclicCommissionSearch represents the model behind the search form of `app\modules\employee\models\cyclic_commission\CyclicCommission`.
+ * CyclicCommissionSearch represents the model behind the search form of `app\modules\employee\models\CyclicCommission`.
  */
 class CyclicCommissionSearch extends CyclicCommission
 {

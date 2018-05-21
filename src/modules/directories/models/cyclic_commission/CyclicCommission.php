@@ -16,6 +16,7 @@ use yii\helpers\ArrayHelper;
  * The followings are the available columns in table 'cyclic_commission':
  * @property integer $id
  * @property string $title
+ * @property string $short_title
  * @property integer $head_id
  *
  * @property Employee[] $employees
@@ -51,12 +52,15 @@ class CyclicCommission extends ActiveRecord
         return Employee::getMap('nameWithInitials', 'id', ['cyclic_commission_id' => $commissionId], false);
     }
 
+    /**
+     * @return string
+     */
     public function getHeadName()
     {
-        if (isset($this->head))
+        if (isset($this->head)) {
             return $this->head->getFullName();
-        else
-            return Yii::t('base', 'Not selected');
+        }
+        return Yii::t('base', 'Not selected');
     }
 
     /**
@@ -65,7 +69,7 @@ class CyclicCommission extends ActiveRecord
     public function rules()
     {
         return [
-            [['title'], 'required'],
+            [['title', 'short_title'], 'required'],
             [['head_id'], 'required', 'on' => 'update'],
             [['head_id'], 'integer'],
             [['title'], 'string', 'max' => 255],
@@ -78,7 +82,7 @@ class CyclicCommission extends ActiveRecord
      */
     public function getEmployees()
     {
-        return $this->hasMany(Employee::className(), ['cyclic_commission_id' => 'id']);
+        return $this->hasMany(Employee::class, ['cyclic_commission_id' => 'id']);
     }
 
     /**
@@ -86,7 +90,7 @@ class CyclicCommission extends ActiveRecord
      */
     public function getWorkSubjects()
     {
-        return $this->hasMany(WorkSubject::className(), ['cyclic_commission_id' => 'id']);
+        return $this->hasMany(WorkSubject::class, ['cyclic_commission_id' => 'id']);
     }
 
     /**
@@ -94,7 +98,7 @@ class CyclicCommission extends ActiveRecord
      */
     public function getHead()
     {
-        return $this->hasOne(Employee::className(), ['id' => 'head_id']);
+        return $this->hasOne(Employee::class, ['id' => 'head_id']);
     }
 
     /**
@@ -105,6 +109,7 @@ class CyclicCommission extends ActiveRecord
         return [
             'id' => 'ID',
             'title' => Yii::t('terms', 'Title'),
+            'short_title' => Yii::t('terms', 'Short Title'),
             'head_id' => Yii::t('terms', 'Head'),
             'employees' => Yii::t('terms', 'Employees'),
         ];
