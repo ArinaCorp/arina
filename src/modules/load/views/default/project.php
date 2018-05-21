@@ -1,8 +1,8 @@
 <?php
 /**
- * @var MainController $this
- * @var Load $model
- * @var TbActiveForm $form
+ * @var \yii\web\View $this
+ * @var \app\modules\load\models\Load $model
+ * @var \yii\bootstrap\ActiveForm $form
  */
 $this->breadcrumbs = array(
     Yii::t('base', 'Load') => $this->createUrl('index'),
@@ -31,12 +31,12 @@ $this->breadcrumbs = array(
         'ajax' => array(
             'type' => 'GET',
             'url' => $this->createUrl('/teacher/listByCycle'),
-            'update' => '#Load_teacher_id',
+            'update' => '#Load_employee_id',
             'data' => array('id' => 'js:this.value'),
         )
     )
 ); ?>
-<?php echo $form->dropDownListRow($model, 'teacher_id', array(), array('empty' => '', 'class' => 'span6')); ?>
+<?php echo $form->dropDownListRow($model, 'employee_id', array(), array('empty' => '', 'class' => 'span6')); ?>
 <?php echo $form->dropDownListRow($model, 'wp_subject_id', WorkSubject::getListByYear($model->study_year_id, true), array('empty' => '', 'class' => 'span6')); ?>
 <?php echo $form->dropDownListRow($model, 'group_id', Group::getTreeList(), array('empty' => '', 'class' => 'span6')); ?>
 <?php echo $form->dropDownListRow($model, 'workType', Load::getTypes(), array('empty' => '', 'class' => 'span6')); ?>

@@ -25,9 +25,8 @@ use yii\helpers\Html;
 
 <?php echo $form->errorSummary($model); ?>
 
-<?php echo $form->field($model, 'teacher_id')->dropDownList(Teacher::getListByCycle($model->workSubject->cyclic_commission_id),
-    ['prompt' => 'Оберіть викладача', 'class' => 'span6'], ['labelOptions' => ['class' => 'label-width']]
-); ?>
+<?php echo $form->field($model, 'employee_id')->dropDownList(Teacher::getListByCycle($model->workSubject->cyclic_commission_id),
+    ['prompt' => 'Оберіть викладача', 'class' => 'span6']); ?>
 <h3 class="central-header">Осінній семестр</h3>
 <?php echo $form->field($model, 'fall_hours[0]')->textInput(array('class' => 'span6', 'labelOptions' => array('class' => 'label-width'))); ?>
 <?php echo $form->field($model, 'fall_hours[1]')->textInput(array('class' => 'span6', 'labelOptions' => array('class' => 'label-width'))); ?>

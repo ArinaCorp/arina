@@ -4,6 +4,7 @@ namespace app\modules\directories\models\cyclic_commission;
 
 use app\modules\employee\models\Employee;
 use app\modules\plans\models\WorkSubject;
+use nullref\useful\traits\Mappable;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
@@ -23,13 +24,7 @@ use yii\helpers\ArrayHelper;
  */
 class CyclicCommission extends ActiveRecord
 {
-    public function getHeadName()
-    {
-        if (isset($this->head))
-            return $this->head->getFullName();
-        else
-            return Yii::t('base', 'Not selected');
-    }
+    use Mappable;
 
     /**
      * @return string the associated database table name
@@ -37,6 +32,31 @@ class CyclicCommission extends ActiveRecord
     public static function tableName()
     {
         return '{{%cyclic_commission}}';
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function getList()
+    {
+        return ArrayHelper::map(self::find()->all(), 'id', 'title');
+    }
+
+    /**
+     * @param $commissionId
+     * @return Employee[]|array
+     */
+    public static function getEmployeeByCyclicCommissionMap($commissionId)
+    {
+        return Employee::getMap('nameWithInitials', 'id', ['cyclic_commission_id' => $commissionId], false);
+    }
+
+    public function getHeadName()
+    {
+        if (isset($this->head))
+            return $this->head->getFullName();
+        else
+            return Yii::t('base', 'Not selected');
     }
 
     /**
@@ -86,25 +106,8 @@ class CyclicCommission extends ActiveRecord
             'id' => 'ID',
             'title' => Yii::t('terms', 'Title'),
             'head_id' => Yii::t('terms', 'Head'),
-            'employees'=>Yii::t('terms', 'Employees'),
+            'employees' => Yii::t('terms', 'Employees'),
         ];
-    }
-
-    /**
-     * @return mixed
-     */
-    public static function getList()
-    {
-        return ArrayHelper::map(self::find()->all(), 'id', 'title');
-    }
-
-    /**
-     * @param $commissionId
-     * @return Employee[]|array
-     */
-    public static function getEmployeeByCyclicCommissionMap($commissionId)
-    {
-        return Employee::getMap('nameWithInitials', 'id', ['cyclic_commission_id' => $commissionId], false);
     }
 
 

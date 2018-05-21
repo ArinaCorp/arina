@@ -20,7 +20,6 @@ use yii\web\NotFoundHttpException;
  * The followings are the available columns in table 'load':
  * @property integer $id
  * @property integer $study_year_id
- * @property integer $teacher_id //@TODO remove
  * @property integer $employee_id
  * @property integer $group_id
  * @property integer $work_subject_id
@@ -77,7 +76,7 @@ class Load extends ActiveRecord
             [['spring_hours'], 'default', 'skipOnEmpty' => false,
                 'value' => !empty($this->spring_hours) ? ArrayHelper::merge(self::$HOURS, $this->spring_hours) : self::$HOURS],
             [['consult'], 'validateConsultation'],
-            [['teacher_id'], 'required', 'on' => 'project'],
+            [['employee_id'], 'required', 'on' => 'project'],
         ];
     }
 
