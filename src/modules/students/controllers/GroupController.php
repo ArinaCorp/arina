@@ -39,6 +39,11 @@ class GroupController extends Controller implements IAdminController
                         'allow' => true,
                         'actions' => [],
                         'roles' => ['head-of-department'],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['index', 'view', 'document'],
+                        'roles' => ['teacher'],
                     ]
                 ]
             ]

@@ -2,20 +2,53 @@
 
 namespace app\modules\load\controllers;
 
+use app\components\DepDropHelper;
+use app\modules\directories\models\cyclic_commission\CyclicCommission;
 use app\modules\directories\models\StudyYear;
 use app\modules\directories\models\StudyYearSearch;
 use app\modules\load\models\Load;
 use app\modules\load\models\LoadSearch;
 use app\modules\plans\models\WorkSubject;
+use app\modules\rbac\filters\AccessControl;
 use app\modules\students\models\Group;
 use nullref\core\interfaces\IAdminController;
 use Yii;
+use yii\filters\VerbFilter;
+use yii\helpers\Json;
 use yii\helpers\Url;
 use yii\web\Controller;
 
 class DefaultController extends Controller implements IAdminController
 {
-
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'delete' => ['POST'],
+                ],
+            ],
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => [],
+                        'roles' => ['head-of-department', 'head-of-cyclic-commission'],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['index', 'view'],
+                        'roles' => ['teacher'],
+                    ]
+                ]
+            ]
+        ];
+    }
     public function actionIndex()
     {
         $searchModel = new StudyYearSearch();
@@ -199,5 +232,22 @@ class DefaultController extends Controller implements IAdminController
             }
         }
         return $this->render('doc', ['model' => $model, 'year'=>$year]);
+    }
+
+    public function getEmployees()
+    {
+        if (isset($_POST['depdrop_parents'])) {
+            $parents = $_POST['depdrop_parents'];
+            if ($parents != null) {
+                if (!empty($_POST['depdrop_all_params'])) {
+                    $commission_id = $parents[0]; // get the value of input-type-1
+                    if ($commission_id) {
+                        $out = DepDropHelper::convertMap(CyclicCommission::getEmployeeByCyclicCommission($commission_id));
+                        return Json::encode(['output' => $out, 'selected' => Yii::t('app', 'Select teacher')]);
+                    }
+                }
+            }
+            return Json::encode(['output' => [], 'selected' => Yii::t('app', 'Select ...')]);
+        }
     }
 }

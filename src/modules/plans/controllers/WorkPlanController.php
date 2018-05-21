@@ -40,7 +40,7 @@ class WorkPlanController extends Controller implements IAdminController
                     [
                         'allow' => true,
                         'actions' => [],
-                        'roles' => ['head-of-department'],
+                        'roles' => ['head-of-department', 'head-of-cyclic-commission'],
                     ]
                 ]
             ]

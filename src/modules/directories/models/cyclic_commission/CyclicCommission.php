@@ -99,5 +99,10 @@ class CyclicCommission extends ActiveRecord
         return ArrayHelper::map(self::find()->all(), 'id', 'title');
     }
 
+    public static function getEmployeeByCyclicCommission($commissionId)
+    {
+        return Employee::find()->andWhere(['cyclic_commission_id' => $commissionId])->all();
+    }
+
 
 }

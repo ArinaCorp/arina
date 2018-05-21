@@ -15,10 +15,6 @@
 
 ?>
 
-<?= $this->render('/_alert', [
-    'module' => Yii::$app->getModule('rbac'),
-]) ?>
-
 <div>
     <?= $content ?>
 </div>

@@ -10,6 +10,9 @@
 
 
 use app\modules\directories\models\cyclic_commission\CyclicCommission;
+use app\modules\employee\models\Employee;
+use kartik\depdrop\DepDrop;
+use kartik\select2\Select2;
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -43,40 +46,86 @@ $this->registerJs('
            $(sender).toggleClass("btn-warning");
        }
    ');
+
+
+$this->title = Yii::t('app', 'Loads');
+$this->params['breadcrumbs'][] = $this->title;
+
 ?>
-<div class="well">
-<h2>Навантаження на <?php echo $year->title; ?> навчальний рік</h2>
+<div class="load-view">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">
+                Навантаження на <?php echo $year->title; ?> навчальний рік
+            </h1>
+        </div>
+    </div>
 
     <?php $form = ActiveForm::begin(['id' => 'load-filter-form', 'method' => 'GET']); ?>
-    <?php echo $form->field($model, 'commissionId')->dropDownList(CyclicCommission::getList(), [
-        'class' => 'span6',
-        'empty' => '',
-        'ajax' => [
-            'type' => 'GET',
-            'url' => Url::to('/teacher/listByCycle'), //url to call.
-            'update' => '#Load_teacher_id',
-            'data' => ['id' => 'js:this.value'],
-        ],
-    ]); ?>
-<?php echo $form->field($model, 'teacher_id')->dropDownList([], ['empty' => '', 'class' => 'span6']); ?>
-<div class="form-actions">
-    <?php echo Html::submitButton('Фільтрувати', ['class' => 'btn-success']); ?>
-    <?php echo Html::a(
-        'Скасувати фільтр',
-        Url::to('view', array('id' => $year->id)),
-        array('class' => 'btn btn-danger')
-    ); ?>
-</div>
-<?php ActiveForm::end(); ?>
-<hr/>
 
-<div class="form-actions">
-    <button onclick="toggleSection('general', this)" class="btn btn-info">Загальні дані</button>
-    <button onclick="toggleSection('fall', this)" class="btn btn-info">Осінній семестр</button>
-    <button onclick="toggleSection('spring', this)" class="btn btn-info">Весняний семестр</button>
-</div>
+    <div class="row">
+        <div class="col-sm-4">
+            <?= $form->field($model, 'commissionId')->widget(Select2::class, [
+                'data' => CyclicCommission::getList(),
+                'id' => 'commissionId',
+                'options' =>
+                    [
+                        'placeholder' => Yii::t('app', 'Choose cyclic commission')
+                    ]
+            ]); ?>
+        </div>
+    </div>
 
-    <?= $this->render('_subjects', ['model' => $model, 'dataProvider' => $dataProvider]); ?>
+    <?php
+    $employeeData = CyclicCommission::getEmployeeByCyclicCommission($model->commissionId);
+    ?>
+
+    <div class="row">
+        <div class="col-sm-4">
+            <?= $form->field($model, 'employee_id')->widget(DepDrop::class,
+                [
+                    'data' => $employeeData,
+                    'type' => 2,
+                    'pluginOptions' => [
+                        'depends' => ['commissionId'],
+                        'url' => Url::to(['get-employees']),
+                        'placeholder' => Yii::t('app', 'Choose employee'),
+                    ]
+                ]) ?>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-4">
+            <?= $form->field($model, 'employee_id')->widget(Select2::class, [
+                'data' => [],
+                'id' => 'commissionId',
+                'options' =>
+                    [
+                        'placeholder' => Yii::t('app', 'Choose employee')
+                    ]
+            ]); ?>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <?= Html::submitButton('Фільтрувати', ['class' => 'btn btn-success']); ?>
+
+        <?= Html::a('Скасувати фільтр', Url::to('view', ['id' => $year->id]), ['class' => 'btn btn-danger']); ?>
+    </div>
+    <?php ActiveForm::end(); ?>
+
+    <hr/>
+
+    <div class="form-actions">
+        <button onclick="toggleSection('general', this)" class="btn btn-info">Загальні дані</button>
+        <button onclick="toggleSection('fall', this)" class="btn btn-info">Осінній семестр</button>
+        <button onclick="toggleSection('spring', this)" class="btn btn-info">Весняний семестр</button>
+    </div>
+
+    <p>
+        <?= $this->render('_subjects', ['model' => $model, 'dataProvider' => $dataProvider]); ?>
+    </p>
 
 </div>
 

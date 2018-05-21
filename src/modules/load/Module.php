@@ -40,13 +40,16 @@ class Module extends BaseModule implements IAdminModule
                     'label' => Yii::t('load', 'View loads'),
                     'url' => ['/load/default/index'],
                     'icon' => 'th-list',
+                    'roles' => ['head-of-cyclic-commission', 'teacher'],
                 ],
                 [
                     'label' => Yii::t('load', 'Create load'),
                     'url' => ['/load/default/create'],
                     'icon' => 'plus',
+                    'roles' => ['head-of-cyclic-commission'],
                 ],
             ],
+            'roles' => ['head-of-cyclic-commission', 'teacher'],
         ];
     }
 }
