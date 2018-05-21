@@ -2,17 +2,15 @@
 
 namespace app\modules\students\models;
 
-use app\modules\employee\models\Employee;
-use Yii;
-use yii\bootstrap\Html;
-use yii\db\ActiveRecord;
-use yii\db\ActiveQuery;
-
 use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 use app\modules\directories\models\StudyYear;
-use yii\helpers\ArrayHelper;
-use PHPExcel;
+use app\modules\employee\models\Employee;
 use PHPExcel_IOFactory;
+use Yii;
+use yii\bootstrap\Html;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 
 /**
@@ -30,7 +28,6 @@ use yii\helpers\Url;
  * @property Student $groupLeader
  * @property StudyYear $studyYear;
  *
- * @property boolean $active;
  */
 class Group extends ActiveRecord
 {
@@ -210,7 +207,7 @@ class Group extends ActiveRecord
         /** @var Group[] $groups */
         $groups = self::find()->all();
         foreach ($groups as $key => $group) {
-            if ($group->active) {
+            if ($group->isActive()) {
                 unset($groups[$key]);
             }
         }
@@ -232,13 +229,21 @@ class Group extends ActiveRecord
         return ArrayHelper::map(self::getAllGroups(), 'id', 'title');
     }
 
-    public function getActive($year_id)
+    /**
+     * @param bool $year_id
+     * @return bool
+     */
+    public function isActive($year_id = true)
     {
-        $queryYear = StudyYear::findOne($year_id);
-        if ($queryYear->year_start < $this->studyYear->year_start) {
+        if ($year_id) {
+            $year = StudyYear::findOne($year_id);
+        } else {
+            $year = StudyYear::findOne(['active' => 1]);
+        }
+        if ($year->year_start < $this->studyYear->year_start) {
             return false;
         }
-        return $this->specialityQualification->getCountCourses() > ($queryYear->year_start - $this->studyYear->year_start);
+        return $this->specialityQualification->getCountCourses() > ($year->year_start - $this->studyYear->year_start);
     }
 
     public function getCoursesList()

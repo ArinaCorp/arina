@@ -34,7 +34,7 @@ use yii\widgets\ActiveForm;
     ]) ?>
     <?=$form->field($model, 'subject_id')->widget(Select2::className(),[
         'name' =>'select-subject',
-        'data' => Subject::getSubjectList(),
+        'data' => Subject::getMap('title'),
         'options' => [
             'placeholder' => Yii::t('app', 'Оберіть предмет'),
         ],
