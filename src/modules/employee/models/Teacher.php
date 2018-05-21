@@ -12,6 +12,7 @@ use app\modules\directories\models\cyclic_commission\CyclicCommission;
 use yii\helpers\ArrayHelper;
 
 /**
+ * @TODO move active features to Employee model
  * Class Teacher
  * @package app\modules\employee\models
  */
@@ -70,6 +71,7 @@ class Teacher extends Employee
     }
 
     /**
+     * @TODO rework it
      * @return array relational rules.
      */
     public function relations()

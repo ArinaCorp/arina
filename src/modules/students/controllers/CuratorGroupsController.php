@@ -140,24 +140,21 @@ class CuratorGroupsController extends Controller implements IAdminController
                                 /**
                                  * @var $curator Employee;
                                  */
-                                echo Json::encode(['output' => [['id' => $curator->id, 'name' => $curator->getFullName()]], 'selected' => ['id' => $curator->id, 'name' => $curator->getFullName()]]);
-                                break;
+                                return Json::encode(['output' => [['id' => $curator->id, 'name' => $curator->getFullName()]], 'selected' => ['id' => $curator->id, 'name' => $curator->getFullName()]]);
                             }
                             case CuratorGroup::TYPE_ACCEPTED: {
-                                $out = DepDropHelper::convertMap(Employee::getAllTeacherList());
-                                echo Json::encode(['output' => $out, 'selected' => Yii::t('app', 'Select teacher')]);
-                                break;
+                                $out = DepDropHelper::convertMap(Employee::getMap('nameWithInitials', 'id', [], false));
+                                return Json::encode(['output' => $out, 'selected' => Yii::t('app', 'Select teacher')]);
                             }
                             default: {
                                 break;
                             }
                         }
-                        return;
+                        ;
                     }
                 }
             }
-            echo Json::encode(['output' => [], 'selected' => Yii::t('app', 'Select ...')]);
-            return;
+            return Json::encode(['output' => [], 'selected' => Yii::t('app', 'Select ...')]);
         }
     }
 

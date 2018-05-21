@@ -5,6 +5,7 @@ namespace app\modules\students\models;
 use app\modules\employee\models\Employee;
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -18,7 +19,7 @@ use yii\helpers\ArrayHelper;
  * @property int $created_at
  * @property int $updated_at
  */
-class CuratorGroup extends \yii\db\ActiveRecord
+class CuratorGroup extends ActiveRecord
 {
     const TYPE_ACCEPTED = 1;
     const TYPE_DE_ACCEPTED = 2;
