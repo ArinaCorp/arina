@@ -33,7 +33,7 @@ class DefaultController extends Controller implements IAdminController
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['view'],
+                        'actions' => [],
                         'roles' => ['staff-office'],
                     ]
                 ]

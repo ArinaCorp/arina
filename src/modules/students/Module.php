@@ -30,7 +30,7 @@ class Module extends BaseModule implements IAdminModule, IAccessibleModule
                     'label' => Yii::t('app', 'List'),
                     'url' => ['/students/default/index'],
                     'icon' => 'address-book',
-                    'roles' => ['head-of-department'],
+                    'roles' => ['head-of-department', 'staff-office'],
                 ],
                 [
                     'label' => Yii::t('app', 'Groups'),
@@ -79,7 +79,7 @@ class Module extends BaseModule implements IAdminModule, IAccessibleModule
                     'icon' => 'file-text-o',
                 ]
             ],
-            'roles' => ['head-of-department', 'teacher', 'curator'],
+            'roles' => ['head-of-department', 'teacher', 'curator', 'staff-office'],
         ];
     }
 

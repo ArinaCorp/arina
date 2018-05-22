@@ -59,19 +59,11 @@ class GroupController extends Controller implements IAdminController
     {
         $query = Group::find();
 
+        $ids = [];
+
         if (!Yii::$app->user->isGuest) {
             /** @var User $user */
             $user = Yii::$app->user->identity;
-
-            if (UserHelper::hasRole($user, 'curator')) {
-                if ($user->employee) {
-                    $groupId = CuratorGroup::find()
-                        ->andWhere(['teacher_id' => $user->employee->id])
-                        ->select('group_id')
-                        ->column();
-                    $query->andWhere(['id' => $groupId]);
-                }
-            }
 
             if (UserHelper::hasRole($user, 'head-of-department')) {
                 if ($user->employee && $user->employee->department) {
@@ -83,13 +75,27 @@ class GroupController extends Controller implements IAdminController
                         ])
                         ->select('id')
                         ->column();
-                    $query->andWhere(['speciality_qualifications_id' => $spQIds]);
+                    $ids = array_merge($ids, $query->andWhere(['speciality_qualifications_id' => $spQIds])->select('id')->column());
+                }
+            }
+
+            if (UserHelper::hasRole($user, 'curator')) {
+                if ($user->employee) {
+                    $groupId = CuratorGroup::find()
+                        ->andWhere(['teacher_id' => $user->employee->id])
+                        ->select('group_id')
+                        ->column();
+                    $curatorGroupId = $query->andWhere(['id' => $groupId])->select('id')->column();
+
+                    if (in_array($curatorGroupId, $ids)){
+                        $ids = array_merge($ids, $curatorGroupId);
+                    }
                 }
             }
         }
 
         $dataProvider = new ActiveDataProvider([
-            'query' => $query,
+            'query' => $query->andWhere(['id' => $ids]),
         ]);
 
         return $this->render('index', [

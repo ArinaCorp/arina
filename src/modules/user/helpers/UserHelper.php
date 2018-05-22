@@ -74,6 +74,11 @@ class UserHelper
         ];
     }
 
+    /**
+     * @param User $user
+     * @param $role
+     * @return bool
+     */
     public static function hasRole(User $user, $role)
     {
         return in_array($role, array_keys(UserHelper::getRoles($user)));

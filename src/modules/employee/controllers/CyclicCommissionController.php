@@ -4,6 +4,7 @@ namespace app\modules\employee\controllers;
 
 use app\modules\employee\models\CyclicCommission;
 use app\modules\employee\models\CyclicCommissionSearch;
+use app\modules\rbac\filters\AccessControl;
 use nullref\core\interfaces\IAdminController;
 use Yii;
 use yii\data\ArrayDataProvider;
@@ -25,11 +26,21 @@ class CyclicCommissionController extends Controller implements IAdminController
     {
         return [
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
                 ],
             ],
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => [],
+                        'roles' => ['staff-office'],
+                    ]
+                ]
+            ]
         ];
     }
 
