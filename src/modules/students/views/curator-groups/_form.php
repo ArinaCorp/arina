@@ -19,7 +19,7 @@ use yii\helpers\Url;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'group_id')->widget(Select2::className(), [
+    <?= $form->field($model, 'group_id')->widget(Select2::class, [
         'data' => Group::getActiveGroupsList(),
         'options' => [
             'placeholder' => Yii::t('app', 'Select group'),
@@ -30,7 +30,7 @@ use yii\helpers\Url;
             ]
     ]); ?>
 
-    <?= $form->field($model, 'type')->widget(DepDrop::className(), [
+    <?= $form->field($model, 'type')->widget(DepDrop::class, [
         'name' => 'teacher',
         'data' => [],
         'options' => ['placeholder' => Yii::t('app', 'Select group')],
@@ -43,7 +43,7 @@ use yii\helpers\Url;
         ]
     ]) ?>
 
-    <?= $form->field($model, 'teacher_id')->widget(DepDrop::className(), ['name' => 'teacher',
+    <?= $form->field($model, 'teacher_id')->widget(DepDrop::class, ['name' => 'teacher',
         'data' => [],
         'options' => ['placeholder' => Yii::t('app', 'Select group')],
         'type' => DepDrop::TYPE_SELECT2,

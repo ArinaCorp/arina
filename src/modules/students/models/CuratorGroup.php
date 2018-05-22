@@ -11,8 +11,8 @@ use yii\helpers\ArrayHelper;
 /**
  * This is the model class for table "curator_group".
  *
- * @property int $id
- * @property int $group_id
+ * @property int $id$group_id
+ * @property int
  * @property int $teacher_id
  * @property int $type
  * @property string $date
@@ -28,7 +28,7 @@ class CuratorGroup extends ActiveRecord
     public function behaviors()
     {
         return [
-            TimestampBehavior::className(),
+            TimestampBehavior::class,
         ];
     }
 
@@ -83,11 +83,11 @@ class CuratorGroup extends ActiveRecord
 
     public function getTeacher()
     {
-        return $this->hasOne(Employee::className(), ['id' => 'teacher_id']);
+        return $this->hasOne(Employee::class, ['id' => 'teacher_id']);
     }
 
     public function getGroup()
     {
-        return $this->hasOne(Group::className(), ['id' => 'group_id']);
+        return $this->hasOne(Group::class, ['id' => 'group_id']);
     }
 }

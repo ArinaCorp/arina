@@ -581,7 +581,7 @@ class StudentsHistory extends ActiveRecord
      */
     public static function find()
     {
-        return parent::find()->alias('studentsHistory')->orderBy(['studentsHistory.id' => SORT_DESC]);
+        return parent::find()->alias('studentsHistory')->orderBy(['id' => SORT_DESC]);
     }
 
     /**

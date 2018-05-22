@@ -168,9 +168,9 @@ class CuratorGroupsController extends Controller implements IAdminController
                     $group_id = $params['curatorgroup-group_id']; // get the value of input-type-1
                     $group = Group::findOne(['id' => $group_id]);
                     if ($group->getCuratorId() === false) {
-                        echo Json::encode(['output' => [['id' => CuratorGroup::TYPE_ACCEPTED, 'name' => CuratorGroup::getTypesList()[CuratorGroup::TYPE_ACCEPTED]]], 'selected' => ['id' => CuratorGroup::TYPE_ACCEPTED, 'name' => CuratorGroup::getTypesList()[CuratorGroup::TYPE_ACCEPTED]]]);
+                        return Json::encode(['output' => [['id' => CuratorGroup::TYPE_ACCEPTED, 'name' => CuratorGroup::getTypesList()[CuratorGroup::TYPE_ACCEPTED]]], 'selected' => ['id' => CuratorGroup::TYPE_ACCEPTED, 'name' => CuratorGroup::getTypesList()[CuratorGroup::TYPE_ACCEPTED]]]);
                     } else {
-                        echo Json::encode(['output' => [['id' => CuratorGroup::TYPE_DE_ACCEPTED, 'name' => CuratorGroup::getTypesList()[CuratorGroup::TYPE_DE_ACCEPTED]]], 'selected' => ['id' => CuratorGroup::TYPE_DE_ACCEPTED, 'name' => CuratorGroup::getTypesList()[CuratorGroup::TYPE_DE_ACCEPTED]]]);
+                        return Json::encode(['output' => [['id' => CuratorGroup::TYPE_DE_ACCEPTED, 'name' => CuratorGroup::getTypesList()[CuratorGroup::TYPE_DE_ACCEPTED]]], 'selected' => ['id' => CuratorGroup::TYPE_DE_ACCEPTED, 'name' => CuratorGroup::getTypesList()[CuratorGroup::TYPE_DE_ACCEPTED]]]);
                     }
                 }
             }

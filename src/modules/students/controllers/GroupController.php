@@ -4,6 +4,7 @@ namespace app\modules\students\controllers;
 
 use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 use app\modules\rbac\filters\AccessControl;
+use app\modules\students\models\CuratorGroup;
 use app\modules\students\models\Group;
 use app\modules\user\helpers\UserHelper;
 use app\modules\user\models\User;
@@ -43,7 +44,7 @@ class GroupController extends Controller implements IAdminController
                     [
                         'allow' => true,
                         'actions' => ['index', 'view', 'document'],
-                        'roles' => ['teacher'],
+                        'roles' => ['teacher', 'curator'],
                     ]
                 ]
             ]
@@ -61,6 +62,16 @@ class GroupController extends Controller implements IAdminController
         if (!Yii::$app->user->isGuest) {
             /** @var User $user */
             $user = Yii::$app->user->identity;
+
+            if (UserHelper::hasRole($user, 'curator')) {
+                if ($user->employee) {
+                    $groupId = CuratorGroup::find()
+                        ->andWhere(['teacher_id' => $user->employee->id])
+                        ->select('group_id')
+                        ->column();
+                    $query->andWhere(['id' => $groupId]);
+                }
+            }
 
             if (UserHelper::hasRole($user, 'head-of-department')) {
                 if ($user->employee && $user->employee->department) {
