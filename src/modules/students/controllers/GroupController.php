@@ -4,7 +4,6 @@ namespace app\modules\students\controllers;
 
 use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 use app\modules\rbac\filters\AccessControl;
-use app\modules\students\models\CuratorGroup;
 use app\modules\students\models\Group;
 use app\modules\user\helpers\UserHelper;
 use app\modules\user\models\User;
@@ -57,8 +56,6 @@ class GroupController extends Controller implements IAdminController
      */
     public function actionIndex()
     {
-        $query = Group::find();
-
         $ids = [];
 
         if (!Yii::$app->user->isGuest) {
@@ -75,13 +72,13 @@ class GroupController extends Controller implements IAdminController
                         ])
                         ->select('id')
                         ->column();
-                    $ids = array_merge($ids, $query->andWhere(['speciality_qualifications_id' => $spQIds])->select('id')->column());
+                    $ids = array_merge($ids, Group::find()->andWhere(['speciality_qualifications_id' => $spQIds])->select('id')->column());
                 }
             }
 
             if (UserHelper::hasRole($user, 'curator')) {
                 if ($user->employee) {
-                    $curatorGroupId = $query->andWhere(['curator_id' => $user->employee->id])->select('id')->column();
+                    $curatorGroupId = Group::find()->andWhere(['curator_id' => $user->employee->id])->select('id')->column();
                     $ids = array_merge($ids, $curatorGroupId);
                 }
             }
@@ -90,7 +87,7 @@ class GroupController extends Controller implements IAdminController
         $ids = array_unique($ids);
 
         $dataProvider = new ActiveDataProvider([
-            'query' => $query->andWhere(['id' => $ids]),
+            'query' => Group::find()->andWhere(['id' => $ids]),
         ]);
 
         return $this->render('index', [
