@@ -30,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="journal-student-form">
 
         <?php $form = ActiveForm::begin(); ?>
-        <?= $form->field($model, 'year_id')->widget(Select2::className(),
+        <?= $form->field($model, 'year_id')->widget(Select2::class,
             [
 
                 'data' => StudyYear::getYearList(),
@@ -39,7 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'placeholder' => Yii::t('app', 'Select study year'),
                 ]
             ]) ?>
-        <?= $form->field($model, 'speciality_qualification_id')->widget(Select2::className(),
+        <?= $form->field($model, 'speciality_qualification_id')->widget(Select2::class,
             [
 
                 'data' => SpecialityQualification::getList(),
@@ -51,7 +51,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php
         $groupData = StudyYear::getListGroupByYear($model->speciality_qualification_id, $model->year_id)
         ?>
-        <?= $form->field($model, 'group_id')->widget(DepDrop::className(),
+        <?= $form->field($model, 'group_id')->widget(DepDrop::class,
             [
                 'data' => $groupData,
                 'pluginOptions' => [
@@ -63,7 +63,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php
         $loadData = Load::getListByGroupAndYear($model->group_id, $model->year_id)
         ?>
-        <?= $form->field($model, 'load_id')->widget(DepDrop::className(),
+        <?= $form->field($model, 'load_id')->widget(DepDrop::class,
             [
                 'data' => $loadData,
                 'pluginOptions' => [

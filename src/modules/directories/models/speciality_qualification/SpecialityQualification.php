@@ -82,7 +82,7 @@ class SpecialityQualification extends ActiveRecord
      */
     public function getQualification()
     {
-        return $this->hasOne(Qualification::className(), ['id' => 'qualification_id']);
+        return $this->hasOne(Qualification::class, ['id' => 'qualification_id']);
     }
 
     /**
@@ -90,7 +90,7 @@ class SpecialityQualification extends ActiveRecord
      */
     public function getSpeciality()
     {
-        return $this->hasOne(Speciality::className(), ['id' => 'speciality_id']);
+        return $this->hasOne(Speciality::class, ['id' => 'speciality_id']);
     }
 
     /**
@@ -131,7 +131,7 @@ class SpecialityQualification extends ActiveRecord
      */
     public function getSubjectRelation()
     {
-        return $this->hasMany(SubjectRelation::className(), ['speciality_qualification_id' => 'id']);
+        return $this->hasMany(SubjectRelation::class, ['speciality_qualification_id' => 'id']);
     }
 
     /**
@@ -172,7 +172,7 @@ class SpecialityQualification extends ActiveRecord
      */
     public function getGroups()
     {
-        return $this->hasMany(Group::className(), ['speciality_qualifications_id' => 'id']);
+        return $this->hasMany(Group::class, ['speciality_qualifications_id' => 'id']);
     }
 
     /**
@@ -186,7 +186,7 @@ class SpecialityQualification extends ActiveRecord
          * @var Group[] $array
          */
         foreach ($array as $key => $item) {
-            if (!$item->getActive($year_id)) {
+            if (!$item->isActive($year_id)) {
                 unset($array[$key]);
             }
         }

@@ -183,7 +183,7 @@ class ExportWorkplan
                 //CYCLE COMMISSION
 
 //                No object exception - Fix
-                $sheet->setCellValue("BM$row", $item->cyclicCommission ? $item->cyclicCommission->title : ' ');
+                $sheet->setCellValue("BM$row", $item->cyclicCommission ? $item->cyclicCommission->short_title : ' ');
 //                $sheet->setCellValue("BM$row", "TROUBLEMAKER");
 
                 $j++;
