@@ -6,7 +6,6 @@ use app\modules\employee\models\Employee;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
-use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "curator_group".
@@ -18,6 +17,8 @@ use yii\helpers\ArrayHelper;
  * @property string $date
  * @property int $created_at
  * @property int $updated_at
+ *
+ * @property Group $group;
  */
 class CuratorGroup extends ActiveRecord
 {
@@ -68,11 +69,9 @@ class CuratorGroup extends ActiveRecord
         ];
     }
 
-//    public function getType()
-//    {
-//        return ($this->type) ? Yii::t('app', 'Accepted') : Yii::t('app', 'De accepted');
-//    }
-
+    /**
+     * @return array
+     */
     public static function getTypesList()
     {
         return [
@@ -81,11 +80,39 @@ class CuratorGroup extends ActiveRecord
         ];
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getTeacher()
     {
         return $this->hasOne(Employee::class, ['id' => 'teacher_id']);
     }
 
+    /**
+     * Set or unset curator id at group record
+     *
+     * @param bool $insert
+     * @param array $changedAttributes
+     */
+    public function afterSave($insert, $changedAttributes)
+    {
+        if ($this->isNewRecord) {
+            if ($group = $this->group) {
+                if ($this->type === self::TYPE_ACCEPTED) {
+                    $group->curator_id = $this->teacher_id;
+                } else {
+                    $group->curator_id = null;
+                }
+                $group->save(false, ['curator_id']);
+            }
+        }
+        parent::afterSave($insert, $changedAttributes);
+    }
+
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getGroup()
     {
         return $this->hasOne(Group::class, ['id' => 'group_id']);
