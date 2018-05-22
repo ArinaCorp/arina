@@ -71,6 +71,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'options' => [
                         'placeholder' => Yii::t('app', 'Choose cyclic commission')
                     ],
+                    'pluginOptions' => ['allowClear' => true],
                 ]);
             ?>
         </div>

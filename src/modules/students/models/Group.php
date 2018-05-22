@@ -2,10 +2,10 @@
 
 namespace app\modules\students\models;
 
+use app\components\ExportToExcel;
 use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 use app\modules\directories\models\StudyYear;
 use app\modules\employee\models\Employee;
-use PHPExcel_IOFactory;
 use Yii;
 use yii\bootstrap\Html;
 use yii\db\ActiveQuery;
@@ -307,54 +307,60 @@ class Group extends ActiveRecord
         return $this->groupLeader->getLink();
     }
 
+//    /**
+//     * @throws \PHPExcel_Exception
+//     * @throws \PHPExcel_Reader_Exception
+//     * @throws \PHPExcel_Writer_Exception
+//     *
+//     * @TODO move to excel export component
+//     */
     /**
-     * @throws \PHPExcel_Exception
-     * @throws \PHPExcel_Reader_Exception
-     * @throws \PHPExcel_Writer_Exception
-     *
-     * @TODO move to excel export component
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
     public function getDocument()
     {
-        $tmpfname = Yii::getAlias('@webroot') . "/templates/group.xls";
-        $excelReader = PHPExcel_IOFactory::createReaderForFile($tmpfname);;
-        $excelObj = $excelReader->load($tmpfname);
-        $excelObj->setActiveSheetIndex(0);
-        $excelObj->getActiveSheet()->SetCellValue('B2', $this->title);
-        $excelObj->getActiveSheet()->SetCellValue('B3', StudyYear::getCurrentYear()->fullName . " навчального року");
-        /**
-         * @var Student[] $students
-         */
-        $students = $this->getStudentsArray();
-        if (!is_null($students)) {
-            $startRow = 7;
-            $current = $startRow;
-            $i = 1;
-            foreach ($students as $student) {
-                $excelObj->getActiveSheet()->mergeCells("C" . $current . ":G" . $current);
-                $excelObj->getActiveSheet()->insertNewRowBefore($current + 1);
-                $excelObj->getActiveSheet()->setCellValue('B' . $current, $i);
-                $excelObj->getActiveSheet()->setCellValue('C' . $current, $student->getFullName());
-                $excelObj->getActiveSheet()->setCellValue('H' . $current, $student->getPaymentTypeLabel());
-                $i++;
-                $current++;
-            }
-            $excelObj->getActiveSheet()->removeRow($current);
-            $excelObj->getActiveSheet()->removeRow($current);
-            $current += 1;
-            $excelObj->getActiveSheet()->setCellValue('F' . $current, $this->getCuratorShortNameInitialFirst());
-            $current += 2;
-            $excelObj->getActiveSheet()->setCellValue('F' . $current, $this->getGroupLeaderShortNameInitialFirst());
-            $current += 2;
-            $excelObj->getActiveSheet()->setCellValue('F' . $current, Yii::t('app', 'Date created'));
-            $excelObj->getActiveSheet()->setCellValue('G' . $current, date('d.m.Y H:i:s'));
-        }
-        header('Content-Type: application/vnd.ms-excel');
-        $filename = "Group_" . $this->title . "_" . date("d-m-Y-His") . ".xls";
-        header('Content-Disposition: attachment;filename=' . $filename . ' ');
-        header('Cache-Control: max-age=0');
-        $objWriter = PHPExcel_IOFactory::createWriter($excelObj, 'Excel2007');
-        $objWriter->save('php://output');
+//        $tmpfname = Yii::getAlias('@webroot') . "/templates/group.xls";
+//        $excelReader = PHPExcel_IOFactory::createReaderForFile($tmpfname);;
+//        $excelObj = $excelReader->load($tmpfname);
+//        $excelObj->setActiveSheetIndex(0);
+//        $excelObj->getActiveSheet()->SetCellValue('B2', $this->title);
+//        $excelObj->getActiveSheet()->SetCellValue('B3', StudyYear::getCurrentYear()->fullName . " навчального року");
+//        /**
+//         * @var Student[] $students
+//         */
+//        $students = $this->getStudentsArray();
+//        if (!is_null($students)) {
+//            $startRow = 7;
+//            $current = $startRow;
+//            $i = 1;
+//            foreach ($students as $student) {
+//                $excelObj->getActiveSheet()->mergeCells("C" . $current . ":G" . $current);
+//                $excelObj->getActiveSheet()->insertNewRowBefore($current + 1);
+//                $excelObj->getActiveSheet()->setCellValue('B' . $current, $i);
+//                $excelObj->getActiveSheet()->setCellValue('C' . $current, $student->getFullName());
+//                $excelObj->getActiveSheet()->setCellValue('H' . $current, $student->getPaymentTypeLabel());
+//                $i++;
+//                $current++;
+//            }
+//            $excelObj->getActiveSheet()->removeRow($current);
+//            $excelObj->getActiveSheet()->removeRow($current);
+//            $current += 1;
+//            $excelObj->getActiveSheet()->setCellValue('F' . $current, $this->getCuratorShortNameInitialFirst());
+//            $current += 2;
+//            $excelObj->getActiveSheet()->setCellValue('F' . $current, $this->getGroupLeaderShortNameInitialFirst());
+//            $current += 2;
+//            $excelObj->getActiveSheet()->setCellValue('F' . $current, Yii::t('app', 'Date created'));
+//            $excelObj->getActiveSheet()->setCellValue('G' . $current, date('d.m.Y H:i:s'));
+//        }
+//        header('Content-Type: application/vnd.ms-excel');
+//        $filename = "Group_" . $this->title . "_" . date("d-m-Y-His") . ".xls";
+//        header('Content-Disposition: attachment;filename=' . $filename . ' ');
+//        header('Cache-Control: max-age=0');
+//        $objWriter = PHPExcel_IOFactory::createWriter($excelObj, 'Excel2007');
+//        $objWriter->save('php://output');
+        ExportToExcel::getDocument('Group',$this);
     }
 
     /**

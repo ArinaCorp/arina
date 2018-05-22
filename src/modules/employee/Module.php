@@ -44,11 +44,13 @@ class Module extends BaseModule implements IAdminModule, IAccessibleModule
                     'label' => Yii::t('app', 'List'),
                     'url' => ['/employee/default/index'],
                     'icon' => 'list',
+                    'roles' => ['staff-office'],
                 ],
                 [
                     'label' => Yii::t('app', 'Cyclic Commissions'),
                     'url' => ['/employee/cyclic-commission/index'],
                     'icon' => 'list',
+                    'roles' => ['staff-office'],
                 ],
             ],
             'roles' => ['staff-office'],

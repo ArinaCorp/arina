@@ -17,7 +17,6 @@ use yii\web\Response;
 
 use app\modules\plans\models\WorkPlan;
 use app\modules\plans\models\WorkSubject;
-use app\modules\plans\models\StudyPlan;
 use app\modules\plans\models\WorkPlanSearch;
 
 class WorkPlanController extends Controller implements IAdminController

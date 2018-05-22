@@ -2,6 +2,7 @@
 
 namespace app\modules\plans\models;
 
+use app\components\ExportToExcel;
 use app\modules\user\helpers\UserHelper;
 use app\modules\user\models\User;
 use Yii;
@@ -255,8 +256,14 @@ class StudyPlan extends ActiveRecord
         return date('d.m.Y H:i', $this->updated);
     }
 
+    /**
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
     public function getDocument()
     {
-        Yii::$app->excel->makeStudyPlan($this);
+//        Yii::$app->excel->makeStudyPlan($this);
+        ExportToExcel::getDocument('StudyPlan', $this);
     }
 }

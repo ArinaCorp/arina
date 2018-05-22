@@ -2,13 +2,13 @@
 
 namespace app\modules\employee\models;
 
+use app\components\ExportToExcel;
 use app\modules\directories\models\department\Department;
 use app\modules\directories\models\position\Position;
 use app\modules\students\models\CuratorGroup;
 use app\modules\students\models\Group;
 use nullref\useful\behaviors\RelatedBehavior;
 use nullref\useful\traits\Mappable;
-use PHPExcel_IOFactory;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
@@ -75,7 +75,7 @@ class Employee extends ActiveRecord
             [['id', 'position_id', 'category_id', 'is_in_education', 'gender', 'type', 'cyclic_commission_id'], 'integer'],
             [['last_name', 'first_name', 'middle_name', 'position_id', 'is_in_education',
                 'gender', 'passport', 'birth_date', 'passport_issued_by', 'start_date', 'passport_issued_date', 'category_id'], 'required'],
-            [['birth_date','cyclic_commission_id', 'passport', 'passport_issued_by'], 'safe'],
+            [['birth_date', 'cyclic_commission_id', 'passport', 'passport_issued_by'], 'safe'],
             [['passport', 'id'], 'unique'],
         ];
     }
@@ -124,7 +124,7 @@ class Employee extends ActiveRecord
 
     public function getShortNameInitialFirst()
     {
-        return mb_substr($this->first_name, 0, 1, 'UTF-8') . '.' . mb_substr($this->middle_name, 0, 1, 'UTF-8') . '.' . ' '.$this->last_name;
+        return mb_substr($this->first_name, 0, 1, 'UTF-8') . '.' . mb_substr($this->middle_name, 0, 1, 'UTF-8') . '.' . ' ' . $this->last_name;
     }
 
     public function getStartDate()
@@ -193,7 +193,7 @@ class Employee extends ActiveRecord
         return Position::findOne(['id' => $this->position_id])->title;
     }
 
-    public  function getCyclicCommissionTitle()
+    public function getCyclicCommissionTitle()
     {
         $cyclicCommission = CyclicCommission::findOne(['id' => $this->cyclic_commission_id]);
         if ($cyclicCommission) {
@@ -216,16 +216,18 @@ class Employee extends ActiveRecord
         $listGroup = [];
         foreach ($listRecord as $item) {
             switch ($item->type) {
-                case 1: {
-                    array_push($listGroup, $item->group_id);
-                    break;
-                }
-                case 2: {
-                    if (($key = array_search($item->group_id, $listGroup)) !== false) {
-                        unset($listGroup[$key]);
+                case 1:
+                    {
+                        array_push($listGroup, $item->group_id);
+                        break;
                     }
+                case 2:
+                    {
+                        if (($key = array_search($item->group_id, $listGroup)) !== false) {
+                            unset($listGroup[$key]);
+                        }
 
-                }
+                    }
             }
         }
         return $listGroup;
@@ -244,49 +246,13 @@ class Employee extends ActiveRecord
     /**
      * @TODO move to component
      *
-     * @throws \PHPExcel_Exception
-     * @throws \PHPExcel_Reader_Exception
-     * @throws \PHPExcel_Writer_Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
     public static function getDocument()
     {
-        $tmpfname = Yii::getAlias('@webroot') . "/templates/employee.xls";
-        $excelReader = PHPExcel_IOFactory::createReaderForFile($tmpfname);;
-        $excelObj = $excelReader->load($tmpfname);
-        $excelObj->setActiveSheetIndex(0);
-
-        /**
-         * @var Employee[] $employees
-         */
-        $employees = Employee::getList();
-        if (!is_null($employees)) {
-            $startRow = 5;
-            $current = $startRow;
-            $i = 1;
-            foreach ($employees as $employee) {
-                $excelObj->getActiveSheet()->mergeCells("C" . $current . ":D" . $current);
-                $excelObj->getActiveSheet()->mergeCells("E" . $current . ":I" . $current);
-                $excelObj->getActiveSheet()->mergeCells("J" . $current . ":L" . $current);
-                $excelObj->getActiveSheet()->mergeCells("M" . $current . ":O" . $current);
-
-                $excelObj->getActiveSheet()->insertNewRowBefore($current + 1);
-                $excelObj->getActiveSheet()->setCellValue('B' . $current, $i);
-                $excelObj->getActiveSheet()->setCellValue('C' . $current, $employee->getPosition());
-                $excelObj->getActiveSheet()->setCellValue('E' . $current, $employee->getFullName());
-                $excelObj->getActiveSheet()->setCellValue('J' . $current, $employee->getCyclicCommissionTitle());
-                $excelObj->getActiveSheet()->setCellValue('M' . $current, $employee->getStartDate());
-                $i++;
-                $current++;
-            }
-            $excelObj->getActiveSheet()->removeRow($current);
-        }
-        header('Content-Type: application/vnd.ms-excel');
-        $filename = "Employee_" . date("d-m-Y-His") . ".xls";
-        header('Content-Disposition: attachment;filename=' . $filename . ' ');
-        header('Cache-Control: max-age=0');
-        $objWriter = PHPExcel_IOFactory::createWriter($excelObj, 'Excel2007');
-        $objWriter->save('php://output');
-        exit();
+        ExportToExcel::getDocument('Employee');
     }
 
     /**
@@ -294,7 +260,7 @@ class Employee extends ActiveRecord
      */
     public function getEmployeeEducation()
     {
-        return $this->hasMany(EmployeeEducation::className(),['employee_id'=>'id']);
+        return $this->hasMany(EmployeeEducation::className(), ['employee_id' => 'id']);
     }
 
     /**

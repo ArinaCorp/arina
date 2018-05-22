@@ -2,6 +2,7 @@
 
 namespace app\modules\plans\models;
 
+use app\components\ExportToExcel;
 use app\modules\user\helpers\UserHelper;
 use app\modules\user\models\User;
 use Yii;
@@ -382,10 +383,16 @@ class WorkPlan extends ActiveRecord
         return $result;
     }
 
+    /**
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
     public function getDocument()
     {
         //@TODO move to component
-        Yii::$app->excel->makeWorkPlan($this);
+//        Yii::$app->excel->makeWorkPlan($this);
+        ExportToExcel::getDocument('WorkPlan',$this);
     }
 
     /**

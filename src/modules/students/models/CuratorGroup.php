@@ -10,8 +10,8 @@ use yii\db\ActiveRecord;
 /**
  * This is the model class for table "curator_group".
  *
- * @property int $id$group_id
- * @property int
+ * @property int $id
+ * @property int $group_id
  * @property int $teacher_id
  * @property int $type
  * @property string $date
