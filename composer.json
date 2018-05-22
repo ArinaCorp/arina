@@ -13,7 +13,7 @@
     },
     "minimum-stability": "dev",
     "require": {
-        "php": ">=5.4.0",
+        "php": ">=5.5.0",
         "2amigos/yii2-date-picker-widget": "~1.0",
         "2amigos/yii2-date-time-picker-widget": "*",
         "dektrium/yii2-rbac": "^1.0@dev",
@@ -29,7 +29,6 @@
         "nullref/yii2-admin": ">=0.0.2",
         "nullref/yii2-core": ">=0.0.3",
         "nullref/yii2-useful": ">=0.0.4",
-        "phpoffice/phpexcel": "^1.8",
         "phpoffice/phpspreadsheet": "dev-master",
         "unclead/yii2-multiple-input": "~2.0",
         "vlucas/phpdotenv": "~1.0@dev",

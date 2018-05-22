@@ -27,7 +27,6 @@ at [getcomposer.org](http://getcomposer.org/doc/00-intro.md#installation-nix).
 
 To install vendors run
 ```
-composer global require "fxp/composer-asset-plugin:~1.1.1"
 composer install -o
 ```
 If you use composer.phar as local file, you have to use commands begin with `php composer.phar`
