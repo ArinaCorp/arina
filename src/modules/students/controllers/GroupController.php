@@ -81,18 +81,13 @@ class GroupController extends Controller implements IAdminController
 
             if (UserHelper::hasRole($user, 'curator')) {
                 if ($user->employee) {
-                    $groupId = CuratorGroup::find()
-                        ->andWhere(['teacher_id' => $user->employee->id])
-                        ->select('group_id')
-                        ->column();
-                    $curatorGroupId = $query->andWhere(['id' => $groupId])->select('id')->column();
-
-                    if (in_array($curatorGroupId, $ids)){
-                        $ids = array_merge($ids, $curatorGroupId);
-                    }
+                    $curatorGroupId = $query->andWhere(['curator_id' => $user->employee->id])->select('id')->column();
+                    $ids = array_merge($ids, $curatorGroupId);
                 }
             }
         }
+
+        $ids = array_unique($ids);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query->andWhere(['id' => $ids]),
