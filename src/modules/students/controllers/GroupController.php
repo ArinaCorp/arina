@@ -58,6 +58,8 @@ class GroupController extends Controller implements IAdminController
     {
         $ids = [];
 
+        $showAll = true;
+
         if (!Yii::$app->user->isGuest) {
             /** @var User $user */
             $user = Yii::$app->user->identity;
@@ -72,6 +74,8 @@ class GroupController extends Controller implements IAdminController
                         ])
                         ->select('id')
                         ->column();
+
+                    $showAll = false;
                     $ids = array_merge($ids, Group::find()->andWhere(['speciality_qualifications_id' => $spQIds])->select('id')->column());
                 }
             }
@@ -80,14 +84,20 @@ class GroupController extends Controller implements IAdminController
                 if ($user->employee) {
                     $curatorGroupId = Group::find()->andWhere(['curator_id' => $user->employee->id])->select('id')->column();
                     $ids = array_merge($ids, $curatorGroupId);
+                    $showAll = false;
                 }
             }
         }
 
-        $ids = array_unique($ids);
+        $query = Group::find();
+
+        if (!$showAll) {
+            $ids = array_unique($ids);
+            $query->andWhere(['id' => $ids]);
+        }
 
         $dataProvider = new ActiveDataProvider([
-            'query' => Group::find()->andWhere(['id' => $ids]),
+            'query' => $query,
         ]);
 
         return $this->render('index', [
