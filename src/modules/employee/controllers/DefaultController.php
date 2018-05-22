@@ -59,8 +59,9 @@ class DefaultController extends Controller implements IAdminController
 
     /**
      * Displays a single Employee model.
-     * @param integer $id
+     * @param $id
      * @return mixed
+     * @throws NotFoundHttpException
      */
     public function actionView($id)
     {
@@ -128,8 +129,12 @@ class DefaultController extends Controller implements IAdminController
     /**
      * Deletes an existing Employee model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
+     * @param $id
+     * @return \yii\web\Response
+     * @throws NotFoundHttpException
+     * @throws \Exception
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function actionDelete($id)
     {
@@ -153,6 +158,11 @@ class DefaultController extends Controller implements IAdminController
             throw new NotFoundHttpException('The requested page does not exist.');
     }
 
+    /**
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
     public function actionDocument()
     {
         return Employee::getDocument();
