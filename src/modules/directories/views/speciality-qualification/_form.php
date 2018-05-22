@@ -1,14 +1,14 @@
 <?php
 
-use yii\helpers\Html;
-use yii\widgets\ActiveForm;
-use kartik\touchspin\TouchSpin;
-use kartik\select2\Select2;
 use app\modules\directories\models\qualification\Qualification;
 use app\modules\directories\models\speciality\Speciality;
+use kartik\select2\Select2;
+use kartik\touchspin\TouchSpin;
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\modules\directories\models\specialityqualification\SpecialityQualification */
+/* @var $model \app\modules\directories\models\speciality_qualification\SpecialityQualification */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
@@ -23,9 +23,9 @@ use app\modules\directories\models\speciality\Speciality;
         </div>
 
         <div class="col-sm-4">
-            <?= $form->field($model, 'qualification_id')->widget(Select2::className(),
+            <?= $form->field($model, 'qualification_id')->widget(Select2::class,
                 [
-                    'data' => Qualification::getList(),
+                    'data' => Qualification::getMap('title'),
                     'options' =>
                         [
                             'placeholder' => Yii::t('app', 'Select qualification'),
@@ -34,7 +34,7 @@ use app\modules\directories\models\speciality\Speciality;
         </div>
 
         <div class="col-sm-4">
-            <?= $form->field($model, 'speciality_id')->widget(Select2::className(),
+            <?= $form->field($model, 'speciality_id')->widget(Select2::class,
                 [
                     'data' => Speciality::getSpecialityTreeList(),
                     'options' =>
@@ -49,7 +49,7 @@ use app\modules\directories\models\speciality\Speciality;
     <div class="row">
 
         <div class="col-sm-6">
-            <?= $form->field($model, 'years_count')->widget(TouchSpin::className(), [
+            <?= $form->field($model, 'years_count')->widget(TouchSpin::class, [
                 'pluginOptions' => [
                     'buttonup_class' => 'btn btn-primary',
                     'buttondown_class' => 'btn btn-info',
@@ -59,7 +59,7 @@ use app\modules\directories\models\speciality\Speciality;
             ]) ?>
         </div>
         <div class="col-sm-6">
-            <?= $form->field($model, 'months_count')->widget(TouchSpin::className(), [
+            <?= $form->field($model, 'months_count')->widget(TouchSpin::class, [
                 'pluginOptions' => [
                     'buttonup_class' => 'btn btn-primary',
                     'buttondown_class' => 'btn btn-info',

@@ -17,7 +17,7 @@ use yii\widgets\MaskedInput;
             ) ?>
     </div>
     <div class="col-sm-4 hidden field_cyclic_commission_id">
-        <?= $form->field($model, 'cyclic_commission_id')->widget(Select2::className(), [
+        <?= $form->field($model, 'cyclic_commission_id')->widget(Select2::class, [
             'data' => CyclicCommission::getList(),
             'options' =>
                 [
@@ -25,7 +25,7 @@ use yii\widgets\MaskedInput;
                 ]]) ?>
     </div>
     <div class="col-sm-3">
-        <?= $form->field($model, 'start_date')->widget(DatePicker::className(), [
+        <?= $form->field($model, 'start_date')->widget(DatePicker::class, [
             'language' => Yii::$app->language,
             'pluginOptions' => [
                 'format' => 'yyyy.mm.dd',
@@ -52,7 +52,7 @@ use yii\widgets\MaskedInput;
 
 <div class="row">
     <div class="col-sm-3">
-        <?= $form->field($model, 'birth_date')->widget(DatePicker::className(), [
+        <?= $form->field($model, 'birth_date')->widget(DatePicker::class, [
             'language' => Yii::$app->language,
             'pluginOptions' => [
                 'format' => 'yyyy.mm.dd',
@@ -61,7 +61,7 @@ use yii\widgets\MaskedInput;
         ]); ?>
     </div>
     <div class="col-sm-3">
-        <?= $form->field($model, 'position_id')->widget(Select2::className(), [
+        <?= $form->field($model, 'position_id')->widget(Select2::class, [
             'data' => Position::getList(),
             'options' =>
                 [
@@ -69,10 +69,9 @@ use yii\widgets\MaskedInput;
                 ]]) ?>
     </div>
     <div class="col-sm-3">
-        <?= $form->field($model, 'category_id')->widget(Select2::className(), [
-            'data' => Qualification::getList(),
-            'options' =>
-                [
+        <?= $form->field($model, 'category_id')->widget(Select2::class, [
+            'data' => Qualification::getMap('title'),
+            'options' => [
                     'placeholder' => Yii::t('app', 'Select qualification')
                 ]]) ?>
     </div>
@@ -86,14 +85,14 @@ use yii\widgets\MaskedInput;
 <div class="row">
 
     <div class="col-sm-3">
-        <?= $form->field($model, 'passport')->widget(MaskedInput::className(), ['mask' => 'AA №999999']) ?>
+        <?= $form->field($model, 'passport')->widget(MaskedInput::class, ['mask' => 'AA №999999']) ?>
     </div>
     <div class="col-sm-3">
         <?= $form->field($model, 'passport_issued_by')->textInput(['maxlength' => true, 'placeholder' => $model->getAttributeLabel('passport_issued_by')])
         //$form->field($model, 'type')->dropDownList($model->getTypes(), ['prompt' => Yii::t('app', 'Select type')])?>
     </div>
     <div class="col-sm-3">
-        <?= $form->field($model, 'passport_issued_date')->widget(DatePicker::className(), [
+        <?= $form->field($model, 'passport_issued_date')->widget(DatePicker::class, [
             'language' => Yii::$app->language,
             'pluginOptions' => [
                 'format' => 'yyyy.mm.dd',

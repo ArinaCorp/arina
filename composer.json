@@ -35,7 +35,6 @@
         "voskobovich/yii2-linker-behavior": "^4.0",
         "wbraganca/yii2-dynamicform": "dev-master",
         "yii-dream-team/yii2-upload-behavior": "*",
-        "yii2tech/ar-position": "^1.0",
         "yiisoft/yii2": ">=2.0.13",
         "yiisoft/yii2-bootstrap": "*",
         "yiisoft/yii2-jui": "^2.0",

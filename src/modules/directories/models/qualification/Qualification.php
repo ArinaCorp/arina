@@ -2,9 +2,9 @@
 
 namespace app\modules\directories\models\qualification;
 
+use nullref\useful\traits\Mappable;
 use Yii;
-use yii\helpers\ArrayHelper;
-use \yii2tech\ar\position\PositionBehavior;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "qualification".
@@ -13,8 +13,10 @@ use \yii2tech\ar\position\PositionBehavior;
  * @property string $title
  * @property integer $sort_order
  */
-class Qualification extends \yii\db\ActiveRecord
+class Qualification extends ActiveRecord
 {
+    use Mappable;
+
     /**
      * @inheritdoc
      */
@@ -46,6 +48,7 @@ class Qualification extends \yii\db\ActiveRecord
             'sort_order' => Yii::t('app', 'Sort order'),
         ];
     }
+
     /**
      * @inheritdoc
      * @return QualificationQuery the active query used by this AR class.
@@ -53,12 +56,5 @@ class Qualification extends \yii\db\ActiveRecord
     public static function find()
     {
         return new QualificationQuery(get_called_class());
-    }
-    public static function getList()
-    {
-        $data = Qualification::find()->all();
-        $items = ArrayHelper::map($data,'id','title');
-        return $items;
-
     }
 }

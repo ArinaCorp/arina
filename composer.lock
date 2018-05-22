@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "52c62e7d2223c37007a7b890953a173e",
+    "content-hash": "2ef4ddf28614c54097ed25e90b207390",
     "packages": [
         {
             "name": "2amigos/yii2-date-picker-widget",
@@ -2506,55 +2506,6 @@
             "time": "2017-10-26T15:44:40+00:00"
         },
         {
-            "name": "yii2tech/ar-position",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/yii2tech/ar-position.git",
-                "reference": "0822f8b6a3b7df0404115591c08a21bf53b37b38"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/yii2tech/ar-position/zipball/0822f8b6a3b7df0404115591c08a21bf53b37b38",
-                "reference": "0822f8b6a3b7df0404115591c08a21bf53b37b38",
-                "shasum": ""
-            },
-            "require": {
-                "yiisoft/yii2": "*"
-            },
-            "type": "yii2-extension",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "yii2tech\\ar\\position\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Paul Klimov",
-                    "email": "klimov.paul@gmail.com"
-                }
-            ],
-            "description": "Provides support for ActiveRecord custom sort in Yii2",
-            "keywords": [
-                "active",
-                "order",
-                "position",
-                "record",
-                "sort",
-                "yii2"
-            ],
-            "time": "2018-02-14T12:07:05+00:00"
-        },
-        {
             "name": "yiisoft/yii2",
             "version": "dev-master",
             "source": {
@@ -3258,7 +3209,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.4.0"
+        "php": ">=5.5.0"
     },
     "platform-dev": []
 }
