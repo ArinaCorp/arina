@@ -49,6 +49,7 @@ class DefaultController extends Controller implements IAdminController
             ]
         ];
     }
+
     public function actionIndex()
     {
         $searchModel = new StudyYearSearch();
@@ -103,14 +104,14 @@ class DefaultController extends Controller implements IAdminController
                     $spring = $course * 2;
                     $fall = $spring - 1;
                     $group = Group::findOne(['title' => $title]);
-                    if (!empty($subject->total[$fall-1]) || !empty($subject->total[$spring-1])) {
+                    if (!empty($subject->total[$fall - 1]) || !empty($subject->total[$spring - 1])) {
                         $this->getNewLoad($year, $subject, $group, $course, Load::TYPE_LECTURES);
 
-                        if ($subject->dual_practice && (!empty($subject->practices[$fall-1]) || !empty($subject->practices[$spring-1]))) {
+                        if ($subject->dual_practice && (!empty($subject->practices[$fall - 1]) || !empty($subject->practices[$spring - 1]))) {
                             $this->getNewLoad($year, $subject, $group, $course, Load::TYPE_PRACTICES);
                         }
 
-                        if ($subject->dual_lab_work && (!empty($subject->lab_works[$fall-1]) || !empty($subject->lab_works[$spring-1]))) {
+                        if ($subject->dual_lab_work && (!empty($subject->lab_works[$fall - 1]) || !empty($subject->lab_works[$spring - 1]))) {
                             $this->getNewLoad($year, $subject, $group, $course, Load::TYPE_LAB_WORKS);
                         }
 
@@ -157,7 +158,7 @@ class DefaultController extends Controller implements IAdminController
         if (isset($_POST['Load'])) {
             $model->setAttributes($_POST['Load'], false);
             if ($model->save()) {
-                return $this->redirect(Url::to('view', ['id' => $model->study_year_id]));
+                return $this->redirect(Url::to(['view', 'id' => $model->study_year_id]));
             }
         }
 
@@ -227,7 +228,7 @@ class DefaultController extends Controller implements IAdminController
                 $model->generate();
             }
         }
-        return $this->render('doc', ['model' => $model, 'year'=>$year]);
+        return $this->render('doc', ['model' => $model, 'year' => $year]);
     }
 
     /**

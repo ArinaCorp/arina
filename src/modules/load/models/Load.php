@@ -55,6 +55,8 @@ class Load extends ActiveRecord
 
     public $workType;
 
+    public $commissionId;
+
     protected static $HOURS = ['', '', '', '', ''];
 
     /**
@@ -94,6 +96,14 @@ class Load extends ActiveRecord
     public function getEmployee()
     {
         return $this->hasOne(Employee::className(), ['id' => 'employee_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getTeacher()
+    {
+        return $this->getEmployee();
     }
 
     /**
@@ -544,13 +554,8 @@ class Load extends ActiveRecord
         if (is_null($year_id)) {
             $year_id = StudyYear::getCurrentYear()->id;
         }
-        if ($year_id == 5 && $group_id == 8) {
-            $models = [];
-            $models[] = self::getZaglushka();
-            return $models;
-        }
-        return [];
-        return self::findAll(['group_id' => $group_id, 'year_id' => $year_id]);
+
+        return self::find()->andWhere(['group_id' => $group_id, 'study_year_id' => $year_id])->andWhere(['not', ['employee_id' => null]])->all();
     }
 
     /**
@@ -591,17 +596,5 @@ class Load extends ActiveRecord
     public static function getListByGroupAndYear($group_id, $year_id = null)
     {
         return ArrayHelper::map(self::getArrayByGroupAndYear($group_id, $year_id), 'id', 'labelInfo');
-    }
-
-    public static function getZaglushka()
-    {
-        WorkSubject::findOne(12);
-        $model = new Load();
-        $model->id = 228;
-        $model->work_subject_id = 3;
-        $model->study_year_id = 5;
-        $model->group_id = 8;
-        $model->employee_id = 1;
-        return $model;
     }
 }

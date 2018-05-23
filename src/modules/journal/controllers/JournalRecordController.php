@@ -69,8 +69,8 @@ class JournalRecordController extends Controller implements IAdminController
         $model->type = $type;
         $model->date = date('Y-m-d');
         $typeObj = JournalRecordType::findOne($type);
-        //     $model->teacher_id = Load::findOne($load_id)->employee_id;
-        $model->teacher_id = Load::getZaglushka()->employee_id;
+
+        $model->teacher_id = Load::findOne(['id'=>$load_id])->employee_id;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
