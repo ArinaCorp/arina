@@ -2,7 +2,7 @@
 
 namespace app\modules\plans\models;
 
-use app\components\ExportToExcel;
+use app\components\exporters\WorkPlanExporter;
 use app\modules\user\helpers\UserHelper;
 use app\modules\user\models\User;
 use Yii;
@@ -392,7 +392,7 @@ class WorkPlan extends ActiveRecord
     {
         //@TODO move to component
 //        Yii::$app->excel->makeWorkPlan($this);
-        ExportToExcel::getDocument('WorkPlan',$this);
+        WorkPlanExporter::getDocument($this);
     }
 
     /**

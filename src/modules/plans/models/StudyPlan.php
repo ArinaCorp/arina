@@ -2,7 +2,7 @@
 
 namespace app\modules\plans\models;
 
-use app\components\ExportToExcel;
+use app\components\exporters\StudyPlanExporter;
 use app\modules\user\helpers\UserHelper;
 use app\modules\user\models\User;
 use Yii;
@@ -264,6 +264,6 @@ class StudyPlan extends ActiveRecord
     public function getDocument()
     {
 //        Yii::$app->excel->makeStudyPlan($this);
-        ExportToExcel::getDocument('StudyPlan', $this);
+        StudyPlanExporter::getDocument($this);
     }
 }

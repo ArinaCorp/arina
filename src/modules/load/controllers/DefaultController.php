@@ -216,19 +216,34 @@ class DefaultController extends Controller implements IAdminController
         return $this->render('project', ['model' => $model]);
     }
 
-    public function actionDoc($id)
+    /**
+     * @param $id
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
+    public function actionDocument($id)
     {
         /** @var StudyYear $year */
-        $year = StudyYear::model()->loadContent($id);
-        $model = new LoadDocGenerateModel();
-        if (isset($_POST['LoadDocGenerateModel'])) {
-            $model->setAttributes($_POST['LoadDocGenerateModel'], false);
-            $model->yearId = $id;
-            if ($model->validate()) {
-                $model->generate();
-            }
-        }
-        return $this->render('doc', ['model' => $model, 'year' => $year]);
+//        $year = StudyYear::model()->loadContent($id);
+//        $model = new LoadDocGenerateModel();
+//        if (isset($_POST['LoadDocGenerateModel'])) {
+//            $model->setAttributes($_POST['LoadDocGenerateModel'], false);
+//            $model->yearId = $id;
+//            if ($model->validate()) {
+//                $model->generate();
+//            }
+//        }
+//        return $this->render('doc', ['model' => $model, 'year' => $year]);
+        /**
+         * $model Load
+         */
+//        $model = Load::find()->andWhere(['id'=> $id]);
+//        print_r($id);
+//        die;
+        $model = Load::findOne($id);
+        $model->getDocument();
+
     }
 
     /**

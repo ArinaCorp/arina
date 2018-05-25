@@ -2,6 +2,7 @@
 
 namespace app\modules\load\models;
 
+use app\components\exporters\LoadExporter;
 use app\modules\directories\models\StudyYear;
 use app\modules\employee\models\Employee;
 use app\modules\plans\models\WorkSubject;
@@ -596,5 +597,16 @@ class Load extends ActiveRecord
     public static function getListByGroupAndYear($group_id, $year_id = null)
     {
         return ArrayHelper::map(self::getArrayByGroupAndYear($group_id, $year_id), 'id', 'labelInfo');
+    }
+
+
+    /**
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
+    public function getDocument()
+    {
+        LoadExporter::getDocument($this);
     }
 }

@@ -45,8 +45,9 @@ class LoadDoc extends ActiveRecord
         }
 
         /** @var Excel $excel */
-        $excel = Yii::$app->getComponent('excel');
-        $excel->getDocument($load, 'load');
+//        $excel = Yii::$app->getComponent('excel');
+//        $excel->getDocument($load, 'load');
+
     }
 
     public function rules()

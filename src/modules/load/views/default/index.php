@@ -59,7 +59,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         $options = [
                             'title' => Yii::t('app', 'Export'),
                         ];
-                        $url = Url::toRoute(['load/export', 'id' => $model->id]);
+                        $url = Url::toRoute(['default/document', 'id' => $model->id]);
                         return Html::a('<span class="glyphicon glyphicon-file"</span>', $url, $options);
                     }
                 ]

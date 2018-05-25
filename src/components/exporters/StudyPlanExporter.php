@@ -9,14 +9,13 @@
 namespace app\components\exporters;
 
 
-use app\components\ExportToExcel;
 use app\modules\plans\models\StudyPlan;
 use app\modules\plans\models\StudySubject;
 use PhpOffice\PhpSpreadsheet\Calculation\Calculation;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Yii;
 
-class ExportStudyplan
+class StudyPlanExporter extends BaseExporter
 {
     /**
      * @param $spreadsheet Spreadsheet
@@ -82,7 +81,7 @@ class ExportStudyplan
             } else {
                 $sheet->setCellValue('P' . $i, 52);
             }
-            $sheet->getStyle("A$i:R$i")->applyFromArray(ExportToExcel::getBorderStyle());
+            $sheet->getStyle("A$i:R$i")->applyFromArray(self::getBorderStyle());
             $i++;
         }
         $sheet->setCellValue('A' . $i, 'Разом');
@@ -93,7 +92,7 @@ class ExportStudyplan
         $sheet->setCellValue('C' . $i, $totals['T']);
         $sheet->setCellValue('M' . $i, $totals['H']);
         $sheet->setCellValue('P' . $i, 52 * count($plan->graph) - $totals[' ']);
-        $sheet->getStyle("A$i:R$i")->applyFromArray(ExportToExcel::getBorderStyle());
+        $sheet->getStyle("A$i:R$i")->applyFromArray(self::getBorderStyle());
 
         // table #3 / table #4
         $i = 46;
@@ -107,7 +106,7 @@ class ExportStudyplan
                         $sheet->setCellValue("AF$i", $j + 1);
                     }
                 }
-                $sheet->getStyle("T$i:AH$i")->applyFromArray(ExportToExcel::getBorderStyle());
+                $sheet->getStyle("T$i:AH$i")->applyFromArray(self::getBorderStyle());
                 $i++;
             }
             for ($k = 0; $k < count($item->control); $k++) {
@@ -118,7 +117,7 @@ class ExportStudyplan
                         $sheet->setCellValue("AJ$z", $item->subject->title);
                         $sheet->setCellValue("AT$z", $name);
                         $sheet->setCellValue("BC$z", $k + 1);
-                        $sheet->getStyle("AJ$z:BC$z")->applyFromArray(ExportToExcel::getBorderStyle());
+                        $sheet->getStyle("AJ$z:BC$z")->applyFromArray(self::getBorderStyle());
                         $z++;
                     }
                 }

@@ -9,7 +9,6 @@
 namespace app\components\exporters;
 
 
-use app\components\ExportToExcel;
 use app\modules\plans\models\WorkPlan;
 use app\modules\plans\models\WorkSubject;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
@@ -17,7 +16,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Yii;
 
-class ExportWorkplan
+class WorkPlanExporter extends BaseExporter
 {
     /**
      * @param $spreadsheet Spreadsheet
@@ -38,7 +37,7 @@ class ExportWorkplan
                 }
             }
             $sheet = $spreadsheet->setActiveSheetIndex($i);
-            ExportWorkplan::makeWorkPlanPage($plan, $i + 1, $sheet, $groups, $graphOffset);
+            self::makeWorkPlanPage($plan, $i + 1, $sheet, $groups, $graphOffset);
             $graphOffset += count($groups);
         }
         $spreadsheet->setActiveSheetIndex(0);
@@ -72,18 +71,18 @@ class ExportWorkplan
 
     protected static function makeWorkPlanPage($plan, $course, $sheet, $groups, $graphOffset)
     {
-        ExportWorkplan::setValue($sheet, 'R8', $course);
+        self::setValue($sheet, 'R8', $course);
 
         $beginYear = $plan->studyYear->year_start;
         $endYear = $plan->studyYear->getYearEnd();
-        ExportWorkplan::setValue($sheet, 'R5', $beginYear, '@begin');
-        ExportWorkplan::setValue($sheet, 'R5', $endYear, '@end');
-        ExportWorkplan::setValue($sheet, 'Y17', $course);
-        ExportWorkplan::setValue($sheet, 'AS17', $course + 1);
+        self::setValue($sheet, 'R5', $beginYear, '@begin');
+        self::setValue($sheet, 'R5', $endYear, '@end');
+        self::setValue($sheet, 'Y17', $course);
+        self::setValue($sheet, 'AS17', $course + 1);
         $sheet->setCellValue('AP17', $plan->semesters[$course - 1]);
         $sheet->setCellValue('BJ17', $plan->semesters[$course]);
         $specialityFullName = $plan->specialityQualification->speciality->number . ' "' . $plan->specialityQualification->title . '"';
-        ExportWorkplan::setValue($sheet, 'R6', $specialityFullName);
+        self::setValue($sheet, 'R6', $specialityFullName);
         //groups graph;
 //        $colNumber = PHPExcel_Cell::columnIndexFromString('G');
 //        $colNumber = Coordinate::columnIndexFromString('G');
@@ -101,7 +100,7 @@ class ExportWorkplan
                 }
             }
 //            $sheet->getStyle("G$rowIndex:BG$rowIndex")->applyFromArray(self::getBorderStyle());
-            $sheet->getStyle("H$rowIndex:BG$rowIndex")->applyFromArray(ExportToExcel::getBorderStyle());
+            $sheet->getStyle("H$rowIndex:BG$rowIndex")->applyFromArray(self::getBorderStyle());
         }
 
         //hours table
@@ -141,7 +140,7 @@ class ExportWorkplan
             $i++;
             $row++;
 
-            ExportWorkplan::workPlanInsertNewLine($sheet, $row);
+            self::workPlanInsertNewLine($sheet, $row);
 
 
             $j = 0;
@@ -189,7 +188,7 @@ class ExportWorkplan
                 $j++;
                 $row++;
 
-                ExportWorkplan::workPlanInsertNewLine($sheet, $row);
+                self::workPlanInsertNewLine($sheet, $row);
 
             }
 
@@ -213,7 +212,7 @@ class ExportWorkplan
 
             $row++;
 
-            ExportWorkplan::workPlanInsertNewLine($sheet, $row);
+            self::workPlanInsertNewLine($sheet, $row);
         }
         $sheet->removeRow($row);
         $sheet->setCellValue("C$row", 'Разом');
@@ -235,9 +234,9 @@ class ExportWorkplan
         }
         $row += 6;
 //        Call to a member function getFullName() on null - Fix it
-//        ExportWorkplan::setValue($sheet, "AD$row", $plan->specialityQualification->speciality->department->head->getFullName());
+//        self::setValue($sheet, "AD$row", $plan->specialityQualification->speciality->department->head->getFullName());
         $depHead = $plan->specialityQualification->speciality->department->head;
-        ExportWorkplan::setValue($sheet, "AD$row", $depHead ? $plan->specialityQualification->speciality->department->head->getFullName() : ' ');
+        self::setValue($sheet, "AD$row", $depHead ? $plan->specialityQualification->speciality->department->head->getFullName() : ' ');
 
     }
 

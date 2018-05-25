@@ -11,15 +11,15 @@ namespace app\components\exporters;
 use app\modules\employee\models\Employee;
 use PhpOffice\PhpSpreadsheet;
 
-class ExportEmployee
+class EmployeeExporter extends BaseExporter
 {
     /**
-     *
+     * @param null $data
      * @param $spreadsheet PhpSpreadsheet\Spreadsheet
      * @return PhpSpreadsheet\Spreadsheet
      * @throws PhpSpreadsheet\Exception
      */
-    public static function getSpreadsheet($spreadsheet)
+    public static function getSpreadsheet($spreadsheet, $data = null)
     {
 
         $spreadsheet->setActiveSheetIndex(0);
@@ -55,4 +55,5 @@ class ExportEmployee
         return $spreadsheet;
 
     }
+
 }

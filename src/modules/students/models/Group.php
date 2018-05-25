@@ -2,7 +2,7 @@
 
 namespace app\modules\students\models;
 
-use app\components\ExportToExcel;
+use app\components\exporters\GroupExporter;
 use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 use app\modules\directories\models\StudyYear;
 use app\modules\employee\models\Employee;
@@ -329,6 +329,7 @@ class Group extends ActiveRecord
      */
     public function getDocument()
     {
+
 //        $tmpfname = Yii::getAlias('@webroot') . "/templates/group.xls";
 //        $excelReader = PHPExcel_IOFactory::createReaderForFile($tmpfname);;
 //        $excelObj = $excelReader->load($tmpfname);
@@ -368,7 +369,8 @@ class Group extends ActiveRecord
 //        header('Cache-Control: max-age=0');
 //        $objWriter = PHPExcel_IOFactory::createWriter($excelObj, 'Excel2007');
 //        $objWriter->save('php://output');
-        ExportToExcel::getDocument('Group', $this);
+//       TODO: Probably delete this method
+        GroupExporter::getDocument($this);
     }
 
     /**

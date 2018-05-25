@@ -2,7 +2,7 @@
 
 namespace app\modules\employee\models;
 
-use app\components\ExportToExcel;
+use app\components\exporters\EmployeeExporter;
 use app\modules\directories\models\department\Department;
 use app\modules\directories\models\position\Position;
 use app\modules\students\models\CuratorGroup;
@@ -252,7 +252,7 @@ class Employee extends ActiveRecord
      */
     public static function getDocument()
     {
-        ExportToExcel::getDocument('Employee');
+        EmployeeExporter::getDocument();
     }
 
     /**

@@ -15,7 +15,7 @@ use app\modules\students\models\Student;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Yii;
 
-class ExportGroup
+class GroupExporter extends BaseExporter
 {
     /**
      * @param $spreadsheet Spreadsheet
