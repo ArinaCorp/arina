@@ -2,13 +2,12 @@
 
 namespace app\modules\plans\widgets;
 
-use Yii;
-use yii\bootstrap\Widget;
-use yii\base\Exception;
-
 use app\helpers\GlobalHelper;
-use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 use app\helpers\PlanHelper;
+use app\modules\directories\models\speciality_qualification\SpecialityQualification;
+use Yii;
+use yii\base\Exception;
+use yii\bootstrap\Widget;
 
 class Graph extends Widget
 {
@@ -17,10 +16,13 @@ class Graph extends Widget
     public $field;
     public $graph = null;
     public $studyPlan = true;
+
     /** @var $yearAmount int for study plan */
     public $yearAmount = 4;
+
     /** @var $speciality_qualification_id int for work plan */
     public $speciality_qualification_id;
+
     /** @var $studyYearId int for work plan */
     public $study_year_id;
     public $studyPlanProcessLink = '/plans/study-plan/execute-graph';
@@ -36,8 +38,9 @@ class Graph extends Widget
         $this->list = GlobalHelper::getWeeksByMonths();
         if ($this->studyPlan) {
             $this->graphProcessLink = $this->studyPlanProcessLink;
-            if (empty($this->yearAmount))
+            if (empty($this->yearAmount)) {
                 throw new Exception(Yii::t('plans', 'Years amount must be set'));
+            }
 
             for ($i = 0; $i < $this->yearAmount; $i++) {
                 $this->rows[$i + 1] = $i + 1;
@@ -48,16 +51,17 @@ class Graph extends Widget
             } else {
                 $this->map = PlanHelper::getDefaultPlan();
             }
-        }
-        else
-        {
+        } else {
             $this->graphProcessLink = $this->workPlanProcessLink;
 
-            if (empty($this->speciality_qualification_id))
-                throw new Exception(Yii::t('plans', 'Speciality qualification must be set'));
+            if (empty($this->speciality_qualification_id)) {
 
-            if (empty($this->study_year_id))
+                throw new Exception(Yii::t('plans', 'Speciality qualification must be set'));
+            }
+
+            if (empty($this->study_year_id)) {
                 throw new Exception(Yii::t('plans', 'Study year must be set'));
+            }
 
             /** @var SpecialityQualification $specialityQualification */
             $specialityQualification = SpecialityQualification::findOne($this->speciality_qualification_id);
@@ -70,6 +74,9 @@ class Graph extends Widget
         }
     }
 
+    /**
+     * @return string
+     */
     public function run()
     {
         return $this->render('graph', [
