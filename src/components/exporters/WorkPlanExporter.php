@@ -21,10 +21,11 @@ class WorkPlanExporter extends BaseExporter
     /**
      * @param $spreadsheet Spreadsheet
      * @param $plan WorkPlan
+     * @param $optional null
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @return Spreadsheet
      */
-    public static function getSpreadsheet($spreadsheet, $plan)
+    public static function getSpreadsheet($spreadsheet, $plan, $optional = null)
     {
         $coursesAmount = $plan->getCourseAmount();
         $groupsByCourse = $plan->specialityQualification->getGroupsByStudyYear($plan->study_year_id);
@@ -99,8 +100,8 @@ class WorkPlanExporter extends BaseExporter
                     $sheet->setCellValue($colString . $rowIndex, Yii::t('plans', $plan->graph[$k][$j]));
                 }
             }
-//            $sheet->getStyle("G$rowIndex:BG$rowIndex")->applyFromArray(self::getBorderStyle());
-            $sheet->getStyle("H$rowIndex:BG$rowIndex")->applyFromArray(self::getBorderStyle());
+//            $sheet->getStyle("G$rowIndex:BG$rowIndex")->applyFromArray(self::getAllBordersThin());
+            $sheet->getStyle("H$rowIndex:BG$rowIndex")->applyFromArray(self::getAllBordersThin());
         }
 
         //hours table

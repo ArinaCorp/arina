@@ -286,7 +286,11 @@ class StudyPlanController extends Controller implements IAdminController
     }
 
     /**
-     * @param $id integer
+     * @param $id
+     * @throws NotFoundHttpException
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
     public function actionExport($id)
     {

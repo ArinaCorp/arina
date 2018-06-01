@@ -19,10 +19,11 @@ class LoadExporter extends BaseExporter
     /**
      * @param $spreadsheet Spreadsheet
      * @param $data
+     * @param $optional null
      * @return Spreadsheet
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
-    public static function getSpreadsheet($spreadsheet, $data)
+    public static function getSpreadsheet($spreadsheet, $data, $optional = null)
     {
         $sheet = $spreadsheet->setActiveSheetIndex(0);
         $row = 6;
@@ -87,7 +88,7 @@ class LoadExporter extends BaseExporter
             $sheet->setCellValue("AX$row", $all);
             $sheet->setCellValue("AY$row", round($all * $load->getBudgetPercent() / 100));
             $sheet->setCellValue("AZ$row", round($all * $load->getContractPercent() / 100));
-            $sheet->getStyle("A$row:AZ$row")->applyFromArray(self::getBorderStyle());
+            $sheet->getStyle("A$row:AZ$row")->applyFromArray(self::getAllBordersThin());
             $i++;
             $row++;
             $sheet->insertNewRowBefore($row + 1, 1);

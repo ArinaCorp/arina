@@ -2,16 +2,16 @@
 
 namespace app\components;
 
+use PhpOffice\PhpSpreadsheet\Calculation\Calculation;
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Yii;
 use yii\base\Component;
 use yii\db\Exception;
 use PHPExcel;
-use PHPExcel_Writer_Excel5;
 use PHPExcel_IOFactory;
-use PHPExcel_Worksheet;
-use PHPExcel_Style_Border;
-use PHPExcel_Cell;
-use PHPExcel_Calculation;
 
 use app\modules\plans\models\StudyPlan;
 use app\modules\plans\models\StudySubject;
@@ -56,17 +56,24 @@ class Excel extends Component
      * @param mixed $data source for document
      * @param $name
      * @throws Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
     public function getDocument($data, $name)
     {
         $methodName = 'make' . ucfirst($name);
         if (method_exists($this, $methodName)) {
             $objPHPExcel = $this->$methodName($data);
+            $this->makeLoad();
             $docName = "$name " . date("d.m.Y G-i", time());
+//            Old Format & PHPExcel
+//            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+//            header('Content-Disposition: attachment;filename="' . $docName . '.xls"');
+//            header('Cache-Control: max-age=0');
+//            $objWriter = new PHPExcel_Writer_Excel5($objPHPExcel);
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-            header('Content-Disposition: attachment;filename="' . $docName . '.xls"');
+            header('Content-Disposition: attachment;filename="' . $docName . '.xlsx"');
             header('Cache-Control: max-age=0');
-            $objWriter = new PHPExcel_Writer_Excel5($objPHPExcel);
+            $objWriter = IOFactory::createWriter($objPHPExcel, 'Xlsx');
             $objWriter->save('php://output');
         } else {
             throw new Exception(Yii::t('error', 'Method "{method}" not found', array('{method}' => $methodName)));
@@ -79,6 +86,7 @@ class Excel extends Component
      * @param string $fileType version of template
      * @return PHPExcel
      * @throws Exception
+     * @throws \PHPExcel_Reader_Exception
      */
     protected function loadTemplate($alias, $fileType = 'Excel5')
     {
@@ -94,11 +102,13 @@ class Excel extends Component
 
     /**
      * Find alias in cell and replace it into current value
-     * @param PHPExcel_Worksheet $sheet
+     * @param Worksheet $sheet
      * @param $cell
      * @param $value
      * @param string $alias
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
+
     public function setValue($sheet, $cell, $value, $alias = '@value')
     {
         $sheet->setCellValue($cell, str_replace($alias, $value, $sheet->getCell($cell)->getCalculatedValue()));
@@ -109,7 +119,8 @@ class Excel extends Component
         return [
             'borders' => [
                 'allborders' => [
-                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+//                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                    'style' => Border::BORDER_THIN,
                     'color' => ['argb' => '00000000'],
                 ],
             ],
@@ -117,17 +128,22 @@ class Excel extends Component
     }
 
     /**
-     * Generate study plan document
-     * @param $plan StudyPlan
-     * @return PHPExcel
+     * @param StudyPlan $plan
+     * @return mixed
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
+
     public function makeStudyPlan($plan)
     {
-        $tmpfname = Yii::getAlias('@webroot') . "/templates/study-plan.xls";
-        $excelReader = PHPExcel_IOFactory::createReaderForFile($tmpfname);;
-        $objPHPExcel = $excelReader->load($tmpfname);
+        $tmpfname = Yii::getAlias('@webroot') . "/templates/study-plan.xlsx";
+//        $excelReader = IOFactory::createReaderForFile($tmpfname);
+//        $objPHPExcel = $excelReader->load($tmpfname);
+        $objPHPExcel = IOFactory::load($tmpfname);
         //SHEET #1
-        $sheet = $sheet = $objPHPExcel->setActiveSheetIndex(0);
+//        $sheet = $sheet = $objPHPExcel->setActiveSheetIndex(0);
+        $sheet = $objPHPExcel->setActiveSheetIndex(0);
         $sheet->setCellValue("F19", $plan->specialityQualification->speciality->number . ' ' . $plan->specialityQualification->speciality->title);
 
         // table #1
@@ -225,7 +241,8 @@ class Excel extends Component
         }
 
         //SHEET #2
-        $sheet = $sheet = $objPHPExcel->setActiveSheetIndex(2);
+//        $sheet = $sheet = $objPHPExcel->setActiveSheetIndex(2);
+        $sheet = $objPHPExcel->setActiveSheetIndex(2);
 
         $j = 'N';
         $i = 8;
@@ -237,8 +254,8 @@ class Excel extends Component
         $j = 1;
         $totals = array();
         foreach ($plan->getSubjectsByCycles() as $name => $group) {
-            $sheet->setCellValue("B$i", $name);
-            $sheet->insertNewRowBefore($i + 1, 1);
+            $sheet->setCellValue("B$i", $name)
+                ->insertNewRowBefore($i + 1, 1);
             $i++;
             $begin = $i;
             $jj = 1;
@@ -280,24 +297,47 @@ class Excel extends Component
         for ($c = 'G'; $c < 'V'; $c++) {
             $sheet->setCellValue("$c$i", "=SUM($c" . implode("+$c", $totals) . ')');
         }
-        header('Content-Type: application/vnd.ms-excel');
-        $filename = "Study_plan_" . "_" . date("d-m-Y-His") . ".xls";
-        header('Content-Disposition: attachment;filename=' . $filename . ' ');
+
+//        header('Content-Type: application/vnd.ms-excel');
+//        $filename = "StudyPlan_" . date("d-m-Y-His") . ".xls";
+//        header('Content-Disposition: attachment;filename=' . $filename . ' ');
+//        header('Cache-Control: max-age=0');
+
+//        Show first sheet when open.
+        $objPHPExcel->setActiveSheetIndex(0);
+
+//        If current method is invoked in getDocument(), this could be an appropriate end.
+//        return $objPHPExcel;
+
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        $filename = "StudyPlan_" . date("d-m-Y-His") . ".xlsx";
+        header('Content-Disposition: attachment;filename=' . $filename);
         header('Cache-Control: max-age=0');
-        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-        PHPExcel_Calculation::getInstance()->disableCalculationCache();
-        return $objWriter->save('php://output');
+        $objWriter = IOFactory::createWriter($objPHPExcel, 'Xlsx');
+        Calculation::getInstance()->disableCalculationCache();
+        $objWriter->save('php://output');
+        exit();
     }
+
+//    /**
+//     * @param $plan WorkPlan
+//     * @return PHPExcel
+//     */
 
     /**
      * @param $plan WorkPlan
-     * @return PHPExcel
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
     public function makeWorkPlan($plan)
     {
-        $tmpfname = Yii::getAlias('@webroot') . "/templates/work-plan.xls";
-        $excelReader = PHPExcel_IOFactory::createReaderForFile($tmpfname);;
-        $objPHPExcel = $excelReader->load($tmpfname);
+        $tmpfname = Yii::getAlias('@webroot') . "/templates/work-plan.xlsx";
+//        $excelReader = PHPExcel_IOFactory::createReaderForFile($tmpfname);
+//        $excelReader = IOFactory::createReaderForFile($tmpfname);
+//        $objPHPExcel = $excelReader->load($tmpfname);
+        $objPHPExcel = IOFactory::load($tmpfname);
 
         $coursesAmount = $plan->getCourseAmount();
         $groupsByCourse = $plan->specialityQualification->getGroupsByStudyYear($plan->study_year_id);
@@ -309,26 +349,36 @@ class Excel extends Component
                     $groups[] = $group;
                 }
             }
-            $sheet = $sheet = $objPHPExcel->setActiveSheetIndex($i);
+//            $sheet = $sheet = $objPHPExcel->setActiveSheetIndex($i);
+            $sheet = $objPHPExcel->setActiveSheetIndex($i);
             $this->makeWorkPlanPage($plan, $i + 1, $sheet, $groups, $graphOffset);
             $graphOffset += count($groups);
         }
         $objPHPExcel->setActiveSheetIndex(0);
-        header('Content-Type: application/vnd.ms-excel');
-        $filename = "Work_plan_" . "_" . date("d-m-Y-His") . ".xls";
-        header('Content-Disposition: attachment;filename=' . $filename . ' ');
+//        header('Content-Type: application/vnd.ms-excel');
+//        $filename = "Work_plan_" . "_" . date("d-m-Y-His") . ".xls";
+//        header('Content-Disposition: attachment;filename=' . $filename . ' ');
+//        header('Cache-Control: max-age=0');
+//        return $objWriter->save('php://output');
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        $filename = "WorkPlan_" . date("d-m-Y-His") . ".xlsx";
+        header('Content-Disposition: attachment;filename=' . $filename);
         header('Cache-Control: max-age=0');
-        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-        return $objWriter->save('php://output');
+        $objWriter = IOFactory::createWriter($objPHPExcel, 'Xlsx');
+//        Calculation::getInstance()->disableCalculationCache();
+        $objWriter->save('php://output');
+        exit();
     }
 
     /**
      * @param $plan WorkPlan
      * @param $course
-     * @param $sheet PHPExcel_Worksheet
+     * @param $sheet Worksheet
      * @param $groups
      * @param $graphOffset
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
+
     protected function makeWorkPlanPage($plan, $course, $sheet, $groups, $graphOffset)
     {
         $this->setValue($sheet, 'R8', $course);
@@ -344,18 +394,23 @@ class Excel extends Component
         $specialityFullName = $plan->specialityQualification->speciality->number . ' "' . $plan->specialityQualification->title . '"';
         $this->setValue($sheet, 'R6', $specialityFullName);
         //groups graph;
-        $colNumber = PHPExcel_Cell::columnIndexFromString('G');
+//        $colNumber = PHPExcel_Cell::columnIndexFromString('G');
+//        $colNumber = Coordinate::columnIndexFromString('G');
+        $colNumber = Coordinate::columnIndexFromString('H');
         for ($i = 0; $i < count($groups); $i++) {
             $rowIndex = $i + 11;
-            $sheet->setCellValue("G$rowIndex", $groups[$i]);
+//            $sheet->setCellValue("G$rowIndex", $groups[$i]);
+            $sheet->setCellValue("H$rowIndex", $groups[$i]);
             for ($j = 0; $j < 52; $j++) {
-                $colString = PHPExcel_Cell::stringFromColumnIndex($colNumber + $j);
+//                $colString = PHPExcel_Cell::stringFromColumnIndex($colNumber + $j);
+                $colString = Coordinate::stringFromColumnIndex($colNumber + $j);
                 $k = $i + $graphOffset;
                 if (isset($plan->graph[$k][$j])) {
                     $sheet->setCellValue($colString . $rowIndex, Yii::t('plans', $plan->graph[$k][$j]));
                 }
             }
-            $sheet->getStyle("G$rowIndex:BG$rowIndex")->applyFromArray(self::getBorderStyle());
+//            $sheet->getStyle("G$rowIndex:BG$rowIndex")->applyFromArray(self::getAllBordersThin());
+            $sheet->getStyle("H$rowIndex:BG$rowIndex")->applyFromArray(self::getBorderStyle());
         }
 
         //hours table
@@ -436,7 +491,10 @@ class Excel extends Component
 
                 //CYCLE COMMISSION
 
+//                No object exception - Fix
+//                $sheet->setCellValue("BM$row", $item->cyclicCommission->title);
                 $sheet->setCellValue("BM$row", $item->cyclicCommission->title);
+//                $sheet->setCellValue("BM$row", "TROUBLEMAKER");
 
                 $j++;
                 $row++;
@@ -449,9 +507,18 @@ class Excel extends Component
 
             $sheet->setCellValue("C$row", Yii::t('app', 'Total'));
             $totals[] = $row;
-            for ($c = 14; $c < 45; $c++) {
-                $index = PHPExcel_Cell::stringFromColumnIndex($c);
+//            Changed it because after fixes every cycle begins from 15
+//            for ($c = 14; $c < 45; $c++) {
+            $exclude = array(33, 39, 53, 59);
+            for ($c = 15; $c < 45; $c++) {
+//                $index = PHPExcel_Cell::stringFromColumnIndex($c);
+                $index = Coordinate::stringFromColumnIndex($c);
                 $sheet->setCellValue("$index$row", "=SUM($index$begin:$index$end)");
+//                Optional fixes. Better safe than sorry
+                if (in_array($c, $exclude)) {
+                    $index = Coordinate::stringFromColumnIndex($c + 1);
+                    $sheet->setCellValue("$index$row", "=SUM($index$begin:$index$end)");
+                }
             }
 
             $row++;
@@ -461,27 +528,46 @@ class Excel extends Component
         $sheet->removeRow($row);
         $sheet->setCellValue("C$row", 'Разом');
 
-        for ($c = 14; $c < 45; $c++) {
-            $index = PHPExcel_Cell::stringFromColumnIndex($c);
-            $sheet->setCellValue("$index$row", "=SUM($index" . implode("+$index", $totals) . ')');
+//        There was a mistake in cycle values
+//        for ($c = 14; $c < 45; $c++) {
+        $exclude = array(33, 39, 53, 59);
+        for ($c = 15; $c < 45; $c += 2) {
+//            $index = PHPExcel_Cell::stringFromColumnIndex($c);
+            $index = Coordinate::stringFromColumnIndex($c);
+
+//            Caused File Corruption - Fixed
+//            $sheet->setCellValue("$index$row", "=SUM($index" . implode("+$index", $totals) . ')');
+            $sheet->setCellValue("$index$row", "=SUM($index" . implode(",$index", $totals) . ")");
+            if (in_array($c, $exclude)) {
+                $index = Coordinate::stringFromColumnIndex($c + 1);
+                $sheet->setCellValue("$index$row", "=SUM($index" . implode(",$index", $totals) . ")");
+            }
         }
-        $row += 6;
-        //$this->setValue($sheet, "AD$row", $plan->specialityQualification->speciality->department->head->getFullName());
+//        $row += 6;
+//        Call to a member function getFullName() on null - Fix it
+//        $this->setValue($sheet, "AD$row", $plan->specialityQualification->speciality->department->head->getFullName());
+
     }
 
     /**
-     * @param $sheet PHPExcel_Worksheet
+     * @param $sheet Worksheet
      * @param $row
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
+
     public function workPlanInsertNewLine($sheet, $row)
     {
         $sheet->insertNewRowBefore($row, 1);
         $sheet->mergeCells("C$row:N$row");
-        $exclude = array(32, 38, 52, 58);
-        for ($i = 14; $i < 66; $i += 2) {
+//        $exclude = array(32, 38, 52, 58);
+        $exclude = array(33, 39, 53, 59);
+//        prev value = 14
+        for ($i = 15; $i < 66; $i += 2) {
             if (in_array($i, $exclude)) continue;
-            $index1 = PHPExcel_Cell::stringFromColumnIndex($i);
-            $index2 = PHPExcel_Cell::stringFromColumnIndex($i + 1);
+//            $index1 = PHPExcel_Cell::stringFromColumnIndex($i);
+            $index1 = Coordinate::stringFromColumnIndex($i);
+//            $index2 = PHPExcel_Cell::stringFromColumnIndex($i + 1);
+            $index2 = Coordinate::stringFromColumnIndex($i + 1);
             $sheet->mergeCells("$index1$row:$index2$row");
         }
     }

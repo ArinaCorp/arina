@@ -11,20 +11,23 @@ namespace app\components\exporters;
 use PhpOffice\PhpSpreadsheet;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use Yii;
 
 abstract class BaseExporter
 {
 
-    abstract public static function getSpreadsheet($spreadsheet, $data);
+    abstract public static function getSpreadsheet($spreadsheet, $data, $optional = null);
 
     /**
+     * @param $entryData
+     * @param $optional
      * @var $exporter string - Exporter class name
      * @throws PhpSpreadsheet\Exception
      * @throws PhpSpreadsheet\Reader\Exception
      * @throws PhpSpreadsheet\Writer\Exception
      */
-    public static function getDocument($entryData = null)
+    public static function getDocument($entryData = null, $optional = null)
     {
 //        Get module name to load template
         $explodedArray = explode('\\', static::class);
@@ -35,7 +38,7 @@ abstract class BaseExporter
         $spreadsheet = IOFactory::load($template);
 
 //        Fill the spreadsheet and save it
-        $spreadsheet = static::getSpreadsheet($spreadsheet, $entryData);
+        $spreadsheet = static::getSpreadsheet($spreadsheet, $entryData, $optional);
 
         $filename = $module . "_" . date("d-m-Y-His") . ".xlsx";
 
@@ -52,15 +55,36 @@ abstract class BaseExporter
 //        return Yii::$app->response->sendFile(Yii::getAlias('@webroot') . '/exported/');
     }
 
-    public static function getBorderStyle()
+    public static function getAllBordersThin()
     {
         return [
             'borders' => [
-                'allborders' => [
-                    'style' => Border::BORDER_THIN,
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_THIN,
                     'color' => ['argb' => '00000000'],
                 ],
             ],
+        ];
+    }
+
+    public static function getLeftBorderThin()
+    {
+        return [
+            'borders' => [
+                'left' => [
+                    'borderStyle' => Border::BORDER_THIN,
+                    'color' => ['argb' => '00000000'],
+                ],
+            ],
+        ];
+    }
+
+    public static function getAlignmentCenter()
+    {
+        return [
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_CENTER
+            ]
         ];
     }
 

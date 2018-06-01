@@ -20,11 +20,12 @@ class StudyPlanExporter extends BaseExporter
     /**
      * @param $spreadsheet Spreadsheet
      * @param $plan StudyPlan
+     * @param $optional null
      * @return mixed
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
 
-    public static function getSpreadsheet($spreadsheet, $plan)
+    public static function getSpreadsheet($spreadsheet, $plan, $optional = null)
     {
         //SHEET #1
 //        $sheet = $sheet = $objPHPExcel->setActiveSheetIndex(0);
@@ -81,7 +82,7 @@ class StudyPlanExporter extends BaseExporter
             } else {
                 $sheet->setCellValue('P' . $i, 52);
             }
-            $sheet->getStyle("A$i:R$i")->applyFromArray(self::getBorderStyle());
+            $sheet->getStyle("A$i:R$i")->applyFromArray(self::getAllBordersThin());
             $i++;
         }
         $sheet->setCellValue('A' . $i, 'Разом');
@@ -92,7 +93,7 @@ class StudyPlanExporter extends BaseExporter
         $sheet->setCellValue('C' . $i, $totals['T']);
         $sheet->setCellValue('M' . $i, $totals['H']);
         $sheet->setCellValue('P' . $i, 52 * count($plan->graph) - $totals[' ']);
-        $sheet->getStyle("A$i:R$i")->applyFromArray(self::getBorderStyle());
+        $sheet->getStyle("A$i:R$i")->applyFromArray(self::getAllBordersThin());
 
         // table #3 / table #4
         $i = 46;
@@ -106,7 +107,7 @@ class StudyPlanExporter extends BaseExporter
                         $sheet->setCellValue("AF$i", $j + 1);
                     }
                 }
-                $sheet->getStyle("T$i:AH$i")->applyFromArray(self::getBorderStyle());
+                $sheet->getStyle("T$i:AH$i")->applyFromArray(self::getAllBordersThin());
                 $i++;
             }
             for ($k = 0; $k < count($item->control); $k++) {
@@ -117,7 +118,7 @@ class StudyPlanExporter extends BaseExporter
                         $sheet->setCellValue("AJ$z", $item->subject->title);
                         $sheet->setCellValue("AT$z", $name);
                         $sheet->setCellValue("BC$z", $k + 1);
-                        $sheet->getStyle("AJ$z:BC$z")->applyFromArray(self::getBorderStyle());
+                        $sheet->getStyle("AJ$z:BC$z")->applyFromArray(self::getAllBordersThin());
                         $z++;
                     }
                 }
@@ -187,7 +188,7 @@ class StudyPlanExporter extends BaseExporter
         $spreadsheet->setActiveSheetIndex(0);
 
         Calculation::getInstance()->disableCalculationCache();
-        
+
         return $spreadsheet;
     }
 }

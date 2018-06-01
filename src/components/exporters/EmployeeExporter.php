@@ -14,14 +14,14 @@ use PhpOffice\PhpSpreadsheet;
 class EmployeeExporter extends BaseExporter
 {
     /**
-     * @param null $data
+     * @param $data null
+     * @param $optional null
      * @param $spreadsheet PhpSpreadsheet\Spreadsheet
      * @return PhpSpreadsheet\Spreadsheet
      * @throws PhpSpreadsheet\Exception
      */
-    public static function getSpreadsheet($spreadsheet, $data = null)
+    public static function getSpreadsheet($spreadsheet, $data = null, $optional = null)
     {
-
         $spreadsheet->setActiveSheetIndex(0);
 
         /**

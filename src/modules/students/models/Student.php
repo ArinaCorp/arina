@@ -212,6 +212,11 @@ class Student extends \yii\db\ActiveRecord
         return $this->fullName . " " . $this->birth_day;
     }
 
+    public function getBirthDay()
+    {
+        return $this->birth_day;
+    }
+
     public function getLink()
     {
         return Html::a($this->getFullName(), ['/students/default/view', 'id' => $this->id], ['target' => '_blank']);

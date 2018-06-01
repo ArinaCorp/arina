@@ -5,6 +5,7 @@ namespace app\modules\students\controllers;
 use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 use app\modules\rbac\filters\AccessControl;
 use app\modules\students\models\Group;
+use app\modules\students\models\GroupExport;
 use app\modules\user\helpers\UserHelper;
 use app\modules\user\models\User;
 use nullref\core\interfaces\IAdminController;
@@ -177,7 +178,17 @@ class GroupController extends Controller implements IAdminController
 
     public function actionDocument($id)
     {
-        $model = $this->findModel($id);
+//        TODO: replace for this, later
+        $model = new GroupExport($id);
+        if ($model->load(Yii::$app->request->get())) {
+            $model->export();
+            return;
+        } else {
+            return $this->render('export', [
+                'model' => $model,
+            ]);
+        }
+        $model=$this->findModel($id);
         $model->getDocument();
     }
 

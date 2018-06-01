@@ -44,7 +44,7 @@ class Accounting extends BaseModule implements IAdminModule, IAccessibleModule
                     'icon' => 'list',
                 ],*/
                 [
-                    'label' => Yii::t('app', 'Accounting per mounth'),
+                    'label' => Yii::t('app', 'Accounting per month'),
                     'url' => ['/accounting/accounting'],
                     'icon' => 'list',
                 ],

@@ -27,7 +27,7 @@ return [
     'Subject_id' => 'Предмет',
     'Save' => 'Зберегти',
     'Accounting teacher training hours per year' => 'Облік годин за рік',
-    'Accounting per mounth' => 'Облік за місяць',
+    'Accounting per month' => 'Облік за місяць',
     'Students' => 'Студенти',
     'Student' => 'Студент',
     'Last Name' => 'Прізвище',
@@ -378,5 +378,6 @@ return [
     'Update Mark' => 'Оновити оцінку',
     'The record date should be greater or equal' => 'Дата запису має бути більша або рівна ',
     'Report from subject' => 'Звіт по предмету',
-    'Total amount' => 'Загальна кількість'
+    'Total amount' => 'Загальна кількість',
+    'Date created' => 'Дата створення'
 ];
