@@ -91,7 +91,7 @@ class WorkPlanExporter extends BaseExporter
         for ($i = 0; $i < count($groups); $i++) {
             $rowIndex = $i + 11;
 //            $sheet->setCellValue("G$rowIndex", $groups[$i]);
-            $sheet->setCellValue("H$rowIndex", $groups[$i]);
+            $sheet->setCellValue("G$rowIndex", $groups[$i]);
             for ($j = 0; $j < 52; $j++) {
 //                $colString = PHPExcel_Cell::stringFromColumnIndex($colNumber + $j);
                 $colString = Coordinate::stringFromColumnIndex($colNumber + $j);
@@ -101,7 +101,7 @@ class WorkPlanExporter extends BaseExporter
                 }
             }
 //            $sheet->getStyle("G$rowIndex:BG$rowIndex")->applyFromArray(self::getAllBordersThin());
-            $sheet->getStyle("H$rowIndex:BG$rowIndex")->applyFromArray(self::getAllBordersThin());
+            $sheet->getStyle("G$rowIndex:BG$rowIndex")->applyFromArray(self::getAllBordersThin());
         }
 
         //hours table
