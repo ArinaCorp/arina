@@ -22,9 +22,9 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="row">
     <h1><?= Html::encode($this->title); ?></h1>
 
-    <h4><?= Html::encode($model->specialityQualification->title.' - '.$model->getYearTitle()); ?></h4>
+    <h4><?= Html::encode($model->specialityQualification->title . ' - ' . $model->getYearTitle()); ?></h4>
 
-    <h4><?= $model->getAttributeLabel('created').': '.\Yii::$app->formatter->asDate($model->created);  ?></h4>
+    <h4><?= $model->getAttributeLabel('created') . ': ' . \Yii::$app->formatter->asDate($model->created); ?></h4>
 
     <?php Pjax::begin(); ?>
 
@@ -49,9 +49,12 @@ $this->params['breadcrumbs'][] = $this->title;
             'study_year_id' => $model->study_year_id,
             'studyPlan' => false,
         ]
-    );?>
+    ); ?>
 
-    <?= $this->render('/_form_buttons', ['model' => $model, 'plan' => False]) ?>
+    <p>
+        <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-info']) ?>
+        <?= Html::a(Yii::t('app', 'Return'), ['/plans/work-plan/view', 'id' => $model->id], ['class' => 'btn btn-danger']) ?>
+    </p>
 
     <?php ActiveForm::end(); ?>
 

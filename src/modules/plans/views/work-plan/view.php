@@ -6,6 +6,7 @@ use yii\helpers\Url;
 
 use app\modules\plans\models\WorkPlan;
 use app\modules\plans\widgets\Graph;
+
 /**
  * @var $this View
  * @var $model WorkPlan
@@ -18,9 +19,11 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="row">
-    <h1><?= Html::encode($this->title.' '.$model->getYearTitle()); ?></h1>
+    <h1><?= Html::encode($this->title . ' ' . $model->getYearTitle()); ?></h1>
 
-    <h4><?= $model->getAttributeLabel('created').': '.date('d.m.Y', $model->created); ?></h4>
+    <h4><?= $model->getAttributeLabel('created') . ': ' . date('d.m.Y', $model->created); ?></h4>
+
+    <?= Html::a(Yii::t('app', 'List'), ['index'], ['class' => 'btn btn-danger']) ?>
 
     <?= Html::a(Yii::t('app', 'Export'), Url::toRoute(['work-plan/export', 'id' => $model->id]), ['class' => 'btn btn-success']); ?>
 
@@ -33,16 +36,16 @@ $this->params['breadcrumbs'][] = $this->title;
     <br/><br/>
 
     <?= Graph::widget(
-            [
-                'model' => $model,
-                'field' => '',
-                'readOnly' => true,
-                'graph' => $model->graph,
-                'speciality_qualification_id'=>$model->speciality_qualification_id,
-                'study_year_id' => $model->study_year_id,
-                'studyPlan' => false
-            ]
-    )?>
+        [
+            'model' => $model,
+            'field' => '',
+            'readOnly' => true,
+            'graph' => $model->graph,
+            'speciality_qualification_id' => $model->speciality_qualification_id,
+            'study_year_id' => $model->study_year_id,
+            'studyPlan' => false
+        ]
+    ) ?>
 
     <?= $model->checkSubjects(); ?>
 

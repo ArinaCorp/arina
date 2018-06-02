@@ -1,5 +1,6 @@
 <?php
 
+use yii\helpers\Html;
 use yii\web\View;
 use yii\bootstrap\ActiveForm;
 use yii\widgets\Pjax;
@@ -40,7 +41,7 @@ use app\modules\directories\models\subject\Subject;
                     'data' => $model->isNewRecord ?
                         $model->studyPlan->getUnusedSubjects() :
                         Subject::getListForSpecialityQualification($model->studyPlan->speciality_qualification_id),
-                    'options' =>[ 'placeholder' => Yii::t('plans', 'Select subject')]
+                    'options' => ['placeholder' => Yii::t('plans', 'Select subject')]
                 ]) ?>
         </div>
         <div class="col-sm-4">
@@ -56,71 +57,78 @@ use app\modules\directories\models\subject\Subject;
     <div class="row">
         <div class="col-sm-3">
             <?= $form->field($model, 'total')->textInput(['type' => 'number', 'min' => 0,
-                'value' => $model->isNewRecord ? 0 : $model->total,])?>
-        </div>
-        <div class="col-sm-3">
-            <label class="control-label" for="classes_week-total"><?=$model->getAttributeLabel('classes_week')?></label>
-            <?= TouchSpin::widget(['disabled' => true, 'name' => 'classes_week'])?>
-        </div>
-        <div class="col-sm-3">
-            <label class="control-label" for="classes-total"><?=$model->getAttributeLabel('classes')?></label>
-            <?= TouchSpin::widget(['disabled' => true, 'name' => 'classes'])?>
+                'value' => $model->isNewRecord ? 0 : $model->total,]) ?>
         </div>
         <div class="col-sm-3">
             <?= $form->field($model, 'lectures')->textInput(['type' => 'number', 'min' => 0,
-                'value' => $model->isNewRecord ? 0 : $model->lectures,])?>
+                'value' => $model->isNewRecord ? 0 : $model->lectures,]) ?>
+        </div>
+        <div class="col-sm-3">
+            <label class="control-label"
+                   for="classes_week-total"><?= $model->getAttributeLabel('classes_week') ?></label>
+            <?= TouchSpin::widget(['disabled' => true, 'name' => 'classes_week']) ?>
+        </div>
+        <div class="col-sm-3">
+            <label class="control-label" for="classes-total"><?= $model->getAttributeLabel('classes') ?></label>
+            <?= TouchSpin::widget(['disabled' => true, 'name' => 'classes']) ?>
         </div>
     </div>
 
     <div class="row">
         <div class="col-sm-3">
             <?= $form->field($model, 'lab_works')->textInput(['type' => 'number', 'min' => 0,
-                'value' => $model->isNewRecord ? 0 : $model->lab_works,])?>
+                'value' => $model->isNewRecord ? 0 : $model->lab_works,]) ?>
         </div>
         <div class="col-sm-3">
             <?= $form->field($model, 'practices')->textInput(['type' => 'number', 'min' => 0,
-                'value' => $model->isNewRecord ? 0 : $model->practices,])?>
+                'value' => $model->isNewRecord ? 0 : $model->practices,]) ?>
         </div>
         <div class="col-sm-3">
-            <?= $form->field($model, 'dual_lab_work')->checkbox()?>
-            <?= $form->field($model, 'dual_practice')->checkbox()?>
+            <?= $form->field($model, 'dual_lab_work')->checkbox() ?>
+            <?= $form->field($model, 'dual_practice')->checkbox() ?>
         </div>
         <div class="col-sm-3">
             <?= $form->field($model, 'practice_weeks')->textInput(['type' => 'number', 'min' => 0,
-                'value' => $model->isNewRecord ? 0 : $model->practice_weeks,])?>
+                'value' => $model->isNewRecord ? 0 : $model->practice_weeks,]) ?>
         </div>
     </div>
     <?php foreach ($model->studyPlan->semesters as $semester => $weeks): ?>
         <div class="row">
-            <div class="col-sm-4">
+            <div class="col-sm-3">
                 <?= $form->field($model, "weeks[$semester]")->textInput(['type' => 'number', 'min' => 0,
                     'value' => $model->isNewRecord ? 0 : $model->weeks[$semester],
                     'options' => ['placeholder' => Yii::t('plans', 'Hours per week')]])
-                ->label($semester + 1 . '-й семестр: ' . $weeks . ' тижнів')?>
+                    ->label($semester + 1 . '-й семестр: ' . $weeks . ' тижнів') ?>
             </div>
             <div class="col-sm-1"><br/>
-                <?= $form->field($model, "control[$semester][0]")->checkbox(['label' => Yii::t('plans', 'Test')])?>
+                <?= $form->field($model, "control[$semester][0]")->checkbox(['label' => Yii::t('plans', 'Test')]) ?>
             </div>
             <div class="col-sm-1"><br/>
-                <?= $form->field($model, "control[$semester][1]")->checkbox(['label' => Yii::t('plans', 'Exam')])?>
+                <?= $form->field($model, "control[$semester][1]")->checkbox(['label' => Yii::t('plans', 'Exam')]) ?>
             </div>
             <div class="col-sm-1"><br/>
-                <?= $form->field($model, "control[$semester][2]")->checkbox(['label' => Yii::t('plans', 'DPA')])?>
+                <?= $form->field($model, "control[$semester][2]")->checkbox(['label' => Yii::t('plans', 'DPA')]) ?>
             </div>
             <div class="col-sm-1"><br/>
-                <?= $form->field($model, "control[$semester][3]")->checkbox(['label' => Yii::t('plans', 'DA')])?>
+                <?= $form->field($model, "control[$semester][3]")->checkbox(['label' => Yii::t('plans', 'DA')]) ?>
+            </div>
+            <div class="col-sm-1"><br/>
+                <?= $form->field($model, "control[$semester][4]")->checkbox(['label' => Yii::t('plans', 'ZNO')]) ?>
             </div>
             <div class="col-sm-2"><br/>
-                <?= $form->field($model, "control[$semester][4]")->checkbox(['label' => Yii::t('plans', 'Course work')])?>
+                <?= $form->field($model, "control[$semester][5]")->checkbox(['label' => Yii::t('plans', 'Course work')]) ?>
             </div>
             <div class="col-sm-2"><br/>
-                <?= $form->field($model, "control[$semester][5]")->checkbox(['label' => Yii::t('plans', 'Course project')])?>
+                <?= $form->field($model, "control[$semester][6]")->checkbox(['label' => Yii::t('plans', 'Course project')]) ?>
             </div>
         </div>
     <?php endforeach; ?>
 
-    <?= $this->render('/_form_buttons', ['model' => $model, 'plan' => 'study']) ?>
+    <p>
+        <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-info']) ?>
 
+        <?= Html::a(Yii::t('app', 'Return'), ['view', 'id' => $model->study_plan_id], ['class' => 'btn btn-danger']) ?>
+    </p>
     <?php ActiveForm::end(); ?>
 
     <?php Pjax::end(); ?>

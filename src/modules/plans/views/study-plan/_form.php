@@ -1,5 +1,6 @@
 <?php
 
+use yii\helpers\Html;
 use yii\web\View;
 use yii\bootstrap\ActiveForm;
 use yii\widgets\Pjax;
@@ -42,31 +43,34 @@ use app\modules\plans\widgets\Graph;
                     [
                         'placeholder' => $model->getAttributeLabel('speciality_qualification_id')
                     ]
-            ]);?>
+            ]); ?>
         </div>
     </div>
     <?php if ($model->isNewRecord): ?>
-    <div class="row">
-        <div class="col-sm-6">
-            <?= Select2::widget(
-                [
-                    'data' => StudyPlan::getList(),
-                    'id' => 'origin',
-                    'name' => 'origin',
-                    'options' =>
-                        [
-                            'placeholder' => Yii::t('plans', 'Select copy plan')
-                        ]
-                ]
-            );?>
+        <div class="row">
+            <div class="col-sm-6">
+                <?= Select2::widget(
+                    [
+                        'data' => StudyPlan::getList(),
+                        'id' => 'origin',
+                        'name' => 'origin',
+                        'options' =>
+                            [
+                                'placeholder' => Yii::t('plans', 'Select copy plan')
+                            ]
+                    ]
+                ); ?>
+            </div>
+            <br/><br/>
         </div>
-        <br/><br/>
-    </div>
     <?php endif; ?>
 
-    <?= Graph::widget(['model' => $model, 'field' => '', 'graph' => $model->graph]);?>
+    <?= Graph::widget(['model' => $model, 'field' => '', 'graph' => $model->graph]); ?>
 
-    <?= $this->render('/_form_buttons', ['model' => $model, 'plan' => True ]) ?>
+    <p>
+        <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-info']) ?>
+        <?= Html::a(Yii::t('app', 'Return'), ['view', 'id' => $model->id], ['class' => 'btn btn-danger']) ?>
+    </p>
 
     <?php ActiveForm::end(); ?>
 

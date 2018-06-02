@@ -14,9 +14,9 @@
     <tbody>
     <?php foreach ($data as $i => $v): ?>
         <tr>
-            <td><?php echo $i; ?></td>
+            <td><?= $i; ?></td>
             <?php foreach ($v as $j): ?>
-                <td><?php echo $j; ?></td>
+                <td><?= $j; ?></td>
             <?php endforeach;?>
         </tr>
     <?php endforeach;?>

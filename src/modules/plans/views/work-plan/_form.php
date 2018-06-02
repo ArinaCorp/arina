@@ -1,18 +1,18 @@
 <?php
 
+use yii\helpers\Html;
 use yii\web\View;
 use yii\bootstrap\ActiveForm;
 use yii\widgets\Pjax;
 use kartik\select2\Select2;
 
 use app\modules\directories\models\speciality_qualification\SpecialityQualification;
-use app\modules\plans\models\StudyPlan;
 use app\modules\directories\models\StudyYear;
 use app\modules\plans\models\WorkPlan;
 
 /**
  * @var $this View
- * @var $model StudyPlan
+ * @var $model WorkPlan
  * @var ActiveForm $form
  */
 ?>
@@ -43,7 +43,7 @@ use app\modules\plans\models\WorkPlan;
                     [
                         'placeholder' => $model->getAttributeLabel('speciality_qualification_id')
                     ]
-            ]);?>
+            ]); ?>
         </div>
     </div>
 
@@ -56,7 +56,7 @@ use app\modules\plans\models\WorkPlan;
                     [
                         'placeholder' => $model->getAttributeLabel('study_year_id')
                     ]
-            ]);?>
+            ]); ?>
         </div>
     </div>
 
@@ -71,7 +71,7 @@ use app\modules\plans\models\WorkPlan;
                         [
                             'placeholder' => Yii::t('plans', 'Select copy of study plan')
                         ]
-                ]);?>
+                ]); ?>
             </div>
         </div>
 
@@ -85,13 +85,16 @@ use app\modules\plans\models\WorkPlan;
                         [
                             'placeholder' => Yii::t('plans', 'Select copy of work plan')
                         ]
-                ]);?>
+                ]); ?>
             </div>
         </div>
         <br/>
     <?php endif; ?>
 
-    <?= $this->render('/_form_buttons', ['model' => $model, 'plan' => False]) ?>
+    <p>
+        <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-info']) ?>
+        <?= Html::a(Yii::t('app', 'Return'), ['view', 'id' => $model->id], ['class' => 'btn btn-danger']) ?>
+    </p>
 
     <?php ActiveForm::end(); ?>
 

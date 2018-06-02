@@ -99,7 +99,7 @@ use yii\web\View;
     /** Generate js translations for types */
     $js = implode(PHP_EOL, array_map(function ($item) {
         return 'var ' . $item . ' = "' . Yii::t('plans', strtoupper($item)) . '";';
-    }, ['t', 's', 'p', 'h', 'dp', 'da']));
+    }, ['t', 's', 'p', 'h', 'dp', 'da', 'dpa']));
 
 
     $js .= <<<JS
@@ -134,6 +134,10 @@ jQuery('tr.line').find('input').click(function () {
             obj.attr('data-state', 'DA');
             break;
         case 'DA':
+            obj.val(dpa);
+            obj.attr('data-state', 'DPA');
+            break;
+        case 'DPA':
             obj.val(empty);
             obj.attr('data-state', ' ');
             break;
@@ -182,6 +186,7 @@ JS;
         <li><?= Yii::t('plans', 'H - vacation (holidays)'); ?>  </li>
         <li><?= Yii::t('plans', 'DP - diploma design'); ?>      </li>
         <li><?= Yii::t('plans', 'DA - state certification'); ?> </li>
+        <li><?= Yii::t('plans', 'DPA - state final examination'); ?> </li>
     </ul>
 
     <?= Html::button(Yii::t('app', 'Generate'), ['class' => 'btn btn-primary', 'id' => 'generate']); ?>

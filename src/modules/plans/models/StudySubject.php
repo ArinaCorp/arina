@@ -213,6 +213,9 @@ class StudySubject extends ActiveRecord
             if (!empty($control[3])) {
                 $semesters[] = ($semester + 1) . Yii::t('plans', 'State examination');
             }
+            if (!empty($control[4])) {
+                $semesters[] = ($semester + 1) . Yii::t('plans', 'External independent evaluation');
+            }
         }
         return implode(', ', $semesters);
     }
@@ -224,7 +227,7 @@ class StudySubject extends ActiveRecord
     {
         $semesters = [];
         foreach ($this->control as $semester => $control) {
-            if (!empty($control[4])) {
+            if (!empty($control[5])) {
                 $semesters[] = $semester + 1;
             }
         }
@@ -238,7 +241,7 @@ class StudySubject extends ActiveRecord
     {
         $semesters = [];
         foreach ($this->control as $semester => $control) {
-            if (!empty($control[5])) {
+            if (!empty($control[6])) {
                 $semesters[] = $semester + 1;
             }
         }
