@@ -22,7 +22,7 @@ class EmployeeExporter extends BaseExporter
      */
     public static function getSpreadsheet($spreadsheet, $data = null, $optional = null)
     {
-        $spreadsheet->setActiveSheetIndex(0);
+        $sheet = $spreadsheet->setActiveSheetIndex(0);
 
         /**
          * @var Employee[] $employees
@@ -34,14 +34,13 @@ class EmployeeExporter extends BaseExporter
 
             foreach (range('A', 'G') as $col) {
                 if ($col != 'F')
-                    $spreadsheet->getActiveSheet()->getColumnDimension($col)->setAutoSize(true);
+                    $sheet->getColumnDimension($col)->setAutoSize(true);
             }
 
             $current = 5;
             $i = 1;
             foreach ($employees as $employee) {
-                $spreadsheet->getActiveSheet()
-                    ->insertNewRowBefore($current + 1)
+                $sheet->insertNewRowBefore($current + 1)
                     ->setCellValue('B' . $current, $i)
                     ->setCellValue('C' . $current, $employee->getPosition())
                     ->setCellValue('D' . $current, $employee->getFullName())
@@ -50,7 +49,7 @@ class EmployeeExporter extends BaseExporter
                 $i++;
                 $current++;
             }
-            $spreadsheet->getActiveSheet()->removeRow($current);
+            $sheet->removeRow($current);
         }
         return $spreadsheet;
 

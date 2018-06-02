@@ -24,11 +24,17 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(['method' => 'get']); ?>
 
-    <p>
-        <?= $form->field($model, 'telephone')->checkbox() ?>
-        <?= $form->field($model, 'birth_day')->checkbox() ?>
-        <?= $form->field($model, 'payment_type_label')->checkbox() ?>
-    </p>
+    <div class="row">
+        <div class="col-sm-2">
+            <?= $form->field($model, 'telephone')->checkbox() ?>
+        </div>
+        <div class="col-sm-2">
+            <?= $form->field($model, 'birth_day')->checkbox() ?>
+        </div>
+        <div class="col-sm-2">
+            <?= $form->field($model, 'payment_type_label')->checkbox() ?>
+        </div>
+    </div>
 
     <div class="form-group">
         <?= Html::submitButton('Export', ['class' => 'btn btn-primary']) ?>

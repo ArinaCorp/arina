@@ -379,5 +379,8 @@ return [
     'The record date should be greater or equal' => 'Дата запису має бути більша або рівна ',
     'Report from subject' => 'Звіт по предмету',
     'Total amount' => 'Загальна кількість',
-    'Date created' => 'Дата створення'
+    'Date created' => 'Дата створення',
+    'Phone number' => 'Номер телефону',
+    'Birth date' => 'Дата Народження',
+    'Payment type' => 'Тип оплати'
 ];

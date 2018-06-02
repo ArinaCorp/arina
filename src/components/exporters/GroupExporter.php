@@ -33,8 +33,9 @@ class GroupExporter extends BaseExporter
     public static function getSpreadsheet($spreadsheet, $group, $optional = null)
     {
         $spreadsheet->setActiveSheetIndex(0);
-        $spreadsheet->getActiveSheet()->SetCellValue('B2', $group->title);
-        $spreadsheet->getActiveSheet()->SetCellValue('B3', StudyYear::getCurrentYear()->fullName . " навчального року");
+        $sheet=$spreadsheet->getActiveSheet();
+        $sheet->SetCellValue('B2', $group->title);
+        $sheet->SetCellValue('B3', StudyYear::getCurrentYear()->fullName . " навчального року");
         /**
          * Optional attributes headers
          *
@@ -49,10 +50,10 @@ class GroupExporter extends BaseExporter
         foreach ($optional as $key => $property) {
             if ($property) {
                 $str_inc=Coordinate::stringFromColumnIndex($col_inc);
-                $spreadsheet->getActiveSheet()->insertNewColumnBefore($str_inc);
-                $spreadsheet->getActiveSheet()->setCellValue($str_inc . $header_row, self::$headers[$key]);
-                $spreadsheet->getActiveSheet()->getStyle($str_inc . $header_row)->applyFromArray(self::getLeftBorderThin());
-                $spreadsheet->getActiveSheet()->getColumnDimension($str_inc)->setAutoSize(true);
+                $sheet->insertNewColumnBefore($str_inc);
+                $sheet->setCellValue($str_inc . $header_row, self::$headers[$key]);
+                $sheet->getStyle($str_inc . $header_row)->applyFromArray(self::getLeftBorderThin());
+                $sheet->getColumnDimension($str_inc)->setAutoSize(true);
                 $col_inc++;
             }
         }
@@ -66,10 +67,10 @@ class GroupExporter extends BaseExporter
             $i = 1;
             foreach ($students as $student) {
 //                Obligatory cells
-                $spreadsheet->getActiveSheet()->mergeCells("C" . $currentRow . ":G" . $currentRow);
-                $spreadsheet->getActiveSheet()->insertNewRowBefore($currentRow + 1);
-                $spreadsheet->getActiveSheet()->setCellValue('B' . $currentRow, $i);
-                $spreadsheet->getActiveSheet()->setCellValue('C' . $currentRow, $student->getFullName());
+                $sheet->mergeCells("C" . $currentRow . ":G" . $currentRow);
+                $sheet->insertNewRowBefore($currentRow + 1);
+                $sheet->setCellValue('B' . $currentRow, $i);
+                $sheet->setCellValue('C' . $currentRow, $student->getFullName());
 //                Optional fields
                 /**
                  * Optional attributes cells
@@ -79,29 +80,29 @@ class GroupExporter extends BaseExporter
                     if ($property) {
 //                        TODO: Need a way to get the phone number of a student
 //                        if ($key = 'telephone')
-//                            $spreadsheet->getActiveSheet()->setCellValue($header_col . $currentRow, $student->phones[0]);
+//                            $sheet->setCellValue($header_col . $currentRow, $student->phones[0]);
 //                        else
                         $str_inc = Coordinate::stringFromColumnIndex($col_inc);
                         $getMethod = 'get' . $key;
 
-                        $spreadsheet->getActiveSheet()->setCellValue($str_inc . $currentRow, $student->$getMethod());
-                        $spreadsheet->getActiveSheet()->getStyle($str_inc.$currentRow)->applyFromArray(self::getAlignmentCenter());
-                        $spreadsheet->getActiveSheet()->getStyle($str_inc . $currentRow)->applyFromArray(self::getLeftBorderThin());
+                        $sheet->setCellValue($str_inc . $currentRow, $student->$getMethod());
+                        $sheet->getStyle($str_inc.$currentRow)->applyFromArray(self::getAlignmentCenter());
+                        $sheet->getStyle($str_inc . $currentRow)->applyFromArray(self::getLeftBorderThin());
                         $col_inc++;
                     }
                 }
                 $i++;
                 $currentRow++;
             }
-            $spreadsheet->getActiveSheet()->removeRow($currentRow);
-            $spreadsheet->getActiveSheet()->removeRow($currentRow);
+            $sheet->removeRow($currentRow);
+            $sheet->removeRow($currentRow);
             $currentRow += 1;
-            $spreadsheet->getActiveSheet()->setCellValue('F' . $currentRow, $group->getCuratorShortNameInitialFirst());
+            $sheet->setCellValue('F' . $currentRow, $group->getCuratorShortNameInitialFirst());
             $currentRow += 2;
-            $spreadsheet->getActiveSheet()->setCellValue('F' . $currentRow, $group->getGroupLeaderShortNameInitialFirst());
+            $sheet->setCellValue('F' . $currentRow, $group->getGroupLeaderShortNameInitialFirst());
             $currentRow += 2;
-            $spreadsheet->getActiveSheet()->setCellValue('F' . $currentRow, Yii::t('app', 'Date created'));
-            $spreadsheet->getActiveSheet()->setCellValue('G' . $currentRow, date('d.m.Y H:i:s'));
+            $sheet->setCellValue('F' . $currentRow, Yii::t('app', 'Date created'));
+            $sheet->setCellValue('G' . $currentRow, date('d.m.Y H:i:s'));
         }
         return $spreadsheet;
     }

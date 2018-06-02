@@ -10,6 +10,7 @@ namespace app\modules\students\models;
 
 
 use app\components\exporters\GroupExporter;
+use Yii;
 use yii\base\Model;
 
 class GroupExport extends Model
@@ -34,6 +35,15 @@ class GroupExport extends Model
         ];
     }
 
+    public function attributeLabels()
+    {
+        return [
+            'telephone' => Yii::t('app', 'Phone number'),
+            'birth_day' => Yii::t('app', 'Birth date'),
+            'payment_type_label' => Yii::t('app', 'Payment type')
+        ];
+    }
+
     /**
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
@@ -41,9 +51,9 @@ class GroupExport extends Model
      */
     public function export()
     {
-        $optional=['Phone'=>$this->telephone,'BirthDay'=>$this->birth_day,'PaymentTypeLabel'=>$this->payment_type_label];
+        $optional = ['Phone' => $this->telephone, 'BirthDay' => $this->birth_day, 'PaymentTypeLabel' => $this->payment_type_label];
         $model = Group::findOne($this->groupId);
-        return GroupExporter::getDocument($model,$optional);
+        return GroupExporter::getDocument($model, $optional);
     }
 
 }
