@@ -38,6 +38,7 @@
         "yiisoft/yii2": ">=2.0.13",
         "yiisoft/yii2-bootstrap": "*",
         "yiisoft/yii2-jui": "^2.0",
+        "yiisoft/yii2-shell": "^2.0@dev",
         "yiisoft/yii2-swiftmailer": "*"
     },
     "require-dev": {
