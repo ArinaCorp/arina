@@ -97,7 +97,7 @@ class m170417_145342_create_basic_roles extends Migration
             'email' => 'admin@test.com',
         ]);
 
-        if ($user) {
+        if (!$user) {
             $user = new User();
             $user->username = 'admin';
             $user->email = 'admin@test.com';
