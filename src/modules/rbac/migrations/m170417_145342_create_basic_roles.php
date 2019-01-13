@@ -102,6 +102,7 @@ class m170417_145342_create_basic_roles extends Migration
             $user->username = 'admin';
             $user->email = 'admin@test.com';
             $user->password = 'password';
+            $user->confirm();
             $user->save();
         }
 
