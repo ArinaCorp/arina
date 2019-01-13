@@ -3,8 +3,6 @@
 use app\modules\rbac\models\AuthItem;
 use app\modules\rbac\models\AuthItemChild;
 use app\modules\rbac\models\AuthRule;
-use app\modules\rbac\models\rules\ProjectRule;
-use app\modules\rbac\models\rules\TaskRule;
 use app\modules\user\models\User;
 use yii\db\Migration;
 use yii\rbac\Item;
@@ -44,13 +42,13 @@ class m170417_145342_create_basic_roles extends Migration
         ]);
 
         //Add rules
-        $projectRule = new ProjectRule();
-        $authManager->add($projectRule);
-        $taskRule = new TaskRule();
-        $authManager->add($taskRule);
+//        $projectRule = new ProjectRule();
+//        $authManager->add($projectRule);
+//        $taskRule = new TaskRule();
+//        $authManager->add($taskRule);
 
         //Permissions
-        $this->batchInsert($authManager->itemTable, ['name', 'type', 'description', 'rule_name', 'data', 'created_at', 'updated_at'], [
+//        $this->batchInsert($authManager->itemTable, ['name', 'type', 'description', 'rule_name', 'data', 'created_at', 'updated_at'], [
 //            //Project permissions for project-manager
 //            ['indexProject', Item::TYPE_PERMISSION, 'Перегляд проектів', null, null, $time, $time],
 //            ['createProject', Item::TYPE_PERMISSION, 'Створення проекту', null, null, $time, $time],
@@ -68,10 +66,10 @@ class m170417_145342_create_basic_roles extends Migration
 //            ['deleteTask', Item::TYPE_PERMISSION, 'Видалення завдання', null, null, $time, $time],
 //            ['updateOwnTask', Item::TYPE_PERMISSION, 'Оновлення власного завдання', $taskRule->name, null, $time, $time],
 //            ['deleteOwnTask', Item::TYPE_PERMISSION, 'Видалення власного завдання', $taskRule->name, null, $time, $time],
-        ]);
+//        ]);
 
 
-        $this->batchInsert($authManager->itemChildTable, ['parent', 'child'], [
+//        $this->batchInsert($authManager->itemChildTable, ['parent', 'child'], [
 //            //Bind permissions to roles
 //            ['project-manager', 'indexProject'],
 //            ['project-manager', 'createProject'],
@@ -91,13 +89,21 @@ class m170417_145342_create_basic_roles extends Migration
 //            ['createTask', 'createTaskForProject'],
 //            ['updateTask', 'updateOwnTask'],
 //            ['deleteTask', 'deleteOwnTask'],
-        ]);
+//        ]);
 
         /** @var User $user */
         $user = User::findOne([
             'username' => 'admin',
             'email' => 'admin@test.com',
         ]);
+
+        if ($user) {
+            $user = new User();
+            $user->username = 'admin';
+            $user->email = 'admin@test.com';
+            $user->password = 'password';
+            $user->save();
+        }
 
         $this->insert($authManager->assignmentTable, [
             'item_name' => 'admin',
