@@ -49,6 +49,11 @@ class Module extends BaseModule implements IAdminModule, IAccessibleModule
                     'icon' => 'download',
                 ],
                 [
+                    'label' => Yii::t('app', 'Import Students from CSV'),
+                    'url' => ['/students/csv-import-document'],
+                    'icon' => 'download',
+                ],
+                [
                     'label' => Yii::t('app', 'Family ties types'),
                     'url' => ['/students/family-relation-type'],
                     'icon' => 'home',

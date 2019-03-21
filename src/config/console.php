@@ -10,7 +10,7 @@ return [
     'basePath' => dirname(__DIR__),
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     'runtimePath' => dirname(dirname(__DIR__)) . '/runtime',
-    'bootstrap' => ['log', 'core'],
+    'bootstrap' => ['log', 'core', 'queue'],
     'modules' => $modules,
     'params' => $params,
     'aliases' => [
@@ -21,6 +21,22 @@ return [
         'db' => require(__DIR__ . '/db.php'),
         'authManager' => [
             'class' => \dektrium\rbac\components\DbManager::class,
+        ],
+        'queue' => [
+            'class' => \yii\queue\db\Queue::class,
+            'db' => 'db',
+            'tableName' => '{{%queue}}',
+            'channel' => 'default',
+            'mutex' => \yii\mutex\MysqlMutex::class,
+        ],
+    ],
+    'controllerMap' => [
+        'migrate' => [
+            'class' => 'yii\console\controllers\MigrateController',
+            'migrationPath' => null,
+            'migrationNamespaces' => [
+                'yii\queue\db\migrations',
+            ],
         ],
     ],
 ];
