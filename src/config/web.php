@@ -9,7 +9,7 @@ $config = [
     'basePath' => dirname(__DIR__),
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     'runtimePath' => dirname(dirname(__DIR__)) . '/runtime',
-    'bootstrap' => ['log'],
+    'bootstrap' => ['log', 'queue'],
     'language' => 'uk',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
@@ -34,6 +34,7 @@ $config = [
         ],
         'formatter' => [
             'class' => 'app\components\Formatter',
+            'timeZone' => 'Europe/Kiev',
         ],
         'request' => [
             'cookieValidationKey' => 'RiAveGUdUACvWZppHVevMJRGd5Rij8uh',
@@ -71,6 +72,13 @@ $config = [
             ],
         ],
         'db' => require(__DIR__ . '/db.php'),
+        'queue' => [
+            'class' => \yii\queue\db\Queue::class,
+            'db' => 'db',
+            'tableName' => '{{%queue}}',
+            'channel' => 'default',
+            'mutex' => \yii\mutex\MysqlMutex::class,
+        ],
     ],
     'modules' => $modules,
     'params' => $params,
