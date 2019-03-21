@@ -110,7 +110,8 @@ class Student extends \yii\db\ActiveRecord
     {
         return [
             [['sseed_id', 'user_id', 'gender', 'status', 'created_at', 'updated_at'], 'integer'],
-            [['last_name', 'first_name', 'middle_name', 'gender', 'country_id', 'region_id', 'district_id'], 'required'],
+            [['last_name', 'first_name', 'middle_name', 'gender'], 'required'],
+//            [['last_name', 'first_name', 'middle_name', 'gender', 'country_id', 'region_id', 'district_id'], 'required'],
             [['birth_day', 'passport_issued_date'], 'safe'],
             [['exemption_ids'], 'each', 'rule' => ['integer']],
             [['student_code', 'passport_code', 'birth_certificate'], 'string', 'max' => 12],
@@ -163,7 +164,7 @@ class Student extends \yii\db\ActiveRecord
     {
         if (parent::beforeSave($insert)) {
             $this->birth_day = date('Y-m-d', strtotime($this->birth_day));
-            if (is_null(!$this->passport_issued_date)) {
+            if (!is_null($this->passport_issued_date)) {
                 $this->passport_issued_date = date('Y-m-d', strtotime($this->passport_issued_date));
             }
 
