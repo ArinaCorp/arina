@@ -1,5 +1,6 @@
 <?php
 
+use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
 use yii\grid\GridView;
 use \app\modules\students\models\CsvImportDocument as Document;
@@ -45,7 +46,18 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'created_at:datetime',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{rerun} {view} {delete}',
+                'buttons' => [
+                    'rerun' => function ($url, Document $model, $key) {
+                        if ($model->status === Document::STATUS_ERROR) {
+                            return Html::a(FA::icon(FA::_REFRESH), ['rerun', 'id' => $model->id]);
+                        }
+                        return '';
+                    },
+                ]
+            ]
         ],
     ]); ?>
 

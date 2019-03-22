@@ -3,6 +3,7 @@
 namespace app\modules\students\controllers;
 
 use app\modules\students\models\CreateCsvImportDocument;
+use app\modules\students\models\CsvImportDocumentItem;
 use Yii;
 use app\modules\students\models\CsvImportDocument;
 use yii\data\ActiveDataProvider;
@@ -10,7 +11,6 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use nullref\core\interfaces\IAdminController;
-use yii\web\UploadedFile;
 
 /**
  * CsvImportDocumentController implements the CRUD actions for CsvImportDocument model.
@@ -24,6 +24,7 @@ class CsvImportDocumentController extends Controller implements IAdminController
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
+                    'delete-item' => ['POST'],
                 ],
             ],
         ];
@@ -97,6 +98,13 @@ class CsvImportDocumentController extends Controller implements IAdminController
         ]);
     }
 
+    public function actionRerun($id)
+    {
+        $model = $this->findModel($id);
+        CreateCsvImportDocument::runJob($model);
+        return $this->redirect(['index']);
+    }
+
     /**
      * Updates an existing CsvImportDocument model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -127,5 +135,26 @@ class CsvImportDocumentController extends Controller implements IAdminController
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    public function actionDeleteItem($id)
+    {
+        $model = CsvImportDocumentItem::findOne($id);
+        $document_id = $model->document_id;
+        $model->delete();
+
+        return $this->redirect(['view', 'id' => $document_id]);
+    }
+
+    public function actionDeleteMultipleItems($ids)
+    {
+        $ids = explode(',', $ids);
+        foreach ($ids as $id) {
+            $model = CsvImportDocumentItem::findOne($id);
+            $document_id = $model->document_id;
+            $model->delete();
+        }
+
+        return $this->redirect(['view', 'id' => $document_id]);
     }
 }

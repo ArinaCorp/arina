@@ -10,11 +10,6 @@ namespace app\components\importers;
 
 
 use app\modules\students\models\CsvImportDocument as Document;
-use app\modules\students\models\CsvImportDocumentItem as DocumentItem;
-use app\modules\students\models\Student;
-use ruskid\csvimporter\ARImportStrategy;
-use ruskid\csvimporter\CSVImporter;
-use ruskid\csvimporter\CSVReader;
 use yii\base\BaseObject;
 use yii\queue\JobInterface;
 

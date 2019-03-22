@@ -21,7 +21,10 @@ class CsvImportDocument extends ActiveRecord
 {
     const STATUS_NEW = 0;
     const STATUS_LOADING = 1;
-    const STATUS_DONE = 2;
+    const STATUS_VALIDATING = 2;
+    const STATUS_VALIDATED = 3;
+    const STATUS_PROCESSING = 4;
+    const STATUS_DONE = 5;
     const STATUS_ERROR = 99;
 
     /**
@@ -78,6 +81,9 @@ class CsvImportDocument extends ActiveRecord
         return [
             self::STATUS_NEW => 'New',
             self::STATUS_LOADING => 'Loading',
+            self::STATUS_VALIDATING => 'Validating',
+            self::STATUS_VALIDATED => 'Validated',
+            self::STATUS_PROCESSING => 'Processing',
             self::STATUS_DONE => 'Done',
             self::STATUS_ERROR => 'Error',
         ];
