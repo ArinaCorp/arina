@@ -2,11 +2,13 @@
 
 namespace app\modules\directories\models\subject;
 
+use app\modules\directories\models\subject_block\SubjectBlock;
 use app\modules\directories\models\subject_cycle\SubjectCycle;
 use app\modules\directories\models\subject_relation\SubjectRelation;
 use nullref\useful\traits\Mappable;
 use Yii;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "subject".
@@ -46,7 +48,7 @@ class Subject extends ActiveRecord
     public function rules()
     {
         return [
-            [['title', 'code','short_name'], 'required'],
+            [['title', 'code', 'short_name'], 'required'],
             [['id', 'practice'], 'integer'],
             [['title', 'code', 'short_name'], 'unique'],
             [['title', 'short_name', 'code'], 'string', 'max' => 255],
@@ -100,4 +102,15 @@ class Subject extends ActiveRecord
             'speciality_qualification_id' => $speciality_qualification_id,
             'subject_id' => $this->id])->subjectCycle;
     }
+
+    /**
+     * @return array Returns list of optional subjects
+     */
+    public static function getOptionalList()
+    {
+        $subjects = Subject::find()->where(['like', 'code', 'ПВС'])->all();
+        $items = ArrayHelper::map($subjects, 'id', 'title');
+        return $items;
+    }
+
 }

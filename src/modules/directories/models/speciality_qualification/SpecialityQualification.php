@@ -109,8 +109,8 @@ class SpecialityQualification extends ActiveRecord
             $user = Yii::$app->user->identity;
             if (UserHelper::hasRole($user, 'head-of-department')) {
                 $departments = Department::find()
-                ->andWhere(['head_id'=>$user->employee->id])
-                ->all();
+                    ->andWhere(['head_id' => $user->employee->id])
+                    ->all();
             }
         }
 
@@ -209,11 +209,18 @@ class SpecialityQualification extends ActiveRecord
     public function getGroupsByStudyYear($yearId)
     {
         $list = [];
+        echo '<br>getGroupsByStudyYear<br>';
+
         foreach ($this->groups as $group) {
+//            var_dump(Group::findOne(1)->getCourse($yearId)<5); die;
+//            var_dump($group->getCourse($yearId));
             if ($group->getCourse($yearId) < 5) {
+//                if ($group->id == 1) echo $group->getSystemTitle();
                 $list[$group->getSystemTitle()] = $group->getCourse($yearId);
             }
         }
+//        var_dump($list);
+//        die;
         array_multisort($list);
         return $list;
     }
