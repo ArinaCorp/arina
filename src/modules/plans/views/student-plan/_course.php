@@ -69,12 +69,11 @@ switch ($course) {
         'weeks' => 0,
         'project' => 0,
     ]; ?>
+
     <?php foreach ($model->workPlan->workSubjects as $subject): ?>
-        <?php if ($subject->presentIn($course) && strpos($subject->subject->code, 'ПВС')===false): ?>
+        <?php if ($subject->presentIn($course) && strpos($subject->subject->code, 'ПВС') === false): ?>
             <tr>
-                <td><?= isset($subject->subject) ? $subject->subject->title : $subject->subject_id; ?>:
-                    <b>(<?= array_sum(isset($subject->subject) ? $subject->total : []); ?> годин)</b>
-                </td>
+                <td><?= isset($subject->subject) ? $subject->subject->title : $subject->subject_id; ?></td>
 
                 <td><?= $subject->total[$fall] + $subject->total[$spring]; ?></td>
                 <td><?= $subject->getClasses($fall) + $subject->getClasses($spring); ?></td>
@@ -89,14 +88,29 @@ switch ($course) {
         <?php endif; ?>
     <?php endforeach; ?>
 
+</table>
+
+<table class="table table-bordered">
+    <tr>
+        <th rowspan="2" style="vertical-align: top"><?= Yii::t('app', 'Selected subject'); ?></th>
+    </tr>
+
+    <tr>
+        <th><?= Yii::t('plans', 'Total'); ?>                  </th>
+        <th><?= Yii::t('plans', 'Classes'); ?>                </th>
+        <th><?= Yii::t('plans', 'Lectures'); ?>               </th>
+        <th><?= Yii::t('plans', 'Practices'); ?>              </th>
+        <th><?= Yii::t('plans', 'Laboratory works'); ?>       </th>
+        <th><?= Yii::t('plans', 'Self work'); ?>              </th>
+        <th><?= Yii::t('plans', 'Course projects, works'); ?> </th>
+        <th><?= Yii::t('plans', 'Hours per week'); ?>         </th>
+    </tr>
     <!--    Selected Subject blocks   -->
 
     <?php foreach ($model->getWorkSubjectsBlock() as $subject): ?>
         <?php if ($subject->presentIn($course)): ?>
             <tr>
-                <td><?= isset($subject->subject) ? $subject->subject->title : $subject->subject_id; ?>:
-                    <b>(<?= array_sum(isset($subject->subject) ? $subject->total : []); ?> годин)</b>
-                </td>
+                <td><?= isset($subject->subject) ? $subject->subject->title : $subject->subject_id; ?></td>
 
                 <td><?= $subject->total[$fall] + $subject->total[$spring]; ?></td>
                 <td><?= $subject->getClasses($fall) + $subject->getClasses($spring); ?></td>
@@ -110,4 +124,5 @@ switch ($course) {
             </tr>
         <?php endif; ?>
     <?php endforeach; ?>
+
 </table>

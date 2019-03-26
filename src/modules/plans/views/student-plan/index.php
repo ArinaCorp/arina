@@ -57,6 +57,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'header' => Yii::t('app', 'Updated'),
                 'value' => 'updated',
+                'format' => 'date'
             ],
             [
                 'header' => Yii::t('app', 'Actions'),
@@ -68,8 +69,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         $options = [
                             'title' => Yii::t('plans', 'Export'),
                         ];
-                        $url = Url::toRoute(['work-plan/export', 'id' => $model->id]);
-                        return Html::a('<span class="glyphicon glyphicon-file"</span>', $url, $options);
+                        $url = Url::toRoute(['student-plan/export', 'id' => $model->id]);
+                        return Html::a('<span class="glyphicon glyphicon-file"></span>', Url::toRoute(['student-plan/export', 'id' => $model->id]), $options);
                     }
                 ]
             ],

@@ -54,7 +54,6 @@ class StudentPlan extends ActiveRecord
                 'class' => TimestampBehavior::class,
                 'createdAtAttribute' => 'created',
                 'updatedAtAttribute' => 'updated',
-                'value' => date('Y-m-d H:i:s'),
             ]
         ];
     }
@@ -119,13 +118,26 @@ class StudentPlan extends ActiveRecord
     /**
      * @return WorkSubject[]
      */
+    public function getWorkSubjects()
+    {
+        $subjects = [];
+        foreach ($this->workPlan->workSubjects as $workSubject) {
+            if (strpos($workSubject->subject->code, 'ПВС') === false)
+                $subjects [] = $workSubject;
+        }
+        return $subjects;
+    }
+
+    /**
+     * @return WorkSubject[]
+     */
     public function getWorkSubjectsBlock()
     {
         $subjects = [];
-        foreach($this->subjectBlock->subjects as $subject){
-            foreach($this->workPlan->workSubjects as $workSubject){
-                if($workSubject->subject_id == $subject->id)
-                $subjects [] = $workSubject;
+        foreach ($this->subjectBlock->subjects as $subject) {
+            foreach ($this->workPlan->workSubjects as $workSubject) {
+                if ($workSubject->subject_id == $subject->id)
+                    $subjects [] = $workSubject;
             }
         }
         return $subjects;
@@ -157,6 +169,16 @@ class StudentPlan extends ActiveRecord
         } else {
             return false;
         }
+    }
+
+    /**
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
+    public function getDocument()
+    {
+        ExportToExcel::getDocument('StudentPlan', $this);
     }
 
 

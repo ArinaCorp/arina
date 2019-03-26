@@ -21,10 +21,6 @@ use nullref\core\interfaces\IAdminController;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
-use app\modules\plans\models\WorkPlan;
-use app\modules\plans\models\WorkSubject;
-use app\modules\plans\models\WorkPlanSearch;
-
 class StudentPlanController extends Controller implements IAdminController
 {
     /**
@@ -59,36 +55,13 @@ class StudentPlanController extends Controller implements IAdminController
      */
     public function actionIndex()
     {
-//        $searchModel = new StudentPlanSearch();
-        //$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-//        $query = WorkPlan::find();
-//
-//        if (!Yii::$app->user->isGuest) {
-//            /** @var User $user */
-//            $user = Yii::$app->user->identity;
-//
-//            if (UserHelper::hasRole($user, 'head-of-department')) {
-//                if ($user->employee && $user->employee->department) {
-//                    $spQIds = SpecialityQualification::find()
-//                        ->andWhere([
-//                            'speciality_id' => $user->employee->department->getSpecialities()
-//                                ->select('id')
-//                                ->column(),
-//                        ])
-//                        ->select('id')
-//                        ->column();
-//                    $query->andWhere(['speciality_qualification_id' => $spQIds]);
-//                }
-//            }
-//        }
-
+        //TODO: add searchModel
         $dataProvider = new ActiveDataProvider([
             'query' => StudentPlan::find(),
         ]);
 
         return $this->render('index', [
-//            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
@@ -131,6 +104,7 @@ class StudentPlanController extends Controller implements IAdminController
     /**
      * @param $id
      * @return string
+     * @throws NotFoundHttpException
      */
     public function actionView($id)
     {
@@ -141,6 +115,7 @@ class StudentPlanController extends Controller implements IAdminController
     /**
      * @param $id
      * @return string
+     * @throws NotFoundHttpException
      */
     public function actionUpdate($id)
     {
@@ -168,6 +143,19 @@ class StudentPlanController extends Controller implements IAdminController
     {
         $this->findModel($id)->delete();
         return $this->redirect(['index']);
+    }
+
+    /**
+     * @param $id
+     * @throws NotFoundHttpException
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
+    public function actionExport($id)
+    {
+        $model=$this->findModel($id);
+        $model->getDocument();
     }
 
     /**

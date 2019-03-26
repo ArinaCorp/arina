@@ -4,10 +4,16 @@ namespace app\modules\directories\models\subject_block;
 
 use app\modules\directories\models\speciality\Speciality;
 use app\modules\directories\models\subject\Subject;
+use app\modules\students\models\Group;
+use app\modules\students\models\Student;
+use app\modules\students\models\StudentsHistory;
 use nullref\useful\traits\Mappable;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\bootstrap\Alert;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "subject_block".
@@ -29,6 +35,17 @@ class SubjectBlock extends ActiveRecord
     use Mappable;
 
     public $selectedSubjects;
+
+    public function behaviors()
+    {
+        return [
+            'TimestampBehavior' => [
+                'class' => TimestampBehavior::class,
+                'createdAtAttribute' => 'created',
+                'updatedAtAttribute' => 'updated',
+            ]
+        ];
+    }
 
     /**
      * @inheritdoc
@@ -143,5 +160,19 @@ class SubjectBlock extends ActiveRecord
     {
         return count($this->subjects);
     }
+
+    /**
+     * @param $studentId
+     * @return SubjectBlock[]
+     */
+    public static function getSubjectBlocksForStudent($studentId)
+    {
+        $student = Student::findOne($studentId);
+        /** @var Group $group */
+        $group = $student->getGroups()[0];
+        return ArrayHelper::Map(SubjectBlock::findAll(['course'=>$group->getCourse(), 'speciality_id' => $group->specialityQualification->speciality_id]), 'id','created');
+    }
+
+
 
 }

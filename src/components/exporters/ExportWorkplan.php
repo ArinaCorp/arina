@@ -21,7 +21,7 @@ class ExportWorkplan
 {
     /**
      * @param $spreadsheet Spreadsheet
-     * @param $plan WorkPlan
+     * @param $plan StudentPlan
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @return Spreadsheet
      */
@@ -30,7 +30,9 @@ class ExportWorkplan
         $coursesAmount = $plan->getCourseAmount();
         $groupsByCourse = $plan->specialityQualification->getGroupsByStudyYear($plan->study_year_id);
         $graphOffset = 0;
-        for ($i = 0; $i < $coursesAmount; $i++) {
+        // TODO: Workplans are not copmlete
+        for ($i = 0; $i < 3; $i++) {
+//        for ($i = 0; $i < $coursesAmount; $i++) {
             $groups = [];
             foreach ($groupsByCourse as $group => $course) {
                 if ($course == $i + 1) {
@@ -114,14 +116,15 @@ class ExportWorkplan
                 $fall = 2;
                 $spring = 3;
                 break;
-            case 3:
-                $fall = 4;
-                $spring = 5;
-                break;
-            case 4:
-                $fall = 6;
-                $spring = 7;
-                break;
+                // TODO: Workplans have only 4 semester smh
+//            case 3:
+//                $fall = 4;
+//                $spring = 5;
+//                break;
+//            case 4:
+//                $fall = 6;
+//                $spring = 7;
+//                break;
             default:
                 $fall = 0;
                 $spring = 1;

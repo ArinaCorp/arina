@@ -56,7 +56,6 @@ class ExportToExcel
         return [
             'borders' => [
                 'allborders' => [
-//                    'style' => PHPExcel_Style_Border::BORDER_THIN,
                     'style' => Border::BORDER_THIN,
                     'color' => ['argb' => '00000000'],
                 ],
