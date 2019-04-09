@@ -26,7 +26,7 @@ use kartik\daterange\DateRangePicker;
             'data' => Group::getActiveGroupsList(),
             'pluginOptions' => [
                 'placeholder' => Yii::t('app', 'Select group'),
-                // 'allowClear' => true
+                 'allowClear' => true
             ],
             'options' => [
                 'id' => 'group_id',
@@ -55,20 +55,23 @@ use kartik\daterange\DateRangePicker;
             'placeholder' => Yii::t('app', 'Select exemption')
         ]
     ]) ?>
-    <?= $form->field($model, 'date_range')->widget(DateRangePicker::className(), [
-        'convertFormat' => true,
-        'startAttribute' => 'date_start',
-        'endAttribute' => 'date_end',
-        'pluginOptions' => [
-            'locale' => [
-                'format' => 'Y-m-d'
-            ]
-        ]
-    ]);
-    ?>
-    <!--    --><? //= $form->field($model, 'date_start')->widget(DatePicker::className()) ?>
-    <!---->
-    <!--    --><? //= $form->field($model, 'date_end')->widget(DatePicker::className()) ?>
+    <!--    --><? //= $form->field($model, 'date_range')->widget(DateRangePicker::className(), [
+    //        'convertFormat' => true,
+    //        'startAttribute' => 'date_start',
+    //        'endAttribute' => 'date_end',
+    //        'pluginOptions' => [
+    //            'locale' => [
+    //                'format' => 'Y-m-d'
+    //            ]
+    //        ]
+    //    ]);
+    //    ?>
+    <?= $form->field($model, 'date_start')->widget(DatePicker::className(), ['pluginOptions' => [
+        'format' => 'yyyy-mm-d',
+    ]]) ?>
+    <?= $form->field($model, 'date_end')->widget(DatePicker::className(), ['pluginOptions' => [
+        'format' => 'yyyy-mm-d',
+    ]]) ?>
 
     <?= $form->field($model, 'information')->textarea(['maxlength' => true, 'rows' => 2]) ?>
 

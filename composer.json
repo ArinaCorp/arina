@@ -16,9 +16,14 @@
         "php": ">=5.5.0",
         "2amigos/yii2-date-picker-widget": "~1.0",
         "2amigos/yii2-date-time-picker-widget": "*",
+        "codemix/yii2-excelexport": "dev-master",
         "dektrium/yii2-rbac": "^1.0@dev",
         "dektrium/yii2-user": "^0.9.0@dev",
+        "kartik-v/yii2-checkbox-x": "dev-master",
         "kartik-v/yii2-date-range": "^1.6",
+        "kartik-v/yii2-export": "@dev",
+        "kartik-v/yii2-grid": "dev-master",
+        "kartik-v/yii2-krajee-base": "dev-master",
         "kartik-v/yii2-widget-datepicker": "@dev",
         "kartik-v/yii2-widget-depdrop": "@dev",
         "kartik-v/yii2-widget-fileinput": "@dev",
@@ -29,7 +34,6 @@
         "nullref/yii2-admin": ">=0.0.2",
         "nullref/yii2-core": ">=0.0.3",
         "nullref/yii2-useful": ">=0.0.4",
-        "phpoffice/phpspreadsheet": "dev-master",
         "unclead/yii2-multiple-input": "~2.0",
         "vlucas/phpdotenv": "~1.0@dev",
         "voskobovich/yii2-linker-behavior": "^4.0",
@@ -42,9 +46,10 @@
         "yiisoft/yii2-swiftmailer": "*"
     },
     "require-dev": {
+        "phpunit/dbunit": "^4.0@dev",
         "yiisoft/yii2-debug": "*",
-        "yiisoft/yii2-gii": "*",
-        "yiisoft/yii2-faker": "*"
+        "yiisoft/yii2-faker": "*",
+        "yiisoft/yii2-gii": "*"
     },
     "config": {
         "optimize-autoloader": true,

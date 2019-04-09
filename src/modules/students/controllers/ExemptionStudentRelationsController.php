@@ -12,6 +12,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use nullref\core\interfaces\IAdminController;
+use yii\web\Response;
 
 /**
  * ExemptionStudentRelationsController implements the CRUD actions for ExemptionStudentRelation model.
@@ -128,6 +129,7 @@ class ExemptionStudentRelationsController extends Controller implements IAdminCo
     function actionGetStudentsList()
     {
         $out = [];
+        Yii::$app->response->format = Response::FORMAT_JSON;
         if (isset($_POST['depdrop_parents'])) {
             $parents = $_POST['depdrop_parents'];
             if ($parents != null) {
@@ -135,10 +137,10 @@ class ExemptionStudentRelationsController extends Controller implements IAdminCo
                     $params = $_POST['depdrop_all_params'];
                     $group_id = $params['group_id'];
                     $out = DepDropHelper::convertMap(StudentsHistory::getActiveStudentByGroupList($group_id));
+                    return ['output' => $out, 'selected' => ''];
                 }
             }
-            echo Json::encode(['output' => $out, 'selected' => Yii::t('app', 'Select ...')]);
-            return;
+            return ['output' => '', 'selected' => ''];
         }
     }
 }

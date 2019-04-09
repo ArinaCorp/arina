@@ -3,6 +3,9 @@
 
 namespace app\modules\students\models;
 
+use app\modules\directories\models\speciality\Speciality;
+use app\modules\directories\models\speciality_qualification\SpecialityQualification;
+use app\modules\user\helpers\UserHelper;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
@@ -16,10 +19,26 @@ class StudentSearch extends Student
     /**
      * @inheritdoc
      */
+    public $group;
+    public $exemptions;
+    public $excluded;
+    public $released;
+    public $academic;
+    public $payment;
+    public $state_payment;
+    public $active;
+    public $renewal;
+    public $speciality;
+    public $department;
+
     public function rules()
     {
         return [
-            [['id', 'sseed_id', 'user_id', 'gender', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['id', 'state_payment', 'sseed_id', 'user_id', 'gender', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['last_name', 'first_name', 'middle_name'], 'string'],
+            [['group','speciality','department'], 'integer'],
+            ['exemptions', 'each', 'rule' => ['integer']],
+            [['excluded', 'released', 'renewal', 'active', 'academic', 'payment'], 'boolean'],
             [['student_code', 'last_name', 'first_name', 'middle_name', 'birth_day', 'passport_code', 'tax_id'], 'safe'],
         ];
     }
@@ -32,6 +51,7 @@ class StudentSearch extends Student
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
+
 
     /**
      * Creates data provider instance with search query applied
@@ -58,14 +78,6 @@ class StudentSearch extends Student
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
-            'sseed_id' => $this->sseed_id,
-            'user_id' => $this->user_id,
-            'gender' => $this->gender,
-            'birth_day' => $this->birth_day,
-            'status' => $this->status,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
         ]);
 
         $query->andFilterWhere(['like', 'student_code', $this->student_code])
@@ -75,6 +87,38 @@ class StudentSearch extends Student
             ->andFilterWhere(['like', 'passport_code', $this->passport_code])
             ->andFilterWhere(['like', 'tax_id', $this->tax_id]);
 
+
+        if (!empty($this->group)) {
+            $query->andWhere(['id' => StudentsHistory::getActiveStudentsIdsByGroups($this->group)]);
+        }
+        if (!empty($this->speciality)) {
+            $query->andWhere(['id' => StudentFilter::getStudentIdsBySpecialityId($this->speciality)]);
+        }
+        if (!empty($this->department)) {
+            $query->andWhere(['id' => StudentFilter::getStudentIdsByDepartmentId($this->department)]);
+        }
+
+        if (!empty($this->exemptions)) {
+            $query->andWhere(['id' => StudentFilter::getStudentsByExemptionArray($this->exemptions)]);
+        }
+
+        if ($this->payment) {
+            if ($this->state_payment == 1) {
+                $query->andWhere(['id' => StudentFilter::getStateStudentIds()]);
+            } else if ($this->state_payment == 0) {
+                $query->andWhere(['id' => StudentFilter::getContractStudentIds()]);
+            }
+        }
+
+        if ($this->released) {
+            $query->andWhere(['id' => StudentFilter::getAllAlumnusStudentIds()]);
+        }
+        if ($this->active) {
+            $query->andWhere(['id' => StudentFilter::getAllActiveStudentIds()]);
+        }
+        if ($this->renewal) {
+            $query->andWhere(['id' => StudentFilter::getAllRenewalStudentIds()]);
+        }
         return $dataProvider;
     }
 }

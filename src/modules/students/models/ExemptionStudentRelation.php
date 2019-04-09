@@ -4,6 +4,7 @@ namespace app\modules\students\models;
 
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%exemptions_students_relations}}".
@@ -68,6 +69,17 @@ class ExemptionStudentRelation extends \yii\db\ActiveRecord
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
+    }
+
+
+
+    public static function getExemptionIdByStudentId($id)
+    {
+        $exemptionId = ExemptionStudentRelation::find()->where(["student_id" => $id])->one();
+        if (!empty($exemptionId["exemption_id"])) {
+            return $exemptionId["exemption_id"];
+        }
+        return 0;
     }
 
     public function getExemption()

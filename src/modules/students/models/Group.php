@@ -106,6 +106,7 @@ class Group extends ActiveRecord
      */
     public function getSystemYearPrefix()
     {
+        if(!is_null($this->specialityQualification))
         return $this->studyYear->year_start % 100 - $this->specialityQualification->getOffsetYears();
     }
 

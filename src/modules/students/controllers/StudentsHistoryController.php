@@ -190,6 +190,7 @@ class StudentsHistoryController extends Controller implements IAdminController
     public
     function actionGetStudentsList()
     {
+
         $out = [];
         if (isset($_POST['depdrop_parents'])) {
             $parents = $_POST['depdrop_parents'];

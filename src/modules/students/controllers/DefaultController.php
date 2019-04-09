@@ -3,10 +3,16 @@
 namespace app\modules\students\controllers;
 
 /* @author VasyaKog */
+
+use app\components\DepDropHelper;
+use app\components\exporters\ExportFilteredstudents;
+use app\components\ExportToExcel;
 use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 use app\modules\rbac\filters\AccessControl;
+use app\modules\students\models\Exemption;
 use app\modules\students\models\Group;
 use app\modules\students\models\Student;
+use app\modules\students\models\StudentFilter;
 use app\modules\students\models\StudentSearch;
 use app\modules\students\models\StudentsHistory;
 use app\modules\user\helpers\UserHelper;
@@ -14,6 +20,7 @@ use app\modules\user\models\User;
 use nullref\core\interfaces\IAdminController;
 use Yii;
 use yii\data\ActiveDataProvider;
+use yii\debug\components\search\Filter;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -55,40 +62,71 @@ class DefaultController extends Controller implements IAdminController
     public function actionIndex()
     {
         $searchModel = new StudentSearch();
-
-
-        $query = Group::find();
-
-        if (!Yii::$app->user->isGuest) {
-            /** @var User $user */
-            $user = Yii::$app->user->identity;
-
-            if (UserHelper::hasRole($user, 'head-of-department')) {
-                if ($user->employee && $user->employee->department) {
-                    $spQIds = SpecialityQualification::find()
-                        ->andWhere([
-                            'speciality_id' => $user->employee->department->getSpecialities()
-                                ->select('id')
-                                ->column(),
-                        ])
-                        ->select('id')
-                        ->column();
-                    $query->andWhere(['speciality_qualifications_id' => $spQIds]);
-                }
-            }
-        }
-
-        $groupIds = $query->column();
-        $students = Student::find()
-            ->andWhere(['id' => StudentsHistory::getActiveStudentsIdsByGroups($groupIds)]);
-        $dataProvider = new ActiveDataProvider([
-            'query' => $students,
-        ]);
-
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public static function actionSpecialityList()
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = [];
+        if (isset($_POST['depdrop_parents'])) {
+            $parents = $_POST['depdrop_parents'];
+            if ($parents != null) {
+                if (!empty($_POST['depdrop_all_params'])) {
+                    $params = $_POST['depdrop_all_params'];
+                    $dep_id = $params["department-id"];
+
+                    $out = DepDropHelper::convertMap(StudentFilter::getSpecialitiesByDepartmentId($dep_id));
+                    if (empty($dep_id)) {
+                        $out = DepDropHelper::convertMap(Group::getAllGroupsList());
+                    }
+                    return ['output' => $out, 'selected' => ''];
+                }
+            }
+        }
+        return ['output' => '', 'selected' => ''];
+    }
+
+    public static function actionGroupList()
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = [];
+        if (isset($_POST['depdrop_parents'])) {
+            $parents = $_POST['depdrop_parents'];
+            if ($parents != null) {
+                if (!empty($_POST['depdrop_all_params'])) {
+                    $params = $_POST['depdrop_all_params'];
+                    $spec_id = $params["spec-id"];
+                    $dep_id = $params["department-id"];
+                    $out = DepDropHelper::convertMap(StudentFilter::getGroupsListBySpecialityId($spec_id, $dep_id));
+                    if (empty($spec_id)) {
+                        $out = DepDropHelper::convertMap(Group::getAllGroupsList());
+                    }
+                    return ['output' => $out, 'selected' => ''];
+                }
+            }
+        }
+        return ['output' => '', 'selected' => ''];
+    }
+
+    public function actionFilter()
+    {
+        $search = new StudentSearch();
+//        var_dump(Yii::$app->request->queryParams);
+        $student = $search->search(Yii::$app->request->queryParams);
+        $group = new Group();
+        $exemption = new Exemption();
+        return $this->render('filter', [
+            'student' => $student,
+            'group' => $group,
+            'exemption' => $exemption,
+            'search' => $search,
+            'aliasName' => $this
         ]);
     }
 
@@ -203,5 +241,17 @@ class DefaultController extends Controller implements IAdminController
 
         echo '<pre>';
         print_r($model->emails);
+    }
+
+    public function actionDocument(array $params)
+    {
+        $search = new StudentSearch();
+        $students = $search->search($params);
+        $parameters = $params["StudentSearch"];
+        $model = [
+            'students' => $students,
+            'parameters' => $parameters
+        ];
+        ExportToExcel::getDocument('filteredStudents', $model);
     }
 }

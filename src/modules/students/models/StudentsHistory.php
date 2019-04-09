@@ -2,6 +2,10 @@
 
 namespace app\modules\students\models;
 
+use app\modules\directories\models\department\Department;
+use app\modules\directories\models\qualification\Qualification;
+use app\modules\directories\models\speciality\Speciality;
+use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
@@ -256,7 +260,6 @@ class StudentsHistory extends ActiveRecord
         return $story;
     }
 
-
     public
     function afterFind()
     {
@@ -358,7 +361,6 @@ class StudentsHistory extends ActiveRecord
         return $data1;
     }
 
-
     public static function getAlumnusStudentByGroup($id)
     {
         /**
@@ -393,6 +395,40 @@ class StudentsHistory extends ActiveRecord
         $empty = StudentsHistory::findOne(['id' => $id]);
         $history = self::getFromHistory($empty);
 
+    }
+
+    public static function getActiveStudents()
+    {
+        $res = StudentsHistory::findAll(['action_type' => StudentsHistory::$TYPE_INCLUDE]);
+        return $res;
+    }
+
+    public static function getActiveStudentsList()
+    {
+        return ArrayHelper::map(self::getActiveStudents(), 'id', 'action_type');
+    }
+
+    public static function getStateStudents()
+    {
+        $model = self::findAll(['payment_type' => StudentsHistory::$PAYMENT_STATE]);
+        return $model;
+    }
+
+    public static function getStateStudentsList()
+    {
+        return ArrayHelper::map(self::getStateStudents(), 'id', 'payment_type');
+    }
+
+    public static function getContractStudents()
+    {
+        $model = self::findAll(['payment_type' => StudentsHistory::$PAYMENT_CONTRACT]);
+        return $model;
+    }
+
+
+    public static function getContractStudentsList()
+    {
+        return ArrayHelper::map(self::getContractStudents(), 'id', 'payment_type');
     }
 
     public static function getStudentParentsList($id)
@@ -581,7 +617,8 @@ class StudentsHistory extends ActiveRecord
      */
     public static function find()
     {
-        return parent::find()->alias('studentsHistory')->orderBy(['id' => SORT_DESC]);
+        // return parent::find()->alias('studentsHistory')->orderBy(['id' => SORT_DESC]);
+        return parent::find();
     }
 
     /**
@@ -599,10 +636,10 @@ class StudentsHistory extends ActiveRecord
     public static function getActiveStudentsIdsByGroups($groupIds)
     {
         return self::find()
-            ->select('studentsHistory.student_id')
-            ->andWhere(['studentsHistory.action_type' => StudentsHistory::$TYPE_INCLUDE])
-            ->andWhere(['studentsHistory.group_id' => $groupIds])
-            ->groupBy('studentsHistory.student_id')
+            ->select('students_history.student_id')
+            ->andWhere(['students_history.action_type' => StudentsHistory::$TYPE_INCLUDE])
+            ->andWhere(['students_history.group_id' => $groupIds])
+            ->groupBy('students_history.student_id')
             ->column();
     }
 

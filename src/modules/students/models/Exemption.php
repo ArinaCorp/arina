@@ -38,7 +38,7 @@ class Exemption extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['created_at', 'updated_at'], 'integer'],
+            [['created_at', 'updated_at','id'], 'integer'],
             [['title'], 'string', 'max' => 64],
         ];
     }
@@ -54,6 +54,14 @@ class Exemption extends \yii\db\ActiveRecord
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
+    }
+
+    public static function getExemptionTitleById($id)
+    {
+        $title = Exemption::find()->select("title")->where(["id"=>$id])->column();
+        $str = $title[0];
+
+        return $str;
     }
 
     public function getStudents()

@@ -378,5 +378,15 @@ return [
     'Update Mark' => 'Оновити оцінку',
     'The record date should be greater or equal' => 'Дата запису має бути більша або рівна ',
     'Report from subject' => 'Звіт по предмету',
-    'Total amount' => 'Загальна кількість'
+    'Total amount' => 'Загальна кількість',
+    'Filter' => 'Фільтр',
+    'Students filter' => 'Фільтр студентів',
+    'Search'=>'Пошук',
+    'Reset'=>'Скинути',
+    'Released'=>'Випущений',
+    'Academic leave'=>'Академічна відпустка',
+    'Renewal'=>'Поновлені',
+    'Filtered students'=>'Фільтровані студенти',
+    'Students list'=>'Список студентів',
+    'Date create'=>'Дата створення'
 ];
