@@ -2,6 +2,7 @@
 
 namespace app\modules\students\models;
 
+use nullref\useful\behaviors\SerializeBehavior;
 use Yii;
 
 /**
@@ -36,8 +37,17 @@ class CsvImportDocumentItem extends \yii\db\ActiveRecord
     {
         return [
             [['document_id', 'status'], 'integer'],
-            [['data', 'errors'], 'string'],
             [['document_id'], 'exist', 'skipOnError' => true, 'targetClass' => CsvImportDocument::className(), 'targetAttribute' => ['document_id' => 'id']],
+        ];
+    }
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => SerializeBehavior::className(),
+                'fields' => ['data', 'errors'],
+            ]
         ];
     }
 

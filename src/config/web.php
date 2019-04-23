@@ -34,6 +34,7 @@ $config = [
         ],
         'formatter' => [
             'class' => 'app\components\Formatter',
+            'timeZone' => 'Europe/Kiev',
         ],
         'request' => [
             'cookieValidationKey' => 'RiAveGUdUACvWZppHVevMJRGd5Rij8uh',

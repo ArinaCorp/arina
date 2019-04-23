@@ -101,7 +101,7 @@ class CsvImportDocumentItemController extends Controller implements IAdminContro
     {
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['csv-import-document/index']);
     }
 
     /**

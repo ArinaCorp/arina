@@ -8,15 +8,75 @@
 
 namespace app\components\importers;
 
-
+use app\modules\directories\models\speciality_qualification\SpecialityQualification;
+use app\modules\directories\models\StudyYear;
 use app\modules\students\models\CsvImportDocument as Document;
 use app\modules\students\models\CsvImportDocumentItem as DocumentItem;
 use app\modules\students\models\Student;
+use app\modules\students\models\StudentsHistory;
+use Exception;
 use ruskid\csvimporter\CSVReader;
 
 class ImportStudent
 {
     public $models = [];
+
+    public function import(Document $document)
+    {
+        $this->beforeImport($document);
+
+        if ($document->status === Document::STATUS_NEW) {
+            $this->load($document);
+        }
+
+        $this->validateItems($document);
+
+        $this->processingItems($document);
+
+        $this->afterImport($document);
+
+        return true;
+    }
+
+    public function load(Document $document)
+    {
+        $lines = $this->loadCsv($document);
+        try {
+            foreach ($lines as $line) {
+                $data = $this->extractAttributes($line);
+                $this->loadItem($document, $data);
+            }
+        } catch (Exception $e) {
+            $document->status = Document::STATUS_ERROR;
+            $document->save(false);
+        }
+    }
+
+    public function loadCsv(Document $document)
+    {
+        $document->status = Document::STATUS_LOADING;
+
+        $document->save(false);
+
+        $reader = new CSVReader([
+            'filename' => $document->file_path,
+            'fgetcsvOptions' => [
+                'delimiter' => ';'
+            ]
+        ]);
+
+        return $reader->readFile();
+    }
+
+    public function extractAttributes($line)
+    {
+        $data = [];
+        foreach (self::getColumns() as $column) {
+            $data[$column['target']] = $column['value']($line);
+        }
+
+        return $data;
+    }
 
     public static function getColumns()
     {
@@ -33,7 +93,7 @@ class ImportStudent
                 'label' => 'Прізвище',
                 'value' => function ($line) {
                     $value = explode(' ', $line[4])[0];
-                    $value = mb_convert_encoding($value, 'UTF-8', 'Windows-1251');
+                    $value = self::getConvertedValue($value);
                     return $value;
                 }
             ],
@@ -42,7 +102,7 @@ class ImportStudent
                 'label' => 'Ім\'я',
                 'value' => function ($line) {
                     $value = explode(' ', $line[4])[1];
-                    $value = mb_convert_encoding($value, 'UTF-8', 'Windows-1251');
+                    $value = self::getConvertedValue($value);
                     return $value;
                 }
             ],
@@ -51,7 +111,7 @@ class ImportStudent
                 'label' => 'По батькові',
                 'value' => function ($line) {
                     $value = explode(' ', $line[4])[2];
-                    $value = mb_convert_encoding($value, 'UTF-8', 'Windows-1251');
+                    $value = self::getConvertedValue($value);
                     return $value;
                 }
             ],
@@ -66,7 +126,15 @@ class ImportStudent
                 'target' => 'passport_code',
                 'label' => 'Серія та номер паспорта',
                 'value' => function ($line) {
-                    return $line[7] . $line[8];
+                    if (empty($line[7])) {
+                        $result = $line[8];
+                        if (strlen($line[8]) < 9) {
+                            $result = str_pad($line[8], 9, '00000000', STR_PAD_LEFT);
+                        }
+                    } else {
+                        $result = $line[7] . '№' . $line[8];
+                    }
+                    return $result;
                 }
             ],
             [
@@ -96,74 +164,78 @@ class ImportStudent
                 'value' => function ($line) {
                     return explode(';', $line[43])[0];
                 }
-            ]
+            ],
+
+            //Student History
+            [
+                'target' => 'payment_type',
+                'label' => 'Джерело фінансування',
+                'value' => function ($line) {
+                    $value = self::getConvertedValue($line[21]);
+                    return $value == 'Бюджет' ? StudentsHistory::$PAYMENT_STATE : StudentsHistory::$PAYMENT_CONTRACT;
+                }
+            ],
+            [
+                'target' => 'action_type',
+                'label' => 'Тип дії',
+                'value' => function ($line) {
+                    return StudentsHistory::$TYPE_INCLUDE;
+                }
+            ],
+            [
+                'target' => 'command',
+                'label' => '№ наказу',
+                'value' => function ($line) {
+                    $value = self::getConvertedValue($line[38]);
+                    preg_match_all('!\d+!', $value, $matches);
+                    return $matches[0][1];
+                }
+            ],
+            [
+                'target' => 'date',
+                'label' => 'Дата',
+                'value' => function ($line) {
+                    $value = self::getConvertedValue($line[38]);
+                    preg_match_all('!\d+!', $value, $matches);
+                    $result = implode('.', [$matches[0][2], $matches[0][3], $matches[0][4]]);
+                    return $result;
+                }
+            ],
+            [
+                'target' => 'course',
+                'label' => 'Курс',
+                'value' => function ($line) {
+                    $currentYear = StudyYear::getCurrentYear()->year_start;
+                    $startYear = date('Y', strtotime($line[15]));
+                    return $currentYear - $startYear;
+                }
+            ],
+            [
+                'target' => 'speciality_qualification_id',
+                'label' => 'speciality qualification id',
+                'value' => function ($line) {
+                    $qualification_title = self::getConvertedValue($line[18]);
+                    $speciality_number = explode(' ', self::getConvertedValue($line[24]))[0];
+
+                    return SpecialityQualification::find()->joinWith(['qualification', 'speciality'])->where([
+                        'qualification.title' => $qualification_title,
+                        'speciality.number' => $speciality_number
+                    ])->one()->id;
+                }
+            ],
         ];
     }
 
-    public function import(Document $document)
+    public static function getConvertedValue($value)
     {
-        $this->load($document);
-
-        $this->validateItems($document);
-
-        $this->processingItems($document);
-
-        $this->afterImport($document);
-
-        return true;
-    }
-
-    public function load(Document $document)
-    {
-        $lines = $this->loadCsv($document);
-
-        $savedRows = 0;
-        try {
-            foreach ($lines as $line) {
-                $data = $this->extractAttributes($line);
-                if ($this->loadItem($document, $data)) {
-                    $savedRows++;
-                }
-            }
-        } catch (\Exception $e) {
-            $document->status = Document::STATUS_ERROR;
-            $document->save(false);
-            throw $e;
-        }
-
-        return true;
-    }
-
-    public function loadCsv(Document $document)
-    {
-        $document->status = Document::STATUS_LOADING;
-
-        $document->save(false);
-
-        $reader = new CSVReader([
-            'filename' => $document->file_path,
-            'fgetcsvOptions' => [
-                'delimiter' => ';'
-            ]
-        ]);
-
-        return $reader->readFile();
-    }
-
-    public function extractAttributes($line)
-    {
-        $data = [];
-        foreach (self::getColumns() as $column) {
-            $data[$column['target']] = $column['value']($line);
-        }
-
-        return $data;
+        return mb_convert_encoding($value, 'UTF-8', 'Windows-1251');
     }
 
     public function loadItem($document, $data)
     {
-        $item = new DocumentItem();
-        $item->data = serialize($data);
+        $item = new DocumentItem([
+            'data' => $data,
+        ]);
 
         if (!$item->validate()) {
             return false;
@@ -194,19 +266,29 @@ class ImportStudent
 
     public function validateItem(DocumentItem $item)
     {
-        $data = unserialize($item->data);
-        $model = new Student();
+        /** @var array $data */
+        $data = $item->data;
+        $modelStudent = new Student();
+        $modelHistory = new StudentsHistory();
         foreach ($data as $attribute => $value) {
-            if ($model->hasAttribute($attribute)) {
-                $model->setAttribute($attribute, $value);
+            if ($modelStudent->hasAttribute($attribute)) {
+                $modelStudent->setAttribute($attribute, $value);
+            } else {
+                if ($modelHistory->hasAttribute($attribute)) {
+                    $modelHistory->setAttribute($attribute, $value);
+                }
             }
         }
-        if (!$model->validate()) {
-            $item->errors = serialize($model->errors);
+        if (!$modelStudent->validate() or !$modelHistory->validate(['action_type', 'date', 'command'])) {
+            $errors = array_merge($modelStudent->errors, $modelHistory->errors);
+            $item->errors = $errors;
             $item->status = DocumentItem::STATUS_ERROR;
             $item->save();
         } else {
-            $this->models[] = $model;
+            $this->models[] = [
+                'student' => $modelStudent,
+                'history' => $modelHistory,
+            ];
         }
     }
 
@@ -221,10 +303,20 @@ class ImportStudent
 
         if (!$errorsItems and $this->models) {
             foreach ($this->models as $model) {
-                $model->save(false);
+                $model['student']->save(false);
+                $model['history']->link('student', $model['student']);
+                $model['history']->save(false);
             }
         } else {
             $document->status = Document::STATUS_ERROR;
+            $document->save(false);
+        }
+    }
+
+    public function beforeImport(Document $document)
+    {
+        if (!$document->status){
+            $document->status = Document::STATUS_NEW;
             $document->save(false);
         }
     }
@@ -234,12 +326,6 @@ class ImportStudent
         if ($document->status !== Document::STATUS_ERROR) {
             $document->status = Document::STATUS_DONE;
         }
-        $document->save(false);
-    }
-
-    public function beforeImport(Document $document)
-    {
-        $document->status = Document::STATUS_LOADING;
         $document->save(false);
     }
 }

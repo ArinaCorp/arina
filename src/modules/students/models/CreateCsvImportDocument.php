@@ -60,13 +60,16 @@ class CreateCsvImportDocument extends Model
     }
 
     /**
-     * @param $model
+     * @param CsvImportDocument $model
      */
     public static function runJob($model)
     {
-        $job = new ImportStudentJob();
-        $job->id = $model->id;
-        Yii::$app->queue->push($job);
+        $job = new ImportStudentJob([
+            'id' => $model->id
+        ]);
+
+//        Yii::$app->queue->push($job);
+        $job->import();
     }
 
 }

@@ -96,60 +96,64 @@ JS
         ]) ?>
     </p>
 
-    <?= GridView::widget([
-        'id' => 'grid',
-        'dataProvider' => $dataProvider,
-        'columns' => array_merge([
-            [
-                'class' => CheckboxColumn::class,
-                'checkboxOptions' => [
-                    'class' => 'documentItemCheckbox'
-                ],
-            ],
-            ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-        ],
-            GridHelper::getItemColumns(),
-            [
-                [
-                    'attribute' => 'status',
-                    'value' => function (DocumentItem $model) {
-                        return $model->getStatusReadable();
-                    }
-                ],
-                [
-                    'attribute' => 'errors',
-                    'value' => function (DocumentItem $model) {
-                        $errors = unserialize($model->errors);
+    <div class="row">
+        <div class="col-lg-12 journal-wrapper">
+            <?= GridView::widget([
+                'id' => 'grid',
+                'dataProvider' => $dataProvider,
+                'columns' => array_merge([
+                    [
+                        'class' => CheckboxColumn::class,
+                        'checkboxOptions' => [
+                            'class' => 'documentItemCheckbox'
+                        ],
+                    ],
+                    ['class' => 'yii\grid\SerialColumn'],
 
-                        $result = '';
-                        if (is_array($errors)) {
-                            foreach ($errors as $error) {
-                                $result .= implode(' ', $error);
+                    'id',
+                ],
+                    GridHelper::getItemColumns(),
+                    [
+                        [
+                            'attribute' => 'status',
+                            'value' => function (DocumentItem $model) {
+                                return $model->getStatusReadable();
                             }
-                        }
+                        ],
+                        [
+                            'attribute' => 'errors',
+                            'value' => function (DocumentItem $model) {
+                                $errors = $model->errors;
 
-                        return $result;
-                    }
-                ],
-                [
-                    'class' => 'yii\grid\ActionColumn',
-                    'template' => '{delete}',
-                    'buttons' => [
-                        'delete' => function ($url, DocumentItem $model, $key) {
-                            return Html::a('<span class="glyphicon glyphicon-trash"></span>', ['delete-item', 'id' => $model->id], [
-                                'class' => '',
-                                'data' => [
-                                    'confirm' => 'Are you absolutely sure ? You will lose all the information about this user with this action.',
-                                    'method' => 'post',
-                                ],
-                            ]);
-                        },
+                                $result = '';
+                                if (is_array($errors)) {
+                                    foreach ($errors as $error) {
+                                        $result .= implode(' ', $error);
+                                    }
+                                }
+
+                                return $result;
+                            }
+                        ],
+                        [
+                            'class' => 'yii\grid\ActionColumn',
+                            'template' => '{delete}',
+                            'buttons' => [
+                                'delete' => function ($url, DocumentItem $model, $key) {
+                                    return Html::a('<span class="glyphicon glyphicon-trash"></span>', ['delete-item', 'id' => $model->id], [
+                                        'class' => '',
+                                        'data' => [
+                                            'confirm' => 'Are you absolutely sure ? You will lose all the information about this user with this action.',
+                                            'method' => 'post',
+                                        ],
+                                    ]);
+                                },
+                            ]
+                        ],
                     ]
-                ],
-            ]
-        )
-    ]); ?>
-
+                )
+            ]); ?>
+        </div>
+    </div>
 </div>

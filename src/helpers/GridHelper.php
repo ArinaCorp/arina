@@ -17,7 +17,7 @@ class GridHelper
             return [
                 'label' => $column['label'],
                 'value' => function (CsvImportDocumentItem $model) use ($target) {
-                    $value = unserialize($model->data)[$target];
+                    $value = $model->data[$target];
                     return isset($value) ? $value : '';
                 }
             ];
