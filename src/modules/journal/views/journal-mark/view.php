@@ -1,11 +1,10 @@
 <?php
 
+use app\modules\journal\models\evaluation\Evaluation;
+use app\modules\journal\models\presence\NotPresenceType;
+use app\modules\journal\models\record\JournalMark;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
-use app\modules\journal\models\record\JournalMark;
-use app\modules\journal\models\presence\NotPresenceType;
-use app\modules\journal\models\evaluation\EvaluationSystem;
-use app\modules\journal\models\evaluation\Evaluation;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\journal\models\record\JournalMark */
@@ -65,13 +64,11 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'evaluation_system_id',
                 'value' => function ($model) {
-                    /**
-                     * @var $model JournalMark;
-                     */
-                    if (is_null($model->evaluation_system_id)) {
-                        return null;
+                    /** @var $model JournalMark */
+                    if ($model->evaluation_system_id) {
+                        return $model->evaluationSystem->title;
                     }
-                    return EvaluationSystem::getList()[$model->evaluation_system_id];
+                    return null;
                 },
             ],
             [
@@ -83,6 +80,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     if (is_null($model->evaluation_id)) {
                         return null;
                     }
+                    //@TODO refactor it (used relation)
                     return Evaluation::getListBySystem($model->evaluation_system_id)[$model->evaluation_id];
                 },
             ],
@@ -96,6 +94,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     if (is_null($model->retake_evaluation_id)) {
                         return null;
                     }
+                    //@TODO refactor it (used relation)
                     return Evaluation::getListBySystem($model->evaluation_system_id)[$model->retake_evaluation_id];
                 },
             ],

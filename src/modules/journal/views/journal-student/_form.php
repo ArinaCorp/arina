@@ -18,7 +18,7 @@ use kartik\date\DatePicker;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'type')->widget(Select2::className(), [
+    <?= $form->field($model, 'type')->widget(Select2::class, [
         'data' => JournalStudent::getListTypes(),
         'pluginOptions' => [
             'placeholder' => Yii::t('app', 'Select type action')
@@ -34,7 +34,7 @@ use kartik\date\DatePicker;
         }
     }
     ?>
-    <?= $form->field($model, 'student_id')->widget(DepDrop::className(), [
+    <?= $form->field($model, 'student_id')->widget(DepDrop::class, [
         'data' => $studentData,
         'type' => DepDrop::TYPE_SELECT2,
         'pluginOptions' => [
@@ -44,7 +44,7 @@ use kartik\date\DatePicker;
         ]
     ]) ?>
 
-    <?= $form->field($model, 'date')->widget(DatePicker::className(), [
+    <?= $form->field($model, 'date')->widget(DatePicker::class, [
         'pluginOptions' => [
             'format' => 'yyyy-mm-dd',
             'todayHighlight' => true,

@@ -3,6 +3,7 @@
 namespace app\modules\employee\models;
 
 use app\modules\directories\models\cyclic_commission\CyclicCommission as BaseCyclicCommission;
+use nullref\useful\traits\Mappable;
 use PHPExcel_IOFactory;
 use Yii;
 
@@ -16,6 +17,7 @@ use Yii;
  */
 class CyclicCommission extends BaseCyclicCommission
 {
+    use Mappable;
 
     /**
      * @TODO move it

@@ -44,6 +44,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
             [
                 'attribute' => 'study_year_id',
+                'label' => Yii::t('app', 'Study year'),
                 'format' => 'raw',
                 'value' => function (StudyYear $model, $key, $index, $widget) {
                     return $model->year_start;

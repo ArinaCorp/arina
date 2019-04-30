@@ -35,7 +35,7 @@ use yii\widgets\ActiveForm;
 
             <?= $form->field($model, 'rule') ?>
 
-            <?= $form->field($model, 'children')->widget(Select2::className(), [
+            <?= $form->field($model, 'children')->widget(Select2::class, [
                 'data' => $model->getUnassignedItems(),
                 'options' => [
                     'id' => 'children',

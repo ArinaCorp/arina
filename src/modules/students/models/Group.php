@@ -26,7 +26,7 @@ use yii\helpers\Url;
  *
  * @property SpecialityQualification $specialityQualification
  * @property Student $groupLeader
- * @property StudyYear $studyYear;
+ * @property StudyYear $studyYear
  *
  */
 class Group extends ActiveRecord

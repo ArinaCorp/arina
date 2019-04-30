@@ -29,7 +29,7 @@ class FamilyRelation extends \yii\db\ActiveRecord
     public function behaviors()
     {
         return [
-            TimestampBehavior::className(),
+            TimestampBehavior::class,
         ];
     }
 
@@ -81,11 +81,11 @@ class FamilyRelation extends \yii\db\ActiveRecord
 
     public function getType()
     {
-        return $this->hasOne(FamilyRelationType::className(), ['id' => 'type_id']);
+        return $this->hasOne(FamilyRelationType::class, ['id' => 'type_id']);
     }
 
     public function getStudent()
     {
-        return $this->hasOne(Student::className(), ['student_id' => 'id']);
+        return $this->hasOne(Student::class, ['student_id' => 'id']);
     }
 }

@@ -27,7 +27,7 @@ class ExemptionStudentRelation extends \yii\db\ActiveRecord
     public function behaviors()
     {
         return [
-            TimestampBehavior::className(),
+            TimestampBehavior::class,
         ];
     }
 
@@ -72,12 +72,12 @@ class ExemptionStudentRelation extends \yii\db\ActiveRecord
 
     public function getExemption()
     {
-        return $this->hasOne(Exemption::className(), ['id' => 'exemption_id']);
+        return $this->hasOne(Exemption::class, ['id' => 'exemption_id']);
     }
 
     public function getStudent()
     {
-        return $this->hasOne(Student::className(), ['id' => 'student_id']);
+        return $this->hasOne(Student::class, ['id' => 'student_id']);
     }
 
     public function getStudentFullName()

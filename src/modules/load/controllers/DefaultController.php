@@ -18,6 +18,7 @@ use yii\helpers\Json;
 use yii\helpers\Url;
 use yii\web\Controller;
 
+//@TODO refactor to yii2
 class DefaultController extends Controller implements IAdminController
 {
     /**
@@ -49,6 +50,10 @@ class DefaultController extends Controller implements IAdminController
             ]
         ];
     }
+
+    /**
+     * @return string
+     */
     public function actionIndex()
     {
         $searchModel = new StudyYearSearch();
@@ -60,6 +65,11 @@ class DefaultController extends Controller implements IAdminController
         ]);
     }
 
+    /**
+     * @return string|\yii\web\Response
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
     public function actionCreate()
     {
         if (isset($_POST['study_year'])) {
@@ -71,6 +81,12 @@ class DefaultController extends Controller implements IAdminController
         return $this->render('create');
     }
 
+    /**
+     * @param $id
+     * @return \yii\web\Response
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
     public function actionDelete($id)
     {
         $model = Load::findOne($id);
@@ -147,6 +163,10 @@ class DefaultController extends Controller implements IAdminController
         $model->save();
     }
 
+    /**
+     * @param $id
+     * @return string|\yii\web\Response
+     */
     public function actionUpdate($id)
     {
         /**
@@ -164,6 +184,10 @@ class DefaultController extends Controller implements IAdminController
         return $this->render('update', ['model' => $model]);
     }
 
+    /**
+     * @param $id
+     * @return string
+     */
     public function actionView($id)
     {
         $model = new LoadSearch();
@@ -174,12 +198,22 @@ class DefaultController extends Controller implements IAdminController
         return $this->render('view', ['model' => $model, 'dataProvider' => $dataProvider, 'year' => $year]);
     }
 
+    /**
+     * @param $id
+     * @return \yii\web\Response
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
     public function actionGenerate($id)
     {
         $this->generateLoadFor($id);
         return $this->redirect(Url::to('view', ['id' => $id]));
     }
 
+    /**
+     * @param $id
+     * @return string|\yii\web\Response
+     */
     public function actionProject($id)
     {
         $model = new Load('project');
@@ -197,6 +231,10 @@ class DefaultController extends Controller implements IAdminController
         return $this->render('project', array('model' => $model));
     }
 
+    /**
+     * @param $id
+     * @return string|\yii\web\Response
+     */
     public function actionEdit($id)
     {
         /** @var Load $model */
@@ -215,6 +253,10 @@ class DefaultController extends Controller implements IAdminController
         return $this->render('project', ['model' => $model]);
     }
 
+    /**
+     * @param $id
+     * @return string
+     */
     public function actionDoc($id)
     {
         /** @var StudyYear $year */

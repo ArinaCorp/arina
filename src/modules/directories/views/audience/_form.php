@@ -35,7 +35,7 @@ use app\modules\employee\models\Employee;
     </div>
 
 
-    <?= $form->field($model, 'id_teacher')->widget(Select2::className(), [
+    <?= $form->field($model, 'id_teacher')->widget(Select2::class, [
         'data' => Employee::getAllTeacherList(),
         'options' =>
             [

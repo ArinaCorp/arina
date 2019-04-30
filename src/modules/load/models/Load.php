@@ -85,7 +85,7 @@ class Load extends ActiveRecord
      */
     public function getStudyYear()
     {
-        return $this->hasOne(StudyYear::className(), ['id' => 'study_year_id']);
+        return $this->hasOne(StudyYear::class, ['id' => 'study_year_id']);
     }
 
     /**
@@ -93,7 +93,7 @@ class Load extends ActiveRecord
      */
     public function getEmployee()
     {
-        return $this->hasOne(Employee::className(), ['id' => 'employee_id']);
+        return $this->hasOne(Employee::class, ['id' => 'employee_id']);
     }
 
     /**
@@ -101,7 +101,7 @@ class Load extends ActiveRecord
      */
     public function getGroup()
     {
-        return $this->hasOne(Group::className(), ['id' => 'group_id']);
+        return $this->hasOne(Group::class, ['id' => 'group_id']);
     }
 
     /**
@@ -109,7 +109,7 @@ class Load extends ActiveRecord
      */
     public function getWorkSubject()
     {
-        return $this->hasOne(WorkSubject::className(), ['id' => 'work_subject_id']);
+        return $this->hasOne(WorkSubject::class, ['id' => 'work_subject_id']);
     }
 
     /**
@@ -119,7 +119,7 @@ class Load extends ActiveRecord
     {
         return [
             'JsonBehavior' => [
-                'class' => JsonBehavior::className(),
+                'class' => JsonBehavior::class,
                 'fields' => ['consult', 'students', 'fall_hours', 'spring_hours'],
             ],
         ];

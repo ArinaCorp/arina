@@ -43,7 +43,7 @@ class JournalRecord extends \yii\db\ActiveRecord
     public function behaviors()
     {
         return [
-            TimestampBehavior::className(),
+            TimestampBehavior::class,
         ];
     }
 
@@ -159,12 +159,12 @@ class JournalRecord extends \yii\db\ActiveRecord
 
     public function getTypeObj()
     {
-        return $this->hasOne(JournalRecordType::className(), ['id' => 'type']);
+        return $this->hasOne(JournalRecordType::class, ['id' => 'type']);
     }
 
     public function getTeacher()
     {
-        return $this->hasOne(Employee::className(), ['id' => 'teacher_id']);
+        return $this->hasOne(Employee::class, ['id' => 'teacher_id']);
     }
 
     public static function getLastNumber($load_id)
@@ -198,7 +198,7 @@ class JournalRecord extends \yii\db\ActiveRecord
 
     public function getAudience()
     {
-        return $this->hasOne(Audience::className(), ['id' => 'audience_id']);
+        return $this->hasOne(Audience::class, ['id' => 'audience_id']);
     }
 
     public function beforeSave($insert)

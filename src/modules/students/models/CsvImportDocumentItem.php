@@ -37,7 +37,7 @@ class CsvImportDocumentItem extends \yii\db\ActiveRecord
     {
         return [
             [['document_id', 'status'], 'integer'],
-            [['document_id'], 'exist', 'skipOnError' => true, 'targetClass' => CsvImportDocument::className(), 'targetAttribute' => ['document_id' => 'id']],
+            [['document_id'], 'exist', 'skipOnError' => true, 'targetClass' => CsvImportDocument::class, 'targetAttribute' => ['document_id' => 'id']],
         ];
     }
 
@@ -45,7 +45,7 @@ class CsvImportDocumentItem extends \yii\db\ActiveRecord
     {
         return [
             [
-                'class' => SerializeBehavior::className(),
+                'class' => SerializeBehavior::class,
                 'fields' => ['data', 'errors'],
             ]
         ];
@@ -84,6 +84,6 @@ class CsvImportDocumentItem extends \yii\db\ActiveRecord
      */
     public function getDocument()
     {
-        return $this->hasOne(CsvImportDocument::className(), ['id' => 'document_id']);
+        return $this->hasOne(CsvImportDocument::class, ['id' => 'document_id']);
     }
 }

@@ -1,9 +1,9 @@
 <?php
 
-use yii\helpers\Html;
-use yii\widgets\ActiveForm;
 use app\modules\journal\models\evaluation\EvaluationSystem;
 use kartik\select2\Select2;
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\journal\models\evaluation\Evaluation */
@@ -14,16 +14,15 @@ use kartik\select2\Select2;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'system_id')->widget(Select2::className(),
+    <?= $form->field($model, 'system_id')->widget(Select2::class,
         [
-            'data' => EvaluationSystem::getList(),
+            'data' => EvaluationSystem::getMap('title'),
             'options' => [
                 'placeholder' => Yii::t('app', 'Select evaluation system'),
             ],
-            'pluginOptions' =>
-                [
-                    'allowClear' => true
-                ]
+            'pluginOptions' => [
+                'allowClear' => true
+            ]
         ]) ?>
 
     <?= $form->field($model, 'value')->textInput(['maxlength' => true]) ?>

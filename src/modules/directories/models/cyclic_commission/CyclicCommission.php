@@ -8,7 +8,6 @@ use nullref\useful\traits\Mappable;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
-use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "cyclic_commission".
@@ -33,14 +32,6 @@ class CyclicCommission extends ActiveRecord
     public static function tableName()
     {
         return '{{%cyclic_commission}}';
-    }
-
-    /**
-     * @return mixed
-     */
-    public static function getList()
-    {
-        return ArrayHelper::map(self::find()->all(), 'id', 'title');
     }
 
     /**
@@ -114,6 +105,4 @@ class CyclicCommission extends ActiveRecord
             'employees' => Yii::t('terms', 'Employees'),
         ];
     }
-
-
 }

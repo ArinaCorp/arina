@@ -34,9 +34,9 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 
-
-<!-- @todo remove menu, add default styles like buttons, etc.. -->
-<?= $this->render('/admin/_menu') ?>
+<p>
+    <?= Html::a(Yii::t('user', 'Create a user account'), ['create'], ['class' => 'btn btn-success']) ?>
+</p>
 
 <?php Pjax::begin() ?>
 
@@ -51,7 +51,7 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
         'username',
         [
-            'header' => Yii::t('user', 'Permision'),
+            'header' => Yii::t('user', 'Permission'),
             'attribute' => 'roles',
             'format' => 'roles',
         ],

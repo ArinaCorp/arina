@@ -1,16 +1,14 @@
 <?php
 
-use yii\helpers\Html;
-use yii\widgets\ActiveForm;
-use app\modules\directories\models\department\Department;
-use kartik\select2\Select2;
-use yii\web\View;
-use yii\widgets\Pjax;
-
-use app\modules\directories\models\subject_relation\SubjectRelation;
-use app\modules\directories\models\subject\Subject;
 use app\modules\directories\models\speciality_qualification\SpecialityQualification;
+use app\modules\directories\models\subject\Subject;
 use app\modules\directories\models\subject_cycle\SubjectCycle;
+use app\modules\directories\models\subject_relation\SubjectRelation;
+use kartik\select2\Select2;
+use yii\helpers\Html;
+use yii\web\View;
+use yii\widgets\ActiveForm;
+use yii\widgets\Pjax;
 
 /* @var $this View */
 /* @var $model SubjectRelation */
@@ -25,12 +23,11 @@ use app\modules\directories\models\subject_cycle\SubjectCycle;
     <div class="row">
 
         <div class="col-sm-6">
-            <?= $form->field($model, 'subject_id')->widget(Select2::className(), [
-                'data' => Subject::getList(),
-                'options' =>
-                    [
-                        'placeholder' => Yii::t('app', 'Select subject')
-                    ]
+            <?= $form->field($model, 'subject_id')->widget(Select2::class, [
+                'data' => Subject::getMap('title'),
+                'options' => [
+                    'placeholder' => Yii::t('app', 'Select subject')
+                ]
             ]); ?>
         </div>
 
@@ -39,12 +36,11 @@ use app\modules\directories\models\subject_cycle\SubjectCycle;
     <div class="row">
 
         <div class="col-sm-6">
-            <?= $form->field($model, 'subject_cycle_id')->widget(Select2::className(), [
-                'data' => SubjectCycle::getList(),
-                'options' =>
-                    [
-                        'placeholder' => Yii::t('app', 'Select subject cycle')
-                    ]
+            <?= $form->field($model, 'subject_cycle_id')->widget(Select2::class, [
+                'data' => SubjectCycle::getMap('title'),
+                'options' => [
+                    'placeholder' => Yii::t('app', 'Select subject cycle')
+                ]
             ]); ?>
         </div>
 
@@ -53,12 +49,11 @@ use app\modules\directories\models\subject_cycle\SubjectCycle;
     <div class="row">
 
         <div class="col-sm-6">
-            <?= $form->field($model, 'speciality_qualification_id')->widget(Select2::className(), [
-                'data' => SpecialityQualification::getList(),
-                'options' =>
-                    [
-                        'placeholder' => Yii::t('app', 'Select department')
-                    ]
+            <?= $form->field($model, 'speciality_qualification_id')->widget(Select2::class, [
+                'data' => SpecialityQualification::getMap('title'),
+                'options' => [
+                    'placeholder' => Yii::t('app', 'Select department')
+                ]
             ]); ?>
         </div>
 
@@ -66,7 +61,6 @@ use app\modules\directories\models\subject_cycle\SubjectCycle;
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-
     </div>
 
     <?php ActiveForm::end(); ?>

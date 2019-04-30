@@ -23,7 +23,7 @@ use app\modules\students\models\Group;
     ]); ?>
     <div class="row">
         <div class="col-sm-6">
-            <?= $form->field($model, 'student_id')->widget(Select2::className(),
+            <?= $form->field($model, 'student_id')->widget(Select2::class,
                 [
                     'data' =>
                         [
@@ -35,7 +35,7 @@ use app\modules\students\models\Group;
             ?>
         </div>
         <div class="col-sm-6">
-            <?= $form->field($model, 'parent_id')->widget(Select2::className(),
+            <?= $form->field($model, 'parent_id')->widget(Select2::class,
                 [
                     'data' =>
                         [
@@ -49,7 +49,7 @@ use app\modules\students\models\Group;
     </div>
     <div class="row">
         <div class="col-sm-6">
-            <?= $form->field($model, 'date')->widget(DatePicker::className(), [
+            <?= $form->field($model, 'date')->widget(DatePicker::class, [
                 'type' => DatePicker::TYPE_COMPONENT_APPEND,
                 'readonly' => true,
                 'disabled' => true,
@@ -59,7 +59,7 @@ use app\modules\students\models\Group;
             ]); ?>
         </div>
         <div class="col-sm-6">
-            <?= $form->field($model, 'action_type')->widget(Select2::className(),
+            <?= $form->field($model, 'action_type')->widget(Select2::class,
                 [
                     'data' =>
                         [
@@ -79,7 +79,7 @@ use app\modules\students\models\Group;
     ?>
     <div class="row">
         <div class="col-sm-6">
-            <?= $form->field($model, 'speciality_qualification_id')->widget(Select2::className(),
+            <?= $form->field($model, 'speciality_qualification_id')->widget(Select2::class,
                 [
                     'options' => ['placeholder' => Yii::t('app', 'Select')],
                     'data' => SpecialityQualification::getTreeList(),
@@ -90,7 +90,7 @@ use app\modules\students\models\Group;
             ?>
         </div>
         <div class="col-sm-6">
-            <?= $form->field($model, 'group_id')->widget(DepDrop::className(), [
+            <?= $form->field($model, 'group_id')->widget(DepDrop::class, [
                 'name' => 'group',
                 'data' => [],
                 'type' => DepDrop::TYPE_SELECT2,
@@ -107,7 +107,7 @@ use app\modules\students\models\Group;
     </div>
     <div class="row">
         <div class="col-sm-6">
-            <?= $form->field($model, 'payment_type')->widget(Select2::className(), [
+            <?= $form->field($model, 'payment_type')->widget(Select2::class, [
                 'options' => ['placeholder' => Yii::t('app', 'Select')],
                 'data' => StudentsHistory::getPayments(),
                 'pluginOptions' => [
@@ -117,7 +117,7 @@ use app\modules\students\models\Group;
             ?>
         </div>
         <div class="col-sm-6">
-            <?= $form->field($model, 'course')->widget(DepDrop::className(), [
+            <?= $form->field($model, 'course')->widget(DepDrop::class, [
                 'name' => 'course',
                 'data' => [],
                 'type' => DepDrop::TYPE_SELECT2,
@@ -140,7 +140,7 @@ use app\modules\students\models\Group;
             ?>
             <div class="row">
                 <div class="col-sm-6">
-                    <?= $form->field($model, 'course')->widget(Select2::className(), [
+                    <?= $form->field($model, 'course')->widget(Select2::class, [
                         'options' => ['placeholder' => Yii::t('app', 'Select')],
                         'data' => StudentsHistory::getCurrentGroupById($model->parent_id)->getCoursesList(),
                         'pluginOptions' => [
@@ -157,7 +157,7 @@ use app\modules\students\models\Group;
             ?>
             <div class="row">
                 <div class="col-sm-6">
-                    <?= $form->field($model, 'group_id')->widget(Select2::className(), [
+                    <?= $form->field($model, 'group_id')->widget(Select2::class, [
                         'options' => ['placeholder' => Yii::t('app', 'Select')],
                         'data' => Group::findOne(['id' => $model->data['current']['group_id']]),
                         'pluginOptions' => [
@@ -174,7 +174,7 @@ use app\modules\students\models\Group;
             ?>
             <div class="row">
                 <div class="col-sm-6">
-                    <?= $form->field($model, 'payment_type')->widget(Select2::className(), [
+                    <?= $form->field($model, 'payment_type')->widget(Select2::class, [
                         'options' => ['placeholder' => Yii::t('app', 'Select')],
                         'data' => StudentsHistory::getPayments(),
                         'pluginOptions' => [

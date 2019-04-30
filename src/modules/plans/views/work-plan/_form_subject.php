@@ -37,7 +37,7 @@ use app\modules\directories\models\subject\Subject;
 
     <div class="row">
         <div class="col-sm-5">
-            <?= $form->field($model, 'subject_id')->widget(Select2::className(),
+            <?= $form->field($model, 'subject_id')->widget(Select2::class,
                 [
                     'data' => $model->isNewRecord ?
                         $model->workPlan->getUnusedSubjects() :
@@ -58,9 +58,9 @@ use app\modules\directories\models\subject\Subject;
     </div>
     <div class="row">
         <div class="col-sm-5">
-            <?= $form->field($model, 'cyclic_commission_id')->widget(Select2::className(),
+            <?= $form->field($model, 'cyclic_commission_id')->widget(Select2::class,
                 [
-                    'data' => CyclicCommission::getList(),
+                    'data' => CyclicCommission::getMap('title'),
                     'options' =>[ 'placeholder' => Yii::t('plans', 'Select cyclic commission')]
                 ]) ?>
         </div>

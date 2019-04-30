@@ -2,12 +2,11 @@
 
 namespace app\modules\directories\models\subject_cycle;
 
+use app\modules\directories\models\subject_relation\SubjectRelation;
+use nullref\useful\traits\Mappable;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
-use yii\helpers\ArrayHelper;
-
-use app\modules\directories\models\subject_relation\SubjectRelation;
 
 /**
  * This is the model class for table "subject_cycle".
@@ -20,6 +19,8 @@ use app\modules\directories\models\subject_relation\SubjectRelation;
  */
 class SubjectCycle extends ActiveRecord
 {
+    use Mappable;
+
     /**
      * @inheritdoc
      */
@@ -56,16 +57,7 @@ class SubjectCycle extends ActiveRecord
      */
     public function getSubjectRelation()
     {
-        return $this->hasMany(SubjectRelation::className(), ['subject_cycle_id' => 'id']);
-    }
-
-    /**
-     * @return mixed
-     */
-    public static function getList()
-    {
-        return ArrayHelper::map(SubjectCycle::find()->all(), 'id', 'title');
-
+        return $this->hasMany(SubjectRelation::class, ['subject_cycle_id' => 'id']);
     }
 
 }

@@ -42,7 +42,7 @@ $this->registerJs('
     window.toggleSection = function(section, sender) {
            $("."+section).toggle();
            $(sender).toggleClass("btn-info");
-           $(sender).toggleClass("btn-warning");
+           $(sender).toggleClass("btn-default");
        }
    ');
 
@@ -66,8 +66,8 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-sm-4">
             <?= $form->field($model, 'commission_id')
                 ->widget(Select2::class, [
-                'data' => CyclicCommission::getList(),
-                'id' => 'commissionId',
+                    'data' => CyclicCommission::getMap('title'),
+                    'id' => 'commissionId',
                     'options' => [
                         'placeholder' => Yii::t('app', 'Choose cyclic commission')
                     ],

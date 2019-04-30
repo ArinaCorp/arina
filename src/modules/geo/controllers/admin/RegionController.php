@@ -24,7 +24,7 @@ class RegionController extends Controller implements IAdminController
     {
         parent::init();
         if ($this->modelClass === null) {
-            $this->modelClass = Region::className();
+            $this->modelClass = Region::class;
         }
     }
 
@@ -32,7 +32,7 @@ class RegionController extends Controller implements IAdminController
     {
         return [
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
                 ],

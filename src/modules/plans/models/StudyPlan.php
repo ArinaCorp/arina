@@ -3,19 +3,19 @@
 namespace app\modules\plans\models;
 
 use app\components\ExportToExcel;
+use app\modules\directories\models\department\Department;
+use app\modules\directories\models\speciality_qualification\SpecialityQualification;
+use app\modules\directories\models\subject\Subject;
 use app\modules\user\helpers\UserHelper;
 use app\modules\user\models\User;
-use Yii;
-use yii\db\ActiveRecord;
-use yii\db\ActiveQuery;
-use yii\data\ActiveDataProvider;
-use yii\helpers\ArrayHelper;
 use nullref\useful\behaviors\JsonBehavior;
+use nullref\useful\traits\Mappable;
+use Yii;
 use yii\behaviors\TimestampBehavior;
-
-use app\modules\directories\models\speciality_qualification\SpecialityQualification;
-use app\modules\directories\models\department\Department;
-use app\modules\directories\models\subject\Subject;
+use yii\data\ActiveDataProvider;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "study_plan".
@@ -34,25 +34,9 @@ use app\modules\directories\models\subject\Subject;
  */
 class StudyPlan extends ActiveRecord
 {
-    public $study_plan_origin;
+    use Mappable;
 
-    /**
-     * @return array
-     */
-    public function behaviors()
-    {
-        return [
-            'JsonBehavior' => [
-                'class' => JsonBehavior::className(),
-                'fields' => ['graph', 'semesters'],
-            ],
-            'TimestampBehavior' => [
-                'class' => TimestampBehavior::className(),
-                'createdAtAttribute' => 'created',
-                'updatedAtAttribute' => 'updated',
-            ]
-        ];
-    }
+    public $study_plan_origin;
 
     /**
      * @return string the associated database table name
@@ -61,23 +45,6 @@ class StudyPlan extends ActiveRecord
     {
         return '{{%study_plan}}';
     }
-
-    /**
-     * @return array validation rules for model attributes.
-     */
-    public function rules()
-    {
-        return [
-            [['speciality_qualification_id'], 'required'],
-            [['semesters'], 'required', 'message' => Yii::t('plans', 'Click "Generate" and check the data')],
-            [['id', 'speciality_qualification_id'], 'integer'],
-            [['created', 'updated'], 'safe'],
-
-            [['id', 'speciality_qualification_id'], 'safe', 'on' => 'search'],
-            [['id'], 'unique'],
-        ];
-    }
-
 
     /**
      * @param $id
@@ -125,6 +92,40 @@ class StudyPlan extends ActiveRecord
     /**
      * @return array
      */
+    public function behaviors()
+    {
+        return [
+            'JsonBehavior' => [
+                'class' => JsonBehavior::class,
+                'fields' => ['graph', 'semesters'],
+            ],
+            'TimestampBehavior' => [
+                'class' => TimestampBehavior::class,
+                'createdAtAttribute' => 'created',
+                'updatedAtAttribute' => 'updated',
+            ]
+        ];
+    }
+
+    /**
+     * @return array validation rules for model attributes.
+     */
+    public function rules()
+    {
+        return [
+            [['speciality_qualification_id'], 'required'],
+            [['semesters'], 'required', 'message' => Yii::t('plans', 'Click "Generate" and check the data')],
+            [['id', 'speciality_qualification_id'], 'integer'],
+            [['created', 'updated'], 'safe'],
+
+            [['id', 'speciality_qualification_id'], 'safe', 'on' => 'search'],
+            [['id'], 'unique'],
+        ];
+    }
+
+    /**
+     * @return array
+     */
     public function getUnusedSubjects()
     {
         $usedSubjects = ArrayHelper::map($this->studySubjects, 'subject_id', 'id');
@@ -149,7 +150,7 @@ class StudyPlan extends ActiveRecord
      */
     public function getSpecialityQualification()
     {
-        return $this->hasOne(SpecialityQualification::className(), ['id' => 'speciality_qualification_id']);
+        return $this->hasOne(SpecialityQualification::class, ['id' => 'speciality_qualification_id']);
     }
 
     /**
@@ -157,7 +158,7 @@ class StudyPlan extends ActiveRecord
      */
     public function getStudySubjects()
     {
-        return $this->hasMany(StudySubject::className(), ['study_plan_id' => 'id']);
+        return $this->hasMany(StudySubject::class, ['study_plan_id' => 'id']);
     }
 
     /**

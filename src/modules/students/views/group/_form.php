@@ -16,16 +16,16 @@ use kartik\touchspin\TouchSpin;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'speciality_qualifications_id')->widget(Select2::className(), [
+    <?= $form->field($model, 'speciality_qualifications_id')->widget(Select2::class, [
         'data' => SpecialityQualification::getTreeList(),
     ]) ?>
 
-    <?= $form->field($model, 'created_study_year_id')->widget(Select2::className(),
+    <?= $form->field($model, 'created_study_year_id')->widget(Select2::class,
         [
             'data' => StudyYear::getYearList()
         ]) ?>
 
-    <?= $form->field($model, 'number_group')->widget(TouchSpin::className(), [
+    <?= $form->field($model, 'number_group')->widget(TouchSpin::class, [
             'pluginOptions' => [
                 'buttonup_class' => 'btn btn-primary',
                 'buttondown_class' => 'btn btn-info',
@@ -35,7 +35,7 @@ use kartik\touchspin\TouchSpin;
         ]
     ) ?>
     <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
-    <?= $form->field($model, 'group_leader_id')->widget(Select2::className(),
+    <?= $form->field($model, 'group_leader_id')->widget(Select2::class,
         [
             'data' => $model->getStudentsList(),
             'pluginOptions' =>

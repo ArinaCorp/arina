@@ -24,7 +24,7 @@ class DistrictController extends Controller implements IAdminController
     {
         parent::init();
         if ($this->modelClass === null) {
-            $this->modelClass = District::className();
+            $this->modelClass = District::class;
         }
     }
 
@@ -32,7 +32,7 @@ class DistrictController extends Controller implements IAdminController
     {
         return [
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
                 ],

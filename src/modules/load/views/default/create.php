@@ -1,12 +1,11 @@
 <?php
 
-use yii\widgets\Pjax;
-use yii\widgets\ActiveForm;
+use app\modules\directories\models\StudyYear;
+use kartik\select2\Select2;
 use yii\helpers\Html;
 use yii\web\View;
-use kartik\select2\Select2;
-
-use app\modules\directories\models\StudyYear;
+use yii\widgets\ActiveForm;
+use yii\widgets\Pjax;
 
 /**
  * @var $this View
@@ -40,13 +39,12 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-sm-4">
             <?= Select2::widget(
                 [
-                    'data' => StudyYear::getList(),
+                    'data' => StudyYear::getMap('title', 'id', null, false),
                     'id' => 'study_year',
                     'name' => 'study_year',
-                    'options' =>
-                        [
-                            'placeholder' => Yii::t('load', 'Select study year')
-                        ]
+                    'options' => [
+                        'placeholder' => Yii::t('load', 'Select study year')
+                    ]
                 ]
             ); ?>
         </div>

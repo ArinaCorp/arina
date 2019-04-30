@@ -21,7 +21,7 @@ use yii\widgets\ActiveForm;
     <p>
         <?php //     Html::a(Yii::t('app', 'List'), ['index'], ['class' => 'btn btn-success']) ?>
     </p>
-    <?= $form->field($model, 'group_id')->widget(Select2::className(),[
+    <?= $form->field($model, 'group_id')->widget(Select2::class,[
             'name' =>'select-group',
             'data' => Group::getActiveGroupsList(),
             'options' => [
@@ -32,7 +32,7 @@ use yii\widgets\ActiveForm;
                     'allowClear' => true
                 ]
     ]) ?>
-    <?=$form->field($model, 'subject_id')->widget(Select2::className(),[
+    <?=$form->field($model, 'subject_id')->widget(Select2::class,[
         'name' =>'select-subject',
         'data' => Subject::getMap('title'),
         'options' => [

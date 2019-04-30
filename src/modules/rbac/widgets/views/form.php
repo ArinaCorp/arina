@@ -34,7 +34,7 @@ use yii\widgets\ActiveForm;
 
         <?= Html::activeHiddenInput($model, 'id') ?>
 
-        <?= $form->field($model, 'items')->widget(Select2::className(), [
+        <?= $form->field($model, 'items')->widget(Select2::class, [
             'data' => AuthItem::getDropDownArray('name', 'description'),
             'options' => [
                 'id' => 'items',

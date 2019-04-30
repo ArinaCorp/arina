@@ -60,9 +60,12 @@ class EmployeeEducation extends \yii\db\ActiveRecord
         ];
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getEmployee()
     {
-        return $this->hasOne(Employee::className(), ['employee_id' => 'id']);
+        return $this->hasOne(Employee::class, ['employee_id' => 'id']);
     }
 
     public static function shortClassName()
@@ -72,6 +75,11 @@ class EmployeeEducation extends \yii\db\ActiveRecord
         return $reflector->getShortName();
     }
 
+    /**
+     * @param $employee_id
+     * @param $employee
+     * @return EmployeeEducation[]|array|\yii\db\ActiveRecord[]
+     */
     public static function getList($employee_id, $employee)
     {
         $query = self::find();
@@ -110,57 +118,5 @@ class EmployeeEducation extends \yii\db\ActiveRecord
             }
         }
         return $list;
-    }
-
-    /**
-     * @param $employee Employee;
-     * @return mixed
-     */
-
-    public static function validateSt($employee)
-    {
-        $success = true;
-        $modelsEducation = $employee->has_education;
-        /**
-         * @var $modelsEducation self[];
-         */
-        foreach ($modelsEducation as $model) {
-            $success = $success && $model->validate();
-        }
-        return $success;
-    }
-
-    public static function saveSt($employee_id, $employee)
-    {
-        if (empty($employee_id)) {
-            throw new BadRequestHttpException(Yii::t('app', 'Bad Request'));
-        }
-        $query = self::find()->select('id');
-        $query->andWhere([
-            'employee_id' => $employee_id
-        ]);
-        $ids = $query->asArray()->column();
-        $list = self::getList($employee_id, $employee);
-        foreach ($list as $params) {
-            if (isset($params->id) && !empty($params->id)) {
-                $attr = self::findOne($params->id);
-                $key = array_search($params->id, $ids);
-
-                if ($key !== false) {
-                    unset($ids[$key]);
-                }
-            } else {
-                $attr = new self();
-                $attr->employee_id = $employee_id;
-            }
-            $new_atrib = array_filter($params->getAttributes());
-            $attr->setAttributes($new_atrib);
-            if (!$attr->save()) {
-                $attr->delete();
-            }
-        }
-        if (count($ids) > 0) {
-            self::deleteAll(['in', 'id', $ids]);
-        }
     }
 }

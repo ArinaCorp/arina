@@ -99,6 +99,6 @@ class CsvImportDocument extends ActiveRecord
      */
     public function getDocumentItems()
     {
-        return $this->hasMany(CsvImportDocumentItem::className(), ['document_id' => 'id']);
+        return $this->hasMany(CsvImportDocumentItem::class, ['document_id' => 'id']);
     }
 }

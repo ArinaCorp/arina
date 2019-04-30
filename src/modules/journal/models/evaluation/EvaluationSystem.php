@@ -2,9 +2,9 @@
 
 namespace app\modules\journal\models\evaluation;
 
+use nullref\useful\traits\Mappable;
 use Yii;
 use yii\behaviors\TimestampBehavior;
-use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%evaluation_systems}}".
@@ -16,6 +16,8 @@ use yii\helpers\ArrayHelper;
  */
 class EvaluationSystem extends \yii\db\ActiveRecord
 {
+    use Mappable;
+
     /**
      * @inheritdoc
      */
@@ -30,7 +32,7 @@ class EvaluationSystem extends \yii\db\ActiveRecord
     public function behaviors()
     {
         return [
-            TimestampBehavior::className(),
+            TimestampBehavior::class,
         ];
     }
 
@@ -60,13 +62,4 @@ class EvaluationSystem extends \yii\db\ActiveRecord
         ];
     }
 
-    public static function getArray()
-    {
-        return self::find()->all();
-    }
-
-    public static function getList()
-    {
-        return ArrayHelper::map(self::getArray(), 'id', 'title');
-    }
 }

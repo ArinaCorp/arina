@@ -52,7 +52,7 @@ class Employee extends ActiveRecord
                 'class' => RelatedBehavior::class,
                 'mappedType' => RelatedBehavior::MAPPED_TYPE_PK_FIELD,
                 'fields' => [
-                    'employeeEducation' => EmployeeEducation::className(),
+                    'employeeEducation' => EmployeeEducation::class,
                 ],
             ]
         ];
@@ -153,18 +153,28 @@ class Employee extends ActiveRecord
         return $query->all();
     }
 
-    public static function getList()
+    /**
+     * @return EmployeeQuery|\yii\db\ActiveQuery
+     */
+    public static function find()
     {
-        $query = self::find();
-        $query->addOrderBy(['first_name' => SORT_ASC, 'middle_name' => SORT_ASC, 'last_name' => SORT_ASC]);
-        return $query->all();
+        return new EmployeeQuery(get_called_class());
     }
 
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getEducation()
     {
-        return $this->hasMany(EmployeeEducation::className(), ['employee_id' => 'id']);
+        return $this->hasMany(EmployeeEducation::class, ['employee_id' => 'id']);
     }
 
+    /**
+     * @param $modelClass
+     * @param array $multipleModels
+     * @param string $pk
+     */
     public static function createMultiple($modelClass, $multipleModels = [], $pk = 'id')
     {
         $model = new $modelClass;
@@ -260,7 +270,7 @@ class Employee extends ActiveRecord
      */
     public function getEmployeeEducation()
     {
-        return $this->hasMany(EmployeeEducation::className(), ['employee_id' => 'id']);
+        return $this->hasMany(EmployeeEducation::class, ['employee_id' => 'id']);
     }
 
     /**

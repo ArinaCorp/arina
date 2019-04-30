@@ -21,6 +21,15 @@ class EmployeeQuery extends ActiveQuery
     }
 
     /**
+     *
+     */
+    public function init()
+    {
+        parent::init();
+        $this->addOrderBy(['first_name' => SORT_ASC, 'middle_name' => SORT_ASC, 'last_name' => SORT_ASC]);
+    }
+
+    /**
      * @inheritdoc
      * @return Employee|array|null
      */

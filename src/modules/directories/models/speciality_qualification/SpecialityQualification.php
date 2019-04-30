@@ -9,6 +9,7 @@ use app\modules\directories\models\subject_relation\SubjectRelation;
 use app\modules\students\models\Group;
 use app\modules\user\helpers\UserHelper;
 use app\modules\user\models\User;
+use nullref\useful\traits\Mappable;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
@@ -30,12 +31,47 @@ use yii\helpers\ArrayHelper;
  */
 class SpecialityQualification extends ActiveRecord
 {
+    use Mappable;
+
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
         return '{{%speciality_qualification}}';
+    }
+
+    /**
+     * @return array
+     */
+    public static function getTreeList()
+    {
+        $list = [];
+
+        /* @var $departments Department[] */
+
+        $departments = Department::find()->all();
+
+        if (!Yii::$app->user->isGuest) {
+            /** @var User $user */
+            $user = Yii::$app->user->identity;
+            if (UserHelper::hasRole($user, 'head-of-department')) {
+                $departments = Department::find()
+                    ->andWhere(['head_id' => $user->employee->id])
+                    ->all();
+            }
+        }
+
+        foreach ($departments as $department) {
+            $list[$department->title] = [];
+            foreach ($department->specialities as $speciality) {
+                $list[$department->title][$speciality->title] = [];
+                foreach ($speciality->specialityQualifications as $specialityQualification) {
+                    $list[$department->title][$speciality->title][$specialityQualification->id] = $specialityQualification->title;
+                }
+            }
+        }
+        return $list;
     }
 
     /**
@@ -48,18 +84,6 @@ class SpecialityQualification extends ActiveRecord
             [['years_count', 'months_count', 'speciality_id', 'qualification_id'], 'integer'],
             [['title'], 'string', 'max' => 255],
         ];
-    }
-
-    /**
-     * @return int
-     */
-    public function getCountCourses()
-    {
-        $count = $this->years_count + 0;
-        if ($this->months_count > 0) {
-            $count++;
-        }
-        return $count + 0;
     }
 
     /**
@@ -91,39 +115,6 @@ class SpecialityQualification extends ActiveRecord
     public function getSpeciality()
     {
         return $this->hasOne(Speciality::class, ['id' => 'speciality_id']);
-    }
-
-    /**
-     * @return array
-     */
-    public static function getTreeList()
-    {
-        $list = [];
-
-        /* @var $departments Department[] */
-
-        $departments = Department::find()->all();
-
-        if (!Yii::$app->user->isGuest) {
-            /** @var User $user */
-            $user = Yii::$app->user->identity;
-            if (UserHelper::hasRole($user, 'head-of-department')) {
-                $departments = Department::find()
-                ->andWhere(['head_id'=>$user->employee->id])
-                ->all();
-            }
-        }
-
-        foreach ($departments as $department) {
-            $list[$department->title] = [];
-            foreach ($department->specialities as $speciality) {
-                $list[$department->title][$speciality->title] = [];
-                foreach ($speciality->specialityQualifications as $specialityQualification) {
-                    $list[$department->title][$speciality->title][$specialityQualification->id] = $specialityQualification->title;
-                }
-            }
-        }
-        return $list;
     }
 
     /**
@@ -168,11 +159,32 @@ class SpecialityQualification extends ActiveRecord
     }
 
     /**
+     * @return int
+     */
+    public function getCountCourses()
+    {
+        $count = $this->years_count + 0;
+        if ($this->months_count > 0) {
+            $count++;
+        }
+        return $count + 0;
+    }
+
+    /**
      * @return \yii\db\ActiveQuery
      */
     public function getGroups()
     {
         return $this->hasMany(Group::class, ['speciality_qualifications_id' => 'id']);
+    }
+
+    /**
+     * @param null $year_id
+     * @return array
+     */
+    public function getGroupsActiveList($year_id = null)
+    {
+        return ArrayHelper::map($this->getGroupsActive($year_id), 'id', 'title');
     }
 
     /**
@@ -194,15 +206,6 @@ class SpecialityQualification extends ActiveRecord
     }
 
     /**
-     * @param null $year_id
-     * @return array
-     */
-    public function getGroupsActiveList($year_id = null)
-    {
-        return ArrayHelper::map($this->getGroupsActive($year_id), 'id', 'title');
-    }
-
-    /**
      * @param $yearId
      * @return array
      */
@@ -216,14 +219,6 @@ class SpecialityQualification extends ActiveRecord
         }
         array_multisort($list);
         return $list;
-    }
-
-    /**
-     * @return array
-     */
-    public static function getList()
-    {
-        return ArrayHelper::map(SpecialityQualification::find()->all(), 'id', 'title');
     }
 
 }

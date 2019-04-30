@@ -126,22 +126,22 @@ class JournalMark extends \yii\db\ActiveRecord
 
     public function getEvaluation()
     {
-        return $this->hasOne(Evaluation::className(), ['id' => 'evaluation_id']);
+        return $this->hasOne(Evaluation::class, ['id' => 'evaluation_id']);
     }
 
     public function getEvaluationSystem()
     {
-        return $this->hasOne(EvaluationSystem::className(), ['id' => 'evaluation_system_id']);
+        return $this->hasOne(EvaluationSystem::class, ['id' => 'evaluation_system_id']);
     }
 
     public function getRetakeEvaluation()
     {
-        return $this->hasOne(Evaluation::className(), ['id' => 'retake_evaluation_id']);
+        return $this->hasOne(Evaluation::class, ['id' => 'retake_evaluation_id']);
     }
 
     public function getRetakeEvaluationSystem()
     {
-        return $this->hasOne(EvaluationSystem::className(), ['id' => 'evaluation_system_id']);
+        return $this->hasOne(EvaluationSystem::class, ['id' => 'evaluation_system_id']);
     }
 
     public function getLabelLink()
@@ -182,7 +182,7 @@ class JournalMark extends \yii\db\ActiveRecord
 
     public function getJournalRecord()
     {
-        return $this->hasOne(JournalRecord::className(), ['id' => 'record_id']);
+        return $this->hasOne(JournalRecord::class, ['id' => 'record_id']);
     }
 
     public function beforeSave($insert)
@@ -198,11 +198,11 @@ class JournalMark extends \yii\db\ActiveRecord
 
     public function getStudent()
     {
-        return $this->hasOne(Student::className(), ['id' => 'student_id']);
+        return $this->hasOne(Student::class, ['id' => 'student_id']);
     }
 
     public function getReason()
     {
-        return $this->hasOne(NotPresenceType::className(), ['id' => 'not_presence_reason_id']);
+        return $this->hasOne(NotPresenceType::class, ['id' => 'not_presence_reason_id']);
     }
 }

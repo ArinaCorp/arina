@@ -2,6 +2,7 @@
 
 namespace app\modules\journal\models\record;
 
+use nullref\useful\traits\Mappable;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\helpers\ArrayHelper;
@@ -26,6 +27,7 @@ use yii\helpers\ArrayHelper;
  */
 class JournalRecordType extends \yii\db\ActiveRecord
 {
+    use Mappable;
     /**
      * @inheritdoc
      */
@@ -72,10 +74,5 @@ class JournalRecordType extends \yii\db\ActiveRecord
             'report_title' => Yii::t('app', 'Report Title'),
             'work_type_id' => Yii::t('app', 'Work Type ID'),
         ];
-    }
-
-    public static function getList()
-    {
-        return ArrayHelper::map(self::find()->all(), 'id', 'title');
     }
 }

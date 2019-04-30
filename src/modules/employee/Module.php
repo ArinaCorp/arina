@@ -25,7 +25,7 @@ class Module extends BaseModule implements IAdminModule, IAccessibleModule
     {
         return [
             //               'as AccessBehavior' => [
-            //                   'class' => \developeruz\db_rbac\behaviors\AccessBehavior::className(),
+            //                   'class' => \developeruz\db_rbac\behaviors\AccessBehavior::class,
             //               ]
         ];
     }

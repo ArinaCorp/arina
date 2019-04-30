@@ -21,7 +21,7 @@ use yii\widgets\ActiveForm;
         ->label(Yii::t('app', 'Country'));
     ?>
 
-    <?= $form->field($model, 'region_id')->widget(DepDrop::classname(), [
+    <?= $form->field($model, 'region_id')->widget(DepDrop::class, [
         'options' => ['id' => 'region_id'],
         'data' => [$model->region_id => 'default'],
         'pluginOptions'=>[
