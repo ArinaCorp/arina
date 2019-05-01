@@ -61,8 +61,9 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
 
-    <?php $form = ActiveForm::begin(['id' => 'load-filter-form', 'method' => 'GET']); ?>
+    <?php $form = ActiveForm::begin(['id' => 'load-filter-form', 'method' => 'GET']) ?>
 
+    <?php $employeeData = CyclicCommission::getEmployeeByCyclicCommissionMap($model->commission_id) ?>
     <div class="row">
         <div class="col-sm-4">
             <?= $form->field($model, 'commission_id')
@@ -76,13 +77,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 ]);
             ?>
         </div>
-    </div>
-
-    <?php
-    $employeeData = CyclicCommission::getEmployeeByCyclicCommissionMap($model->commission_id);
-    ?>
-
-    <div class="row">
         <div class="col-sm-4">
             <?= $form->field($model, 'employee_id')->widget(DepDrop::class, [
                 'data' => $employeeData,
@@ -95,7 +89,6 @@ $this->params['breadcrumbs'][] = $this->title;
             ]) ?>
         </div>
     </div>
-
 
     <div class="form-group">
         <?= Html::submitButton('Фільтрувати', ['class' => 'btn btn-success']); ?>

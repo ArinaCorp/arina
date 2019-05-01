@@ -17,7 +17,7 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Calculation and control works' => 'розрах. та контр. роб.',
+    'Calculation and control works' => 'Розрах. та контр. роб.',
     'Consultations' => 'Консультації',
     'Consultations amount exceeds maximum' => '',
     'Course project' => '',
