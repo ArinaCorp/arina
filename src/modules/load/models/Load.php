@@ -4,9 +4,11 @@ namespace app\modules\load\models;
 
 use app\modules\directories\models\StudyYear;
 use app\modules\employee\models\Employee;
+use app\modules\journal\models\record\JournalRecord;
 use app\modules\plans\models\WorkSubject;
 use app\modules\students\models\Group;
 use nullref\useful\JsonBehavior;
+use nullref\useful\traits\MappableQuery;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
@@ -35,6 +37,7 @@ use yii\web\NotFoundHttpException;
  * @property Group $group
  * @property Employee $employee
  * @property WorkSubject $workSubject
+ * @property JournalRecord[] $journalRecords
  */
 class Load extends ActiveRecord
 {
@@ -56,6 +59,16 @@ class Load extends ActiveRecord
     public $workType;
 
     protected static $HOURS = ['', '', '', '', ''];
+
+
+    /**
+     * @inheritdoc
+     * @return LoadQuery the active query used by this AR class.
+     */
+    public static function find()
+    {
+        return new LoadQuery(get_called_class());
+    }
 
     /**
      * @return string the associated database table name
@@ -591,6 +604,19 @@ class Load extends ActiveRecord
     public static function getListByGroupAndYear($group_id, $year_id = null)
     {
         return ArrayHelper::map(self::getArrayByGroupAndYear($group_id, $year_id), 'id', 'labelInfo');
+    }
+
+    /**
+     * @return string
+     */
+    public function getFullTitle()
+    {
+        return $this->group->title . ' ' . $this->workSubject->subject->title;
+    }
+
+    public function getJournalRecords()
+    {
+        return $this->hasMany(JournalRecord::class, ['load_id' => 'id']);
     }
 
     public static function getZaglushka()

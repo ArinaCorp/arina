@@ -71,6 +71,12 @@ class Module extends BaseModule implements IAdminModule
                     'icon' => 'files-o',
                     'roles' => ['teacher'],
                 ],
+                [
+                    'label' => Yii::t('app', 'Marks Accounting'),
+                    'url' => ['/journal/marks-accounting'],
+                    'icon' => 'files-o',
+                    'roles' => ['teacher'],
+                ],
             ],
             'roles' => ['teacher'],
         ];

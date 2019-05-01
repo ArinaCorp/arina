@@ -428,4 +428,10 @@ class Group extends ActiveRecord
         return Html::a($this->title, Url::to(['/students/group/view', 'id' => $this->id]));
     }
 
+    public function getStudents()
+    {
+        return $this->hasMany(Student::class, ['id' => 'student_id'])
+            ->viaTable('student_group', ['group_id' => 'id']);
+    }
+
 }

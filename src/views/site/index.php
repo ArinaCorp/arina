@@ -11,5 +11,8 @@ $this->title = Yii::$app->name;
                 <?= Html::encode($this->title) ?>
             </h1>
         </div>
+        <?php foreach ($widgets as $widget){
+            echo $widget;
+        } ?>
     </div>
 </div>

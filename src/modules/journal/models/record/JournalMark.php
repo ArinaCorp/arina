@@ -25,6 +25,7 @@ use yii\bootstrap\Html;
  * @property string $retake_ticket
  * @property string $retake_date
  * @property string $comment
+ * @property integer $value
  *
  * @property Evaluation $evaluation
  * @property EvaluationSystem $evaluationSystem

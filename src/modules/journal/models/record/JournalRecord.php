@@ -29,9 +29,13 @@ use app\modules\directories\models\audience\Audience;
  * @property JournalRecordType $typeObj
  * @property Employee $teacher
  * @property Audience $audience
+ * @property JournalMark[] $journalMarks
  */
 class JournalRecord extends \yii\db\ActiveRecord
 {
+    const TYPE_ATTESTATION = 0;
+    const TYPE_EXAM = 1;
+
     /**
      * @inheritdoc
      */
@@ -61,45 +65,45 @@ class JournalRecord extends \yii\db\ActiveRecord
 //                 */
 //                return $model->typeObj->n_pp;
 //            }],
-            ['number_in_day', 'required', 'when' => function ($model) {
-                /**
-                 * @var $model JournalRecord
-                 */
-                return $model->typeObj->n_in_day;
-            }],
-            ['hours', 'required', 'when' => function ($model) {
-                /**
-                 * @var $model JournalRecord
-                 */
-                return $model->typeObj->hours;
-            }],
-            ['audience_id', 'required', 'when' => function ($model) {
-                /**
-                 * @var $model JournalRecord
-                 */
-                return $model->typeObj->audience;
-            }],
-            [['date'], 'safe'],
-            ['date', 'required', 'when' => function ($model) {
-                /**
-                 * @var $model JournalRecord
-                 */
-                return $model->typeObj->date;
-            }],
-            [['description', 'home_work'], 'string'],
-            ['description', 'required', 'when' => function ($model) {
-                /**
-                 * @var $model JournalRecord
-                 */
-                return $model->typeObj->description;
-            }],
-            ['home_work', 'required', 'when' => function ($model) {
-                /**
-                 * @var $model JournalRecord
-                 */
-                return $model->typeObj->homework;
-            }],
-            [['date'], 'validateData']
+//            ['number_in_day', 'required', 'when' => function ($model) {
+////                /**
+////                 * @var $model JournalRecord
+////                 */
+////                return $model->typeObj->n_in_day;
+////            }],
+////            ['hours', 'required', 'when' => function ($model) {
+////                /**
+////                 * @var $model JournalRecord
+////                 */
+////                return $model->typeObj->hours;
+////            }],
+////            ['audience_id', 'required', 'when' => function ($model) {
+////                /**
+////                 * @var $model JournalRecord
+////                 */
+////                return $model->typeObj->audience;
+////            }],
+////            [['date'], 'safe'],
+////            ['date', 'required', 'when' => function ($model) {
+////                /**
+////                 * @var $model JournalRecord
+////                 */
+////                return $model->typeObj->date;
+////            }],
+////            [['description', 'home_work'], 'string'],
+////            ['description', 'required', 'when' => function ($model) {
+////                /**
+////                 * @var $model JournalRecord
+////                 */
+////                return $model->typeObj->description;
+////            }],
+////            ['home_work', 'required', 'when' => function ($model) {
+////                /**
+////                 * @var $model JournalRecord
+////                 */
+////                return $model->typeObj->homework;
+////            }],
+////            [['date'], 'validateData']
         ];
     }
 
@@ -123,6 +127,24 @@ class JournalRecord extends \yii\db\ActiveRecord
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
+    }
+
+    public static function getTypes()
+    {
+        return [
+            self::TYPE_ATTESTATION => Yii::t('journal', 'Attestation'),
+            self::TYPE_EXAM => Yii::t('journal', 'Exam')
+        ];
+    }
+
+    public function getType()
+    {
+        return self::getTypes()[$this->type];
+    }
+
+    public function getJournalMarks()
+    {
+        return $this->hasMany(JournalMark::class, ['record_id' => 'id']);
     }
 
     /**
