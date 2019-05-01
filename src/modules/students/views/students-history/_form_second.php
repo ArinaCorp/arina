@@ -138,18 +138,20 @@ use yii\widgets\ActiveForm;
         case StudentsHistory::$TYPE_TRANSFER_COURSE :
             {
                 ?>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <?= $form->field($model, 'course')->widget(Select2::class, [
-                            'options' => ['placeholder' => Yii::t('app', 'Select')],
-                            'data' => StudentsHistory::getCurrentGroupById($model->parent_id)->getCoursesList(),
-                            'pluginOptions' => [
-                                'allowClear' => true,
-                            ]
-                        ]);
-                        ?>
+                <?php if ($model->parent_id): ?>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <?= $form->field($model, 'course')->widget(Select2::class, [
+                                'options' => ['placeholder' => Yii::t('app', 'Select')],
+                                'data' => StudentsHistory::getCurrentGroupById($model->parent_id)->getCoursesList(),
+                                'pluginOptions' => [
+                                    'allowClear' => true,
+                                ]
+                            ]);
+                            ?>
+                        </div>
                     </div>
-                </div>
+                <?php endif ?>
                 <?php
                 break;
             }
