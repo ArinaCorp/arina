@@ -406,7 +406,7 @@ class StudentsHistory extends ActiveRecord
     {
         $parent = self::findOne(['id' => $action_id]);
         $array = [];
-        if ($parent) {
+        if (!$parent) {
             return [
                 self::$TYPE_INCLUDE => Yii::t('app', 'Include'),
             ];
