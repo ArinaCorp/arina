@@ -84,6 +84,7 @@ class JournalMark extends \yii\db\ActiveRecord
     /**
      * @param $students Student[]
      * @param $list JournalRecord[]
+     * @return array
      */
     public static function getMap($students, $list)
     {
