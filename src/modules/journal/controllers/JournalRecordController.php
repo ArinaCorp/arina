@@ -4,14 +4,15 @@ namespace app\modules\journal\controllers;
 
 use app\modules\journal\models\record\JournalRecord;
 use app\modules\journal\models\record\JournalRecordFirst;
-use app\modules\load\models\Load;
-use Yii;
 use app\modules\journal\models\record\JournalRecordType;
 use app\modules\journal\models\record\JournalRecordTypeSearch;
+use app\modules\load\models\Load;
+use app\modules\rbac\filters\AccessControl;
+use nullref\core\interfaces\IAdminController;
+use Yii;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
-use nullref\core\interfaces\IAdminController;
 
 /**
  * JournalRecordController implements the CRUD actions for JournalRecordType model.
@@ -27,6 +28,16 @@ class JournalRecordController extends Controller implements IAdminController
                     'delete' => ['POST'],
                 ],
             ],
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => [],
+                        'roles' => ['teacher'],
+                    ]
+                ]
+            ]
         ];
     }
 
@@ -58,6 +69,22 @@ class JournalRecordController extends Controller implements IAdminController
     }
 
     /**
+     * Finds the JournalRecord  model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param integer $id
+     * @return JournalRecord the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModel($id)
+    {
+        if (($model = JournalRecord::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    /**
      * Creates a new JournalRecordType model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
@@ -69,8 +96,7 @@ class JournalRecordController extends Controller implements IAdminController
         $model->type = $type;
         $model->date = date('Y-m-d');
         $typeObj = JournalRecordType::findOne($type);
-        //     $model->teacher_id = Load::findOne($load_id)->employee_id;
-        $model->teacher_id = Load::getZaglushka()->employee_id;
+        $model->teacher_id = Load::findOne($load_id)->employee_id;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
@@ -126,21 +152,5 @@ class JournalRecordController extends Controller implements IAdminController
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
-    }
-
-    /**
-     * Finds the JournalRecord  model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return JournalRecord the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = JournalRecord::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
     }
 }

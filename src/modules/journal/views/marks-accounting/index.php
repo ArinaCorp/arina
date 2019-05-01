@@ -9,13 +9,13 @@
 use app\modules\journal\models\record\JournalMark;
 use app\modules\journal\models\record\JournalRecord;
 use app\modules\load\models\Load;
-use yii\bootstrap\ActiveForm;
-use yii\helpers\Html;
-use kartik\select2\Select2;
-use yii\helpers\Url;
-use yii\widgets\Pjax;
 use kartik\date\DatePicker;
+use kartik\select2\Select2;
 use rmrevin\yii\fontawesome\FA;
+use yii\helpers\Html;
+use yii\helpers\Url;
+use yii\widgets\ActiveForm;
+use yii\widgets\Pjax;
 
 /**
  * @var array $loads
@@ -41,6 +41,9 @@ $this->registerJS(<<<JS
             replaceRedirect: false,
             timeout: 999999,
         })
+    });
+    jQuery('body').on('submit', '#recordCreateFrom', function(){
+        jQuery('#recordCreateModal').modal('hide');
     });
 JS
 );
@@ -70,25 +73,40 @@ JS
         ]) ?>
     </div>
 
-    <p>
-        <?= Html::button(Yii::t('app', 'Add column'), ['class' => 'btn btn-success', 'data-toggle' => 'modal', 'data-target' => '#addColumnModal']) ?>
-        <?= Html::submitButton(FA::icon('floppy-o'), [
-            'title' => Yii::t('app', 'Save and stay here'),
-            'data-action' => 'save',
-            'class' => 'btn btn-info save-btn',
-        ]) ?>
-    </p>
 
-    <div class="modal fade" id="addColumnModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <?php Pjax::begin([
+        'id' => 'marks-accounting-widget',
+        'timeout' => 99999,
+    ]); ?>
+
+
+    <?php if ($load->id): ?>
+        <p>
+            <?= Html::button(Yii::t('app', 'Add column'), ['class' => 'btn btn-success', 'data-toggle' => 'modal', 'data-target' => '#recordCreateModal']) ?>
+            <?= Html::submitButton(FA::icon('floppy-o'), [
+                'title' => Yii::t('app', 'Save and stay here'),
+                'data-action' => 'save',
+                'class' => 'btn btn-info save-btn',
+            ]) ?>
+        </p>
+    <?php endif ?>
+
+    <div class="modal fade" id="recordCreateModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel"><?= Yii::t('app', 'Add column') ?></h4>
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title"><?= Yii::t('app', 'Add column') ?></h4>
                 </div>
-                <?php $form = ActiveForm::begin(); ?>
+                <?php $form = ActiveForm::begin([
+                    'options' => ['data-pjax' => ''],
+                    'id' => 'recordCreateFrom',
+                ]); ?>
                 <div class="modal-body">
+
+                    <?= $form->field($record, 'teacher_id')->hiddenInput()->label(false) ?>
+                    <?= $form->field($record, 'load_id')->hiddenInput()->label(false) ?>
 
                     <?= $form->field($record, 'type')->widget(Select2::class, [
                         'data' => JournalRecord::getTypes(),
@@ -115,18 +133,14 @@ JS
         </div>
     </div>
 
-    <?php Pjax::begin([
-        'id' => 'marks-accounting-widget',
-        'timeout' => 99999,
-    ]); ?>
 
-    <?php if ($load): ?>
+    <?php if ($load->id): ?>
         <table class="table table-striped table-condensed table-bordered table-hover">
             <thead>
             <tr>
                 <th><?= Yii::t('app', 'Student'); ?></th>
                 <?php foreach ($load->journalRecords as $record): ?>
-                    <th>
+                    <th style="width: 40px;">
                         <?= $record->date . ' ' . $record->getType() ?>
                     </th>
                 <?php endforeach ?>
@@ -137,7 +151,7 @@ JS
                 <tr>
                     <td><?= $student->getShortName(); ?></td>
                     <?php foreach ($load->journalRecords as $record): ?>
-                        <td> <?= Html::input('text', 'mark', $marks[$student->id][$record->id]) ?></td>
+                        <td> <?= Html::input('text', 'mark', $marks[$student->id][$record->id] ?? '') ?></td>
                     <?php endforeach ?>
                 </tr>
             <?php endforeach; ?>

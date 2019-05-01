@@ -8,7 +8,6 @@ use app\modules\journal\models\record\JournalRecord;
 use app\modules\plans\models\WorkSubject;
 use app\modules\students\models\Group;
 use nullref\useful\JsonBehavior;
-use nullref\useful\traits\MappableQuery;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
@@ -50,15 +49,11 @@ class Load extends ActiveRecord
     const HOURS_PROJECT = 2;
     const HOURS_CHECK = 3;
     const HOURS_CONTROL = 4;
-
+    protected static $HOURS = ['', '', '', '', ''];
+    public $workType;
     protected $WORK_RATE = [1, 1, 1];
     protected $PROJECT_RATE = [2, 1, 1];
     protected $DIPLOMA_RATE = [4, 4, 4];
-
-    public $workType;
-
-    protected static $HOURS = ['', '', '', '', ''];
-
 
     /**
      * @inheritdoc
@@ -101,18 +96,12 @@ class Load extends ActiveRecord
 
     /**
      * @param $group_id
-     * @param null $year_id
-     * @return static[]
-     *
-     * //@TODO remove or refactor it
+     * @param null $study_year_id
+     * @return Load[]
      */
-    public static function getArrayByGroupAndYear($group_id, $year_id = null)
+    public static function getArrayByGroupAndYear($group_id, $study_year_id = null)
     {
-        if (is_null($year_id)) {
-            $year_id = StudyYear::getCurrentYear()->id;
-        }
-        return [];
-        return self::findAll(['group_id' => $group_id, 'year_id' => $year_id]);
+        return self::findAll(['group_id' => $group_id, 'study_year_id' => $study_year_id]);
     }
 
     /**
@@ -597,16 +586,6 @@ class Load extends ActiveRecord
     }
 
     /**
-     * @param $group_id
-     * @param null $year_id
-     * @return array
-     */
-    public static function getListByGroupAndYear($group_id, $year_id = null)
-    {
-        return ArrayHelper::map(self::getArrayByGroupAndYear($group_id, $year_id), 'id', 'labelInfo');
-    }
-
-    /**
      * @return string
      */
     public function getFullTitle()
@@ -617,17 +596,5 @@ class Load extends ActiveRecord
     public function getJournalRecords()
     {
         return $this->hasMany(JournalRecord::class, ['load_id' => 'id']);
-    }
-
-    public static function getZaglushka()
-    {
-        WorkSubject::findOne(12);
-        $model = new Load();
-        $model->id = 228;
-        $model->work_subject_id = 3;
-        $model->study_year_id = 5;
-        $model->group_id = 8;
-        $model->employee_id = 1;
-        return $model;
     }
 }

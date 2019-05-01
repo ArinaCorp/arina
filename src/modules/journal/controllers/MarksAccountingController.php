@@ -9,12 +9,10 @@
 namespace app\modules\journal\controllers;
 
 use app\modules\directories\models\StudyYear;
-use app\modules\journal\models\accounting\MarksAccountingForm;
 use app\modules\journal\models\record\JournalMark;
 use app\modules\journal\models\record\JournalRecord;
 use app\modules\load\models\Load;
 use app\modules\rbac\filters\AccessControl;
-use app\modules\user\helpers\UserHelper;
 use app\modules\user\models\User;
 use nullref\core\interfaces\IAdminController;
 use Yii;
@@ -56,16 +54,31 @@ class MarksAccountingController extends Controller implements IAdminController
             ->joinWith('workSubject.subject')
             ->joinWith('group')
             ->where([
-//                    'employee_id' => $user->employee_id,
-//                    'study_year_id' => $current_year->id,
-                'employee_id' => 2,
-                'study_year_id' => 6,
+                'employee_id' => $user->employee_id,
+                'study_year_id' => $current_year->id,
+//                'employee_id' => 2,
+//                'study_year_id' => 6,
             ])->getMap('fullTitle');
 
         $marks = [];
 
-        if ($load_id) {
-            $load = Load::findOne($load_id);
+        $load = Load::findOne($load_id);
+        if (!$load) {
+            $load = new Load();
+        }
+
+        $load->employee_id = $user->employee_id;
+
+        $record = JournalRecord::create($load->id, $user->employee_id);
+
+        if (Yii::$app->request->isPost) {
+            //@TODO save with validation
+            if ($record->load(Yii::$app->request->post()) && $record->save(false)) {
+                $record = JournalRecord::create($load->id, $user->employee_id);
+            }
+        }
+
+        if ($load->id) {
 
             $marksRecords = JournalMark::find()
                 ->joinWith('evaluation')
@@ -78,32 +91,17 @@ class MarksAccountingController extends Controller implements IAdminController
             $records = $load->journalRecords;
 
             foreach ($students as $student) {
-                foreach ($records as $record) {
+                foreach ($records as $journalRecord) {
                     foreach ($marksRecords as $mark) {
-                        if ($student->id == $mark->student_id && $record->id == $mark->record_id) {
+                        if ($student->id == $mark->student_id && $journalRecord->id == $mark->record_id) {
                             $marks[$mark->student_id][$mark->record_id] = $mark->evaluation->value;
                         } else {
-                            $marks[$student->id][$record->id] = null;
+                            $marks[$student->id][$journalRecord->id] = null;
                         }
                     }
                 }
             }
         }
-
-        $record = new JournalRecord();
-
-        if (Yii::$app->request->isPost){
-            if ($record->load(Yii::$app->request->post())) {
-                $record->load_id = $load->id;
-                $record->teacher_id = $load->employee_id;
-                $record->save(false);
-            }
-
-            if (Yii::$app->request->post('save')) {
-
-            }
-        }
-
 
 
         return $this->render('index', [
