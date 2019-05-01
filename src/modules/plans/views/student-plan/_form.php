@@ -34,7 +34,7 @@ use yii\widgets\DetailView;
                 'data' => Student::getList(),
                 'options' => [
                     'id' => 'student-id',
-                    'placeholder' => Yii::t('app', 'Select speciality'),
+                    'placeholder' => Yii::t('app', 'Select ...'),
                     'onchange' => 'loadSubBlockSelect(event)'
                 ],
             ]) ?>
@@ -46,9 +46,11 @@ use yii\widgets\DetailView;
             <?= $form->field($model, 'work_plan_id')->widget(Select2::class, [
                 'data' => WorkPlan::getList(),
                 'options' => [
-                    'placeholder' => Yii::t('app', 'Select speciality'),
+                    'placeholder' => Yii::t('app', 'Select ...'),
                 ],
             ]) ?>
+
+            <?= $form->field($model, 'semester')->dropDownList([1 => 'Перший', 2 => 'Другий']); ?>
 
             <?= $model->student_id ? $form->field($model, 'subject_block_id')->widget(Select2::class, [
                 'data' => SubjectBlock::getSubjectBlocksForStudent($model->student_id),

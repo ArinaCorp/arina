@@ -94,6 +94,10 @@ return [
     'Work plan graph generation' => 'Генерація графіку для робочого плану',
     'Work plan editing' => 'Редагування робочого плану',
     'Work subject creation' => 'Додання предмету до робочого плану',
+    'Create student plan' => 'Створити індивідуальний план',
+    'Student plans' => 'Індивідуальні плани',
+    'Student plan' => 'Індивідуальний план студента',
+    'Student plan editing' => 'Редагування індивідуального плану студента',
     '' => '',
 
 

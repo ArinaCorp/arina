@@ -76,7 +76,7 @@ use app\modules\directories\models\subject\Subject;
         </div>
     </div>
 
-    <?php for ($i = 0; $i < 8; $i++): ?>
+    <?php for ($i = 0; $i < 4; $i++): //TODO $i < 8 default ?>
         <div class="span6 semester" id="semester_<?= $i; ?>">
             <h4><?php echo $i + 1; ?> <?= Yii::t('plans', 'Semester'); ?>:
                 <?= $model->workPlan->semesters[$i]; ?> <?= Yii::t('plans','OfWeeks');?>

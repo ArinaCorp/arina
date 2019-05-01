@@ -390,9 +390,7 @@ class WorkPlan extends ActiveRecord
      */
     public function getDocument()
     {
-        //@TODO move to component
-//        Yii::$app->excel->makeWorkPlan($this);
-        ExportToExcel::getDocument('WorkPlan',$this);
+        ExportToExcel::getDocument('WorkPlan', $this);
     }
 
     /**

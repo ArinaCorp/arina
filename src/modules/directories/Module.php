@@ -42,7 +42,7 @@ class Module extends BaseModule implements IAdminModule
                     'icon' => 'book',
                 ],
                 [
-                    'label' => Yii::t('app','Subject Blocks'),
+                    'label' => Yii::t('app','Subject blocks'),
                     'url' => ['/directories/subject-block'],
                     'icon' => 'th-list'
                 ],

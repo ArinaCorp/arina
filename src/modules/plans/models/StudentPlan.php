@@ -28,6 +28,7 @@ use app\modules\directories\models\subject\Subject;
  * @property integer $id
  * @property integer $student_id
  * @property integer $course
+ * @property integer $semester
  * @property integer $work_plan_id
  * @property integer $subject_block_id
  * @property string $created
@@ -65,8 +66,8 @@ class StudentPlan extends ActiveRecord
     {
         return [
             [['loadSubBlockSelect', 'loadSubjectBlock'], 'boolean'],
-            [['student_id', 'work_plan_id', 'subject_block_id', 'course'], 'integer'],
-            [['student_id', 'work_plan_id'], 'required'],
+            [['student_id', 'work_plan_id', 'subject_block_id', 'course', 'semester'], 'integer'],
+            [['student_id'], 'required'],
         ];
     }
 
@@ -88,6 +89,7 @@ class StudentPlan extends ActiveRecord
             'student_id' => Yii::t('app', 'Student'),
             'work_plan_id' => Yii::t('plans', 'The work plan for the base'),
             'subject_block_id' => Yii::t('app', 'Subject block'),
+            'semester' => Yii::t('app', 'Semester'),
         ];
     }
 

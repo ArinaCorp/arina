@@ -130,6 +130,10 @@ use yii\helpers\Url;
             if ($data->course == $course){
             $springSemester = $data->course * 2;
             $fallSemester = $springSemester - 1;
+            //TODO: Remove
+//            var_dump($springSemester);
+//            var_dump($fallSemester);
+//            var_dump($data->course);
             ?>
         <tr>
             <td>
@@ -292,7 +296,10 @@ use yii\helpers\Url;
                 else echo Html::a('редагувати', Url::to(['update', 'id' => $data->id])); ?>
             </td>
         </tr>
-        <?php } endforeach; ?>
+        <?php }  endforeach;
+            //TODO: Remove
+            //die;
+            ?>
         <!-- Підсумки -->
         <tr>
             <td colspan="4"><b>Всього</b></td>

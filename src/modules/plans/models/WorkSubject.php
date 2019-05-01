@@ -180,6 +180,13 @@ class WorkSubject extends ActiveRecord
      */
     public function getClasses($semester)
     {
+//        echo $semester;
+//        echo '<br>';
+//        var_dump($this->weeks);
+//        echo '<br>';
+//        var_dump($this->workPlan->semesters);
+//        die;
+        if($semester>3){ $semester=3;}
         return $this->weeks[$semester] * $this->workPlan->semesters[$semester];
     }
 

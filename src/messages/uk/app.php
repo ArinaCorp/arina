@@ -378,5 +378,14 @@ return [
     'Update Mark' => 'Оновити оцінку',
     'The record date should be greater or equal' => 'Дата запису має бути більша або рівна ',
     'Report from subject' => 'Звіт по предмету',
-    'Total amount' => 'Загальна кількість'
+    'Total amount' => 'Загальна кількість',
+    'Study form' => 'Форма навчання',
+    'Education program' => 'Освітня програма',
+    'Group curator' => 'Куратор групи',
+    'Selected subject' => 'Обраний предмет на вибір',
+    'Subject block' => 'Блок предметів на вибір студента',
+    'Subject blocks' => 'Блоки вибіркових предметів',
+    'Speciality title' => 'Назва спеціальності',
+    'Subject count' => 'Кількість предметів',
+    'Create subject block' => 'Створити блок предметів',
 ];

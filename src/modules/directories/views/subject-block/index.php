@@ -10,7 +10,7 @@ use yii\grid\GridView;
  * @var $dataProvider yii\data\ActiveDataProvider
  * @var $searchModel \app\modules\directories\models\subject_block\SubjectBlockSearch */
 
-$this->title = Yii::t('app', 'Subject Blocks');
+$this->title = Yii::t('app', 'Subject blocks');
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>
@@ -27,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a(Yii::t('app', 'Create Subject Block'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('app', 'Create subject block'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([

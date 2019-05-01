@@ -49,6 +49,8 @@ use yii\web\UploadedFile;
  * @property StudentSocialNetwork[] $socialNetworksList
  * @property Group[] $groups
  *
+ * @property integer $course
+ *
  *
  * @method loadWithRelations($data, $formName = null)
  * @method validateWithRelations()
@@ -369,6 +371,9 @@ class Student extends \yii\db\ActiveRecord
     }
 
 
+    /**
+     * @return \app\modules\directories\models\department\Department[]|\app\modules\directories\models\speciality_qualification\SpecialityQualification[]|\app\modules\directories\models\StudyYear[]|\app\modules\plans\models\StudyPlan[]|\app\modules\plans\models\WorkPlan[]|CuratorGroup[]|Group[]|Student[]|array|\yii\db\ActiveRecord[]
+     */
     public function getGroups()
     {
         return Group::find()->where(['id' => array_keys($this->getGroupArray())])->all();
@@ -422,6 +427,11 @@ class Student extends \yii\db\ActiveRecord
         unset($model, $formName, $post);
 
         return $models;
+    }
+
+    public function getCourse()
+    {
+        return $this->getGroups()[0]->getCourse();
     }
 
 

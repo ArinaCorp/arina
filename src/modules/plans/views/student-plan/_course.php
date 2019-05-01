@@ -8,6 +8,7 @@ use yii\helpers\Url;
 /**
  * @var $model StudentPlan
  * @var $course integer
+ * @var $semester integer
  */
 
 switch ($course) {
@@ -20,7 +21,7 @@ switch ($course) {
         $spring = 3;
         break;
     case 3:
-        // TODO: remove subtraction, it's a getZaglushka lol
+        // TODO: remove subtraction, it's
         $fall = 4 - 1;
         $spring = 5 - 2;
         break;
@@ -32,6 +33,7 @@ switch ($course) {
         $fall = 0;
         $spring = 1;
 }
+$semester = $semester == 2 ? 'spring' : 'fall';
 ?>
 
 <table class="table table-bordered">
@@ -75,14 +77,14 @@ switch ($course) {
             <tr>
                 <td><?= isset($subject->subject) ? $subject->subject->title : $subject->subject_id; ?></td>
 
-                <td><?= $subject->total[$fall] + $subject->total[$spring]; ?></td>
-                <td><?= $subject->getClasses($fall) + $subject->getClasses($spring); ?></td>
-                <td><?= $subject->lectures[$fall] + $subject->lectures[$spring]; ?></td>
-                <td><?= $subject->practices[$fall] + $subject->practices[$spring]; ?></td>
-                <td><?= $subject->lab_works[$fall] + $subject->lab_works[$spring]; ?></td>
-                <td><?= $subject->getSelfWork($fall) + $subject->getSelfWork($spring); ?></td>
+                <td><?= $subject->total[${$semester}]; ?></td>
+                <td><?= $subject->getClasses(${$semester}); ?></td>
+                <td><?= $subject->lectures[${$semester}]; ?></td>
+                <td><?= $subject->practices[${$semester}]; ?></td>
+                <td><?= $subject->lab_works[${$semester}]; ?></td>
+                <td><?= $subject->getSelfWork(${$semester}); ?></td>
                 <td><?= $subject->project_hours; ?></td>
-                <td><?= $subject->weeks[$fall] + $subject->weeks[$spring]; ?></td>
+                <td><?= $subject->weeks[${$semester}]; ?></td>
 
             </tr>
         <?php endif; ?>
@@ -112,14 +114,14 @@ switch ($course) {
             <tr>
                 <td><?= isset($subject->subject) ? $subject->subject->title : $subject->subject_id; ?></td>
 
-                <td><?= $subject->total[$fall] + $subject->total[$spring]; ?></td>
-                <td><?= $subject->getClasses($fall) + $subject->getClasses($spring); ?></td>
-                <td><?= $subject->lectures[$fall] + $subject->lectures[$spring]; ?></td>
-                <td><?= $subject->practices[$fall] + $subject->practices[$spring]; ?></td>
-                <td><?= $subject->lab_works[$fall] + $subject->lab_works[$spring]; ?></td>
-                <td><?= $subject->getSelfWork($fall) + $subject->getSelfWork($spring); ?></td>
+                <td><?= $subject->total[${$semester}]; ?></td>
+                <td><?= $subject->getClasses(${$semester}); ?></td>
+                <td><?= $subject->lectures[${$semester}]; ?></td>
+                <td><?= $subject->practices[${$semester}]; ?></td>
+                <td><?= $subject->lab_works[${$semester}]; ?></td>
+                <td><?= $subject->getSelfWork(${$semester}); ?></td>
                 <td><?= $subject->project_hours; ?></td>
-                <td><?= $subject->weeks[$fall] + $subject->weeks[$spring]; ?></td>
+                <td><?= $subject->weeks[${$semester}]; ?></td>
 
             </tr>
         <?php endif; ?>

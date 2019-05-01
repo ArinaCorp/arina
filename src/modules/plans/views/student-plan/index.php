@@ -63,16 +63,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'header' => Yii::t('app', 'Actions'),
                 'class' => ActionColumn::className(),
                 'contentOptions' => ['style' => 'width: 90px'],
-                'template' => '{view} {update} {export} {delete}',
-                'buttons' => [
-                    'export' => function ($url, $model) {
-                        $options = [
-                            'title' => Yii::t('plans', 'Export'),
-                        ];
-                        $url = Url::toRoute(['student-plan/export', 'id' => $model->id]);
-                        return Html::a('<span class="glyphicon glyphicon-file"></span>', Url::toRoute(['student-plan/export', 'id' => $model->id]), $options);
-                    }
-                ]
+                'template' => '{view} {update} {delete}',
             ],
         ],
     ]);

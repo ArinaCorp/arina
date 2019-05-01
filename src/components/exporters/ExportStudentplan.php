@@ -13,6 +13,7 @@ use app\components\ExportToExcel;
 use app\modules\plans\models\StudentPlan;
 use app\modules\plans\models\WorkPlan;
 use app\modules\plans\models\WorkSubject;
+use app\modules\students\models\Group;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
@@ -23,12 +24,14 @@ class ExportStudentplan
     /**
      * @param $spreadsheet Spreadsheet
      * @param $plan StudentPlan
+     * @return Spreadsheet
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \yii\base\InvalidConfigException
-     * @return Spreadsheet
      */
     public static function getSpreadsheet($spreadsheet, $plan)
     {
+        // Default semester is 1 (fall), optional is 2 (spring)
+        $semester = $plan->semester === 2 ? 'spring' : 'fall';
         $student = $plan->student;
         $group = $plan->student->groups[0];
         $workplan = $plan->workPlan;
@@ -37,35 +40,42 @@ class ExportStudentplan
         $activeSheet = $spreadsheet->getActiveSheet();
 
         // Set department head full name
-        $activeSheet->setCellValue('F4', $workplan->specialityQualification->speciality->department->head->getFullName());
+        $activeSheet->setCellValue('F4', $workplan->specialityQualification->speciality->department->title);
+        $activeSheet->setCellValue('F5', $workplan->specialityQualification->speciality->department->head->getFullName());
 
         // Set study year
-        $activeSheet->setCellValue('A8', $workplan->getYearTitle());
+        $activeSheet->setCellValue('A9', 'на ' . $workplan->getYearTitle() . 'н.р.');
+        // Semester
+        $activeSheet->setCellValue('A10', $plan->semester . ' семестр');
 
         // Set meta info (student, department, speciality)
 
         // Note, that all static data should be set before the dynamic data.
         // Because after the dynamic row insertion you'd have to calculate the offset for the rows that shifted after a table.
 
-        $activeSheet->setCellValue('A9', 'Студент: ' . $student->fullName);
-        $activeSheet->setCellValue('A10', 'Відділення: ' . $workplan->specialityQualification->speciality->department->title);
-        $activeSheet->setCellValue('A11', 'Спеціальність: ' . $workplan->specialityQualification->speciality->title);
+        $activeSheet->setCellValue('A11', 'Студент: ' . $student->fullName . ' (' . $group->title . ')');
+        $activeSheet->setCellValue('A12', 'Відділення: ' . $workplan->specialityQualification->speciality->department->title);
+        $activeSheet->setCellValue('A13', 'Спеціальність: ' . $workplan->specialityQualification->speciality->title);
+        $activeSheet->setCellValue('A14', 'Освітній рівень: ' . $workplan->specialityQualification->qualification->title);
 
         // Set date of creation
         $activeSheet->setCellValue('A24', Yii::$app->formatter->asDate($plan->created,'dd.mm.y'));
 
         // Start listing out the mandatory subjects
-        // Begin with headers, template expects them to come on row 15 and have 8 columns ( A - I included )
+        // Begin with headers, template expects them to come on row 17 and have 11 columns ( A - K included )
         // Headers could be included in template, but if we ever need to put localization here such approach would be nice.
-        $activeSheet->setCellValue('A15', '№ п/п');
-        $activeSheet->setCellValue('B15', 'Назва навчальної дисципліни');
-        $activeSheet->setCellValue('C15', 'Заг. обсяг год.');
-        $activeSheet->setCellValue('D15', 'Обсяг год. лек.');
-        $activeSheet->setCellValue('E15', 'Обсяг год. лаб.');
-        $activeSheet->setCellValue('F15', 'Обсяг год. практ.');
-        $activeSheet->setCellValue('G15', 'Самостійне опрац.');
-        $activeSheet->setCellValue('H15', 'Курс. проекти');
-        $activeSheet->setCellValue('I15', 'Цикл. ком.');
+        $headerRow =  17;
+        $activeSheet->setCellValue("A$headerRow", '№ п/п');
+        $activeSheet->setCellValue("B$headerRow", 'Назва навчальної дисципліни');
+        $activeSheet->setCellValue("C$headerRow", 'Кільк. кред. ЄКТС');
+        $activeSheet->setCellValue("D$headerRow", 'Заг. обсяг год.');
+        $activeSheet->setCellValue("E$headerRow", 'Обсяг год. лек.');
+        $activeSheet->setCellValue("F$headerRow", 'Обсяг год. лаб.');
+        $activeSheet->setCellValue("G$headerRow", 'Обсяг год. практ.');
+        $activeSheet->setCellValue("H$headerRow", 'Обсяг год. сам. роб..');
+        $activeSheet->setCellValue("I$headerRow", 'Курсов. КР(КП)');
+        $activeSheet->setCellValue("J$headerRow", 'Форма підс. контр.');
+        $activeSheet->setCellValue("K$headerRow", 'Цикл. ком.');
 
         // Now continue with the list of subjects themselves
         // Here we decide which parts of the arrays to take data from, depending on a course, we select proper semesters
@@ -94,19 +104,21 @@ class ExportStudentplan
         }
         // The row iterator begins with 16, the 17 is the row before which we insert others, to copy it's style
         // TODO: $mandatoryRow and $selectableRow are ambiguous names for variables
-        $mandatoryRow = 16;
+        $mandatoryRow = 18;
         $counter = 1;
         // Actual subject data
         foreach ($plan->getWorkSubjects() as $subject) {
             $activeSheet->setCellValue("A$mandatoryRow", $counter);
             $activeSheet->setCellValue("B$mandatoryRow", $subject->subject->title);
-            $activeSheet->setCellValue("C$mandatoryRow", $subject->total[$fall] + $subject->total[$spring]);
-            $activeSheet->setCellValue("D$mandatoryRow", $subject->lectures[$fall] + $subject->lectures[$spring]);
-            $activeSheet->setCellValue("E$mandatoryRow", $subject->lab_works[$fall] + $subject->lab_works[$spring]);
-            $activeSheet->setCellValue("F$mandatoryRow", $subject->practices[$fall] + $subject->practices[$spring]);
-            $activeSheet->setCellValue("G$mandatoryRow", $subject->getSelfWork($fall) + $subject->getSelfWork($spring));
-            $activeSheet->setCellValue("H$mandatoryRow", $subject->project_hours);
-            $activeSheet->setCellValue("I$mandatoryRow", $subject->cyclicCommission->short_title);
+            $activeSheet->setCellValue("C$mandatoryRow", ($subject->total[${$semester}])/30);
+            $activeSheet->setCellValue("D$mandatoryRow", $subject->total[${$semester}]);
+            $activeSheet->setCellValue("E$mandatoryRow", $subject->lectures[${$semester}]);
+            $activeSheet->setCellValue("F$mandatoryRow", $subject->lab_works[${$semester}]);
+            $activeSheet->setCellValue("G$mandatoryRow", $subject->practices[${$semester}]);
+            $activeSheet->setCellValue("H$mandatoryRow", $subject->getSelfWork(${$semester}));
+            $activeSheet->setCellValue("I$mandatoryRow", $subject->project_hours ? $subject->project_hours : '0');
+            $activeSheet->setCellValue("J$mandatoryRow", 'WIP');
+            $activeSheet->setCellValue("K$mandatoryRow", $subject->cyclicCommission->short_title);
             //Here is our row 17, well for the first iteration
             $activeSheet->insertNewRowBefore($mandatoryRow + 1);
             $mandatoryRow++;
@@ -124,13 +136,15 @@ class ExportStudentplan
             // Set up headers
             $activeSheet->setCellValue("A$selectableRow", '№ п/п');
             $activeSheet->setCellValue("B$selectableRow", 'Назва навчальної дисципліни');
-            $activeSheet->setCellValue("C$selectableRow", 'Заг. обсяг год.');
-            $activeSheet->setCellValue("D$selectableRow", 'Обсяг год. лек.');
-            $activeSheet->setCellValue("E$selectableRow", 'Обсяг год. лаб.');
-            $activeSheet->setCellValue("F$selectableRow", 'Обсяг год. практ.');
-            $activeSheet->setCellValue("G$selectableRow", 'Самостійне опрац.');
-            $activeSheet->setCellValue("H$selectableRow", 'Курс. проекти');
-            $activeSheet->setCellValue("I$selectableRow", 'Цикл. ком.');
+            $activeSheet->setCellValue("C$selectableRow", 'Кільк. кред. ЄКТС');
+            $activeSheet->setCellValue("D$selectableRow", 'Заг. обсяг год.');
+            $activeSheet->setCellValue("E$selectableRow", 'Обсяг год. лек.');
+            $activeSheet->setCellValue("F$selectableRow", 'Обсяг год. лаб.');
+            $activeSheet->setCellValue("G$selectableRow", 'Обсяг год. практ.');
+            $activeSheet->setCellValue("H$selectableRow", 'Обсяг год. сам. роб..');
+            $activeSheet->setCellValue("I$selectableRow", 'Курсов. КР(КП)');
+            $activeSheet->setCellValue("J$selectableRow", 'Форма підс. контр.');
+            $activeSheet->setCellValue("K$selectableRow", 'Цикл. ком.');
 
             $selectableRow++;
             $counter = 1;
@@ -139,13 +153,15 @@ class ExportStudentplan
             foreach ($plan->getWorkSubjectsBlock() as $subject) {
                 $activeSheet->setCellValue("A$selectableRow", $counter);
                 $activeSheet->setCellValue("B$selectableRow", $subject->subject->title);
-                $activeSheet->setCellValue("C$selectableRow", $subject->total[$fall] + $subject->total[$spring]);
-                $activeSheet->setCellValue("D$selectableRow", $subject->lectures[$fall] + $subject->lectures[$spring]);
-                $activeSheet->setCellValue("E$selectableRow", $subject->lab_works[$fall] + $subject->lab_works[$spring]);
-                $activeSheet->setCellValue("F$selectableRow", $subject->practices[$fall] + $subject->practices[$spring]);
-                $activeSheet->setCellValue("G$selectableRow", $subject->getSelfWork($fall) + $subject->getSelfWork($spring));
-                $activeSheet->setCellValue("H$selectableRow", $subject->project_hours);
-                $activeSheet->setCellValue("I$selectableRow", $subject->cyclicCommission->short_title);
+                $activeSheet->setCellValue("C$selectableRow", ($subject->total[${$semester}])/30);
+                $activeSheet->setCellValue("D$selectableRow", $subject->total[${$semester}]);
+                $activeSheet->setCellValue("E$selectableRow", $subject->lectures[${$semester}]);
+                $activeSheet->setCellValue("F$selectableRow", $subject->lab_works[${$semester}]);
+                $activeSheet->setCellValue("G$selectableRow", $subject->practices[${$semester}]);
+                $activeSheet->setCellValue("H$selectableRow", $subject->getSelfWork(${$semester}));
+                $activeSheet->setCellValue("I$selectableRow", $subject->project_hours ? $subject->project_hours : '0');
+                $activeSheet->setCellValue("J$selectableRow", 'WIP');
+                $activeSheet->setCellValue("K$selectableRow", $subject->cyclicCommission->short_title);
 
                 $activeSheet->insertNewRowBefore($selectableRow + 1);
                 $selectableRow++;

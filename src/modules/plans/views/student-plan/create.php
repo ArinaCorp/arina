@@ -7,7 +7,7 @@ use yii\widgets\Pjax;
 /* @var $this yii\web\View */
 /* @var $model \app\modules\plans\models\StudentPlan */
 
-$this->title = Yii::t('app', 'Create student plan');
+$this->title = Yii::t('plans', 'Create student plan');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Student plan'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

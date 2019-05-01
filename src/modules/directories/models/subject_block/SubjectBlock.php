@@ -89,6 +89,9 @@ class SubjectBlock extends ActiveRecord
             'speciality_id' => Yii::t('app', 'Speciality'),
             'course' => Yii::t('app', 'Course'),
             'selectedSubjects' => Yii::t('app', 'Selected subject'),
+            'created' => Yii::t('app','Created At'),
+            'subjectCount' => Yii::t('app','Subject count'),
+            'specialityTitle' => Yii::t('app','Speciality title'),
         ];
     }
 

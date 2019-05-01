@@ -6,8 +6,8 @@ use yii\web\View;
 /* @var $this View
  * @var $model \app\modules\directories\models\subject_block\SubjectBlock */
 
-$this->title = Yii::t('app', 'Create Subject Block');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Subject Blocks'), 'url' => ['index']];
+$this->title = Yii::t('app', 'Create subject block');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Subject blocks'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>

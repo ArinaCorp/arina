@@ -19,12 +19,13 @@ switch ($course) {
         $spring = 3;
         break;
     case 3:
-        $fall = 4;
-        $spring = 5;
+        // TODO: remove subtraction, it's a getZaglushka lol
+        $fall = 4 - 1;
+        $spring = 5 - 2;
         break;
     case 4:
-        $fall = 6;
-        $spring = 7;
+        $fall = 6 - 3;
+        $spring = 7 - 4;
         break;
     default:
         $fall = 0;

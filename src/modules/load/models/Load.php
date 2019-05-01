@@ -322,8 +322,15 @@ class Load extends ActiveRecord
     public function getProject($semester)
     {
         if ($semester & 1) {
+            //TODO: Remove debugs
+//            var_dump($this->spring_hours);
             $project = $this->fall_hours[self::HOURS_PROJECT];
         } else {
+//            if(count($this->spring_hours)<3) {
+//                var_dump($this->spring_hours);
+//                die;
+//            }
+//            die;
             $project = $this->spring_hours[self::HOURS_PROJECT];
         }
         return !empty($project) ? $project : '';
@@ -442,7 +449,11 @@ class Load extends ActiveRecord
     {
         if ($this->type == self::TYPE_PROJECT) return '';
         $spring = $this->course * 2;
-        $fall = $spring - 1;
+//        $fall = $spring - 1; TODO: Default
+        $fall = 1;
+//        var_dump($fall -1);
+//        var_dump($spring -1); die;
+//        var_dump($this->workSubject->getClasses($fall - 1) + $this->workSubject->getClasses($spring - 1)); die;
         return $this->workSubject->getClasses($fall - 1) + $this->workSubject->getClasses($spring - 1);
     }
 
@@ -595,6 +606,7 @@ class Load extends ActiveRecord
 
     public static function getZaglushka()
     {
+        echo 'ZAGLUSHI SVOE EBALO SOOQA'; die;
         WorkSubject::findOne(12);
         $model = new Load();
         $model->id = 228;

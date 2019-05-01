@@ -146,7 +146,7 @@ class StudentPlanController extends Controller implements IAdminController
     }
 
     /**
-     * @param $id
+     * @param $id integer
      * @throws NotFoundHttpException
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
@@ -154,7 +154,7 @@ class StudentPlanController extends Controller implements IAdminController
      */
     public function actionExport($id)
     {
-        $model=$this->findModel($id);
+        $model = $this->findModel($id);
         $model->getDocument();
     }
 

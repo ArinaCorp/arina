@@ -18,7 +18,7 @@ use yii\widgets\Pjax;
         [
             'label' => Yii::t('app', 'First').' '.Yii::t('app', 'course'),
             'active' => true,
-            'content' => $this->render('_course', ['model' => $model, 'course' => $model->course], true),
+            'content' => $this->render('_course', ['model' => $model, 'course' => $model->course, 'semester' => $model->semester], true),
         ],
     ],
 ]);

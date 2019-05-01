@@ -63,7 +63,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'title' => Yii::t('plans', 'Export'),
                         ];
                         $url = Url::toRoute(['work-plan/export', 'id' => $model->id]);
-                        return Html::a('<span class="glyphicon glyphicon-file"</span>', $url, $options);
+                        return Html::a('<span class="glyphicon glyphicon-file"></span>', $url, $options);
                     }
                 ]
             ],
