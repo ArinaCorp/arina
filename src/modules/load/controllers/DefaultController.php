@@ -244,7 +244,7 @@ class DefaultController extends Controller implements IAdminController
      */
     public function actionProject($id)
     {
-        $model = new Load('project');
+        $model = new Load(['scenario' => 'project']);
         $model->study_year_id = $id;
         $model->type = Load::TYPE_PROJECT;
 

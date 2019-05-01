@@ -116,6 +116,7 @@ class Load extends ActiveRecord
                 'value' => !empty($this->spring_hours) ? ArrayHelper::merge(self::$HOURS, $this->spring_hours) : self::$HOURS],
             [['consult'], 'validateConsultation'],
             [['employee_id'], 'required', 'on' => 'project'],
+            [['employee_id'], 'safe'],
         ];
     }
 
