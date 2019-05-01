@@ -13,7 +13,7 @@
     },
     "minimum-stability": "dev",
     "require": {
-        "php": ">=5.5.0",
+        "php": ">=7.1.0",
         "2amigos/yii2-date-picker-widget": "~1.0",
         "2amigos/yii2-date-time-picker-widget": "*",
         "dektrium/yii2-rbac": "^1.0@dev",

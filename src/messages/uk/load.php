@@ -17,22 +17,22 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Calculation and control works' => '',
-    'Consultations' => '',
+    'Calculation and control works' => 'Розрах. та контр. роб.',
+    'Consultations' => 'Консультації',
     'Consultations amount exceeds maximum' => '',
     'Course project' => '',
     'Course work' => '',
     'Diploma project' => '',
-    'Load creating' => 'Створення запису про навантаження',
-    'Loads' => 'Навантаження',
-    'Practice management, diploma control, state qualification commissions' => '',
+    'Practice management, diploma control, state qualification commissions' => 'Керівництво практикою, дипломне нормоконтроль, ДКК',
     'Project type' => '',
-    'Select study year' => 'Оберіть навчальний рік',
     'Total students' => '',
     'Total students on budget' => '',
     'Total students on contract' => '',
     '' => '',
     'Create load' => 'Створити навантаження',
     'Load' => 'Навантаження',
+    'Load creating' => 'Створення запису про навантаження',
+    'Loads' => 'Навантаження',
+    'Select study year' => 'Оберіть навчальний рік',
     'View loads' => 'Переглянути навантаження',
 ];

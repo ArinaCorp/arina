@@ -13,7 +13,6 @@ use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
-use yii\web\NotFoundHttpException;
 
 /**
  *
@@ -76,6 +75,44 @@ class Load extends ActiveRecord
     public static function tableName()
     {
         return '{{%load}}';
+    }
+
+    /**
+     * @return array
+     */
+    public static function getTypes()
+    {
+        return [
+            0 => Yii::t('load', 'Course work'),
+            1 => Yii::t('load', 'Course project'),
+            2 => Yii::t('load', 'Diploma project'),
+        ];
+    }
+
+    /**
+     * @param $group_id
+     * @param null $year_id
+     * @return array
+     */
+    public static function getListByGroupAndYear($group_id, $year_id = null)
+    {
+        return ArrayHelper::map(self::getArrayByGroupAndYear($group_id, $year_id), 'id', 'labelInfo');
+    }
+
+    /**
+     * @param $group_id
+     * @param null $year_id
+     * @return static[]
+     *
+     * //@TODO remove or refactor it
+     */
+    public static function getArrayByGroupAndYear($group_id, $year_id = null)
+    {
+        if (is_null($year_id)) {
+            $year_id = StudyYear::getCurrentYear()->id;
+        }
+        return [];
+        return self::findAll(['group_id' => $group_id, 'year_id' => $year_id]);
     }
 
     /**
@@ -335,9 +372,9 @@ class Load extends ActiveRecord
     public function getProject($semester)
     {
         if ($semester & 1) {
-            $project = $this->fall_hours[self::HOURS_PROJECT];
+            $project = $this->fall_hours[self::HOURS_PROJECT] ?? '';
         } else {
-            $project = $this->spring_hours[self::HOURS_PROJECT];
+            $project = $this->spring_hours[self::HOURS_PROJECT] ?? '';
         }
         return !empty($project) ? $project : '';
     }
@@ -349,9 +386,9 @@ class Load extends ActiveRecord
     public function getCheck($semester)
     {
         if ($semester & 1) {
-            $check = $this->fall_hours[self::HOURS_CHECK];
+            $check = $this->fall_hours[self::HOURS_CHECK] ?? '';
         } else {
-            $check = $this->spring_hours[self::HOURS_CHECK];
+            $check = $this->spring_hours[self::HOURS_CHECK] ?? '';
         }
         return !empty($check) ? $check : '';
     }
@@ -363,9 +400,9 @@ class Load extends ActiveRecord
     public function getControl($semester)
     {
         if ($semester & 1) {
-            $control = $this->fall_hours[self::HOURS_CONTROL];
+            $control = $this->fall_hours[self::HOURS_CONTROL] ?? '';
         } else {
-            $control = $this->spring_hours[self::HOURS_CONTROL];
+            $control = $this->spring_hours[self::HOURS_CONTROL] ?? '';
         }
         return !empty($control) ? $control : '';
     }
@@ -470,7 +507,6 @@ class Load extends ActiveRecord
         return $this->workSubject->getSelfwork($fall - 1) + $this->workSubject->getSelfwork($spring - 1);
     }
 
-
     public function validateConsultation()
     {
         if (!$this->hasErrors() && $this->scenario != 'project') {
@@ -527,43 +563,13 @@ class Load extends ActiveRecord
     }
 
     /**
-     * @return array
+     * @return string
      */
-    public static function getTypes()
+    public function getLabelITitle()
     {
-        return [
-            0 => Yii::t('load', 'Course work'),
-            1 => Yii::t('load', 'Course project'),
-            2 => Yii::t('load', 'Diploma project'),
-        ];
-    }
-
-    protected function findModel($id)
-    {
-        if (($model = self::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
-    }
-
-    /**
-     * @param $group_id
-     * @param null $year_id
-     * @return static[]
-     */
-    public static function getArrayByGroupAndYear($group_id, $year_id = null)
-    {
-        if (is_null($year_id)) {
-            $year_id = StudyYear::getCurrentYear()->id;
-        }
-        if ($year_id == 5 && $group_id == 8) {
-            $models = [];
-            $models[] = self::getZaglushka();
-            return $models;
-        }
-        return [];
-        return self::findAll(['group_id' => $group_id, 'year_id' => $year_id]);
+        //@TODO move html from model
+        return
+            "<h2>" . Yii::t('app', 'Subject') . ':' . $this->getSubjectName() . '</h2><h3>' . Yii::t('app', 'Teacher ID') . ': ' . $this->getTeacherFullName() . "</h3>";
     }
 
     /**
@@ -579,18 +585,12 @@ class Load extends ActiveRecord
      */
     public function getTeacherFullName()
     {
-        return $this->employee->getFullName();
+        return $this->employee ? $this->employee->getShortName() : Yii::t('base', 'Not selected');
     }
 
     /**
      * @return string
      */
-    public function getLabelITitle()
-    {
-        return
-            "<h2>" . Yii::t('app', 'Subject') . ':' . $this->getSubjectName() . '</h2><h3>' . Yii::t('app', 'Teacher ID') . ': ' . $this->getTeacherFullName() . "</h3>";
-    }
-
     public function getLabelInfo()
     {
         return Yii::t('app', 'Subject') . ':' . $this->getSubjectName() . '.' . Yii::t('app', 'Teacher ID') . ': ' . $this->getTeacherFullName();

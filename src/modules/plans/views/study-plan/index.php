@@ -1,5 +1,6 @@
 <?php
 
+use app\modules\plans\models\StudyPlan;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\grid\GridView;
@@ -43,13 +44,17 @@ $this->params['breadcrumbs'][] = $this->title;
                 'contentOptions' => ['style' => 'width: 750px'],
                 'label' => 'title',
                 'format' => 'raw',
-                'value' => function ($model) {
+                'value' => function (StudyPlan $model) {
                     return Html::a($model->getTitle(), Url::toRoute(['study-plan/view', 'id' => $model->id]));
                 },
             ],
             [
-                'header' => Yii::t('app', 'Updated'),
-                'value' => 'updatedForm'
+                'attribute' => 'updated',
+                'format'=>'datetime'
+            ],
+            [
+                'attribute' => 'created',
+                'format'=>'datetime'
             ],
             [
                 'header' => Yii::t('app', 'Actions'),

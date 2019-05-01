@@ -8,7 +8,6 @@
 namespace app\modules\employee\models;
 
 
-use app\modules\directories\models\cyclic_commission\CyclicCommission;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -89,7 +88,6 @@ class Teacher extends Employee
     {
         return $this->hasOne(CyclicCommission::class, ['id' => 'cyclic_commission_id']);
     }
-
 
 
     function defaultScope()

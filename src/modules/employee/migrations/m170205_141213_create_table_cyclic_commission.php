@@ -20,15 +20,4 @@ class m170205_141213_create_table_cyclic_commission extends Migration
     {
         $this->dropTable('{{%cyclic_commission}}');
     }
-
-    /*
-    // Use safeUp/safeDown to run migration code within a transaction
-    public function safeUp()
-    {
-    }
-
-    public function safeDown()
-    {
-    }
-    */
 }

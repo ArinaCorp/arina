@@ -58,3 +58,8 @@
 .form-template {
     display: none;
 }
+#select2-group-speciality_qualifications_id-results .select2-results__option .select2-results__option,
+#select2-workplan-speciality_qualification_id-results .select2-results__option .select2-results__option,
+#select2-studyplan-speciality_qualification_id-results .select2-results__option .select2-results__option {
+    padding-left: 35px;
+}

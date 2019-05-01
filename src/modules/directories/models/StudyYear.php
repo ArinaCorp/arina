@@ -3,6 +3,7 @@
 namespace app\modules\directories\models;
 
 use app\modules\directories\models\speciality_qualification\SpecialityQualification;
+use app\modules\load\models\Load;
 use app\modules\plans\models\WorkPlan;
 use nullref\useful\traits\Mappable;
 use Yii;
@@ -17,6 +18,7 @@ use yii\db\ActiveRecord;
  * @property integer $active
  *
  * @property WorkPlan[] $workPlans
+ * @property Load[] $loads
  */
 class StudyYear extends ActiveRecord
 {
@@ -83,6 +85,14 @@ class StudyYear extends ActiveRecord
     }
 
     /**
+     * @return ActiveQuery
+     */
+    public static function find()
+    {
+        return parent::find();
+    }
+
+    /**
      * @return array
      */
     public static function getYearList()
@@ -112,6 +122,14 @@ class StudyYear extends ActiveRecord
     public function getWorkPlans()
     {
         return $this->hasMany(WorkPlan::class, ['study_year_id' => 'id'])->alias('workPlans');
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getLoads()
+    {
+        return $this->hasMany(WorkPlan::class, ['study_year_id' => 'id'])->alias('loads');
     }
 
     /**

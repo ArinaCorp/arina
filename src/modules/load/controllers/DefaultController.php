@@ -3,9 +3,9 @@
 namespace app\modules\load\controllers;
 
 use app\components\DepDropHelper;
-use app\modules\directories\models\cyclic_commission\CyclicCommission;
 use app\modules\directories\models\StudyYear;
 use app\modules\directories\models\StudyYearSearch;
+use app\modules\employee\models\CyclicCommission;
 use app\modules\load\models\Load;
 use app\modules\load\models\LoadSearch;
 use app\modules\plans\models\WorkSubject;
@@ -17,6 +17,7 @@ use yii\filters\VerbFilter;
 use yii\helpers\Json;
 use yii\helpers\Url;
 use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 
 //@TODO refactor to yii2
 class DefaultController extends Controller implements IAdminController
@@ -56,8 +57,11 @@ class DefaultController extends Controller implements IAdminController
      */
     public function actionIndex()
     {
+        $studyYearIds = Load::find()->select('study_year_id')->groupBy('study_year_id')->column();
         $searchModel = new StudyYearSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams
+            , StudyYear::find()->andWhere(['id' => $studyYearIds])
+        );
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -75,24 +79,11 @@ class DefaultController extends Controller implements IAdminController
         if (isset($_POST['study_year'])) {
 
             $this->generateLoadFor($_POST['study_year']);
+//            die;
             return $this->redirect(Url::to('index'));
         }
 
         return $this->render('create');
-    }
-
-    /**
-     * @param $id
-     * @return \yii\web\Response
-     * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
-     */
-    public function actionDelete($id)
-    {
-        $model = Load::findOne($id);
-        $year = $model->study_year_id;
-        $model->delete();
-        return $this->redirect(Url::to('view', ['id' => $year]));
     }
 
     /**
@@ -119,14 +110,28 @@ class DefaultController extends Controller implements IAdminController
                     $spring = $course * 2;
                     $fall = $spring - 1;
                     $group = Group::findOne(['title' => $title]);
-                    if (!empty($subject->total[$fall-1]) || !empty($subject->total[$spring-1])) {
+//                    if (!$group) {
+//                        echo $title;
+//                        die;
+//                    }
+//                    print_r($title);
+//                    echo '<br>';
+//                    print_r($course);
+//                    echo '<br>';
+//                    print_r($subject->total);
+//                    echo '<br>';
+//                    print_r($fall - 1);
+//                    echo '<br>';
+//                    print_r($spring - 1);
+//                    echo '<br>';
+                    if (!empty($subject->total[$fall - 1]) || !empty($subject->total[$spring - 1])) {
                         $this->getNewLoad($year, $subject, $group, $course, Load::TYPE_LECTURES);
 
-                        if ($subject->dual_practice && (!empty($subject->practices[$fall-1]) || !empty($subject->practices[$spring-1]))) {
+                        if ($subject->dual_practice && (!empty($subject->practices[$fall - 1]) || !empty($subject->practices[$spring - 1]))) {
                             $this->getNewLoad($year, $subject, $group, $course, Load::TYPE_PRACTICES);
                         }
 
-                        if ($subject->dual_lab_work && (!empty($subject->lab_works[$fall-1]) || !empty($subject->lab_works[$spring-1]))) {
+                        if ($subject->dual_lab_work && (!empty($subject->lab_works[$fall - 1]) || !empty($subject->lab_works[$spring - 1]))) {
                             $this->getNewLoad($year, $subject, $group, $course, Load::TYPE_LAB_WORKS);
                         }
 
@@ -161,24 +166,34 @@ class DefaultController extends Controller implements IAdminController
         $students[2] = $group->getCountByPayment(2);
         $model->students = $students;
         $model->save();
+        print_r($model->errors);
+    }
+
+    /**
+     * @param $id
+     * @return \yii\web\Response
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    public function actionDelete($id)
+    {
+        $model = Load::findOne($id);
+        $year = $model->study_year_id;
+        $model->delete();
+        return $this->redirect(Url::to('view', ['id' => $year]));
     }
 
     /**
      * @param $id
      * @return string|\yii\web\Response
+     * @throws NotFoundHttpException
      */
     public function actionUpdate($id)
     {
-        /**
-         * @var Load $model
-         */
-        $model = Load::findOne($id);
+        $model = $this->findModel($id);
 
-        if (isset($_POST['Load'])) {
-            $model->setAttributes($_POST['Load'], false);
-            if ($model->save()) {
-                return $this->redirect(Url::to('view', ['id' => $model->study_year_id]));
-            }
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->study_year_id]);
         }
 
         return $this->render('update', ['model' => $model]);
@@ -186,12 +201,25 @@ class DefaultController extends Controller implements IAdminController
 
     /**
      * @param $id
+     * @return Load|null
+     * @throws NotFoundHttpException
+     */
+    protected function findModel($id)
+    {
+        if (($model = Load::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    /**
+     * @param $id StudyYear Id
      * @return string
      */
     public function actionView($id)
     {
         $model = new LoadSearch();
-
 
         $dataProvider = $model->search(Yii::$app->request->queryParams);
         $year = StudyYear::findOne($id);
@@ -234,6 +262,8 @@ class DefaultController extends Controller implements IAdminController
     /**
      * @param $id
      * @return string|\yii\web\Response
+     *
+     * @TODO remove if doesn't use
      */
     public function actionEdit($id)
     {
@@ -256,6 +286,8 @@ class DefaultController extends Controller implements IAdminController
     /**
      * @param $id
      * @return string
+     *
+     * @TODO remove if doesn't use
      */
     public function actionDoc($id)
     {
@@ -269,7 +301,7 @@ class DefaultController extends Controller implements IAdminController
                 $model->generate();
             }
         }
-        return $this->render('doc', ['model' => $model, 'year'=>$year]);
+        return $this->render('doc', ['model' => $model, 'year' => $year]);
     }
 
     /**
