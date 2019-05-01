@@ -1,16 +1,15 @@
 <?php
 
-use yii\helpers\Html;
-use yii\widgets\ActiveForm;
-use app\modules\students\models\Student;
 use app\modules\directories\models\speciality_qualification\SpecialityQualification;
-use app\modules\students\models\StudentsHistory;
-use kartik\select2\Select2;
-use kartik\depdrop\DepDrop;
-use kartik\date\DatePicker;
-use yii\helpers\Url;
-use app\modules\directories\models\StudyYear;
 use app\modules\students\models\Group;
+use app\modules\students\models\Student;
+use app\modules\students\models\StudentsHistory;
+use kartik\date\DatePicker;
+use kartik\depdrop\DepDrop;
+use kartik\select2\Select2;
+use yii\helpers\Html;
+use yii\helpers\Url;
+use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\students\models\StudentsHistoryBefore */
@@ -23,28 +22,28 @@ use app\modules\students\models\Group;
     ]); ?>
     <div class="row">
         <div class="col-sm-6">
-            <?= $form->field($model, 'student_id')->widget(Select2::class,
-                [
-                    'data' =>
-                        [
-                            $model->student_id => Student::findOne(['id' => $model->student_id])->fullNameAndCode,
-                        ],
-                    'disabled' => true,
-                    'readonly' => true,
-                ])
+            <?= $form->field($model, 'student_id')->widget(Select2::class, [
+                'data' => [
+                    $model->student_id => Student::findOne(['id' => $model->student_id])->fullNameAndCode,
+                ],
+                'disabled' => true,
+                'readonly' => true,
+            ])
             ?>
         </div>
         <div class="col-sm-6">
-            <?= $form->field($model, 'parent_id')->widget(Select2::class,
-                [
-                    'data' =>
-                        [
-                            $model->parent_id => StudentsHistory::getStudentParentsList($model->student_id)[$model->parent_id],
-                        ],
+            <?php if ($model->parent_id): ?>
+                <?= $form->field($model, 'parent_id')->widget(Select2::class, [
+                    'data' => [
+                        $model->parent_id => StudentsHistory::getStudentParentsList($model->student_id)[$model->parent_id],
+                    ],
                     'disabled' => true,
                     'readonly' => true,
                 ]);
-            ?>
+                ?>
+            <?php else: ?>
+                <?= $form->field($model, 'parent_id')->hiddenInput()->label(false) ?>
+            <?php endif ?>
         </div>
     </div>
     <div class="row">
@@ -136,57 +135,60 @@ use app\modules\students\models\Group;
         <?
         break;
         }
-        case StudentsHistory::$TYPE_TRANSFER_COURSE : {
-            ?>
-            <div class="row">
-                <div class="col-sm-6">
-                    <?= $form->field($model, 'course')->widget(Select2::class, [
-                        'options' => ['placeholder' => Yii::t('app', 'Select')],
-                        'data' => StudentsHistory::getCurrentGroupById($model->parent_id)->getCoursesList(),
-                        'pluginOptions' => [
-                            'allowClear' => true,
-                        ]
-                    ]);
-                    ?>
+        case StudentsHistory::$TYPE_TRANSFER_COURSE :
+            {
+                ?>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <?= $form->field($model, 'course')->widget(Select2::class, [
+                            'options' => ['placeholder' => Yii::t('app', 'Select')],
+                            'data' => StudentsHistory::getCurrentGroupById($model->parent_id)->getCoursesList(),
+                            'pluginOptions' => [
+                                'allowClear' => true,
+                            ]
+                        ]);
+                        ?>
+                    </div>
                 </div>
-            </div>
-            <?php
-            break;
-        }
-        case StudentsHistory::$TYPE_TRANSFER_GROUP : {
-            ?>
-            <div class="row">
-                <div class="col-sm-6">
-                    <?= $form->field($model, 'group_id')->widget(Select2::class, [
-                        'options' => ['placeholder' => Yii::t('app', 'Select')],
-                        'data' => Group::findOne(['id' => $model->data['current']['group_id']]),
-                        'pluginOptions' => [
-                            'allowClear' => true,
-                        ]
-                    ]);
-                    ?>
+                <?php
+                break;
+            }
+        case StudentsHistory::$TYPE_TRANSFER_GROUP :
+            {
+                ?>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <?= $form->field($model, 'group_id')->widget(Select2::class, [
+                            'options' => ['placeholder' => Yii::t('app', 'Select')],
+                            'data' => Group::findOne(['id' => $model->data['current']['group_id']]),
+                            'pluginOptions' => [
+                                'allowClear' => true,
+                            ]
+                        ]);
+                        ?>
+                    </div>
                 </div>
-            </div>
-            <?php
-            break;
-        }
-        case StudentsHistory::$TYPE_TRANSFER_FOUNDING : {
-            ?>
-            <div class="row">
-                <div class="col-sm-6">
-                    <?= $form->field($model, 'payment_type')->widget(Select2::class, [
-                        'options' => ['placeholder' => Yii::t('app', 'Select')],
-                        'data' => StudentsHistory::getPayments(),
-                        'pluginOptions' => [
-                            'allowClear' => true,
-                        ]
-                    ]);
-                    ?>
+                <?php
+                break;
+            }
+        case StudentsHistory::$TYPE_TRANSFER_FOUNDING :
+            {
+                ?>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <?= $form->field($model, 'payment_type')->widget(Select2::class, [
+                            'options' => ['placeholder' => Yii::t('app', 'Select')],
+                            'data' => StudentsHistory::getPayments(),
+                            'pluginOptions' => [
+                                'allowClear' => true,
+                            ]
+                        ]);
+                        ?>
+                    </div>
                 </div>
-            </div>
-            <?php
-            break;
-        }
+                <?php
+                break;
+            }
         }
         ?>
     </div>
