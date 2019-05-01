@@ -1,6 +1,6 @@
 <?php
 
-use app\modules\directories\models\cyclic_commission\CyclicCommission;
+use app\modules\employee\models\CyclicCommission;
 use app\modules\directories\models\position\Position;
 use app\modules\employee\models\Employee;
 use yii\grid\GridView;

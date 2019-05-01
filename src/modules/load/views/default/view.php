@@ -9,12 +9,13 @@
  */
 
 
-use app\modules\directories\models\cyclic_commission\CyclicCommission;
+use app\modules\employee\models\CyclicCommission;
 use kartik\depdrop\DepDrop;
 use kartik\select2\Select2;
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
 use yii\helpers\Url;
+//@TODO replace labels by Yii::t
 
 //$this->breadcrumbs = array(
 //    Yii::t('base', 'Load') => $this->createUrl('index'),
@@ -83,16 +84,15 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="row">
         <div class="col-sm-4">
-            <?= $form->field($model, 'employee_id')->widget(DepDrop::class,
-                [
-                    'data' => $employeeData,
-                    'type' => DepDrop::TYPE_SELECT2,
-                    'pluginOptions' => [
-                        'depends' => ['loadsearch-commission_id'],
-                        'url' => Url::to(['get-employees']),
-                        'placeholder' => Yii::t('app', 'Choose employee'),
-                    ]
-                ]) ?>
+            <?= $form->field($model, 'employee_id')->widget(DepDrop::class, [
+                'data' => $employeeData,
+                'type' => DepDrop::TYPE_SELECT2,
+                'pluginOptions' => [
+                    'depends' => ['loadsearch-commission_id'],
+                    'url' => Url::to(['get-employees']),
+                    'placeholder' => Yii::t('app', 'Choose employee'),
+                ]
+            ]) ?>
         </div>
     </div>
 

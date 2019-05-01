@@ -17,7 +17,7 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Cancel' => '',
+    'Cancel' => 'Відміна',
     'Create' => '',
     'Load' => '',
     'Not selected' => 'Не задано',

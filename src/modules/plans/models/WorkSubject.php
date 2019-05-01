@@ -10,7 +10,7 @@ use yii\helpers\ArrayHelper;
 use nullref\useful\behaviors\JsonBehavior;
 
 use app\modules\directories\models\subject\Subject;
-use app\modules\directories\models\cyclic_commission\CyclicCommission;
+use app\modules\employee\models\CyclicCommission;
 use app\modules\directories\models\StudyYear;
 
 /**
@@ -180,7 +180,7 @@ class WorkSubject extends ActiveRecord
      */
     public function getClasses($semester)
     {
-        return $this->weeks[$semester] * $this->workPlan->semesters[$semester];
+        return $this->weeks[$semester] ?? 0 * $this->workPlan->semesters[$semester] ?? 0;
     }
 
     /**

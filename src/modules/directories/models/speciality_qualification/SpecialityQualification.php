@@ -65,9 +65,9 @@ class SpecialityQualification extends ActiveRecord
         foreach ($departments as $department) {
             $list[$department->title] = [];
             foreach ($department->specialities as $speciality) {
-                $list[$department->title][$speciality->title] = [];
+                $list[$department->title]['- ' . $speciality->title] = [];
                 foreach ($speciality->specialityQualifications as $specialityQualification) {
-                    $list[$department->title][$speciality->title][$specialityQualification->id] = $specialityQualification->title;
+                    $list[$department->title]['- ' . $speciality->title][$specialityQualification->id] = $specialityQualification->qualification->title;
                 }
             }
         }
@@ -219,6 +219,14 @@ class SpecialityQualification extends ActiveRecord
         }
         array_multisort($list);
         return $list;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFullTitle()
+    {
+        return $this->speciality->title . ' | ' . $this->qualification->title;
     }
 
 }

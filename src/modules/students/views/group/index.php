@@ -40,7 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
             ],
 
-            // 'group_leader_id',
+             'specialityQualification.fullTitle',
 
             [
                 'class' => 'yii\grid\ActionColumn',

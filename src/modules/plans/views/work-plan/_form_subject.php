@@ -6,7 +6,7 @@ use yii\widgets\Pjax;
 use kartik\select2\Select2;
 use yii\bootstrap\Html;
 
-use app\modules\directories\models\cyclic_commission\CyclicCommission;
+use app\modules\employee\models\CyclicCommission;
 use app\modules\plans\models\WorkSubject;
 use app\modules\directories\models\subject\Subject;
 
@@ -97,7 +97,7 @@ use app\modules\directories\models\subject\Subject;
                         "classes_$i",
                         '',
                         ['type' => 'number', 'min' => 0, 'placeholder' => $model->getAttributeLabel('classes'),
-                            'readonly' => true, 'style' => 'width:140px']
+                            'readonly' => true, 'style' => 'width:140px', 'class'=>'form-control']
                     ); ?>
                 </div>
 

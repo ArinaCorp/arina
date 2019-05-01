@@ -214,8 +214,8 @@ class WorkPlan extends ActiveRecord
             'id' => 'ID',
             'study_year_id' => Yii::t('app', 'Study year'),
             'speciality_qualification_id' => Yii::t('app', 'Speciality qualification'),
-            'created' => Yii::t('plans', 'Date of creation'),
-            'updated' => Yii::t('plans', 'Date of update'),
+            'created' => Yii::t('app', 'Created at'),
+            'updated' => Yii::t('app', 'Updated at'),
             'study_plan_origin' => Yii::t('plans', 'The study plan for the base'),
             'work_plan_origin' => Yii::t('plans', 'The work plan for the base'),
             'title' => Yii::t('plans', 'Work plan'),
@@ -227,7 +227,7 @@ class WorkPlan extends ActiveRecord
      */
     public function getTitle()
     {
-        return $this->getSpecialityQualificationTitle() . ' - ' . $this->getYearTitle();
+        return $this->specialityQualification->getFullTitle() . ' - ' . $this->getYearTitle();
     }
 
     public function checkOrigin()
@@ -393,17 +393,6 @@ class WorkPlan extends ActiveRecord
         //@TODO move to component
 //        Yii::$app->excel->makeWorkPlan($this);
         ExportToExcel::getDocument('WorkPlan',$this);
-    }
-
-    /**
-     * @return string
-     */
-    public function getSpecialityQualificationTitle()
-    {
-        if (!empty($this->specialityQualification)) {
-            return $this->specialityQualification->title;
-        }
-        return '';
     }
 
 }

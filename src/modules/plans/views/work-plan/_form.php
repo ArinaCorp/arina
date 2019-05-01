@@ -49,7 +49,7 @@ use yii\widgets\Pjax;
     <div class="row">
         <div class="col-sm-6">
             <?= $form->field($model, 'study_year_id')->widget(Select2::class, [
-                'data' => StudyYear::getMap('year_start'),
+                'data' => StudyYear::getYearList(),
                 'id' => 'study_year_id',
                 'options' => [
                     'placeholder' => $model->getAttributeLabel('study_year_id')

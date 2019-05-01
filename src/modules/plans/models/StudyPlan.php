@@ -47,18 +47,18 @@ class StudyPlan extends ActiveRecord
     }
 
     /**
-     * @param $id
+     * @param $headId
      * @return array
      */
-    public static function getList($id = NULL)
+    public static function getList($headId = NULL)
     {
         /** @var Department $department */
-        if (isset($id)) {
-            $department = Department::find()->where(['head_id' => $id])->all();
+        if (isset($headId)) {
+            $department = Department::find()->where(['head_id' => $headId])->all();
             if (isset($department)) {
                 $list = [];
                 foreach ($department->specialities as $speciality) {
-                    $list[$speciality->title] = ArrayHelper::map($speciality->studyPlans, 'id', 'title');
+                    $list[$speciality->title] = ArrayHelper::map($speciality->studyPlans, 'id', 'titleWithDate');
                 }
                 return $list;
             }
@@ -80,10 +80,10 @@ class StudyPlan extends ActiveRecord
                             ->column();
                         return ArrayHelper::map(StudyPlan::find()
                             ->andWhere(['speciality_qualification_id' => $spQIds])
-                            ->all(), 'id', 'title');
+                            ->all(), 'id', 'titleWithDate');
                     }
                 } else {
-                    return ArrayHelper::map(StudyPlan::find()->all(), 'id', 'title');
+                    return ArrayHelper::map(StudyPlan::find()->all(), 'id', 'titleWithDate');
                 }
             }
         }
@@ -103,7 +103,7 @@ class StudyPlan extends ActiveRecord
                 'class' => TimestampBehavior::class,
                 'createdAtAttribute' => 'created',
                 'updatedAtAttribute' => 'updated',
-            ]
+            ],
         ];
     }
 
@@ -190,8 +190,8 @@ class StudyPlan extends ActiveRecord
             'speciality_qualification_id' => Yii::t('app', 'Speciality qualification'),
             'semesters' => Yii::t('plans', 'Semesters'),
             'graph' => Yii::t('plans', 'Graph'),
-            'created' => Yii::t('app', 'Date of creation'),
-            'updated' => Yii::t('app', 'Date of update'),
+            'created' => Yii::t('app', 'Created at'),
+            'updated' => Yii::t('app', 'Updated at'),
         ];
     }
 
@@ -246,7 +246,15 @@ class StudyPlan extends ActiveRecord
      */
     public function getTitle()
     {
-        return $this->specialityQualification->title . ' - ' . date('d.m.Y H:i', $this->created);
+        return $this->specialityQualification->getFullTitle();
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitleWithDate()
+    {
+        return $this->getTitle() . ' - ' . date('d.m.Y H:i', $this->created);
     }
 
     /**
