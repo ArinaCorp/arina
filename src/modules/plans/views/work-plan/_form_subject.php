@@ -6,7 +6,7 @@ use yii\widgets\Pjax;
 use kartik\select2\Select2;
 use yii\bootstrap\Html;
 
-use app\modules\directories\models\cyclic_commission\CyclicCommission;
+use app\modules\employee\models\CyclicCommission;
 use app\modules\plans\models\WorkSubject;
 use app\modules\directories\models\subject\Subject;
 
@@ -37,7 +37,7 @@ use app\modules\directories\models\subject\Subject;
 
     <div class="row">
         <div class="col-sm-5">
-            <?= $form->field($model, 'subject_id')->widget(Select2::className(),
+            <?= $form->field($model, 'subject_id')->widget(Select2::class,
                 [
                     'data' => $model->isNewRecord ?
                         $model->workPlan->getUnusedSubjects() :
@@ -58,9 +58,9 @@ use app\modules\directories\models\subject\Subject;
     </div>
     <div class="row">
         <div class="col-sm-5">
-            <?= $form->field($model, 'cyclic_commission_id')->widget(Select2::className(),
+            <?= $form->field($model, 'cyclic_commission_id')->widget(Select2::class,
                 [
-                    'data' => CyclicCommission::getList(),
+                    'data' => CyclicCommission::getMap('title'),
                     'options' =>[ 'placeholder' => Yii::t('plans', 'Select cyclic commission')]
                 ]) ?>
         </div>
@@ -97,7 +97,7 @@ use app\modules\directories\models\subject\Subject;
                         "classes_$i",
                         '',
                         ['type' => 'number', 'min' => 0, 'placeholder' => $model->getAttributeLabel('classes'),
-                            'readonly' => true, 'style' => 'width:140px']
+                            'readonly' => true, 'style' => 'width:140px', 'class'=>'form-control']
                     ); ?>
                 </div>
 

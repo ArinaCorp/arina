@@ -29,29 +29,25 @@ use yii\helpers\ArrayHelper;
  */
 class StudentsHistory extends ActiveRecord
 {
-    public $category_id;
-    public $group_search_id;
-    public $child;
-    public $isAnalized = false;
-
+    const CATEGORY_NEW = 1;
+    const CATEGORY_ACTIVE = 2;
+    const CATEGORY_ALUMNUS = 3;
     public static $_HISTORY;
     public static $PAYMENT_STATE = 1;
     public static $PAYMENT_CONTRACT = 2;
+    public static $TYPE_EXCLUDE = 1;
 
     //@TODO change to const
-
-    public static $TYPE_EXCLUDE = 1;
     public static $TYPE_INCLUDE = 2;
     public static $TYPE_TRANSFER_FOUNDING = 3;
     public static $TYPE_TRANSFER_SPECIALITY_QA = 4;
     public static $TYPE_RENEWAL = 5;
     public static $TYPE_TRANSFER_GROUP = 6;
     public static $TYPE_TRANSFER_COURSE = 7;
-
-
-    const CATEGORY_NEW = 1;
-    const CATEGORY_ACTIVE = 2;
-    const CATEGORY_ALUMNUS = 3;
+    public $category_id;
+    public $group_search_id;
+    public $child;
+    public $isAnalized = false;
     /**
      * @author VasyaKog
      * Kosteli and velosupedu
@@ -64,50 +60,6 @@ class StudentsHistory extends ActiveRecord
     public static function tableName()
     {
         return '{{%students_history}}';
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function rules()
-    {
-        return [
-            [['student_id', 'action_type', 'date', 'command'], 'required'],
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'id' => Yii::t('app', 'ID'),
-            'speciality_qualification_id' => Yii::t('app', 'Speciality Qualification ID'),
-            'payment_type' => Yii::t('app', 'Payment Type'),
-            'course' => Yii::t('app', 'Course'),
-            'command' => Yii::t('app', 'Command'),
-            'created_at' => Yii::t('app', 'Created At'),
-            'updated_at' => Yii::t('app', 'Updated At'),
-            'group_id' => Yii::t('app', 'Group ID'),
-            'student_id' => Yii::t('app', 'Student ID'),
-            'date' => Yii::t('app', 'Date'),
-            'action_type' => Yii::t('app', 'Action type'),
-            'category_id' => Yii::t('app', 'Category ID'),
-            'parent_id' => Yii::t('app', 'Parent ID'),
-            'group_search_id' => Yii::t('app', 'Group Search ID'),
-            'information' => Yii::t('app', 'Information'),
-        ];
-    }
-
-    public function beforeSave($insert)
-    {
-        if (parent::beforeSave($insert)) {
-            $this->date = date('Y-m-d', strtotime($this->date));
-            return true;
-        } else {
-            return false;
-        }
     }
 
     public static function getActionsTypes()
@@ -123,14 +75,6 @@ class StudentsHistory extends ActiveRecord
         ];
     }
 
-    public static function getPayments()
-    {
-        return [
-            self::$PAYMENT_CONTRACT => Yii::t('app', 'Contract payment'),
-            self::$PAYMENT_STATE => Yii::t('app', 'State payment'),
-        ];
-    }
-
     public static function getStudentCategoryList()
     {
         return [
@@ -138,19 +82,6 @@ class StudentsHistory extends ActiveRecord
             self::CATEGORY_ACTIVE => Yii::t('app', 'Active'),
             self::CATEGORY_ALUMNUS => Yii::t('app', 'Alumnus'),
         ];
-    }
-
-    public static function getStudentHistory($id)
-    {
-        if (!isset(self::$_HISTORY[$id])) {
-            $trees = [];
-            $rows = StudentsHistory::findAll(['student_id' => $id, 'parent_id' => null]);
-            foreach ($rows as $row) {
-                $trees[] = $row->buildTree();
-            }
-            self::$_HISTORY[$id] = $trees;
-        }
-        return self::$_HISTORY[$id];
     }
 
     public static function getStudentHistoryArray($id)
@@ -170,32 +101,17 @@ class StudentsHistory extends ActiveRecord
     }
 
     /**
-     * @param $current StudentsHistory
-     * @return bool
+     * @return ActiveQuery;
      */
-    public static function getFromHistory($current)
+    public static function find()
     {
-        $history = self::getStudentHistory($current->student_id);
-        foreach ($history as $trees) {
-            while (!is_null($trees)) {
-                if ($trees->id == $current->id) return $trees;
-                $trees = $trees->child;
-            }
-        }
-
+        return parent::find()->alias('studentsHistory')->orderBy(['id' => SORT_DESC]);
     }
 
-
-    private
-    function buildTree()
+    public
+    static function getNewStudentList()
     {
-        $child = self::findOne(['parent_id' => $this->id]);
-        $this->isAnalized = true;
-        if (!is_null($child)) {
-            $child->data = self::mergeHistoriesData($this->data, $child->data);
-            $this->child = $child->buildTree();
-        }
-        return $this;
+        return ArrayHelper::map(self::getNewStudents(), 'id', 'fullName');
     }
 
     public
@@ -206,31 +122,6 @@ class StudentsHistory extends ActiveRecord
             if (!empty(self::getParents($student->id))) unset($students[$key]);
         }
         return $students;
-    }
-
-    public
-    static function getNewStudentList()
-    {
-        return ArrayHelper::map(self::getNewStudents(), 'id', 'fullName');
-    }
-
-    public
-    static function getActiveStudentByGroup($id)
-    {
-        /**
-         * @var $students Student[]
-         */
-        if (is_null($id)) {
-            return [];
-        }
-        $group = Group::findOne(['id' => $id]);
-        return $group->getStudentsArray();
-    }
-
-    public
-    static function getActiveStudentByGroupList($id)
-    {
-        return ArrayHelper::map(self::getActiveStudentByGroup($id), 'id', 'fullNameAndCode');
     }
 
     /**
@@ -248,6 +139,54 @@ class StudentsHistory extends ActiveRecord
         return $parents;
     }
 
+    public static function getStudentHistory($id)
+    {
+        if (!isset(self::$_HISTORY[$id])) {
+            $trees = [];
+            $rows = StudentsHistory::findAll(['student_id' => $id, 'parent_id' => null]);
+            foreach ($rows as $row) {
+                $trees[] = $row->buildTree();
+            }
+            self::$_HISTORY[$id] = $trees;
+        }
+        return self::$_HISTORY[$id];
+    }
+
+    private
+    function buildTree()
+    {
+        $child = self::findOne(['parent_id' => $this->id]);
+        $this->isAnalized = true;
+        if (!is_null($child)) {
+            $child->data = self::mergeHistoriesData($this->data, $child->data);
+            $this->child = $child->buildTree();
+        }
+        return $this;
+    }
+
+    /**
+     * @param $object1 StudentsHistory
+     * @param $object2 StudentsHistory
+     * @return StudentsHistory
+     */
+    public static function mergeHistoriesData($data1, $data2)
+    {
+        if (!is_null($data2['current'])) {
+            foreach ($data2['current'] as $key => $value) {
+                $data1['old'][$key][] = $data1['current'][$key];
+                $data1['current'][$key] = $value;
+            }
+        } else {
+            if (!is_null($data1['current'])) {
+                foreach ($data1['current'] as $key => $value) {
+                    $data1['old'][$key][] = $data1['current'][$key];
+                    $data1['current'][$key] = null;
+                }
+            }
+        }
+        return $data1;
+    }
+
     public
     static
     function getLastChild($story)
@@ -256,59 +195,23 @@ class StudentsHistory extends ActiveRecord
         return $story;
     }
 
+    public
+    static function getActiveStudentByGroupList($id)
+    {
+        return ArrayHelper::map(self::getActiveStudentByGroup($id), 'id', 'fullNameAndCode');
+    }
 
     public
-    function afterFind()
+    static function getActiveStudentByGroup($id)
     {
-        parent::afterFind(); // TODO: Change the autogenerated stub
-        $this->date = date('d.m.Y', strtotime($this->date));
-        switch ($this->action_type) {
-            case self::$TYPE_EXCLUDE :
-                {
-                    $this->data['current'] = [
-                        'speciality_qualification_id' => null,
-                        'payment_type' => null,
-                        'group_id' => null,
-                        'course' => null,
-                    ];
-                    break;
-                }
-            case self::$TYPE_INCLUDE :
-            case self::$TYPE_RENEWAL :
-            case self::$TYPE_TRANSFER_SPECIALITY_QA :
-                {
-                    $this->data['current'] = [
-                        'speciality_qualification_id' => $this->speciality_qualification_id,
-                        'payment_type' => $this->payment_type,
-                        'group_id' => $this->group_id,
-                        'course' => $this->course,
-                    ];
-                    break;
-                }
-            case self::$TYPE_TRANSFER_COURSE :
-                {
-                    $this->data['current'] = [
-                        'course' => $this->course,
-                    ];
-                    break;
-                }
-            case self::$TYPE_TRANSFER_FOUNDING :
-                {
-                    $this->data['current'] = [
-                        'payment_type' => $this->payment_type,
-                    ];
-                    break;
-                }
-            case self::$TYPE_TRANSFER_GROUP :
-                {
-                    $this->data['current'] = [
-                        'group_id' => $this->group_id,
-                    ];
-                    break;
-                }
-            default:
-                break;
+        /**
+         * @var $students Student[]
+         */
+        if (is_null($id)) {
+            return [];
         }
+        $group = Group::findOne(['id' => $id]);
+        return $group->getStudentsArray();
     }
 
     /**
@@ -335,29 +238,10 @@ class StudentsHistory extends ActiveRecord
         return array_unique($array);
     }
 
-    /**
-     * @param $object1 StudentsHistory
-     * @param $object2 StudentsHistory
-     * @return StudentsHistory
-     */
-    public static function mergeHistoriesData($data1, $data2)
+    public static function getAlumnusStudentByGroupList($id)
     {
-        if (!is_null($data2['current'])) {
-            foreach ($data2['current'] as $key => $value) {
-                $data1['old'][$key][] = $data1['current'][$key];
-                $data1['current'][$key] = $value;
-            }
-        } else {
-            if (!is_null($data1['current'])) {
-                foreach ($data1['current'] as $key => $value) {
-                    $data1['old'][$key][] = $data1['current'][$key];
-                    $data1['current'][$key] = null;
-                }
-            }
-        }
-        return $data1;
+        return ArrayHelper::map(self::getAlumnusStudentByGroup($id), 'id', 'fullNameAndCode');
     }
-
 
     public static function getAlumnusStudentByGroup($id)
     {
@@ -372,9 +256,32 @@ class StudentsHistory extends ActiveRecord
         return $students;
     }
 
-    public static function getAlumnusStudentByGroupList($id)
+    public static function getInformationById($id)
     {
-        return ArrayHelper::map(self::getAlumnusStudentByGroup($id), 'id', 'fullNameAndCode');
+        $empty = StudentsHistory::findOne(['id' => $id]);
+        $history = self::getFromHistory($empty);
+
+    }
+
+    /**
+     * @param $current StudentsHistory
+     * @return bool
+     */
+    public static function getFromHistory($current)
+    {
+        $history = self::getStudentHistory($current->student_id);
+        foreach ($history as $trees) {
+            while (!is_null($trees)) {
+                if ($trees->id == $current->id) return $trees;
+                $trees = $trees->child;
+            }
+        }
+
+    }
+
+    public static function getStudentParentsList($id)
+    {
+        return ArrayHelper::map(self::getStudentParents($id), 'id', 'text');
     }
 
     public static function getStudentParents($id)
@@ -386,18 +293,6 @@ class StudentsHistory extends ActiveRecord
                 $data[] = ['id' => $parent->id, 'text' => $parent->getInformation()];
             }
         return $data;
-    }
-
-    public static function getInformationById($id)
-    {
-        $empty = StudentsHistory::findOne(['id' => $id]);
-        $history = self::getFromHistory($empty);
-
-    }
-
-    public static function getStudentParentsList($id)
-    {
-        return ArrayHelper::map(self::getStudentParents($id), 'id', 'text');
     }
 
     public function getInformation()
@@ -499,10 +394,23 @@ class StudentsHistory extends ActiveRecord
         return $arr[$id];
     }
 
+    public static function getPayments()
+    {
+        return [
+            self::$PAYMENT_CONTRACT => Yii::t('app', 'Contract payment'),
+            self::$PAYMENT_STATE => Yii::t('app', 'State payment'),
+        ];
+    }
+
     public static function getPermittedActionList($action_id)
     {
         $parent = self::findOne(['id' => $action_id]);
         $array = [];
+        if (!$parent) {
+            return [
+                self::$TYPE_INCLUDE => Yii::t('app', 'Include'),
+            ];
+        }
         switch ($parent->action_type) {
             case self::$TYPE_INCLUDE:
             case self::$TYPE_RENEWAL:
@@ -538,6 +446,16 @@ class StudentsHistory extends ActiveRecord
         return $array;
     }
 
+    /**
+     * @param $id
+     * @return bool|Group
+     */
+    public static function getCurrentGroupById($id)
+    {
+
+        return self::findOne(['id' => $id])->getCurrentGroup();
+    }
+
     public function getCurrentGroup()
     {
         $parents = self::getParents($this->student_id);
@@ -550,13 +468,115 @@ class StudentsHistory extends ActiveRecord
     }
 
     /**
-     * @param $id
-     * @return bool|Group
+     * @param $groupIds
+     * @return array
      */
-    public static function getCurrentGroupById($id)
+    public static function getActiveStudentsIdsByGroups($groupIds)
     {
+        return self::find()
+            ->select('studentsHistory.student_id')
+            ->andWhere(['studentsHistory.action_type' => StudentsHistory::$TYPE_INCLUDE])
+            ->andWhere(['studentsHistory.group_id' => $groupIds])
+            ->groupBy('studentsHistory.student_id')
+            ->column();
+    }
 
-        return self::findOne(['id' => $id])->getCurrentGroup();
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            [['student_id', 'action_type', 'date', 'command'], 'required'],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'id' => Yii::t('app', 'ID'),
+            'speciality_qualification_id' => Yii::t('app', 'Speciality Qualification ID'),
+            'payment_type' => Yii::t('app', 'Payment Type'),
+            'course' => Yii::t('app', 'Course'),
+            'command' => Yii::t('app', 'Command'),
+            'created_at' => Yii::t('app', 'Created At'),
+            'updated_at' => Yii::t('app', 'Updated At'),
+            'group_id' => Yii::t('app', 'Group ID'),
+            'student_id' => Yii::t('app', 'Student ID'),
+            'date' => Yii::t('app', 'Date'),
+            'action_type' => Yii::t('app', 'Action type'),
+            'category_id' => Yii::t('app', 'Category ID'),
+            'parent_id' => Yii::t('app', 'Parent ID'),
+            'group_search_id' => Yii::t('app', 'Group Search ID'),
+            'information' => Yii::t('app', 'Information'),
+        ];
+    }
+
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            $this->date = date('Y-m-d', strtotime($this->date));
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public
+    function afterFind()
+    {
+        parent::afterFind(); // TODO: Change the autogenerated stub
+        $this->date = date('d.m.Y', strtotime($this->date));
+        switch ($this->action_type) {
+            case self::$TYPE_EXCLUDE :
+                {
+                    $this->data['current'] = [
+                        'speciality_qualification_id' => null,
+                        'payment_type' => null,
+                        'group_id' => null,
+                        'course' => null,
+                    ];
+                    break;
+                }
+            case self::$TYPE_INCLUDE :
+            case self::$TYPE_RENEWAL :
+            case self::$TYPE_TRANSFER_SPECIALITY_QA :
+                {
+                    $this->data['current'] = [
+                        'speciality_qualification_id' => $this->speciality_qualification_id,
+                        'payment_type' => $this->payment_type,
+                        'group_id' => $this->group_id,
+                        'course' => $this->course,
+                    ];
+                    break;
+                }
+            case self::$TYPE_TRANSFER_COURSE :
+                {
+                    $this->data['current'] = [
+                        'course' => $this->course,
+                    ];
+                    break;
+                }
+            case self::$TYPE_TRANSFER_FOUNDING :
+                {
+                    $this->data['current'] = [
+                        'payment_type' => $this->payment_type,
+                    ];
+                    break;
+                }
+            case self::$TYPE_TRANSFER_GROUP :
+                {
+                    $this->data['current'] = [
+                        'group_id' => $this->group_id,
+                    ];
+                    break;
+                }
+            default:
+                break;
+        }
     }
 
     public function validateSpeciality($attribute, $params)
@@ -577,33 +597,11 @@ class StudentsHistory extends ActiveRecord
     }
 
     /**
-     * @return ActiveQuery;
-     */
-    public static function find()
-    {
-        return parent::find()->alias('studentsHistory')->orderBy(['id' => SORT_DESC]);
-    }
-
-    /**
      * @return ActiveQuery
      */
     public function getStudent()
     {
         return $this->hasOne(Student::class, ['id' => 'student_id']);
-    }
-
-    /**
-     * @param $groupIds
-     * @return array
-     */
-    public static function getActiveStudentsIdsByGroups($groupIds)
-    {
-        return self::find()
-            ->select('studentsHistory.student_id')
-            ->andWhere(['studentsHistory.action_type' => StudentsHistory::$TYPE_INCLUDE])
-            ->andWhere(['studentsHistory.group_id' => $groupIds])
-            ->groupBy('studentsHistory.student_id')
-            ->column();
     }
 
     /**

@@ -1,15 +1,13 @@
 <?php
 
-use yii\helpers\Html;
-use yii\widgets\ActiveForm;
-use kartik\select2\Select2;
+use app\modules\directories\models\audience\Audience;
 use app\modules\employee\models\Employee;
-use app\modules\plans\models\WorkSubject;
-
 use app\modules\journal\models\record\JournalRecordType;
 use kartik\date\DatePicker;
-use app\modules\directories\models\audience\Audience;
+use kartik\select2\Select2;
 use kartik\touchspin\TouchSpin;
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\journal\models\record\JournalRecord */
@@ -21,16 +19,16 @@ use kartik\touchspin\TouchSpin;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'type')->widget(Select2::className(), [
-        'data' => JournalRecordType::getList(),
+    <?= $form->field($model, 'type')->widget(Select2::class, [
+        'data' => JournalRecordType::getMap('title'),
         'disabled' => true,
         'readonly' => true,
     ]) ?>
-    <?= $form->field($model, 'teacher_id')->widget(Select2::className(), [
+    <?= $form->field($model, 'teacher_id')->widget(Select2::class, [
         'data' => Employee::getAllTeacherList(),
     ]) ?>
     <?php if ($type->date) : ?>
-        <?= $form->field($model, 'date')->widget(DatePicker::className(), [
+        <?= $form->field($model, 'date')->widget(DatePicker::class, [
             'pluginOptions' => [
                 'format' => 'yyyy-mm-dd',
                 'todayHighlight' => true
@@ -45,35 +43,33 @@ use kartik\touchspin\TouchSpin;
     <?php endif; ?>
     <?php if ($type->n_in_day) : ?>
 
-        <?= $form->field($model, 'number_in_day')->widget(TouchSpin::className(),
-            [
-                'pluginOptions' => [
-                    'initval' => 1,
-                    'min' => 0,
-                    'max' => 8,
-                    'step' => 1,
-                    'decimals' => 0,
-                    'boostat' => 5,
-                    'maxboostedstep' => 10,
-                ],
-            ]) ?>
+        <?= $form->field($model, 'number_in_day')->widget(TouchSpin::class, [
+            'pluginOptions' => [
+                'initval' => 1,
+                'min' => 0,
+                'max' => 8,
+                'step' => 1,
+                'decimals' => 0,
+                'boostat' => 5,
+                'maxboostedstep' => 10,
+            ],
+        ]) ?>
     <?php endif; ?>
     <?php if ($type->hours) : ?>
-        <?= $form->field($model, 'hours')->widget(TouchSpin::className(),
-            [
-                'pluginOptions' => [
-                    'initval' => 1,
-                    'min' => 0,
-                    'max' => 16,
-                    'step' => 1,
-                    'decimals' => 0,
-                    'boostat' => 5,
-                    'maxboostedstep' => 10,
-                ],
-            ]) ?>
+        <?= $form->field($model, 'hours')->widget(TouchSpin::class, [
+            'pluginOptions' => [
+                'initval' => 1,
+                'min' => 0,
+                'max' => 16,
+                'step' => 1,
+                'decimals' => 0,
+                'boostat' => 5,
+                'maxboostedstep' => 10,
+            ],
+        ]) ?>
     <?php endif; ?>
     <?php if ($type->audience) : ?>
-        <?= $form->field($model, 'audience_id')->widget(Select2::className(), [
+        <?= $form->field($model, 'audience_id')->widget(Select2::class, [
             'data' => Audience::getAudienceList()
         ]) ?>
     <?php endif; ?>

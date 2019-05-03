@@ -22,7 +22,7 @@ class SpecialityQualificationController extends Controller implements IAdminCont
     {
         return [
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
                 ],

@@ -33,7 +33,7 @@ class Evaluation extends \yii\db\ActiveRecord
     public function behaviors()
     {
         return [
-            TimestampBehavior::className(),
+            TimestampBehavior::class,
         ];
     }
 
@@ -70,7 +70,7 @@ class Evaluation extends \yii\db\ActiveRecord
      */
     public function getSystem()
     {
-        return $this->hasOne(EvaluationSystem::className(), ['id' => 'system_id']);
+        return $this->hasOne(EvaluationSystem::class, ['id' => 'system_id']);
     }
 
     public function getSystemLabel()

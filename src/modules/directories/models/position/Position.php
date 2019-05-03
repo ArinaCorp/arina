@@ -2,11 +2,11 @@
 
 namespace app\modules\directories\models\position;
 
-use Yii;
-use yii\helpers\ArrayHelper;
-use yii\db\ActiveRecord;
-use \yii\db\ActiveQuery;
 use app\modules\employee\models\Employee;
+use nullref\useful\traits\Mappable;
+use Yii;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "position".
@@ -21,6 +21,8 @@ use app\modules\employee\models\Employee;
  */
 class Position extends ActiveRecord
 {
+    use Mappable;
+
     /**
      * @return string the associated database table name
      */
@@ -58,8 +60,8 @@ class Position extends ActiveRecord
         return array(
             'id' => Yii::t('app', 'ID'),
             'title' => Yii::t('app', 'Title'),
-            'max_hour_1' => Yii::t('app', 'Max load hours').' 1',
-            'max_hour_2' => Yii::t('app', 'Max load hours').' 2',
+            'max_hour_1' => Yii::t('app', 'Max load hours') . ' 1',
+            'max_hour_2' => Yii::t('app', 'Max load hours') . ' 2',
         );
     }
 
@@ -68,14 +70,6 @@ class Position extends ActiveRecord
      */
     public function getEmployee()
     {
-        return $this->hasMany(Employee::className(), ['position_id' => 'id']);
+        return $this->hasMany(Employee::class, ['position_id' => 'id']);
     }
-
-    public static function getList()
-    {
-        $departments = Position::find()->all();
-        $items = ArrayHelper::map($departments,'id','title');
-        return $items;
-    }
-
 }

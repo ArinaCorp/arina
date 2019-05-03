@@ -10,7 +10,7 @@ use yii\helpers\ArrayHelper;
 use nullref\useful\behaviors\JsonBehavior;
 
 use app\modules\directories\models\subject\Subject;
-use app\modules\directories\models\cyclic_commission\CyclicCommission;
+use app\modules\employee\models\CyclicCommission;
 use app\modules\directories\models\StudyYear;
 
 /**
@@ -55,7 +55,7 @@ class WorkSubject extends ActiveRecord
     {
         return [
             'JsonBehavior' => [
-                'class' => JSONBehavior::className(),
+                'class' => JSONBehavior::class,
                 'fields' => ['control', 'control_hours', 'total', 'lectures', 'lab_works', 'practices', 'weeks',],
             ],
         ];
@@ -145,7 +145,7 @@ class WorkSubject extends ActiveRecord
      */
     public function getSubject()
     {
-        return $this->hasOne(Subject::className(), ['id' => 'subject_id']);
+        return $this->hasOne(Subject::class, ['id' => 'subject_id']);
     }
 
     /**
@@ -153,7 +153,7 @@ class WorkSubject extends ActiveRecord
      */
     public function getCyclicCommission()
     {
-        return $this->hasOne(CyclicCommission::className(), ['id' => 'cyclic_commission_id']);
+        return $this->hasOne(CyclicCommission::class, ['id' => 'cyclic_commission_id']);
     }
 
     /**
@@ -161,7 +161,7 @@ class WorkSubject extends ActiveRecord
      */
     public function getWorkPlan()
     {
-        return $this->hasOne(WorkPlan::className(), ['id' => 'work_plan_id']);
+        return $this->hasOne(WorkPlan::class, ['id' => 'work_plan_id']);
     }
 
 
@@ -180,14 +180,7 @@ class WorkSubject extends ActiveRecord
      */
     public function getClasses($semester)
     {
-//        echo $semester;
-//        echo '<br>';
-//        var_dump($this->weeks);
-//        echo '<br>';
-//        var_dump($this->workPlan->semesters);
-//        die;
-        if($semester>3){ $semester=3;}
-        return $this->weeks[$semester] * $this->workPlan->semesters[$semester];
+        return $this->weeks[$semester] ?? 0 * $this->workPlan->semesters[$semester] ?? 0;
     }
 
     /**

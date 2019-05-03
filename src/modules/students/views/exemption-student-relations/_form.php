@@ -21,7 +21,7 @@ use kartik\daterange\DateRangePicker;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'group_id')->widget(Select2::className(),
+    <?= $form->field($model, 'group_id')->widget(Select2::class,
         [
             'data' => Group::getActiveGroupsList(),
             'pluginOptions' => [
@@ -34,7 +34,7 @@ use kartik\daterange\DateRangePicker;
         ]
     ); ?>
 
-    <?= $form->field($model, 'student_id')->widget(DepDrop::className(),
+    <?= $form->field($model, 'student_id')->widget(DepDrop::class,
         [
             'data' => StudentsHistory::getActiveStudentByGroupList($model->group_id),
             'pluginOptions' => [
@@ -49,13 +49,13 @@ use kartik\daterange\DateRangePicker;
         ]
     ); ?>
 
-    <?= $form->field($model, 'exemption_id')->widget(Select2::className(), [
-        'data' => Exemption::getList(),
+    <?= $form->field($model, 'exemption_id')->widget(Select2::class, [
+        'data' => Exemption::getMap('title'),
         'pluginOptions' => [
             'placeholder' => Yii::t('app', 'Select exemption')
         ]
     ]) ?>
-    <?= $form->field($model, 'date_range')->widget(DateRangePicker::className(), [
+    <?= $form->field($model, 'date_range')->widget(DateRangePicker::class, [
         'convertFormat' => true,
         'startAttribute' => 'date_start',
         'endAttribute' => 'date_end',
@@ -66,9 +66,9 @@ use kartik\daterange\DateRangePicker;
         ]
     ]);
     ?>
-    <!--    --><? //= $form->field($model, 'date_start')->widget(DatePicker::className()) ?>
+    <!--    --><? //= $form->field($model, 'date_start')->widget(DatePicker::class) ?>
     <!---->
-    <!--    --><? //= $form->field($model, 'date_end')->widget(DatePicker::className()) ?>
+    <!--    --><? //= $form->field($model, 'date_end')->widget(DatePicker::class) ?>
 
     <?= $form->field($model, 'information')->textarea(['maxlength' => true, 'rows' => 2]) ?>
 

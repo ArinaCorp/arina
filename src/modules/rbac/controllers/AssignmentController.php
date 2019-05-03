@@ -38,7 +38,7 @@ class AssignmentController extends BaseAssignmentController
     public function actionAssign($id)
     {
         $model = Yii::createObject([
-            'class' => Assignment::className(),
+            'class' => Assignment::class,
             'user_id' => $id,
         ]);
 

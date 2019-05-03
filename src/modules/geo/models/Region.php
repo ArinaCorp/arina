@@ -37,7 +37,7 @@ class Region extends BaseModel
     {
         return array_merge(parent::behaviors(), [
             'timestamp' => [
-                'class' => TimestampBehavior::className(),
+                'class' => TimestampBehavior::class,
                 'createdAtAttribute' => 'createdAt',
                 'updatedAtAttribute' => 'updatedAt',
             ],
@@ -77,12 +77,12 @@ class Region extends BaseModel
      */
     public function getCities()
     {
-        return $this->hasMany(City::className(), ['country_id' => 'id'])->orderBy(['name' => SORT_ASC]);
+        return $this->hasMany(City::class, ['country_id' => 'id'])->orderBy(['name' => SORT_ASC]);
     }
 
     public function getCountry()
     {
-        return $this->hasOne(Country::className(), ['id' => 'country_id']);
+        return $this->hasOne(Country::class, ['id' => 'country_id']);
     }
 
 }

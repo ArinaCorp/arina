@@ -108,7 +108,7 @@ class Audience extends ActiveRecord
 
     public function getTeacher()
     {
-        return $this->hasOne(Employee::className(), ['id' => 'id_teacher']);
+        return $this->hasOne(Employee::class, ['id' => 'id_teacher']);
     }
 
     /**

@@ -4,6 +4,7 @@ namespace app\modules\directories\models\department;
 
 use app\modules\directories\models\speciality\Speciality;
 use app\modules\employee\models\Employee;
+use nullref\useful\traits\Mappable;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\helpers\ArrayHelper;
@@ -23,6 +24,8 @@ use yii\helpers\Url;
  */
 class Department extends \yii\db\ActiveRecord
 {
+    use Mappable;
+
     /**
      * @inheritdoc
      */
@@ -39,18 +42,8 @@ class Department extends \yii\db\ActiveRecord
         return [
             [['head_id'], 'integer'],
             [['title'], 'string', 'max' => 255],
-            [['title'],'required'],
+            [['title'], 'required'],
         ];
-    }
-
-    /**
-     * @return array
-     */
-    public static function getList()
-    {
-        $departments = Department::find()->all();
-        $items = ArrayHelper::map($departments,'id','title');
-        return $items;
     }
 
     /**
@@ -59,10 +52,10 @@ class Department extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app','ID'),
-            'title' => Yii::t('app','Title'),
-            'head_id' => Yii::t('app','HeadID'),
-            'specialities' => Yii::t('app','Specialities'),
+            'id' => Yii::t('app', 'ID'),
+            'title' => Yii::t('app', 'Title'),
+            'head_id' => Yii::t('app', 'HeadID'),
+            'specialities' => Yii::t('app', 'Specialities'),
             'headName' => Yii::t('app', 'HeadID'),
         ];
     }
@@ -70,21 +63,26 @@ class Department extends \yii\db\ActiveRecord
     /**
      * @return ActiveQuery
      */
-    public function getSpecialities(){
+    public function getSpecialities()
+    {
         return $this->hasMany(Speciality::class, ['department_id' => 'id']);
     }
 
     /**
      * @return string
      */
-    public function getSpecialitiesListLinks(){
-        $string="";
+    public function getSpecialitiesListLinks()
+    {
+        $string = "";
         foreach ($this->specialities as $speciality) {
-            $string.=Html::a($speciality->title,Url::to(['speciality/view','id'=>$speciality->id])).'</br>';
+            $string .= Html::a($speciality->title, Url::to(['speciality/view', 'id' => $speciality->id])) . '</br>';
         }
         return $string;
     }
 
+    /**
+     * @return string
+     */
     public function getHeadName()
     {
         if (isset($this->head)) {
@@ -94,7 +92,11 @@ class Department extends \yii\db\ActiveRecord
         }
     }
 
-    public function getHead(){
-        return $this->hasOne(Employee::className(),['id'=>'head_id']);
+    /**
+     * @return ActiveQuery
+     */
+    public function getHead()
+    {
+        return $this->hasOne(Employee::class, ['id' => 'head_id']);
     }
 }

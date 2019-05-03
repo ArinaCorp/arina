@@ -63,7 +63,7 @@ class Speciality extends ActiveRecord
      */
     public function getDepartment()
     {
-        return $this->hasOne(Department::className(), ['id' => 'department_id']);
+        return $this->hasOne(Department::class, ['id' => 'department_id']);
     }
 
     /**
@@ -71,7 +71,7 @@ class Speciality extends ActiveRecord
      */
     public function getSpecialityQualifications()
     {
-        return $this->hasMany(SpecialityQualification::className(), ['speciality_id' => 'id']);
+        return $this->hasMany(SpecialityQualification::class, ['speciality_id' => 'id']);
     }
 
     /**
@@ -79,7 +79,7 @@ class Speciality extends ActiveRecord
      */
     public function getQualification()
     {
-        return $this->hasMany(Qualification::className(), ['id' => 'qualification_id'])
+        return $this->hasMany(Qualification::class, ['id' => 'qualification_id'])
             ->via('specialityQualifications');
     }
 

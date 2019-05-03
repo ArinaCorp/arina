@@ -1,9 +1,9 @@
 <?php
 
-use yii\helpers\Html;
-use yii\widgets\ActiveForm;
 use app\modules\directories\models\department\Department;
 use kartik\select2\Select2;
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\directories\models\speciality\Speciality */
@@ -32,24 +32,23 @@ use kartik\select2\Select2;
     <div class="row">
 
         <div class="col-sm-6">
-            <?= $form->field($model, 'department_id')->widget(Select2::className(), [
-                'data' => Department::getList(),
-                'options' =>
-                    [
-                        'placeholder' => Yii::t('app', 'Select department')
-                    ]
+            <?= $form->field($model, 'department_id')->widget(Select2::class, [
+                'data' => Department::getMap('title'),
+                'options' => [
+                    'placeholder' => Yii::t('app', 'Select department')
+                ]
             ]); ?>
         </div>
 
         <div class="col-sm-6">
-            <?= $form->field($model, 'accreditation_date')->widget(dosamigos\datepicker\DatePicker::className(), [ //@TODO change to kartik-v/yii2-widget-datepicker
+            <?= $form->field($model, 'accreditation_date')->widget(dosamigos\datepicker\DatePicker::class, [ //@TODO change to kartik-v/yii2-widget-datepicker
                 'language' => 'uk',
                 'clientOptions' => [
                     'autoclose' => true,
                 ]
             ]); ?>
         </div>
-        
+
     </div>
 
     <div class="form-group">

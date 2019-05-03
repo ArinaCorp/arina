@@ -71,7 +71,7 @@ class Subject extends ActiveRecord
 
     public function getSubjectRelation()
     {
-        return $this->hasMany(SubjectRelation::className(), ['subject_id' => 'id']);
+        return $this->hasMany(SubjectRelation::class, ['subject_id' => 'id']);
     }
 
     /**

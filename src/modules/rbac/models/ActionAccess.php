@@ -55,7 +55,7 @@ class ActionAccess extends \yii\db\ActiveRecord
      */
     public function getAuthItems()
     {
-        return $this->hasMany(AuthItem::className(), ['name' => 'auth_item_name'])
+        return $this->hasMany(AuthItem::class, ['name' => 'auth_item_name'])
             ->viaTable(ActionAccessItem::tableName(), ['action_access_id' => 'id']);
     }
 

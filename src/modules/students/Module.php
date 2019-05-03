@@ -1,5 +1,6 @@
 <?php
 /* @author VasyaKog */
+
 namespace app\modules\students;
 
 use app\modules\rbac\interfaces\IAccessibleModule;
@@ -44,23 +45,24 @@ class Module extends BaseModule implements IAdminModule, IAccessibleModule
                     'icon' => 'random',
                 ],
                 [
-                    'label' => Yii::t('app', 'Import Students from XML'),
-                    'url' => ['/students/import'],
+                    'label' => Yii::t('app', 'Students Import'),
                     'icon' => 'download',
-                ],
-                [
-                    'label' => Yii::t('app', 'Family ties types'),
-                    'url' => ['/students/family-relation-type'],
-                    'icon' => 'home',
+                    'items' => [
+                        [
+                            'label' => Yii::t('app', 'Import Students from XML'),
+                            'url' => ['/students/import'],
+                            'icon' => 'download',
+                        ],
+                        [
+                            'label' => Yii::t('app', 'Import Students from CSV'),
+                            'url' => ['/students/csv-import-document'],
+                            'icon' => 'download',
+                        ],
+                    ],
                 ],
                 [
                     'label' => Yii::t('app', 'Exemptions journal'),
                     'url' => ['/students/exemption-student-relations'],
-                    'icon' => 'universal-access',
-                ],
-                [
-                    'label' => Yii::t('app', 'Exemptions types'),
-                    'url' => ['/students/exemptions'],
                     'icon' => 'universal-access',
                 ],
                 [
@@ -69,15 +71,31 @@ class Module extends BaseModule implements IAdminModule, IAccessibleModule
                     'icon' => 'sort',
                 ],
                 [
-                    'label' => Yii::t('app', 'Social Networks'),
-                    'url' => ['/students/social-networks'],
-                    'icon' => 'users',
+                    'label' => Yii::t('app', 'Directories'),
+                    'icon' => 'tasks',
+                    'items' => [
+                        [
+                            'label' => Yii::t('app', 'Family ties types'),
+                            'url' => ['/students/family-relation-type'],
+                            'icon' => 'home',
+                        ],
+                        [
+                            'label' => Yii::t('app', 'Exemptions types'),
+                            'url' => ['/students/exemptions'],
+                            'icon' => 'universal-access',
+                        ],
+                        [
+                            'label' => Yii::t('app', 'Social Networks'),
+                            'url' => ['/students/social-networks'],
+                            'icon' => 'users',
+                        ],
+                        [
+                            'label' => Yii::t('app', 'Characteristics Types'),
+                            'url' => ['/students/characteristics-type'],
+                            'icon' => 'file-text-o',
+                        ],
+                    ],
                 ],
-                [
-                    'label' => Yii::t('app', 'Characteristics Types'),
-                    'url' => ['/students/characteristics-type'],
-                    'icon' => 'file-text-o',
-                ]
             ],
             'roles' => ['head-of-department', 'teacher', 'curator', 'staff-office'],
         ];

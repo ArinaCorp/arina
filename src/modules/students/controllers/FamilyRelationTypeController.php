@@ -19,7 +19,7 @@ class FamilyRelationTypeController extends Controller implements IAdminControlle
     {
         return [
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
                 ],

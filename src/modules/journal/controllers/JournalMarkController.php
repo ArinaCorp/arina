@@ -4,15 +4,15 @@ namespace app\modules\journal\controllers;
 
 use app\components\DepDropHelper;
 use app\modules\journal\models\evaluation\Evaluation;
-use app\modules\journal\models\record\JournalRecordType;
-use Yii;
 use app\modules\journal\models\record\JournalMark;
+use app\modules\rbac\filters\AccessControl;
+use nullref\core\interfaces\IAdminController;
+use Yii;
 use yii\data\ActiveDataProvider;
+use yii\filters\VerbFilter;
 use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
-use nullref\core\interfaces\IAdminController;
 
 /**
  * JournalMarkController implements the CRUD actions for JournalMark model.
@@ -23,11 +23,22 @@ class JournalMarkController extends Controller implements IAdminController
     {
         return [
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
                 ],
             ],
+            'access' => [
+
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => [],
+                        'roles' => ['teacher'],
+                    ]
+                ]
+            ]
         ];
     }
 
@@ -56,6 +67,22 @@ class JournalMarkController extends Controller implements IAdminController
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
+    }
+
+    /**
+     * Finds the JournalMark model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param integer $id
+     * @return JournalMark the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModel($id)
+    {
+        if (($model = JournalMark::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
     }
 
     /**
@@ -130,22 +157,6 @@ class JournalMarkController extends Controller implements IAdminController
             }
             echo Json::encode(['output' => [], 'selected' => Yii::t('app', 'Select ...')]);
             return;
-        }
-    }
-
-    /**
-     * Finds the JournalMark model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return JournalMark the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = JournalMark::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
 }

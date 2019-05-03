@@ -2,6 +2,7 @@
 
 namespace app\modules\load\models;
 
+use Yii;
 use yii\data\ActiveDataProvider;
 
 class LoadSearch extends Load
@@ -56,4 +57,15 @@ class LoadSearch extends Load
 
         return $dataProvider;
     }
+
+    /**
+     * @return array
+     */
+    public function attributeLabels()
+    {
+        return array_merge(parent::attributeLabels(), [
+            'commission_id' => Yii::t('app', 'Cyclic Commission'),
+        ]);
+    }
+
 }

@@ -19,7 +19,7 @@ class CharacteristicsTypeController extends Controller implements IAdminControll
     {
         return [
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
                 ],

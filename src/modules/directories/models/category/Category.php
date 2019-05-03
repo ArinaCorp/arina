@@ -54,7 +54,7 @@ class Category extends ActiveRecord
      */
     public function getEmployee()
     {
-        return $this->hasMany(Employee::className(), ['category_id' => 'id']);
+        return $this->hasMany(Employee::class, ['category_id' => 'id']);
     }
 
 }

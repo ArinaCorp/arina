@@ -28,7 +28,7 @@ class ExportEmployee
          * @var Employee[] $employees
          */
 
-        $employees = Employee::getList();
+        $employees = Employee::find()->all();
 
         if (!is_null($employees)) {
 

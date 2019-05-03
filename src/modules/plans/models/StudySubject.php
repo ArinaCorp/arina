@@ -50,7 +50,7 @@ class StudySubject extends ActiveRecord
     {
         return [
             'JsonBehavior' => [
-                'class' => JsonBehavior::className(),
+                'class' => JsonBehavior::class,
                 'fields' => ['control', 'weeks'],
             ],
         ];
@@ -86,7 +86,7 @@ class StudySubject extends ActiveRecord
      */
     public function getStudyPlan()
     {
-        return $this->hasOne(StudyPlan::className(), ['id' => 'study_plan_id']);
+        return $this->hasOne(StudyPlan::class, ['id' => 'study_plan_id']);
     }
 
     /**
@@ -94,7 +94,7 @@ class StudySubject extends ActiveRecord
      */
     public function getSubject()
     {
-        return $this->hasOne(Subject::className(), ['id' => 'subject_id']);
+        return $this->hasOne(Subject::class, ['id' => 'subject_id']);
     }
 
     /**

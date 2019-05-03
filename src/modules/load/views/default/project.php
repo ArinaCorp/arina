@@ -4,6 +4,7 @@
  * @var \app\modules\load\models\Load $model
  * @var \yii\bootstrap\ActiveForm $form
  */
+//@TODO refactor to yii2
 $this->breadcrumbs = array(
     Yii::t('base', 'Load') => $this->createUrl('index'),
     $model->studyYear->title => $this->createUrl('view', array('id' => $model->study_year_id)),

@@ -11,18 +11,16 @@ use yii\widgets\MaskedInput;
 
 <div class="row">
     <div class="col-sm-4">
-        <?= $form->field($model, 'is_in_education')
-            ->dropDownList(
-                [0 => Yii::t('app', 'No'), 1 => Yii::t('app', 'Yes')]
-            ) ?>
+        <?= $form->field($model, 'is_in_education')->dropDownList(
+            [0 => Yii::t('app', 'No'), 1 => Yii::t('app', 'Yes')]
+        ) ?>
     </div>
     <div class="col-sm-4 hidden field_cyclic_commission_id">
         <?= $form->field($model, 'cyclic_commission_id')->widget(Select2::class, [
-            'data' => CyclicCommission::getList(),
-            'options' =>
-                [
-                    'placeholder' => Yii::t('app', 'Select cyclic commission')
-                ]]) ?>
+            'data' => CyclicCommission::getMap('title'),
+            'options' => [
+                'placeholder' => Yii::t('app', 'Select cyclic commission')
+            ]]) ?>
     </div>
     <div class="col-sm-3">
         <?= $form->field($model, 'start_date')->widget(DatePicker::class, [
@@ -62,18 +60,17 @@ use yii\widgets\MaskedInput;
     </div>
     <div class="col-sm-3">
         <?= $form->field($model, 'position_id')->widget(Select2::class, [
-            'data' => Position::getList(),
-            'options' =>
-                [
-                    'placeholder' => Yii::t('app', 'Select position')
-                ]]) ?>
+            'data' => Position::getMap('title'),
+            'options' => [
+                'placeholder' => Yii::t('app', 'Select position')
+            ]]) ?>
     </div>
     <div class="col-sm-3">
         <?= $form->field($model, 'category_id')->widget(Select2::class, [
             'data' => Qualification::getMap('title'),
             'options' => [
-                    'placeholder' => Yii::t('app', 'Select qualification')
-                ]]) ?>
+                'placeholder' => Yii::t('app', 'Select qualification')
+            ]]) ?>
     </div>
     <div class="col-sm-3">
         <?= $form->field($model, 'gender')->dropDownList([0 => Yii::t('app', 'Male'), 1 => Yii::t('app', 'Female')], ['prompt' => Yii::t('app', 'Select gender')]) ?>
@@ -89,7 +86,7 @@ use yii\widgets\MaskedInput;
     </div>
     <div class="col-sm-3">
         <?= $form->field($model, 'passport_issued_by')->textInput(['maxlength' => true, 'placeholder' => $model->getAttributeLabel('passport_issued_by')])
-        //$form->field($model, 'type')->dropDownList($model->getTypes(), ['prompt' => Yii::t('app', 'Select type')])?>
+        //$form->field($model, 'type')->dropDownList($model->getTypes(), ['prompt' => Yii::t('app', 'Select type')])    ?>
     </div>
     <div class="col-sm-3">
         <?= $form->field($model, 'passport_issued_date')->widget(DatePicker::class, [

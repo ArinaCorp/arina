@@ -44,6 +44,77 @@ class Employee extends ActiveRecord
     public $data;
     public $has_education;
 
+    /**
+     * @return string the associated database table name
+     */
+    public static function tableName()
+    {
+        return '{{%employee}}';
+    }
+
+    /**
+     * @param $modelClass
+     * @param array $multipleModels
+     * @param string $pk
+     */
+    public static function createMultiple($modelClass, $multipleModels = [], $pk = 'id')
+    {
+        $model = new $modelClass;
+        $formName = $model->formName();
+        $post = Yii::$app->request->post($formName);
+        $models = [];
+
+        if (!empty($multipleModels)) {
+            $keys = array_keys(ArrayHelper::map($multipleModels, $pk, $pk));
+            $multipleModels = array_combine($keys, $multipleModels);
+        }
+
+        if ($post && is_array($post)) {
+            foreach ($post as $i => $item) {
+                if (isset($item[$pk]) && !empty($item[$pk]) && isset($multipleModels[$item[$pk]])) {
+                    $models[] = $multipleModels[$item[$pk]];
+                } else {
+                    $models[] = new $modelClass;
+                }
+            }
+        }
+    }
+
+    public static function getAllTeacherList()
+    {
+        return ArrayHelper::map(self::getAllTeacher(), 'id', 'fullName', 'cyclic_commission_id');
+    }
+
+    public static function getAllTeacher($cyclicCommissionId = false)
+    {
+        $query = self::find();
+        $query->andWhere(['is_in_education' => 1]);
+        if ($cyclicCommissionId) {
+            $query->andWhere(['cyclic_commission_id' => $cyclicCommissionId]);
+        }
+        $query->addOrderBy(['first_name' => SORT_ASC, 'middle_name' => SORT_ASC, 'last_name' => SORT_ASC]);
+        return $query->all();
+    }
+
+    /**
+     * @return EmployeeQuery|\yii\db\ActiveQuery
+     */
+    public static function find()
+    {
+        return new EmployeeQuery(get_called_class());
+    }
+
+    /**
+     * @TODO move to component
+     *
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
+    public static function getDocument()
+    {
+        ExportToExcel::getDocument('Employee');
+    }
 
     public function behaviors()
     {
@@ -52,18 +123,10 @@ class Employee extends ActiveRecord
                 'class' => RelatedBehavior::class,
                 'mappedType' => RelatedBehavior::MAPPED_TYPE_PK_FIELD,
                 'fields' => [
-                    'employeeEducation' => EmployeeEducation::className(),
+                    'employeeEducation' => EmployeeEducation::class,
                 ],
             ]
         ];
-    }
-
-    /**
-     * @return string the associated database table name
-     */
-    public static function tableName()
-    {
-        return '{{%employee}}';
     }
 
     /**
@@ -105,11 +168,6 @@ class Employee extends ActiveRecord
         ];
     }
 
-    public function getFullName()
-    {
-        return trim("$this->last_name $this->first_name $this->middle_name");
-    }
-
     public function getNameWithInitials()
     {
         $firstNameInitial = mb_substr($this->first_name, 0, 1, 'UTF-8');
@@ -119,7 +177,7 @@ class Employee extends ActiveRecord
 
     public function getShortName()
     {
-        return $this->first_name . ' ' . $this->middle_name . ' ' . $this->last_name;
+        return $this->last_name . ' ' . mb_substr($this->first_name, 0, 1, 'UTF-8') . '.' . mb_substr($this->middle_name, 0, 1, 'UTF-8') . '.';
     }
 
     public function getShortNameInitialFirst()
@@ -142,50 +200,12 @@ class Employee extends ActiveRecord
         return $this->is_in_education ? Yii::t('app', 'Take part in education') : Yii::t('app', 'Not take part in education');
     }
 
-    public static function getAllTeacher($cyclicCommissionId = false)
-    {
-        $query = self::find();
-        $query->andWhere(['is_in_education' => 1]);
-        if ($cyclicCommissionId) {
-            $query->andWhere(['cyclic_commission_id' => $cyclicCommissionId]);
-        }
-        $query->addOrderBy(['first_name' => SORT_ASC, 'middle_name' => SORT_ASC, 'last_name' => SORT_ASC]);
-        return $query->all();
-    }
-
-    public static function getList()
-    {
-        $query = self::find();
-        $query->addOrderBy(['first_name' => SORT_ASC, 'middle_name' => SORT_ASC, 'last_name' => SORT_ASC]);
-        return $query->all();
-    }
-
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getEducation()
     {
-        return $this->hasMany(EmployeeEducation::className(), ['employee_id' => 'id']);
-    }
-
-    public static function createMultiple($modelClass, $multipleModels = [], $pk = 'id')
-    {
-        $model = new $modelClass;
-        $formName = $model->formName();
-        $post = Yii::$app->request->post($formName);
-        $models = [];
-
-        if (!empty($multipleModels)) {
-            $keys = array_keys(ArrayHelper::map($multipleModels, $pk, $pk));
-            $multipleModels = array_combine($keys, $multipleModels);
-        }
-
-        if ($post && is_array($post)) {
-            foreach ($post as $i => $item) {
-                if (isset($item[$pk]) && !empty($item[$pk]) && isset($multipleModels[$item[$pk]])) {
-                    $models[] = $multipleModels[$item[$pk]];
-                } else {
-                    $models[] = new $modelClass;
-                }
-            }
-        }
+        return $this->hasMany(EmployeeEducation::class, ['employee_id' => 'id']);
     }
 
     public function getPosition()
@@ -202,9 +222,9 @@ class Employee extends ActiveRecord
         return null;
     }
 
-    public static function getAllTeacherList()
+    public function getGroups()
     {
-        return ArrayHelper::map(self::getAllTeacher(), 'id', 'fullName', 'cyclic_commission_id');
+        return Group::find()->where(['id' => $this->getGroupArray()])->all();
     }
 
     public function getGroupArray()
@@ -233,26 +253,14 @@ class Employee extends ActiveRecord
         return $listGroup;
     }
 
-    public function getGroups()
-    {
-        return Group::find()->where(['id' => $this->getGroupArray()])->all();
-    }
-
     public function getLink()
     {
         return Html::a($this->getFullName(), Url::to(['/employee/default/view', 'id' => $this->id]));
     }
 
-    /**
-     * @TODO move to component
-     *
-     * @throws \PhpOffice\PhpSpreadsheet\Exception
-     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
-     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
-     */
-    public static function getDocument()
+    public function getFullName()
     {
-        ExportToExcel::getDocument('Employee');
+        return trim("$this->last_name $this->first_name $this->middle_name");
     }
 
     /**
@@ -260,7 +268,7 @@ class Employee extends ActiveRecord
      */
     public function getEmployeeEducation()
     {
-        return $this->hasMany(EmployeeEducation::className(), ['employee_id' => 'id']);
+        return $this->hasMany(EmployeeEducation::class, ['employee_id' => 'id']);
     }
 
     /**

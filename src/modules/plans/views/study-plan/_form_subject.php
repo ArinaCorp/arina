@@ -35,7 +35,7 @@ use app\modules\directories\models\subject\Subject;
 
     <div class="row">
         <div class="col-sm-4">
-            <?= $form->field($model, 'subject_id')->widget(Select2::className(),
+            <?= $form->field($model, 'subject_id')->widget(Select2::class,
                 [
                     'data' => $model->isNewRecord ?
                         $model->studyPlan->getUnusedSubjects() :

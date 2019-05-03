@@ -34,11 +34,6 @@ use yii\bootstrap\Nav;
             'visible' => isset(Yii::$app->extensions['dektrium/yii2-rbac']),
         ],
         [
-            'label' => \Yii::t('user', 'Rules'),
-            'url'   => ['/rbac/rule/index'],
-            'visible' => isset(Yii::$app->extensions['dektrium/yii2-rbac']),
-        ],
-        [
             'label' => Yii::t('user', 'Create'),
             'items' => [
                 [

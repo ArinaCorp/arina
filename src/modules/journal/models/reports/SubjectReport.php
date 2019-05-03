@@ -12,7 +12,7 @@ class SubjectReport extends Model
 {
     public static function getReport($load_id)
     {
-        $load = Load::getZaglushka();
+        $load = Load::findOne($load_id);
         $tmpfname = Yii::getAlias('@webroot') . "/templates/report_subject.xls";
         $excelReader = PHPExcel_IOFactory::createReaderForFile($tmpfname);;
         $excelObj = $excelReader->load($tmpfname);

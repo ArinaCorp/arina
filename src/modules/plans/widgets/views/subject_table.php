@@ -42,7 +42,7 @@ use yii\helpers\Url;
         [ 'header' => '7', 'value' => function ($model) { return $model->weeks[6]; }],
         [ 'header' => '8', 'value' => function ($model) { return $model->weeks[7]; }],
         [
-            'class' => ActionColumn::className(),
+            'class' => ActionColumn::class,
             'header' => Yii::t('app', 'Actions'),
             'contentOptions' => ['style' => 'width: 20px'],
             'template' => '{update} {delete}',

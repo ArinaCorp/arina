@@ -22,7 +22,7 @@ use kartik\depdrop\DepDrop;
             ['prompt' => Yii::t('app', 'Choose country')]);
     ?>
 
-    <?= $form->field($model, 'region_id')->widget(DepDrop::classname(), [
+    <?= $form->field($model, 'region_id')->widget(DepDrop::class, [
         'options' => ['id' => 'region_id'],
         'data' => [$model->region_id => 'default'],
         'pluginOptions'=>[
@@ -33,7 +33,7 @@ use kartik\depdrop\DepDrop;
         ]
     ]); ?>
 
-    <?= $form->field($model, 'district_id')->widget(DepDrop::classname(), [
+    <?= $form->field($model, 'district_id')->widget(DepDrop::class, [
         'options' => ['id' => 'district_id'],
         'data' => [$model->district_id => 'default'],
         'pluginOptions'=>[

@@ -17,7 +17,7 @@ use app\modules\plans\models\WorkSubject;
 
     <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'description')->widget(SwitchInput::classname(), [
+    <?= $form->field($model, 'description')->widget(SwitchInput::class, [
         'pluginOptions' =>
             [
                 'onText' => Yii::t('app', 'Yes'),
@@ -25,22 +25,14 @@ use app\modules\plans\models\WorkSubject;
             ]
     ]); ?>
 
-    <?= $form->field($model, 'homework')->widget(SwitchInput::classname(), [
+    <?= $form->field($model, 'homework')->widget(SwitchInput::class, [
         'pluginOptions' =>
             [
                 'onText' => Yii::t('app', 'Yes'),
                 'offText' => Yii::t('app', 'No'),
             ]
     ]); ?>
-    <?= $form->field($model, 'audience')->widget(SwitchInput::classname(), [
-        'pluginOptions' =>
-            [
-                'onText' => Yii::t('app', 'Yes'),
-                'offText' => Yii::t('app', 'No'),
-            ]
-    ]); ?>
-
-    <?= $form->field($model, 'hours')->widget(SwitchInput::classname(), [
+    <?= $form->field($model, 'audience')->widget(SwitchInput::class, [
         'pluginOptions' =>
             [
                 'onText' => Yii::t('app', 'Yes'),
@@ -48,7 +40,7 @@ use app\modules\plans\models\WorkSubject;
             ]
     ]); ?>
 
-    <?= $form->field($model, 'present')->widget(SwitchInput::classname(), [
+    <?= $form->field($model, 'hours')->widget(SwitchInput::class, [
         'pluginOptions' =>
             [
                 'onText' => Yii::t('app', 'Yes'),
@@ -56,7 +48,7 @@ use app\modules\plans\models\WorkSubject;
             ]
     ]); ?>
 
-    <?= $form->field($model, 'date')->widget(SwitchInput::classname(), [
+    <?= $form->field($model, 'present')->widget(SwitchInput::class, [
         'pluginOptions' =>
             [
                 'onText' => Yii::t('app', 'Yes'),
@@ -64,7 +56,7 @@ use app\modules\plans\models\WorkSubject;
             ]
     ]); ?>
 
-    <?= $form->field($model, 'n_pp')->widget(SwitchInput::classname(), [
+    <?= $form->field($model, 'date')->widget(SwitchInput::class, [
         'pluginOptions' =>
             [
                 'onText' => Yii::t('app', 'Yes'),
@@ -72,7 +64,7 @@ use app\modules\plans\models\WorkSubject;
             ]
     ]); ?>
 
-    <?= $form->field($model, 'n_in_day')->widget(SwitchInput::classname(), [
+    <?= $form->field($model, 'n_pp')->widget(SwitchInput::class, [
         'pluginOptions' =>
             [
                 'onText' => Yii::t('app', 'Yes'),
@@ -80,7 +72,7 @@ use app\modules\plans\models\WorkSubject;
             ]
     ]); ?>
 
-    <?= $form->field($model, 'ticket')->widget(SwitchInput::classname(), [
+    <?= $form->field($model, 'n_in_day')->widget(SwitchInput::class, [
         'pluginOptions' =>
             [
                 'onText' => Yii::t('app', 'Yes'),
@@ -88,7 +80,15 @@ use app\modules\plans\models\WorkSubject;
             ]
     ]); ?>
 
-    <?= $form->field($model, 'is_report')->widget(SwitchInput::classname(), [
+    <?= $form->field($model, 'ticket')->widget(SwitchInput::class, [
+        'pluginOptions' =>
+            [
+                'onText' => Yii::t('app', 'Yes'),
+                'offText' => Yii::t('app', 'No'),
+            ]
+    ]); ?>
+
+    <?= $form->field($model, 'is_report')->widget(SwitchInput::class, [
         'pluginOptions' =>
             [
                 'onText' => Yii::t('app', 'Yes'),
@@ -98,7 +98,7 @@ use app\modules\plans\models\WorkSubject;
 
     <?= $form->field($model, 'report_title')->textInput() ?>
 
-    <?= $form->field($model, 'work_type_id')->widget(Select2::className(), [
+    <?= $form->field($model, 'work_type_id')->widget(Select2::class, [
         'data' => WorkSubject::getControlLabelList(),
         'options' => ['placeholder' => Yii::t('app','Select a type')],
         'pluginOptions' => [

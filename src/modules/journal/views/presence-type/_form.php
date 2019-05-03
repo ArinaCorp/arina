@@ -18,7 +18,7 @@ use kartik\touchspin\TouchSpin;
 
     <?= $form->field($model, 'label')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'is_great')->widget(SwitchInput::classname(), [
+    <?= $form->field($model, 'is_great')->widget(SwitchInput::class, [
         'pluginOptions' =>
             [
                 'onText' => Yii::t('app', 'Yes'),
@@ -27,7 +27,7 @@ use kartik\touchspin\TouchSpin;
     ]);
     ?>
 
-    <?= $form->field($model, 'percent_hours')->widget(TouchSpin::className(),
+    <?= $form->field($model, 'percent_hours')->widget(TouchSpin::class,
         [
             'pluginOptions' => [
                 'initval' => 100,

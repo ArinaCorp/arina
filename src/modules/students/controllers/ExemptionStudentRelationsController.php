@@ -22,7 +22,7 @@ class ExemptionStudentRelationsController extends Controller implements IAdminCo
     {
         return [
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
                 ],

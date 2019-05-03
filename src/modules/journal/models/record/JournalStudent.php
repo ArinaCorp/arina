@@ -3,7 +3,6 @@
 namespace app\modules\journal\models\record;
 
 use app\modules\load\models\Load;
-use app\modules\students\models\Group;
 use app\modules\students\models\Student;
 use Yii;
 use yii\behaviors\TimestampBehavior;
@@ -28,6 +27,53 @@ class JournalStudent extends \yii\db\ActiveRecord
     CONST TYPE_ACCEPTED = 1;
     CONST TYPE_DE_ACCEPTED = 0;
 
+    public static function getListTypes()
+    {
+        return [
+            self::TYPE_DE_ACCEPTED => Yii::t('app', 'De accepted from list'),
+            self::TYPE_ACCEPTED => Yii::t('app', 'Accepted to list'),
+        ];
+    }
+
+    /**
+     * @param $load_id
+     * @param null $dateTo
+     * @param null $dateFrom
+     * @return Student[]
+     */
+    public static function getAllStudentByLoad($load_id, $dateTo = null, $dateFrom = null)
+    {
+        return Student::find()
+            ->where([
+                'id' => self::getAllStudentsIdsByLoad($load_id, $dateTo, $dateFrom)
+            ])
+            ->all();
+    }
+
+    /**
+     * @param $load_id
+     * @param null $dateTo
+     * @param null $dateFrom
+     * @return array
+     */
+    public static function getAllStudentsIdsByLoad($load_id, $dateTo = null, $dateFrom = null)
+    {
+        $query = new Query();
+        $query
+            ->from(self::tableName())
+            ->select(['student_id'])
+            ->where(['load_id' => $load_id]);
+        if (!is_null($dateFrom)) {
+            $query->andFilterWhere(['<=', 'data', $dateTo]);
+        };
+        if (!is_null($dateTo)) {
+            $query->andFilterWhere(['>=', 'data', $dateFrom]);
+        };
+        $query->
+        groupBy(['student_id']);
+        return ArrayHelper::getColumn($query->all(), 'student_id');
+    }
+
     /**
      * @inheritdoc
      */
@@ -36,10 +82,99 @@ class JournalStudent extends \yii\db\ActiveRecord
         return '{{%journal_student}}';
     }
 
+    public static function getAvailableStudentsList($load_id)
+    {
+        return ArrayHelper::map(self::getAvailableStudentArray($load_id), 'id', 'fullName');
+    }
+
+    public static function getAvailableStudentArray($load_id)
+    {
+        return Student::findAll(self::getAvailableStudentIds($load_id));
+    }
+
+    public static function getAvailableStudentIds($load_id)
+    {
+        $load = Load::findOne($load_id);
+        $inGroup = $load->group->getStudentsIds();
+        $inAlreadyLoad = self::getActiveStudentsIdsInLoad($load_id);
+        return array_diff($inGroup, $inAlreadyLoad);
+    }
+
+    /**
+     * @param $load_id
+     * @param null $dateTo
+     * @return int[]
+     */
+    public static function getActiveStudentsIdsInLoad($load_id, $dateTo = null)
+    {
+        $records = self::getRecordsByLoad($load_id, $dateTo);
+        $ids = [];
+        /**
+         * @var $records self[]
+         */
+        foreach ($records as $record) {
+            if ($record->type == self::TYPE_ACCEPTED) {
+                $ids[] = $record->student_id;
+            } elseif ($record->type == self::TYPE_DE_ACCEPTED) {
+                $key = array_search($record->student_id, $ids);
+                if ($key !== false) {
+                    unset($ids[$key]);
+                }
+            }
+        }
+        return $ids;
+    }
+
+    public static function getRecordsByLoad($load_id, $type = null, $dateTo = null, $dateFrom = null)
+    {
+        $query = self::find();
+        $query->andWhere(['load_id' => $load_id]);
+        if (!is_null($type)) {
+            $query->andWhere(['type' => $type]);
+        }
+        if (!is_null($dateTo)) {
+            $query->andFilterWhere(['<=', 'date', $dateTo]);
+        }
+        if (!is_null($dateFrom)) {
+            $query->andFilterWhere(['>=', 'date', $dateFrom]);
+        }
+        $query->orderBy(['date' => SORT_ASC]);
+        return $query->all();
+    }
+
+    public static function getActiveStudentsInLoadList($load_id, $dateTo = null)
+    {
+        return ArrayHelper::map(self::getActiveStudentsInLoad($load_id, $dateTo), 'id', 'fullName');
+    }
+
+    public static function getActiveStudentsInLoad($load_id, $dateTo = null)
+    {
+        return Student::findAll(self::getActiveStudentsIdsInLoad($load_id, $dateTo));
+    }
+
+    public static function checkIsActive($student_id, $load_id, $dateTo)
+    {
+        /**
+         * @var $record self
+         */
+        $record = self::find()
+            ->andWhere(['student_id' => $student_id, 'load_id' => $load_id])
+            ->andWhere(['<', 'date', $dateTo])
+            ->orderBy(['id' => SORT_DESC])
+            ->one();
+        //var_dump($record);
+        if ($record == null) return false;
+        if ($record->type == self::TYPE_ACCEPTED) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function behaviors()
     {
         return [
-            TimestampBehavior::className(),
+            TimestampBehavior::class,
         ];
     }
 
@@ -87,144 +222,6 @@ class JournalStudent extends \yii\db\ActiveRecord
 
     public function getStudent()
     {
-        return $this->hasOne(Student::className(), ['id' => 'student_id']);
-    }
-
-    public static function getListTypes()
-    {
-        return [
-            self::TYPE_DE_ACCEPTED => Yii::t('app', 'De accepted from list'),
-            self::TYPE_ACCEPTED => Yii::t('app', 'Accepted to list'),
-        ];
-    }
-
-    public static function getRecordsByLoad($load_id, $type = null, $dateTo = null, $dateFrom = null)
-    {
-        $query = self::find();
-        $query->andWhere(['load_id' => $load_id]);
-        if (!is_null($type)) {
-            $query->andWhere(['type' => $type]);
-        }
-        if (!is_null($dateTo)) {
-            $query->andFilterWhere(['<=', 'date', $dateTo]);
-        }
-        if (!is_null($dateFrom)) {
-            $query->andFilterWhere(['>=', 'date', $dateFrom]);
-        }
-        $query->orderBy(['date' => SORT_ASC]);
-        return $query->all();
-    }
-
-    /**
-     * @param $load_id
-     * @param null $dateTo
-     * @param null $dateFrom
-     * @return array
-     */
-    public static function getAllStudentsIdsByLoad($load_id, $dateTo = null, $dateFrom = null)
-    {
-        $query = new Query();
-        $query
-            ->from(self::tableName())
-            ->select(['student_id'])
-            ->where(['load_id' => $load_id]);
-        if (!is_null($dateFrom)) {
-            $query->andFilterWhere(['<=', 'data', $dateTo]);
-        };
-        if (!is_null($dateTo)) {
-            $query->andFilterWhere(['>=', 'data', $dateFrom]);
-        };
-        $query->
-        groupBy(['student_id']);
-        return ArrayHelper::getColumn($query->all(), 'student_id');
-    }
-
-    /**
-     * @param $load_id
-     * @param null $dateTo
-     * @param null $dateFrom
-     * @return Student[]
-     */
-    public static function getAllStudentByLoad($load_id, $dateTo = null, $dateFrom = null)
-    {
-        return Student::find()
-            ->where([
-                'id' => self::getAllStudentsIdsByLoad($load_id, $dateTo, $dateFrom)
-            ])
-            ->all();
-    }
-
-    public static function getAvailableStudentIds($load_id)
-    {
-        $load = Load::getZaglushka();
-        // $load = Load::findOne($load_id);
-        $inGroup = $load->group->getStudentsIds();
-        $inAlreadyLoad = self::getActiveStudentsIdsInLoad($load_id);
-        return array_diff($inGroup, $inAlreadyLoad);
-    }
-
-    public static function getAvailableStudentArray($load_id)
-    {
-        return Student::findAll(self::getAvailableStudentIds($load_id));
-    }
-
-    public static function getAvailableStudentsList($load_id)
-    {
-        return ArrayHelper::map(self::getAvailableStudentArray($load_id), 'id', 'fullName');
-    }
-
-
-    /**
-     * @param $load_id
-     * @param null $dateTo
-     * @return int[]
-     */
-    public static function getActiveStudentsIdsInLoad($load_id, $dateTo = null)
-    {
-        $records = self::getRecordsByLoad($load_id, $dateTo);
-        $ids = [];
-        /**
-         * @var $records self[]
-         */
-        foreach ($records as $record) {
-            if ($record->type == self::TYPE_ACCEPTED) {
-                $ids[] = $record->student_id;
-            } elseif ($record->type == self::TYPE_DE_ACCEPTED) {
-                $key = array_search($record->student_id, $ids);
-                if ($key !== false) {
-                    unset($ids[$key]);
-                }
-            }
-        }
-        return $ids;
-    }
-
-    public static function getActiveStudentsInLoad($load_id, $dateTo = null)
-    {
-        return Student::findAll(self::getActiveStudentsIdsInLoad($load_id, $dateTo));
-    }
-
-    public static function getActiveStudentsInLoadList($load_id, $dateTo = null)
-    {
-        return ArrayHelper::map(self::getActiveStudentsInLoad($load_id, $dateTo), 'id', 'fullName');
-    }
-
-    public static function checkIsActive($student_id, $load_id, $dateTo)
-    {
-        /**
-         * @var $record self
-         */
-        $record = self::find()
-            ->andWhere(['student_id' => $student_id, 'load_id' => $load_id])
-            ->andWhere(['<', 'date', $dateTo])
-            ->orderBy(['id' => SORT_DESC])
-            ->one();
-       //var_dump($record);
-        if ($record == null) return false;
-        if ($record->type == self::TYPE_ACCEPTED) {
-            return true;
-        } else {
-            return false;
-        }
+        return $this->hasOne(Student::class, ['id' => 'student_id']);
     }
 }
