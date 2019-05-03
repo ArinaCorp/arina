@@ -384,6 +384,14 @@ class Group extends ActiveRecord
         if (!isset($year)) {
             $year = StudyYear::getCurrentYear();
         }
+        //TODO: remove later
+//        var_dump($year->getYearEnd());
+//        var_dump($this->studyYear->year_start);
+//        if($this->id == 1) {
+//            var_dump($this->studyYear->year_start);
+//            var_dump($year->getYearEnd());
+//            die;
+//        }
         $value = $year->getYearEnd() - $this->studyYear->year_start;
         return $value;
     }

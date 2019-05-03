@@ -447,4 +447,13 @@ return [
     'Years Count' => 'Кількість років',
     'Yes' => 'Так',
     'course' => 'курс',
+    'Study form' => 'Форма навчання',
+    'Education program' => 'Освітня програма',
+    'Group curator' => 'Куратор групи',
+    'Selected subject' => 'Обраний предмет на вибір',
+    'Subject block' => 'Блок предметів на вибір студента',
+    'Subject blocks' => 'Блоки вибіркових предметів',
+    'Speciality title' => 'Назва спеціальності',
+    'Subject count' => 'Кількість предметів',
+    'Create subject block' => 'Створити блок предметів',
 ];

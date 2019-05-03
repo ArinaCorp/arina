@@ -123,4 +123,9 @@ return [
     'Work plans' => 'Робочі плани',
     'Work semester' => 'Курсова робота',
     'Work subject creation' => 'Додання предмету до робочого плану',
+    'Create student plan' => 'Створити індивідуальний план',
+    'Student plans' => 'Індивідуальні плани',
+    'Student plan' => 'Індивідуальний план студента',
+    'Student plan editing' => 'Редагування індивідуального плану студента',
+
 ];

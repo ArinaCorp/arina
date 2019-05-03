@@ -1,11 +1,14 @@
 <?php
 
-namespace app\modules\directories\models;
+namespace app\modules\directories\models\subject_block;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 
-class StudyYearSearch extends StudyYear
+/**
+ * SubjectBlockSearch represents the model behind the search form about `app\modules\directories\models\subject\Subject`.
+ */
+class SubjectBlockSearch extends SubjectBlock
 {
     /**
      * @inheritdoc
@@ -13,9 +16,8 @@ class StudyYearSearch extends StudyYear
     public function rules()
     {
         return [
-            ['year_start', 'required'],
-            [['year_start'], 'integer'],
-            ['active', 'boolean'],
+            [['id', 'practice'], 'integer'],
+            [['title', 'short_name', 'code'], 'safe'],
         ];
     }
 
@@ -24,6 +26,7 @@ class StudyYearSearch extends StudyYear
      */
     public function scenarios()
     {
+        // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
 
@@ -33,11 +36,9 @@ class StudyYearSearch extends StudyYear
      * @param array $params
      * @return ActiveDataProvider
      */
-    public function search($params, $query = null)
+    public function search($params)
     {
-        if ($query === null) {
-            $query = StudyYear::find();
-        }
+        $query = SubjectBlock::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -51,12 +52,13 @@ class StudyYearSearch extends StudyYear
 
         $query->andFilterWhere([
             'id' => $this->id,
-            'year_start' => $this->year_start,
-            'active' => $this->active,
+            'practice' => $this->practice,
         ]);
 
-        echo $query->createCommand()->rawSql;
-        die;
+        $query->andFilterWhere(['like', 'title', $this->title])
+            ->andFilterWhere(['like', 'code', $this->code])
+            ->andFilterWhere(['like', 'short_name', $this->short_name]);
+
         return $dataProvider;
     }
 }
