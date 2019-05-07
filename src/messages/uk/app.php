@@ -388,5 +388,15 @@ return [
     'Renewal'=>'Поновлені',
     'Filtered students'=>'Фільтровані студенти',
     'Students list'=>'Список студентів',
-    'Date create'=>'Дата створення'
+    'Date create'=>'Дата створення',
+    'Attestation note'=>'Атестаційна відомість',
+    'Semester note'=>'Семестрова відомість',
+    'Examination note'=>'Екзаменаційна відомість',
+    'Subject title'=>'Назва дисциплін',
+    'Please enter a "semester" value'=>'Будь ласка введіть номер семестру',
+    'Semester value must be >1 and <8'=>'Значення поля повинно бути >1 та <8',
+    'Print'=>'Друк',
+    'Location'=>'Приналежність',
+    'View'=>'Перегляд',
+    'Scoring note'=>'Залікова відомість'
 ];

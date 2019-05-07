@@ -1,8 +1,10 @@
 <?php
 
 use kartik\export\ExportMenu;
+use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\helpers\Url;
 use yii\widgets\Pjax;
 use \app\modules\students\models\Exemption;
 use \app\modules\students\models\ExemptionStudentRelation;
@@ -40,7 +42,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'group' => $group,
             'exemption' => $exemption,
             'search' => $search,
-            'aliasName'=>$aliasName
+            'aliasName' => $aliasName
         ]
     );
     ?>
@@ -56,6 +58,21 @@ $this->params['breadcrumbs'][] = $this->title;
             'visible' => !empty($search->exemptions),
             'value' => function ($model) {
                 return Exemption::getExemptionTitleById(ExemptionStudentRelation::getExemptionIdByStudentId($model->id));
+            }
+        ],
+        [
+            'format' => 'raw',
+            'contentOptions' => ['style' => 'text-align:center;width:70px;'],
+            'value' => function ($model) use ($search) {
+                return Html::a(FA::icon('eye'), Url::to(['/students/default/view', 'id' => $model->primaryKey]), [
+                        'title' => Yii::t('app', 'View'),
+                        'style' => 'text-align:center;margin:0 5px',
+                        'target'=>'_blank', 'data-pjax'=>"0"
+                    ]) . Html::a(FA::icon('file'), ['/students/default/document', 'params' => ['student_id' => $model->primaryKey, 'search' =>Yii::$app->request->queryParams]], [
+                        'title' => Yii::t('app', 'Print'),
+                        'style' => 'text-align:center;margin:0 5px',
+                        'target'=>'_blank', 'data-pjax'=>"0"
+                    ]);
             }
         ],
     ];

@@ -7,6 +7,7 @@ use app\modules\directories\models\subject_relation\SubjectRelation;
 use nullref\useful\traits\Mappable;
 use Yii;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "subject".
@@ -88,6 +89,13 @@ class Subject extends ActiveRecord
             $list[$relation->subjectCycle->title][$relation->subject_id] = $relation->subject->title;
         }
         return $list;
+    }
+
+    public static function getList()
+    {
+        $model = self::find()->all();
+        return ArrayHelper::map($model,'id','title');
+
     }
 
     /**

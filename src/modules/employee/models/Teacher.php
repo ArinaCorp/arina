@@ -36,6 +36,12 @@ class Teacher extends Employee
         return ArrayHelper::map(self::findAll(['order' => 'last_name, middle_name, first_name']), 'id', 'fullName');
     }
 
+    public static function getAll()
+    {
+        $model = self::find()->all();
+        return ArrayHelper::map($model, 'id', 'fullName');
+    }
+
     public static function getTreeList()
     {
         $list = array();

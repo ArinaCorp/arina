@@ -103,6 +103,16 @@ class StudentFilter
         return $ids;
     }
 
+    public static function getContractStudentIds()
+    {
+        $students = StudentsHistory::findAll(['payment_type' => StudentsHistory::$PAYMENT_CONTRACT]);
+        $ids = [];
+        foreach ($students as $student) {
+            array_push($ids, $student["student_id"]);
+        }
+        return $ids;
+    }
+
     public static function getAllAlumnusStudentIds()
     {
         $students = StudentsHistory::findAll(['action_type' => StudentsHistory::$TYPE_EXCLUDE]);

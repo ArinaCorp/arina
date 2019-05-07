@@ -2,9 +2,13 @@
 
 namespace app\modules\students\controllers;
 
+use app\components\ExportToExcel;
 use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 use app\modules\rbac\filters\AccessControl;
+use app\modules\students\models\Exemption;
+use app\modules\students\models\ExportParams;
 use app\modules\students\models\Group;
+use app\modules\students\models\StudentSearch;
 use app\modules\user\helpers\UserHelper;
 use app\modules\user\models\User;
 use nullref\core\interfaces\IAdminController;
@@ -89,6 +93,7 @@ class GroupController extends Controller implements IAdminController
             }
         }
 
+
         $query = Group::find();
 
         if (!$showAll) {
@@ -112,6 +117,7 @@ class GroupController extends Controller implements IAdminController
      */
     public function actionView($id)
     {
+        $exportParams = new ExportParams();
         $dataProvider = new ArrayDataProvider([
             'allModels' => $this->findModel($id)->getStudentsArray(),
         ]);
@@ -121,6 +127,7 @@ class GroupController extends Controller implements IAdminController
         return $this->render('view', [
             'dataProvider' => $dataProvider,
             'model' => $this->findModel($id),
+            'exportParams' => $exportParams
         ]);
     }
 
@@ -179,6 +186,30 @@ class GroupController extends Controller implements IAdminController
     {
         $model = $this->findModel($id);
         $model->getDocument();
+    }
+
+//    public function actionAttestation($id)
+//    {
+//        $model = [
+//            'idGroup' => $id,
+//        ];
+//        ExportToExcel::getDocument('Attestation', $model);
+//    }
+    public function actionAttestation()
+    {
+        $data = (Yii::$app->request->post()["ExportParams"]);
+        $model = [
+            'data' => $data
+        ];
+        ExportToExcel::getDocument('Attestation', $model);
+    }
+    public function actionZalik()
+    {
+        $data = (Yii::$app->request->post()["ExportParams"]);
+        $model = [
+            'data' => $data
+        ];
+        ExportToExcel::getDocument('Zalik', $model);
     }
 
     /**

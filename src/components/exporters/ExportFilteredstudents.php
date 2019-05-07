@@ -13,6 +13,7 @@ use app\modules\directories\models\department\Department;
 use app\modules\directories\models\speciality\Speciality;
 use app\modules\students\models\Exemption;
 use app\modules\students\models\Group;
+use app\modules\students\models\StudentSearch;
 use PhpOffice\PhpSpreadsheet\Style;
 use app\modules\students\models\Student;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -22,7 +23,7 @@ class ExportFilteredstudents
 {
     /**
      * @param $spreadsheet Spreadsheet
-     * @param $model Student
+     * @param $model StudentSearch
      * @return mixed
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
@@ -118,6 +119,10 @@ class ExportFilteredstudents
         $params = $model["parameters"];
         $activeSheet = $spreadsheet->getActiveSheet();
 
+        if(!is_null($model['student_id'])){
+        $query = [Student::findOne(['id'=>$model['student_id']])];
+        }
+//        var_dump($model["parameters"]);die;
         $foos = $query;
         $begin = "B";
         $studentL = "C";
@@ -295,7 +300,9 @@ class ExportFilteredstudents
         } else {
             $activeSheet->getColumnDimension($lastCell)->setAutoSize(true);
         }
+        if(is_array($query)){
         $activeSheet->setCellValue($lastCell . $row, "Всього студентів " . count($query));
+        }
         $activeSheet->getStyle($lastCell . $row)->applyFromArray($textRight);
 
         return $spreadsheet;

@@ -75,7 +75,9 @@ $this->registerJs(
         <!-- seccondRow -->
         <div class="row">
             <div class="col-sm-4">
-                <div class="thumbnail">
+                <div class="thumbnail" style="padding: 5px 20px;">
+                    <h4 class="text-center"><b><?= Yii::t('app', 'Location') ?></b></h4>
+                    <hr style="margin-top: 0">
                     <div class="form-group">
                         <div class="form-group">
                             <?= $form->field($search, 'department')->widget(Select2::classname(), [
@@ -145,9 +147,9 @@ $this->registerJs(
             </div>
 
             <div class="col-sm-8">
-                <div class="thumbnail">
+                <div class="thumbnail" style="padding: 5px 30px;">
                     <h4 class="text-center"><b><?= Yii::t('app', 'Exemptions') ?></b></h4>
-                    <hr>
+                    <hr style="margin-top: 0">
                     <div class="row">
 
                         <?php
@@ -156,7 +158,7 @@ $this->registerJs(
                             'item' => function ($index, $label, $name, $checked, $value) {
                                 return '
                                 <div class="col-md-6 col-lg-4">
-                                <div class="form-group text-center">
+                                <div class="form-group ">
                                 ' . Html::checkbox($name, $checked, ['label' => $label, 'value' => $value]) . '
                                 </div></div>
                             ';
@@ -194,10 +196,10 @@ $this->registerJs(
         </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group" style="text-align: right">
         <?= Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-primary']) ?>
         <?= Html::a(Yii::t('app', 'Reset'), ['filter'], ['class' => 'btn btn-default']) ?>
-        <?= Html::a(Yii::t('app', 'Excel'), ['default/document','params'=>Yii::$app->request->queryParams], ['class' => 'btn btn-warning']) ?>
+        <?= Html::a(Yii::t('app', 'Excel'), ['default/document','params'=>Yii::$app->request->queryParams], ['class' => 'btn btn-success']) ?>
     </div>
 <?php ActiveForm::end(); ?>
 <?php //\yii\widgets\Pjax::end();

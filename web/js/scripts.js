@@ -66,4 +66,31 @@ $(document).ready(function () {
             $('.field_cyclic_commission_id').removeClass('hidden');
         }
     })
-})
+});
+
+let background = $(".dialog-background");
+let attestationBtn= $("#attestation");
+let semesterBtn = $("#semester");
+let examBtn = $("#exam");
+let zalikBtn = $("#zalik");
+
+// console.log(background);
+background.click(function () {
+    $('.dialog-window').css('display', 'none');
+});
+
+zalikBtn.click(() => {
+    $('#zalik-window').css('display', 'flex');
+});
+
+attestationBtn.click(() => {
+    $('#attestation-window').css('display', 'flex');
+});
+
+semesterBtn.click(() => {
+    $('#semester-window').css('display', 'flex');
+});
+
+examBtn.click(() => {
+    $('#exam-window').css('display', 'flex');
+});
