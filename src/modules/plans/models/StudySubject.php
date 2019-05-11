@@ -68,7 +68,7 @@ class StudySubject extends ActiveRecord
             [['practice_weeks'], 'checkPractice'],
             [['lectures'], 'checkClasses'],
             [['subject_id'], 'checkSubject', 'on' => 'insert'],
-            [['lectures', 'lab_works', 'practices'], 'default', 'value' => ["0", "0", "0", "0", "0", "0", "0", "0"], 'on' => 'insert'],
+            [['lectures', 'lab_works', 'practices'], 'default', 'value' => 0, 'on' => 'insert'],
             [['study_plan_id', 'subject_id', 'total', 'lectures', 'lab_works', 'practices'], 'integer',],
             [['study_plan_id', 'subject_id', 'total', 'lectures', 'lab_works', 'practices', 'weeks', 'control',
                 'practice_weeks', 'dual_lab_work', 'dual_practice', 'diploma_name', 'certificate_name'], 'safe'],
@@ -293,7 +293,7 @@ class StudySubject extends ActiveRecord
                     $sum += $weekly * $this->studyPlan->semesters[$semester];
                 }
             }
-            if (!$this->subject->practice && ($sum < $this->getClasses())) {
+            if ($sum < $this->getClasses()) {
                 $this->addError('lectures', Yii::t('plans', 'Not enough hours a week for proofreading'));
             }
         }

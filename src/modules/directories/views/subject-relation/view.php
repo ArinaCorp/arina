@@ -9,15 +9,22 @@ use app\modules\directories\models\subject_relation\SubjectRelation;
 /* @var $this View */
 /* @var $model SubjectRelation */
 
-$this->title = Yii::t('app', 'Subject relation') ." #" . $model->id;
+$this->title = Yii::t('app', 'Subject relation') ." " . $model->subject->title;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Subject relations'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="row">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">
+                <?= Html::encode($this->title) ?>
+            </h1>
+        </div>
+    </div>
 
     <p>
+        <?= Html::a(Yii::t('app', 'List'), ['index'], ['class' => 'btn btn-success']) ?>
         <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',

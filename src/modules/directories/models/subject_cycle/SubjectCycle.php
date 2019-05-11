@@ -3,6 +3,7 @@
 namespace app\modules\directories\models\subject_cycle;
 
 use app\modules\directories\models\subject_relation\SubjectRelation;
+use app\modules\journal\models\evaluation\EvaluationSystem;
 use nullref\useful\traits\Mappable;
 use Yii;
 use yii\db\ActiveQuery;
@@ -14,8 +15,10 @@ use yii\db\ActiveRecord;
  * The followings are the available columns in table 'subject_cycle':
  * @property integer $id
  * @property string $title
+ * @property int $evaluation_system_id
  *
  * @property $relations SubjectRelation[]
+ * @property EvaluationSystem $evaluationSystem
  */
 class SubjectCycle extends ActiveRecord
 {
@@ -36,8 +39,9 @@ class SubjectCycle extends ActiveRecord
     {
         return [
             [['title'], 'required'],
-            [['id'], 'integer'],
-            [['id'], 'unique']
+            [['id', 'evaluation_system_id'], 'integer'],
+            [['id'], 'unique'],
+            [['evaluation_system_id'], 'exist', 'skipOnError' => true, 'targetClass' => EvaluationSystem::class, 'targetAttribute' => ['evaluation_system_id' => 'id']],
         ];
     }
 
@@ -49,6 +53,7 @@ class SubjectCycle extends ActiveRecord
         return [
             'id' => Yii::t('subject', 'Cycle number'),
             'title' => Yii::t('app', 'Title'),
+            'evaluation_system_id' => Yii::t('app', 'Evaluation system'),
         ];
     }
 
@@ -60,4 +65,8 @@ class SubjectCycle extends ActiveRecord
         return $this->hasMany(SubjectRelation::class, ['subject_cycle_id' => 'id']);
     }
 
+    public function getEvaluationSystem()
+    {
+        return $this->hasOne(EvaluationSystem::class, ['id' => 'evaluation_system_id']);
+    }
 }

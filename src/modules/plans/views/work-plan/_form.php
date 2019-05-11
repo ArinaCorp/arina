@@ -36,7 +36,7 @@ use yii\widgets\Pjax;
     <div class="row">
         <div class="col-sm-6">
             <?= $form->field($model, 'speciality_qualification_id')->widget(Select2::class, [
-                'data' => SpecialityQualification::getTreeList(),
+                'data' => SpecialityQualification::getMap('fullTitle', 'id', [], false),
                 'id' => 'speciality_qualification_id',
                 'options' =>
                     [

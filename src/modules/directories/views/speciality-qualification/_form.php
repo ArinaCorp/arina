@@ -2,13 +2,14 @@
 
 use app\modules\directories\models\qualification\Qualification;
 use app\modules\directories\models\speciality\Speciality;
+use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 use kartik\select2\Select2;
 use kartik\touchspin\TouchSpin;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model \app\modules\directories\models\speciality_qualification\SpecialityQualification */
+/* @var $model SpecialityQualification */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 

@@ -3,8 +3,11 @@
 namespace app\modules\load\models;
 
 use app\modules\directories\models\StudyYear;
+use app\modules\directories\models\subject_relation\SubjectRelation;
 use app\modules\employee\models\Employee;
+use app\modules\journal\models\evaluation\EvaluationSystem;
 use app\modules\journal\models\record\JournalRecord;
+use app\modules\journal\models\record\JournalRecordType;
 use app\modules\plans\models\WorkSubject;
 use app\modules\students\models\Group;
 use nullref\useful\JsonBehavior;
@@ -23,7 +26,7 @@ use yii\helpers\ArrayHelper;
  * @property integer $employee_id
  * @property integer $group_id
  * @property integer $work_subject_id
- * @property integer $type
+ * @property integer $evaluation_system_id
  * @property integer $course
  * @property array $consult
  * @property array $students
@@ -36,6 +39,8 @@ use yii\helpers\ArrayHelper;
  * @property Employee $employee
  * @property WorkSubject $workSubject
  * @property JournalRecord[] $journalRecords
+ * @property EvaluationSystem $evaluationSystem
+ * @property JournalRecordType $type
  */
 class Load extends ActiveRecord
 {
@@ -117,6 +122,7 @@ class Load extends ActiveRecord
             [['consult'], 'validateConsultation'],
             [['employee_id'], 'required', 'on' => 'project'],
             [['employee_id'], 'safe'],
+            [['evaluation_system_id'], 'integer'],
         ];
     }
 
@@ -150,6 +156,14 @@ class Load extends ActiveRecord
     public function getWorkSubject()
     {
         return $this->hasOne(WorkSubject::class, ['id' => 'work_subject_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getEvaluationSystem()
+    {
+        return $this->hasOne(EvaluationSystem::class, ['id' => 'evaluation_system_id']);
     }
 
     /**
@@ -546,6 +560,17 @@ class Load extends ActiveRecord
                 }
 
             }
+
+            $relation = SubjectRelation::find()
+                ->joinWith('subjectCycle')
+                ->where([
+                    'subject_id' => $this->workSubject->subject_id,
+                    'speciality_qualification_id' => $this->workSubject->workPlan->speciality_qualification_id,
+                ])->one();
+            $evaluation_system_id = $relation->subjectCycle->evaluation_system_id;
+
+            $this->evaluation_system_id = $evaluation_system_id;
+
             return true;
         } else {
             return false;

@@ -9,15 +9,22 @@ use app\modules\directories\models\subject_cycle\SubjectCycle;
 /* @var $this View */
 /* @var $model SubjectCycle */
 
-$this->title = Yii::t('app', 'Subject cycle') ." #" . $model->id;
+$this->title = Yii::t('app', 'Subject cycle') . " #" . $model->id;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Subject cycles'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="row">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">
+                <?= Html::encode($this->title) ?>
+            </h1>
+        </div>
+    </div>
 
     <p>
+        <?= Html::a(Yii::t('app', 'List'), ['index'], ['class' => 'btn btn-success']) ?>
         <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
@@ -33,6 +40,10 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'title',
+            [
+                'attribute' => 'evaluation_system_id',
+                'value' => $model->evaluationSystem->title,
+            ],
         ],
     ]) ?>
 

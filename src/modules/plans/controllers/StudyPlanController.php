@@ -186,8 +186,6 @@ class StudyPlanController extends Controller implements IAdminController
         if (isset($_POST['StudySubject'])) {
             $model->attributes = $_POST['StudySubject'];
             if ($model->save()) {
-                $model = new StudySubject();
-                $model->study_plan_id = $id;
                 return $this->redirect(Url::toRoute(['study-plan/view', 'id' => $id]));
             }
         }
