@@ -104,7 +104,7 @@ class WorkPlanController extends Controller implements IAdminController
 
             if ($model->save()) {
                 $model->scenario = WorkPlan::SCENARIO_GRAPH;
-                return $this->redirect(['graph', 'id' => $model->id]);
+                return $this->redirect(['view', 'id' => $model->id]);
             }
         }
 
@@ -118,7 +118,6 @@ class WorkPlanController extends Controller implements IAdminController
     public function actionGraph($id)
     {
         $model = WorkPlan::findOne($id);
-
         if (Yii::$app->request->post()) {
             if (isset(Yii::$app->session['weeks'])) {
                 $model->semesters = Yii::$app->session['weeks'];

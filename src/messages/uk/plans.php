@@ -43,7 +43,7 @@ return [
     'Add a semester of practice' => 'Додайте семестр практики',
     'Add subject' => 'Додати предмет',
     'Autumn semester' => 'Осінній семестр',
-    'Certificate name' => 'Назва у сертифікаті',
+    'Certificate name' => 'Назва у атестаті',
     'Choose the plan for base' => 'Виберіть план для основи',
     'Class works' => 'Аудиторні',
     'Classes' => 'Аудиторні',

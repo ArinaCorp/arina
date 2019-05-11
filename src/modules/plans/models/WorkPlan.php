@@ -85,11 +85,11 @@ class WorkPlan extends ActiveRecord
                 'message' => Yii::t('plans', 'Click "Generate" and check the data'), 'on' => 'graphs'
             ],
             [['study_year_id'], 'unique', 'targetAttribute' => ['study_year_id', 'speciality_qualification_id']],
-            [['speciality_qualification_id',], 'integer'],
+            [['speciality_qualification_id'], 'integer'],
             [['created', 'updated'], 'safe'],
             [['id', 'speciality_qualification_id'], 'safe', 'on' => 'search'],
             [['study_plan_origin', 'work_plan_origin'], 'checkOrigin', 'on' => 'insert'],
-            [['semesters',], 'required', 'on' => self::SCENARIO_GRAPH],
+            [['semesters'], 'required', 'on' => self::SCENARIO_GRAPH],
 
         ];
     }
@@ -285,6 +285,7 @@ class WorkPlan extends ActiveRecord
             }
         }
         $this->graph = $graph;
+        $this->semesters = $origin->semesters;
         foreach ($origin->studySubjects as $subject) {
             $model = new WorkSubject();
             $model->work_plan_id = $this->id;
@@ -299,12 +300,18 @@ class WorkPlan extends ActiveRecord
             $model->control_hours = $control_hours;
             $model->weeks = $subject->weeks;
             $model->control = $subject->control;
-            $model->total = ["0", "0", "0", "0", "0", "0", "0", "0"];
-            $model->lectures = ["", "", "", "", "", "", "", ""];
-            $model->lab_works = ["", "", "", "", "", "", "", ""];
-            $model->practices = ["", "", "", "", "", "", "", ""];
-            $model->diploma_name = "";
-            $model->certificate_name = "";
+            $total = [];
+            foreach ($subject->weeks as $id => $hoursPerWeek) {
+                // count total hours per semester
+                $total[] = $hoursPerWeek * $this->semesters[$id];
+            }
+            $model->total = $total;
+            $undefArr = ["0", "0", "0", "0", "0", "0", "0", "0"];
+            $model->lectures = $undefArr;
+            $model->lab_works = $undefArr;
+            $model->practices = $undefArr;
+            $model->diploma_name = $subject->diploma_name;
+            $model->certificate_name = $subject->certificate_name;
             $model->save(false);
         }
     }

@@ -42,7 +42,7 @@ use app\modules\directories\models\subject\Subject;
                     'data' => $model->isNewRecord ?
                         $model->workPlan->getUnusedSubjects() :
                         Subject::getListForSpecialityQualification($model->workPlan->speciality_qualification_id),
-                    'options' =>[ 'placeholder' => Yii::t('plans', 'Select subject')]
+                    'options' => ['placeholder' => Yii::t('plans', 'Select subject')]
                 ]) ?>
         </div>
 
@@ -53,7 +53,7 @@ use app\modules\directories\models\subject\Subject;
 
         <div class="col-sm-2">
             <?= $form->field($model, 'dual_practice')->checkbox(
-                ['label' => $model->getAttributeLabel('dual_practice')]);?>
+                ['label' => $model->getAttributeLabel('dual_practice')]); ?>
         </div>
     </div>
     <div class="row">
@@ -61,7 +61,7 @@ use app\modules\directories\models\subject\Subject;
             <?= $form->field($model, 'cyclic_commission_id')->widget(Select2::class,
                 [
                     'data' => CyclicCommission::getMap('title'),
-                    'options' =>[ 'placeholder' => Yii::t('plans', 'Select cyclic commission')]
+                    'options' => ['placeholder' => Yii::t('plans', 'Select cyclic commission')]
                 ]) ?>
         </div>
 
@@ -72,14 +72,14 @@ use app\modules\directories\models\subject\Subject;
 
         <div class="col-sm-2">
             <?= $form->field($model, 'dual_lab_work')->checkbox(
-                ['label' => $model->getAttributeLabel('dual_lab_work')]);?>
+                ['label' => $model->getAttributeLabel('dual_lab_work')]); ?>
         </div>
     </div>
 
     <?php for ($i = 0; $i < 8; $i++): ?>
         <div class="span6 semester" id="semester_<?= $i; ?>">
             <h4><?php echo $i + 1; ?> <?= Yii::t('plans', 'Semester'); ?>:
-                <?= $model->workPlan->semesters[$i]; ?> <?= Yii::t('plans','OfWeeks');?>
+                <?= $model->workPlan->semesters[$i]; ?> <?= Yii::t('plans', 'OfWeeks'); ?>
                 (<span class="total">0</span> <?= Yii::t('plans', 'OfHours'); ?>)</h4>
 
             <div class="row">
@@ -92,12 +92,12 @@ use app\modules\directories\models\subject\Subject;
                 </div>
 
                 <div class="col-sm-2">
-                    <label class="control-label" for="classes"><?=$model->getAttributeLabel('classes')?></label>
+                    <label class="control-label" for="classes"><?= $model->getAttributeLabel('classes') ?></label>
                     <?= Html::textInput(
                         "classes_$i",
                         '',
                         ['type' => 'number', 'min' => 0, 'placeholder' => $model->getAttributeLabel('classes'),
-                            'readonly' => true, 'style' => 'width:140px', 'class'=>'form-control']
+                            'readonly' => true, 'style' => 'width:140px', 'class' => 'form-control']
                     ); ?>
                 </div>
 
@@ -133,39 +133,41 @@ use app\modules\directories\models\subject\Subject;
             <div class="row">
                 <div class="col-sm-2">
                     <?= $form->field($model, "control[$i][0]")->checkbox(
-                            ['label' => $model->getAttributeLabel('test')]);?>
+                        ['label' => $model->getAttributeLabel('test')]); ?>
                 </div>
 
                 <div class="col-sm-2">
                     <?= $form->field($model, "control[$i][1]")->checkbox(
-                            ['label' => $model->getAttributeLabel('exam')]);?>
+                        ['label' => $model->getAttributeLabel('exam')]); ?>
                 </div>
 
                 <div class="col-sm-2">
                     <?= $form->field($model, "control[$i][2]")->checkbox(
-                            ['label' => $model->getAttributeLabel('dpa')]);?>
+                        ['label' => $model->getAttributeLabel('dpa')]); ?>
                 </div>
 
                 <div class="col-sm-2">
                     <?= $form->field($model, "control[$i][3]")->checkbox(
-                            ['label' => $model->getAttributeLabel('da')]);?>
+                        ['label' => $model->getAttributeLabel('da')]); ?>
                 </div>
 
                 <div class="col-sm-2">
                     <?= $form->field($model, "control[$i][4]")->checkbox(
-                            ['label' => $model->getAttributeLabel('course_work')]);?>
+                        ['label' => $model->getAttributeLabel('course_work')]); ?>
                 </div>
 
                 <div class="col-sm-2">
                     <?= $form->field($model, "control[$i][5]")->checkbox(
-                            ['label' => $model->getAttributeLabel('course_project')]);?>
+                        ['label' => $model->getAttributeLabel('course_project')]); ?>
                 </div>
             </div>
-                <hr/>
+            <hr/>
         </div>
     <?php endfor; ?>
 
     <?= $this->render('/_form_buttons', ['model' => $model, 'plan' => 'study']) ?>
+
+    <?= Html::a(Yii::t('app', 'Return'), ['work-plan/view', 'id' => $model->workPlan->id], ['class' => 'btn btn-danger']) ?>
 
     <?php ActiveForm::end(); ?>
 

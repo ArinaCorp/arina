@@ -110,9 +110,7 @@ switch ($course) {
                     $fallHours['self_work'] += intval($subject->getSelfwork($fall)); ?></td>
                 <td><?= ($subject->control[$fall][4] || $subject->control[$fall][5]) ? $subject->project_hours : '';
                     $fallHours['project'] += intval($subject->project_hours); ?></td>
-                <td><?= $subject->weeks[$fall];
-                    $fallHours['weeks'] += intval($subject->weeks[$fall]); ?></td>
-
+                <td><?= $subject->weeks[$fall]; $fallHours['weeks'] += intval($subject->weeks[$fall]); ?></td>
                 <td><?= $subject->total[$spring];
                     $springHours['total'] += intval($subject->total[$spring]); ?></td>
                 <td><?= $subject->getClasses($spring);
