@@ -38,6 +38,7 @@ use yii\widgets\DetailView;
                     'onchange' => 'loadSubBlockSelect(event)'
                 ],
             ]) ?>
+            <?php // TODO: This stuff is retarded, have to look for better way to imp. it ?>
             <!--  Hidden checkbox used with javaScript  -->
             <div class="hidden">
                 <?= $form->field($model, 'loadSubBlockSelect')->checkbox(['id' => 'loadSubBlockSelect-checkbox', 'class' => '']) ?>

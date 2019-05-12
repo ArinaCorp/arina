@@ -118,7 +118,7 @@ class ExportStudentplan
             $activeSheet->setCellValue("H$mandatoryRow", $subject->getSelfWork(${$semester}));
             $activeSheet->setCellValue("I$mandatoryRow", $subject->project_hours ? $subject->project_hours : '0');
             $activeSheet->setCellValue("J$mandatoryRow", 'WIP');
-            $activeSheet->setCellValue("K$mandatoryRow", $subject->cyclicCommission->short_title);
+            $activeSheet->setCellValue("K$mandatoryRow", $subject->cyclicCommission->short_title ? $subject->cyclicCommission->short_title : '');
             //Here is our row 17, well for the first iteration
             $activeSheet->insertNewRowBefore($mandatoryRow + 1);
             $mandatoryRow++;

@@ -8,6 +8,7 @@ use voskobovich\linker\LinkerBehavior;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\web\UploadedFile;
 
@@ -381,6 +382,15 @@ class Student extends \yii\db\ActiveRecord
     /**
      * @return array
      */
+    public static function getList()
+    {
+        $models = self::find()->all();
+        return ArrayHelper::map($models, 'id', 'fullNameAndCode');
+    }
+
+    /**
+     * @return array
+     */
     public function getGroupArray()
     {
         return StudentsHistory::getGroupArray($this->id);
@@ -444,6 +454,14 @@ class Student extends \yii\db\ActiveRecord
     public function getExemptions()
     {
         return $this->hasMany(Exemption::class, ['id' => 'exemption_id'])->viaTable('{{%exemptions_students_relations}}', ['student_id' => 'id']);
+    }
+
+    /**
+     * @return integer
+     */
+    public function getCourse()
+    {
+        return $this->getGroups()[0]->getCourse();
     }
 }
 

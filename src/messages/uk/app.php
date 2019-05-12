@@ -456,4 +456,5 @@ return [
     'Speciality title' => 'Назва спеціальності',
     'Subject count' => 'Кількість предметів',
     'Create subject block' => 'Створити блок предметів',
+    'Semester' => 'Семестр'
 ];

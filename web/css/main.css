@@ -63,3 +63,35 @@
 #select2-studyplan-speciality_qualification_id-results .select2-results__option .select2-results__option {
     padding-left: 35px;
 }
+
+.m1{
+    margin: 1%;
+}
+.m2{
+    margin: 2%;
+}
+.m3{
+    margin: 3%;
+}
+.m4{
+    margin: 4%;
+}
+.m5{
+    margin: 5%;
+}
+
+.p1{
+    padding: 1%;
+}
+.p2{
+    padding: 2%;
+}
+.p3{
+    padding: 3%;
+}
+.p4{
+    padding: 4%;
+}
+.p5{
+    padding: 5%;
+}

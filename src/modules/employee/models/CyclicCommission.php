@@ -14,6 +14,7 @@ use yii\db\ActiveRecord;
  * @property string $title
  * @property integer $head_id
  * @property Employee $head
+ * @property string $short_title
  */
 class CyclicCommission extends ActiveRecord
 {
