@@ -30,7 +30,7 @@ class m190512_163222_create_student_plan_table extends Migration
         );
 
         $this->addForeignKey(
-            'fk-subject_block-student_id',
+            'fk-student_plan-student_id',
             'student_plan',
             'student_id',
             'student',
@@ -78,6 +78,37 @@ class m190512_163222_create_student_plan_table extends Migration
      */
     public function safeDown()
     {
+
+        $this->dropIndex(
+            'idx-student_plan-student_id',
+            'student_plan'
+        );
+
+        $this->dropForeignKey(
+            'fk-student_plan-student_id',
+            'student_plan'
+        );
+
+        $this->dropIndex(
+            'idx-student_plan-work_plan_id',
+            'student_plan'
+        );
+
+        $this->dropForeignKey(
+            'fk-student_plan-work_plan_id',
+            'student_plan'
+        );
+
+        $this->dropIndex(
+            'idx-student_plan-subject_block_id',
+            'student_plan'
+        );
+
+        $this->dropForeignKey(
+            'fk-student_plan-subject_block_id',
+            'student_plan'
+        );
+
         $this->dropTable('student_plan');
     }
 }

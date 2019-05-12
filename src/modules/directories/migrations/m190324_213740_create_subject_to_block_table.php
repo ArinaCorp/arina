@@ -24,12 +24,6 @@ class m190324_213740_create_subject_to_block_table extends Migration
             'subject_id'
         );
 
-        $this->createIndex(
-            'idx-stb-block_id',
-            'subject_to_block',
-            'block_id'
-        );
-
         $this->addForeignKey(
             'fk-stb-subject_id',
             'subject_to_block',
@@ -38,7 +32,12 @@ class m190324_213740_create_subject_to_block_table extends Migration
             'id',
             'CASCADE',
             'CASCADE'
+        );
 
+        $this->createIndex(
+            'idx-stb-block_id',
+            'subject_to_block',
+            'block_id'
         );
 
         $this->addForeignKey(
@@ -59,6 +58,27 @@ class m190324_213740_create_subject_to_block_table extends Migration
      */
     public function safeDown()
     {
+
+        $this->dropForeignKey(
+            'idx-stb-subject_id',
+            'subject_to_block'
+        );
+
+        $this->dropIndex(
+            'fk-stb-subject_id',
+            'subject_to_block'
+        );
+
+        $this->dropForeignKey(
+            'idx-stb-block_id',
+            'subject_to_block'
+        );
+
+        $this->dropIndex(
+            'idx-stb-block_id',
+            'subject_to_block'
+        );
+
         $this->dropTable('subject_to_block');
     }
 }
