@@ -16,6 +16,8 @@
         "php": ">=7.1.0",
         "2amigos/yii2-date-picker-widget": "~1.0",
         "2amigos/yii2-date-time-picker-widget": "*",
+        "bower-asset/animate.css": "dev-master",
+        "bower-asset/remarkable-bootstrap-notify": "dev-master",
         "dektrium/yii2-rbac": "^1.0@dev",
         "dektrium/yii2-user": "^0.9.0@dev",
         "kartik-v/yii2-date-range": "^1.6",
@@ -64,6 +66,12 @@
             }
         }
     },
+    "repositories": [
+      {
+        "type": "composer",
+        "url": "https://asset-packagist.org"
+      }
+    ],
     "scripts": {
         "post-create-project-cmd": [
             "yii\\composer\\Installer::postCreateProject",

@@ -26,6 +26,11 @@ $config = [
                     'css' => [
                         'css/main.css',
                     ],
+                    'depends' => [
+                        'yii\web\YiiAsset',
+                        'nullref\sbadmin\assets\SBAdminAsset',
+                        'app\assets\NotifyAsset',
+                    ]
                 ],
             ],
         ],
