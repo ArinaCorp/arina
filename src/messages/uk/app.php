@@ -362,6 +362,7 @@ return [
     'Select type action' => 'Оберіть тип дії',
     'Selecting' => 'Обрати',
     'Set evaluation system' => 'Вкажіть систему оцінювання',
+    'Set subject cycle' => 'Вкажіть предметний цикл',
     'Short title' => 'Коротка назва ',
     'Smts' => 'Селище міського типу',
     'Social Networks' => 'Соціальні мережі',

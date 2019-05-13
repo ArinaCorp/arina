@@ -25,7 +25,9 @@ use app\modules\journal\models\evaluation\EvaluationSystem;
         <div class="col-sm-3">
             <?= $form->field($model, 'title')->textInput(['maxlength' => true, 'placeholder' => Yii::t('app', 'Title')]) ?>
         </div>
+    </div>
 
+    <div class="row">
         <div class="col-sm-3">
             <?= $form->field($model, 'evaluation_system_id')->widget(Select2::class, [
                 'data' => EvaluationSystem::getMap('title'),
@@ -38,6 +40,21 @@ use app\modules\journal\models\evaluation\EvaluationSystem;
             ]) ?>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-sm-3">
+            <?= $form->field($model, 'parent_id')->widget(Select2::class, [
+                'data' => SubjectCycle::getMap('title', 'id', ['parent_id' => SubjectCycle::ROOT_ID]),
+                'options' => [
+                    'placeholder' => Yii::t('app', "Set cycle"),
+                ],
+                'pluginOptions' => [
+                    'allowClear' => true,
+                ]
+            ]) ?>
+        </div>
+    </div>
+
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

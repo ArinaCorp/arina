@@ -1,12 +1,12 @@
 <?php
 
-use yii\helpers\Html;
-use yii\grid\GridView;
-use yii\web\View;
-use yii\data\ActiveDataProvider;
-
 use app\modules\directories\models\subject_cycle\SubjectCycle;
 use app\modules\directories\models\subject_cycle\SubjectCycleSearch;
+use app\modules\journal\models\evaluation\EvaluationSystem;
+use yii\data\ActiveDataProvider;
+use yii\grid\GridView;
+use yii\helpers\Html;
+use yii\web\View;
 
 /* @var $this View */
 /* @var $searchModel SubjectCycleSearch */
@@ -31,12 +31,19 @@ $this->params['breadcrumbs'][] = $this->title;
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             'title',
             [
-                'attribute'=>'evaluation_system_id',
+                'filter' => EvaluationSystem::getMap('title'),
+                'attribute' => 'evaluation_system_id',
                 'value' => 'evaluationSystem.title',
+            ],
+            [
+                'filter' => SubjectCycle::getMap('title', 'id', ['parent_id' => SubjectCycle::ROOT_ID]),
+                'attribute' => 'parent_id',
+                'value' => 'parentCycle.title',
             ],
 
             ['class' => 'yii\grid\ActionColumn'],

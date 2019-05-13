@@ -44,6 +44,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'evaluation_system_id',
                 'value' => $model->evaluationSystem->title,
             ],
+            [
+                'label' => Yii::t('app', 'Subject cycles'),
+                'value' => join(', ', SubjectCycle::getMap('title', 'id', ['parent_id' => $model->id])),
+            ]
         ],
     ]) ?>
 

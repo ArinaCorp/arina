@@ -16,13 +16,18 @@ use yii\db\ActiveRecord;
  * @property integer $id
  * @property string $title
  * @property int $evaluation_system_id
+ * @property int $parent_id
  *
- * @property $relations SubjectRelation[]
+ * @property SubjectRelation[] $subjectRelations
  * @property EvaluationSystem $evaluationSystem
+ * @property SubjectCycle $parentCycle
+ * @property SubjectCycle[] $subCycles
  */
 class SubjectCycle extends ActiveRecord
 {
     use Mappable;
+
+    const ROOT_ID = 0;
 
     /**
      * @inheritdoc
@@ -38,8 +43,8 @@ class SubjectCycle extends ActiveRecord
     public function rules()
     {
         return [
-            [['title'], 'required'],
-            [['id', 'evaluation_system_id'], 'integer'],
+            [['title', 'evaluation_system_id'], 'required'],
+            [['id', 'evaluation_system_id', 'parent_id'], 'integer'],
             [['id'], 'unique'],
             [['evaluation_system_id'], 'exist', 'skipOnError' => true, 'targetClass' => EvaluationSystem::class, 'targetAttribute' => ['evaluation_system_id' => 'id']],
         ];
@@ -54,19 +59,39 @@ class SubjectCycle extends ActiveRecord
             'id' => Yii::t('subject', 'Cycle number'),
             'title' => Yii::t('app', 'Title'),
             'evaluation_system_id' => Yii::t('app', 'Evaluation system'),
+            'parent_id' => Yii::t('app', 'Subject cycle'),
         ];
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getSubjectRelation()
+    public function getSubjectRelations()
     {
         return $this->hasMany(SubjectRelation::class, ['subject_cycle_id' => 'id']);
     }
 
+    /**
+     * @return ActiveQuery
+     */
     public function getEvaluationSystem()
     {
         return $this->hasOne(EvaluationSystem::class, ['id' => 'evaluation_system_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getParentCycle()
+    {
+        return $this->hasOne(self::class, ['id' => 'parent_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getSubCycles()
+    {
+        return $this->hasMany(self::class, ['parent_id' => 'id']);
     }
 }
