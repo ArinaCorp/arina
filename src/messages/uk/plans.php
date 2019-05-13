@@ -128,5 +128,5 @@ return [
     'Student plans' => 'Індивідуальні плани',
     'Student plan' => 'Індивідуальний план студента',
     'Student plan editing' => 'Редагування індивідуального плану студента',
-
+    'Subjects which are absent on this course' => 'Предмети відсутні на даному курсі'
 ];

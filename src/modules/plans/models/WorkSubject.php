@@ -87,10 +87,9 @@ class WorkSubject extends ActiveRecord
             [['subject_id', 'cyclic_commission_id'], 'required'],
             [['certificate_name', 'diploma_name'], 'string', 'max' => 255],
             [['id'], 'unique'],
-            [['subject_id', 'total', 'lectures', 'lab_works', 'practices', 'weeks', 'control', 'cyclic_commission_id',
+            [['subject_id', 'total', 'lab_works', 'practices', 'weeks', 'control', 'cyclic_commission_id',
                 'certificate_name', 'diploma_name', 'project_hours'], 'safe'],
-            [['lectures', 'lab_works', 'practices',], 'default', 'value' => ["0", "0", "0", "0", "0", "0", "0", "0"]],
-            [['total', 'weeks',], 'default', 'value' => ["0", "0", "0", "0", "0", "0", "0", "0"]],
+            [['total', 'lectures', 'lab_works', 'practices', 'weeks'], 'each', 'rule' => ['default', 'value' => "0"]],
             [['dual_lab_work', 'dual_practice'], 'default', 'value' => 0]
             //[['total', 'lectures', 'lab_works', 'practices', 'weeks', 'control'], 'each', 'rule' => ['integer']],
         ];

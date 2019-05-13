@@ -32,57 +32,56 @@ switch ($course) {
 }
 ?>
 
-<table class="table table-bordered">
-    <tr>
-        <th rowspan="2"></th>
-        <th rowspan="2" style="vertical-align: top"><?= Yii::t('plans', 'Subject'); ?></th>
-        <th colspan="8"><?= Yii::t('plans', 'Autumn semester').' '.
-            ($model->semesters[$fall] ?? '') . ' ' . Yii::t('plans', 'OfWeeks'); ?></th>
-        <th colspan="8"><?= Yii::t('plans', 'Spring semester').' '.
-            ($model->semesters[$spring] ?? '') . ' ' . Yii::t('plans', 'OfWeeks'); ?></th>
-    </tr>
-    <tr>
-        <th><?= Yii::t('plans', 'Total'); ?>                  </th>
-        <th><?= Yii::t('plans', 'Classes'); ?>                </th>
-        <th><?= Yii::t('plans', 'Lectures'); ?>               </th>
-        <th><?= Yii::t('plans', 'Practices'); ?>              </th>
-        <th><?= Yii::t('plans', 'Laboratory works'); ?>       </th>
-        <th><?= Yii::t('plans', 'Self work'); ?>              </th>
-        <th><?= Yii::t('plans', 'Course projects, works'); ?> </th>
-        <th><?= Yii::t('plans', 'Hours per week'); ?>         </th>
+    <table class="table table-bordered">
+        <tr>
+            <th rowspan="2"></th>
+            <th rowspan="2" style="vertical-align: top"><?= Yii::t('plans', 'Subject'); ?></th>
+            <th colspan="8"><?= Yii::t('plans', 'Autumn semester') . ' ' .
+                ($model->semesters[$fall] ?? '') . ' ' . Yii::t('plans', 'OfWeeks'); ?></th>
+            <th colspan="8"><?= Yii::t('plans', 'Spring semester') . ' ' .
+                ($model->semesters[$spring] ?? '') . ' ' . Yii::t('plans', 'OfWeeks'); ?></th>
+        </tr>
+        <tr>
+            <th><?= Yii::t('plans', 'Total'); ?>                  </th>
+            <th><?= Yii::t('plans', 'Classes'); ?>                </th>
+            <th><?= Yii::t('plans', 'Lectures'); ?>               </th>
+            <th><?= Yii::t('plans', 'Practices'); ?>              </th>
+            <th><?= Yii::t('plans', 'Laboratory works'); ?>       </th>
+            <th><?= Yii::t('plans', 'Self work'); ?>              </th>
+            <th><?= Yii::t('plans', 'Course projects, works'); ?> </th>
+            <th><?= Yii::t('plans', 'Hours per week'); ?>         </th>
 
-        <th><?= Yii::t('plans', 'Total'); ?>                  </th>
-        <th><?= Yii::t('plans', 'Classes'); ?>                </th>
-        <th><?= Yii::t('plans', 'Lectures'); ?>               </th>
-        <th><?= Yii::t('plans', 'Practices'); ?>              </th>
-        <th><?= Yii::t('plans', 'Laboratory works'); ?>       </th>
-        <th><?= Yii::t('plans', 'Self work'); ?>              </th>
-        <th><?= Yii::t('plans', 'Course projects, works'); ?> </th>
-        <th><?= Yii::t('plans', 'Hours per week'); ?>         </th>
-    </tr>
+            <th><?= Yii::t('plans', 'Total'); ?>                  </th>
+            <th><?= Yii::t('plans', 'Classes'); ?>                </th>
+            <th><?= Yii::t('plans', 'Lectures'); ?>               </th>
+            <th><?= Yii::t('plans', 'Practices'); ?>              </th>
+            <th><?= Yii::t('plans', 'Laboratory works'); ?>       </th>
+            <th><?= Yii::t('plans', 'Self work'); ?>              </th>
+            <th><?= Yii::t('plans', 'Course projects, works'); ?> </th>
+            <th><?= Yii::t('plans', 'Hours per week'); ?>         </th>
+        </tr>
 
-    <?php $fallHours = [
-        'total' => 0,
-        'classes' => 0,
-        'lectures' => 0,
-        'lab_works' => 0,
-        'practices' => 0,
-        'self_work' => 0,
-        'weeks' => 0,
-        'project' => 0,
-    ]; ?>
-    <?php $springHours = [
-        'total' => 0,
-        'classes' => 0,
-        'lectures' => 0,
-        'lab_works' => 0,
-        'practices' => 0,
-        'self_work' => 0,
-        'weeks' => 0,
-        'project' => 0,
-    ]; ?>
-    <?php foreach ($model->workSubjects as $subject): ?>
-        <?php if ($subject->presentIn($course)): ?>
+        <?php $fallHours = [
+            'total' => 0,
+            'classes' => 0,
+            'lectures' => 0,
+            'lab_works' => 0,
+            'practices' => 0,
+            'self_work' => 0,
+            'weeks' => 0,
+            'project' => 0,
+        ]; ?>
+        <?php $springHours = [
+            'total' => 0,
+            'classes' => 0,
+            'lectures' => 0,
+            'lab_works' => 0,
+            'practices' => 0,
+            'self_work' => 0,
+            'weeks' => 0,
+            'project' => 0,
+        ]; ?>
+        <?php foreach ($model->getSubjectsForCourse($course) as $subject): ?>
             <tr>
                 <td><?= Html::a(
                         Yii::t('app', 'Update'),
@@ -95,7 +94,6 @@ switch ($course) {
                 <td><?= isset($subject->subject) ? $subject->subject->title : $subject->subject_id; ?>:
                     <b>(<?= array_sum(isset($subject->subject) ? $subject->total : []); ?> годин)</b>
                 </td>
-
                 <td><?= $subject->total[$fall];
                     $fallHours['total'] += intval($subject->total[$fall]); ?></td>
                 <td><?= $subject->getClasses($fall);
@@ -110,7 +108,8 @@ switch ($course) {
                     $fallHours['self_work'] += intval($subject->getSelfwork($fall)); ?></td>
                 <td><?= ($subject->control[$fall][4] || $subject->control[$fall][5]) ? $subject->project_hours : '';
                     $fallHours['project'] += intval($subject->project_hours); ?></td>
-                <td><?= $subject->weeks[$fall]; $fallHours['weeks'] += intval($subject->weeks[$fall]); ?></td>
+                <td><?= $subject->weeks[$fall];
+                    $fallHours['weeks'] += intval($subject->weeks[$fall]); ?></td>
                 <td><?= $subject->total[$spring];
                     $springHours['total'] += intval($subject->total[$spring]); ?></td>
                 <td><?= $subject->getClasses($spring);
@@ -128,29 +127,62 @@ switch ($course) {
                 <td><?= $subject->weeks[$spring];
                     $springHours['weeks'] += intval($subject->weeks[$spring]); ?></td>
             </tr>
-        <?php endif; ?>
-    <?php endforeach; ?>
-    <tr>
-        <td colspan="2"><b><?= Yii::t('plans', 'Total'); ?></b></td>
+        <?php endforeach; ?>
+        <tr>
+            <td colspan="2"><b><?= Yii::t('plans', 'Total'); ?></b></td>
 
-        <td><b><?= $fallHours['total']; ?>      </b></td>
-        <td><b><?= $fallHours['classes']; ?>    </b></td>
-        <td><b><?= $fallHours['lectures']; ?>   </b></td>
-        <td><b><?= $fallHours['practices']; ?>  </b></td>
-        <td><b><?= $fallHours['lab_works']; ?>  </b></td>
-        <td><b><?= $fallHours['self_work']; ?>  </b></td>
-        <td><b><?= $fallHours['project']; ?>    </b></td>
-        <td><b><?= $fallHours['weeks']; ?>      </b></td>
+            <td><b><?= $fallHours['total']; ?>      </b></td>
+            <td><b><?= $fallHours['classes']; ?>    </b></td>
+            <td><b><?= $fallHours['lectures']; ?>   </b></td>
+            <td><b><?= $fallHours['practices']; ?>  </b></td>
+            <td><b><?= $fallHours['lab_works']; ?>  </b></td>
+            <td><b><?= $fallHours['self_work']; ?>  </b></td>
+            <td><b><?= $fallHours['project']; ?>    </b></td>
+            <td><b><?= $fallHours['weeks']; ?>      </b></td>
 
-        <td><b><?= $springHours['total']; ?>    </b></td>
-        <td><b><?= $springHours['classes']; ?>  </b></td>
-        <td><b><?= $springHours['lectures']; ?> </b></td>
-        <td><b><?= $springHours['practices']; ?></b></td>
-        <td><b><?= $springHours['lab_works']; ?></b></td>
-        <td><b><?= $springHours['self_work']; ?></b></td>
-        <td><b><?= $springHours['project']; ?>  </b></td>
-        <td><b><?= $springHours['weeks']; ?>    </b></td>
+            <td><b><?= $springHours['total']; ?>    </b></td>
+            <td><b><?= $springHours['classes']; ?>  </b></td>
+            <td><b><?= $springHours['lectures']; ?> </b></td>
+            <td><b><?= $springHours['practices']; ?></b></td>
+            <td><b><?= $springHours['lab_works']; ?></b></td>
+            <td><b><?= $springHours['self_work']; ?></b></td>
+            <td><b><?= $springHours['project']; ?>  </b></td>
+            <td><b><?= $springHours['weeks']; ?>    </b></td>
 
-        <td></td>
-    </tr>
-</table>
+            <td></td>
+        </tr>
+    </table>
+
+<?php if ($absentSubjects = $model->getSubjectsForCourse($course, true)): ?>
+    <a class="btn btn-link p1" type="button"
+       data-toggle="collapse"
+       data-target="#absentSubjects<?= $course ?>"
+       aria-expanded="false"
+       aria-controls="absentSubjects<?= $course ?>">
+        <h5><?= Yii::t('plans', 'Subjects which are absent on this course'); ?></h5>
+    </a>
+    <div id="absentSubjects<?= $course ?>" class="collapse">
+
+        <table class="table table-bordered">
+            <?php foreach ($absentSubjects as $subject): ?>
+                <tr>
+                    <td class="col-sm-1">
+                        <?= Html::a(
+                            Yii::t('app', 'Update'),
+                            Url::toRoute(['work-plan/update-subject', 'id' => $subject->id])
+                        ); ?>
+                        <?= Html::a(
+                            Yii::t('app', 'Delete'),
+                            Url::toRoute(['work-plan/delete-subject', 'id' => $subject->id])
+                        ); ?>
+                    </td>
+                    <td>
+                        <?= isset($subject->subject) ? $subject->subject->title : $subject->subject_id; ?>:
+                        <b>(<?= array_sum(isset($subject->subject) ? $subject->total : []); ?> годин)</b>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+
+    </div>
+<?php endif; ?>

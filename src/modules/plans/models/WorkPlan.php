@@ -391,6 +391,25 @@ class WorkPlan extends ActiveRecord
     }
 
     /**
+     * Returns an array of work subjects which are present in defined course
+     * @param integer $course
+     * @param bool $absentOnes Search those which are absent for defined course
+     * @return WorkSubject[]
+     */
+    public function getSubjectsForCourse($course, $absentOnes = false)
+    {
+        $result = [];
+        foreach($this->workSubjects as $subject){
+            if($absentOnes && !$subject->presentIn($course)){
+                $result[]=$subject;
+            }elseif(!$absentOnes && $subject->presentIn($course)){
+                $result[]=$subject;
+            }
+        }
+        return $result;
+    }
+
+    /**
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
