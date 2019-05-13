@@ -72,6 +72,7 @@ return [
     'Guide' => 'Пояснення',
     'H - vacation (holidays)' => 'К – канікули',
     'Hours per week' => 'Годин на тиждень',
+    'Hours per week distribution per semester' => 'Розподіл годин на тиждень за семестрами',
     'Lab works' => 'Лабораторні',
     'Laboratory works' => 'Лабораторні',
     'Lectures' => 'Лекції',

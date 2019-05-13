@@ -34,6 +34,10 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             'title',
+            [
+                'attribute'=>'evaluation_system_id',
+                'value' => 'evaluationSystem.title',
+            ],
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

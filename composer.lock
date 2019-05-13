@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "7cbc49d2c87dafb8c4f2ee43ddf4597d",
+    "content-hash": "24cd57dd8f836e53e8712ebb1c549082",
     "packages": [
         {
             "name": "2amigos/yii2-date-picker-widget",
@@ -130,6 +130,23 @@
             "time": "2017-07-05T05:38:36+00:00"
         },
         {
+            "name": "bower-asset/animate.css",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/daneden/animate.css.git",
+                "reference": "2897a5b148efbe294b0f897c0a575e847b05a381"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/daneden/animate.css/zipball/2897a5b148efbe294b0f897c0a575e847b05a381",
+                "reference": "2897a5b148efbe294b0f897c0a575e847b05a381",
+                "shasum": null
+            },
+            "type": "bower-asset",
+            "time": "2019-01-16T18:51:43+00:00"
+        },
+        {
             "name": "bower-asset/bootstrap",
             "version": "v3.3.7",
             "source": {
@@ -183,12 +200,12 @@
             "version": "v1.7.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/eternicode/bootstrap-datepicker.git",
+                "url": "https://github.com/uxsolutions/bootstrap-datepicker.git",
                 "reference": "d364be5b066b38f3675a5a1dc174ce1ab1f3360e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eternicode/bootstrap-datepicker/zipball/d364be5b066b38f3675a5a1dc174ce1ab1f3360e",
+                "url": "https://api.github.com/repos/uxsolutions/bootstrap-datepicker/zipball/d364be5b066b38f3675a5a1dc174ce1ab1f3360e",
                 "reference": "d364be5b066b38f3675a5a1dc174ce1ab1f3360e",
                 "shasum": ""
             },
@@ -302,7 +319,7 @@
             "version": "1.12.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/components/jqueryui.git",
+                "url": "git@github.com:components/jqueryui.git",
                 "reference": "44ecf3794cc56b65954cc19737234a3119d036cc"
             },
             "dist": {
@@ -330,12 +347,12 @@
             "version": "1.1.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/onokumus/metisMenu.git",
+                "url": "https://github.com/onokumus/metismenu.git",
                 "reference": "8e179d59f60a593203667c092119779dc36f5171"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/onokumus/metisMenu/zipball/8e179d59f60a593203667c092119779dc36f5171",
+                "url": "https://api.github.com/repos/onokumus/metismenu/zipball/8e179d59f60a593203667c092119779dc36f5171",
                 "reference": "8e179d59f60a593203667c092119779dc36f5171",
                 "shasum": ""
             },
@@ -377,7 +394,7 @@
             "version": "v1.3.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/bestiejs/punycode.js.git",
+                "url": "git@github.com:bestiejs/punycode.js.git",
                 "reference": "38c8d3131a82567bfef18da09f7f4db68c84f8a3"
             },
             "dist": {
@@ -399,6 +416,30 @@
                     "package.json"
                 ]
             }
+        },
+        {
+            "name": "bower-asset/remarkable-bootstrap-notify",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mouse0270/bootstrap-notify.git",
+                "reference": "d52c64fe1c320a6fe382874318edd00ff714abf6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mouse0270/bootstrap-notify/zipball/d52c64fe1c320a6fe382874318edd00ff714abf6",
+                "reference": "d52c64fe1c320a6fe382874318edd00ff714abf6",
+                "shasum": null
+            },
+            "require": {
+                "bower-asset/bootstrap": ">=2.0.0",
+                "bower-asset/jquery": ">=1.10.2"
+            },
+            "type": "bower-asset",
+            "license": [
+                "MIT"
+            ],
+            "time": "2018-08-07T13:17:49+00:00"
         },
         {
             "name": "bower-asset/smalot-bootstrap-datetimepicker",
@@ -3673,7 +3714,7 @@
             "version": "v0.11.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/twitter/typeahead.js.git",
+                "url": "git@github.com:twitter/typeahead.js.git",
                 "reference": "588440f66559714280628a4f9799f0c4eb880a4a"
             },
             "dist": {
@@ -3934,6 +3975,8 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "bower-asset/animate.css": 20,
+        "bower-asset/remarkable-bootstrap-notify": 20,
         "dektrium/yii2-rbac": 20,
         "dektrium/yii2-user": 20,
         "kartik-v/yii2-widget-datepicker": 20,
@@ -3952,7 +3995,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.5.0"
+        "php": ">=7.1.0"
     },
     "platform-dev": []
 }

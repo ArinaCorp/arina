@@ -93,9 +93,9 @@ class SubjectRelation extends ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'subject_id', 'speciality_qualification_id', 'subject_cycle_id'], 'required'],
-            [['id', 'subject_id', 'speciality_qualification_id', 'subject_cycle_id'], 'integer'],
-            [['id', 'subject_id', ], 'safe'],
+            [['subject_id', 'speciality_qualification_id', 'subject_cycle_id'], 'required'],
+            [['subject_id', 'speciality_qualification_id', 'subject_cycle_id'], 'integer'],
+            [['subject_id'], 'safe'],
         ];
     }
 

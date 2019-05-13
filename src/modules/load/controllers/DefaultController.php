@@ -79,7 +79,6 @@ class DefaultController extends Controller implements IAdminController
         if (isset($_POST['study_year'])) {
 
             $this->generateLoadFor($_POST['study_year']);
-//            die;
             return $this->redirect(Url::to('index'));
         }
 
@@ -99,31 +98,17 @@ class DefaultController extends Controller implements IAdminController
          * @var Load $load
          */
         $year = StudyYear::findOne($studyYear);
-        $load = Load::find()->where(['study_year_id' => $studyYear])->one();
-        if ($load) {
-            $load->delete();
-        }
+        Load::deleteAll(['study_year_id' => $studyYear]);
         foreach ($year->workPlans as $plan) {
-            $groups = $plan->specialityQualification->getGroupsByStudyYear($year->id);
+            $groups = $plan->specialityQualification->groups;
             foreach ($plan->workSubjects as $subject) {
-                foreach ($groups as $title => $course) {
+                foreach ($groups as $group) {
+                    $course = $group->getCourse($year->id);
+                    if ($course > 4) {
+                        break;
+                    }
                     $spring = $course * 2;
                     $fall = $spring - 1;
-                    $group = Group::findOne(['title' => $title]);
-//                    if (!$group) {
-//                        echo $title;
-//                        die;
-//                    }
-//                    print_r($title);
-//                    echo '<br>';
-//                    print_r($course);
-//                    echo '<br>';
-//                    print_r($subject->total);
-//                    echo '<br>';
-//                    print_r($fall - 1);
-//                    echo '<br>';
-//                    print_r($spring - 1);
-//                    echo '<br>';
                     if (!empty($subject->total[$fall - 1]) || !empty($subject->total[$spring - 1])) {
                         $this->getNewLoad($year, $subject, $group, $course, Load::TYPE_LECTURES);
 
@@ -186,7 +171,6 @@ class DefaultController extends Controller implements IAdminController
     /**
      * @param $id
      * @return string|\yii\web\Response
-     * @throws NotFoundHttpException
      */
     public function actionUpdate($id)
     {

@@ -2,7 +2,7 @@
 
 namespace app\modules\directories\controllers;
 
-use Couchbase\Exception;
+use app\modules\directories\models\subject_relation\CreateSubjectRelationForm;
 use Yii;
 use nullref\core\interfaces\IAdminController;
 use app\modules\directories\models\subject_relation\SubjectRelation;
@@ -57,22 +57,35 @@ class SubjectRelationController extends Controller implements IAdminController
     }
 
     /**
+     * Finds the SubjectRelation model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param integer $id
+     * @return SubjectRelation the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModel($id)
+    {
+        if (($model = SubjectRelation::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    /**
      * Creates a new SubjectRelation model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new SubjectRelation();
-        //08 september - change param for save = false
-       if ($model->load(Yii::$app->request->post()) && $model->save(false)) {
-            //print_r($model->getErrors());
-            return $this->redirect(['view', 'id' => $model->id]);
-
+        $model = new CreateSubjectRelationForm();
+        if ($model->load(Yii::$app->request->post()) && $model->process()) {
+            return $this->redirect(['index']);
         } else {
             return $this->render('create', [
-               'model' => $model,
-           ]);
+                'model' => $model,
+            ]);
         }
 
     }
@@ -110,21 +123,5 @@ class SubjectRelationController extends Controller implements IAdminController
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
-    }
-
-    /**
-     * Finds the SubjectRelation model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return SubjectRelation the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = SubjectRelation::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
     }
 }
