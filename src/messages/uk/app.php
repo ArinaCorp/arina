@@ -398,5 +398,11 @@ return [
     'Print'=>'Друк',
     'Location'=>'Приналежність',
     'View'=>'Перегляд',
-    'Scoring note'=>'Залікова відомість'
+    'Scoring note'=>'Залікова відомість',
+    'Input semester'=>'Введіть семестер',
+    'Input course'=>'Введіть курс',
+    'Select teachers'=>'Виберіть викладачів',
+    'Please enter a "course" value'=>'Будь ласка заповніть поле "Курс"',
+    'Input year'=>'Введіть рік',
+    'Select plan'=>'Виберіть план'
 ];

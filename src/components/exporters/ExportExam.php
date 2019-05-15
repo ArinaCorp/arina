@@ -15,7 +15,7 @@ use PhpOffice\PhpSpreadsheet;
 use Yii;
 use app\components\ExportHelpers;
 
-class ExportZalik
+class ExportExam
 {
     /**
      *
@@ -47,14 +47,15 @@ class ExportZalik
 
         $teachers = join($teachers_list,", ");
 
-        $cursor->setCellValue("J101",$subject);
-        $cursor->setCellValue("J102",$specialnist);
-        $cursor->setCellValue("J103",$semester);
-        $cursor->setCellValue("J104",$cours);
-        $cursor->setCellValue("J105",$group);
-        $cursor->setCellValue("J106",$teachers);
+        $cursor->setCellValue("K101",$subject);
+        $cursor->setCellValue("K102",$specialnist);
+        $cursor->setCellValue("K103",$semester);
+        $cursor->setCellValue("K104",$cours);
+        $cursor->setCellValue("K105",$group);
+        $cursor->setCellValue("K106",$teachers);
 
         $id = $data["data"]["group_id"];
+//        var_dump($id);die;
         $group = Group::findOne($id);
         $students = $group->getStudentsArray();
 
@@ -63,7 +64,7 @@ class ExportZalik
         foreach ($students as $student) {
             $cursor->insertNewRowBefore($current+1);
             $cursor->mergeCells("B${current}:E${current}");
-            $cursor->mergeCells("F${current}:G${current}");
+            $cursor->mergeCells("G${current}:H${current}");
             $cursor->setCellValue("A${current}", $i);
 
             $cursor->setCellValue('B' . $current, $student->getFullName());
@@ -72,7 +73,7 @@ class ExportZalik
         }
         $cursor->removeRow($current);
         $cursor->removeRow($current);
-        $cursor->setCellValue('C' . ($current + 8), "Дата: " . date('d.m.Y') . "  Час: " . date('H:i:s'));
+        $cursor->setCellValue('C' . ($current + 10), "Дата: " . date('d.m.Y') . "  Час: " . date('H:i:s'));
 
         return $spreadsheet;
     }

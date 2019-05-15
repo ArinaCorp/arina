@@ -1,7 +1,11 @@
 <?php
 
+use app\modules\directories\models\speciality\Speciality;
+use app\modules\plans\models\StudyPlan;
+use kartik\depdrop\DepDrop;
 use kartik\select2\Select2;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 use yii\widgets\DetailView;
 use app\modules\students\models\StudentsHistory;
@@ -123,8 +127,17 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="dialog-card">
         <div class="dialog-header text-left"><h4><?= Yii::t('app', 'Attestation note') ?></h4></div>
         <div class="dialog-content">
-            <?= $form->field($exportParams, 'semester')->textInput(['placeholder' => 'Семестр', 'class' => 'dialog-input form-control', 'type' => 'number'])->label(false) ?>
-            <?= $form->field($exportParams, 'date')->textInput(['placeholder' => 'Дата початку дії д.м.р', 'class' => 'dialog-input form-control'])->label(false) ?>
+            <?php $exportParams->plan_id = StudyPlan::findOne(["speciality_qualification_id" => $model->specialityQualification]) ?>
+            <?= $form->field($exportParams, 'plan_id')->widget(Select2::classname(), [
+                'data' => StudyPlan::getList(),
+                'options' => ['class' => 'text-center', 'placeholder' => Yii::t('app', 'Select plan')],
+                'pluginOptions' => [
+                    'allowClear' => true,
+                ],
+            ])->label(false);
+            ?>
+            <?= $form->field($exportParams, 'semester')->textInput(['placeholder' => 'Семестр', 'class' => 'dialog-input form-control text-center', 'type' => 'number'])->label(false) ?>
+            <?= $form->field($exportParams, 'date')->textInput(['placeholder' => 'Дата початку дії д.м.р', 'class' => 'dialog-input form-control text-center'])->label(false) ?>
             <?= $form->field($exportParams, 'group_id')->textInput(['readonly' => true, 'class' => 'dialog-input form-control'])->hiddenInput(['value' => $model->id])->label(false) ?>
         </div>
         <?= Html::submitButton(Yii::t('app', 'Print'), ['class' => 'btn btn-default']) ?>
@@ -138,22 +151,37 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="dialog-card">
         <div class="dialog-header text-left"><h4><?= Yii::t('app', 'Scoring note') ?></h4></div>
         <div class="dialog-content">
-            <?= $form->field($exportParams, 'subject_id')->widget(Select2::classname(), [
-                'data' => \app\modules\directories\models\subject\Subject::getList(),
-                'options' => ['placeholder' => 'Предмет'],
-                'pluginOptions' => [
-                    'allowClear' => true,
-                ],
-            ])->label(false); ?>
-            <?= $form->field($exportParams, 'semester')->textInput(['placeholder' => 'Cеместр', 'class' => 'dialog-input text-center form-control','type'=>'number'])->label(false) ?>
-            <?= $form->field($exportParams, 'course')->textInput(['placeholder' => 'Курс', 'class' => 'dialog-input text-center form-control','type'=>'number'])->label(false) ?>
-            <?= $form->field($exportParams, 'teachers_id')->widget(Select2::classname(), [
-                'data' => \app\modules\employee\models\Teacher::getAll(),
-                'options' => ['class' => 'dialog-input','placeholder' => 'Викладачі','multiple' => true],
+            <?= $form->field($exportParams, 'plan_id')->widget(Select2::classname(), [
+                'data' => StudyPlan::getList(),
+                'options' => ['class' => 'text-center', 'placeholder' => Yii::t('app', 'Select plan'), 'id' => 'plan_id'],
                 'pluginOptions' => [
                     'allowClear' => true,
                 ],
             ])->label(false);
+            ?>
+            <?= $form->field($exportParams, 'subject_id')->widget(DepDrop::className(), [
+                'data' => \yii\helpers\ArrayHelper::map($exportParams->plan_id->studySubjects, 'id', 'title'),
+                'pluginOptions' => [
+                    'depends' => ['plan_id'],
+                    'placeholder' => Yii::t('app', 'Select subject'),
+                    'url' => Url::to(['subject-list']),
+                ],
+                'type' => DepDrop::TYPE_SELECT2,
+                'select2Options' => ['pluginOptions' => ['allowClear' => true]],
+                'options' => [
+                    'id' => 'subject-id',
+                    'placeholder' => 'Select ...'
+                ]
+            ])->label(false) ?>
+            <?= $form->field($exportParams, 'semester')->textInput(['placeholder' => Yii::t('app', 'Input semester'), 'class' => 'dialog-input form-control text-center', 'type' => 'number'])->label(false) ?>
+            <?= $form->field($exportParams, 'course')->textInput(['placeholder' => Yii::t('app', 'Input course'), 'class' => 'dialog-input form-control text-center', 'type' => 'number'])->label(false) ?>
+            <?= $form->field($exportParams, 'teachers_id')->widget(Select2::classname(), [
+                'data' => \app\modules\employee\models\Teacher::getAll(),
+                'options' => ['class' => 'text-center form-control', 'multiple' => true],
+                'pluginOptions' => [
+                    'allowClear' => true,
+                ],
+            ])->label(Yii::t('app','Select teachers'));
             ?>
             <?= $form->field($exportParams, 'group_id')->textInput(['readonly' => true, 'class' => 'dialog-input'])->hiddenInput(['value' => $model->id])->label(false) ?>
         </div>
@@ -164,13 +192,21 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <div class="dialog-window" id="semester-window" style="display: none">
-    <?php $form = ActiveForm::begin(['action' => ['print']]); ?>
+    <?php $form = ActiveForm::begin(['action' => ['semester']]); ?>
     <div class="dialog-card">
         <div class="dialog-header text-left"><h4><?= Yii::t('app', 'Semester note') ?></h4></div>
         <div class="dialog-content">
-            <!--            --><? //= $form->field($exportParams, 'semester')->textInput(['placeholder'=>'Семестр','class'=>'dialog-input','type'=>'number'])->label(false) ?>
-            <!--            --><? //= $form->field($exportParams, 'date')->textInput(['placeholder'=>'Дата початку дії д.м.р','class'=>'dialog-input'])->label(false) ?>
-            <!--            --><? //= $form->field($exportParams, 'group_id')->textInput(['readonly' => true,'class'=>'dialog-input'])->hiddenInput(['value' => $model->id])->label(false) ?>
+            <?=$form->field($exportParams, 'plan_id')->widget(Select2::classname(), [
+                'data' => StudyPlan::getList(),
+                'options' => ['class' => 'text-center', 'placeholder' => Yii::t('app', 'Select plan'), 'id' => 'semester_plan_id'],
+                'pluginOptions' => [
+                    'allowClear' => true,
+                ],
+            ])->label(false);
+            ?>
+            <?= $form->field($exportParams, 'semester')->textInput(['placeholder' => Yii::t('app', 'Input semester'), 'class' => 'dialog-input text-center form-control', 'type' => 'number'])->label(false) ?>
+            <?= $form->field($exportParams, 'date')->textInput(['placeholder' => Yii::t('app', 'Input year'), 'class' => 'dialog-input form-control  text-center', 'type' => 'number'])->label(false) ?>
+            <?= $form->field($exportParams, 'group_id')->textInput(['readonly' => true, 'class' => 'dialog-input'])->hiddenInput(['value' => $model->id])->label(false) ?>
         </div>
         <?= Html::submitButton(Yii::t('app', 'Print'), ['class' => 'btn btn-default']) ?>
     </div>
@@ -179,13 +215,43 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <div class="dialog-window" id="exam-window" style="display: none">
-    <?php $form = ActiveForm::begin(['action' => ['print']]); ?>
+    <?php $form = ActiveForm::begin(['action' => ['exam']]); ?>
     <div class="dialog-card">
         <div class="dialog-header text-left"><h4><?= Yii::t('app', 'Examination note') ?></h4></div>
         <div class="dialog-content">
-            <!--            --><? //= $form->field($exportParams, 'semester')->textInput(['placeholder'=>'Семестр','class'=>'dialog-input','type'=>'number'])->label(false) ?>
-            <!--            --><? //= $form->field($exportParams, 'date')->textInput(['placeholder'=>'Дата початку дії д.м.р','class'=>'dialog-input'])->label(false) ?>
-            <!--            --><? //= $form->field($exportParams, 'group_id')->textInput(['readonly' => true,'class'=>'dialog-input'])->hiddenInput(['value' => $model->id])->label(false) ?>
+            <?= $form->field($exportParams, 'plan_id')->widget(Select2::classname(), [
+                'data' => StudyPlan::getList(),
+                'options' => ['class' => 'text-center', 'placeholder' => Yii::t('app', 'Select plan'), 'id' => 'exam_plan_id'],
+                'pluginOptions' => [
+                    'allowClear' => true,
+                ],
+            ])->label(false);
+            ?>
+            <?= $form->field($exportParams, 'subject_id')->widget(DepDrop::className(), [
+                'data' => \yii\helpers\ArrayHelper::map($exportParams->plan_id->studySubjects, 'id', 'title'),
+                'pluginOptions' => [
+                    'depends' => ['exam_plan_id'],
+                    'placeholder' => Yii::t('app', 'Select subject'),
+                    'url' => Url::to(['subject-list']),
+                ],
+                'type' => DepDrop::TYPE_SELECT2,
+                'select2Options' => ['pluginOptions' => ['allowClear' => true]],
+                'options' => [
+                    'id' => 'exam-subject-id',
+                    'placeholder' => 'Select ...'
+                ]
+            ])->label(false) ?>
+            <?= $form->field($exportParams, 'semester')->textInput(['placeholder' => Yii::t('app', 'Input semester'), 'class' => 'dialog-input form-control text-center', 'type' => 'number'])->label(false) ?>
+            <?= $form->field($exportParams, 'course')->textInput(['placeholder' => Yii::t('app', 'Input course'), 'class' => 'dialog-input form-control text-center', 'type' => 'number'])->label(false) ?>
+            <?= $form->field($exportParams, 'teachers_id')->widget(Select2::classname(), [
+                'data' => \app\modules\employee\models\Teacher::getAll(),
+                'options' => ['class' => 'text-center form-control', 'multiple' => true,'id'=>'exam-teacher-select'],
+                'pluginOptions' => [
+                    'allowClear' => true,
+                ],
+            ])->label(Yii::t('app','Select teachers'));
+            ?>
+            <?= $form->field($exportParams, 'group_id')->textInput(['readonly' => true, 'class' => 'dialog-input'])->hiddenInput(['value' => $model->id])->label(false) ?>
         </div>
         <?= Html::submitButton(Yii::t('app', 'Print'), ['class' => 'btn btn-default']) ?>
     </div>
@@ -194,7 +260,7 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <style>
-    .dialog-window,.dialog-background{
+    .dialog-window, .dialog-background {
         position: fixed;
         flex-direction: column;
         justify-content: center;

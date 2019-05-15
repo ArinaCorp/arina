@@ -8,6 +8,7 @@ use Yii;
 
 class ExportParams extends \yii\base\Model
 {
+    public $plan_id;
     public $semester;
     public $date;
     public $subject_id;
@@ -25,7 +26,7 @@ class ExportParams extends \yii\base\Model
             ['course','integer','max' => 4, 'min'=>1,
                 'tooBig'=>Yii::t('app','Course value must be >1 and <4'),
                 'tooSmall'=>Yii::t('app','Course value must be >1 and <4')],
-            [['group_id','course','subject_id'],'required'],
+            [['group_id','course','subject_id','plan_id'],'required'],
             [['date'],'string'],
             ['teachers_id', 'each', 'rule' => ['integer']],
         ];
@@ -38,6 +39,7 @@ class ExportParams extends \yii\base\Model
             'course' => Yii::t('app', 'Course'),
             'teachers_id' => Yii::t('app', 'Teachers'),
             'subject_id' => Yii::t('app', 'Subject'),
+            'plan_id' => Yii::t('app', 'Plan'),
         ];
     }
 }

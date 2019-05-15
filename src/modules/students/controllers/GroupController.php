@@ -2,12 +2,16 @@
 
 namespace app\modules\students\controllers;
 
+use app\components\DepDropHelper;
 use app\components\ExportToExcel;
 use app\modules\directories\models\speciality_qualification\SpecialityQualification;
+use app\modules\directories\models\subject\Subject;
+use app\modules\plans\models\StudyPlan;
 use app\modules\rbac\filters\AccessControl;
 use app\modules\students\models\Exemption;
 use app\modules\students\models\ExportParams;
 use app\modules\students\models\Group;
+use app\modules\students\models\StudentFilter;
 use app\modules\students\models\StudentSearch;
 use app\modules\user\helpers\UserHelper;
 use app\modules\user\models\User;
@@ -16,6 +20,7 @@ use Yii;
 use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
@@ -210,6 +215,51 @@ class GroupController extends Controller implements IAdminController
             'data' => $data
         ];
         ExportToExcel::getDocument('Zalik', $model);
+    }
+    public function actionSemester()
+    {
+        $data = (Yii::$app->request->post()["ExportParams"]);
+        $model = [
+            'data' => $data
+        ];
+        ExportToExcel::getDocument('Semester', $model);
+    }
+    public function actionExam()
+    {
+        $data = (Yii::$app->request->post()["ExportParams"]);
+        $model = [
+            'data' => $data
+        ];
+        ExportToExcel::getDocument('Exam', $model);
+    }
+
+    public static function actionSubjectList()
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = [];
+        if (isset($_POST['depdrop_parents'])) {
+            $parents = $_POST['depdrop_parents'];
+            if ($parents != null) {
+                if (!empty($_POST['depdrop_all_params'])) {
+                    $params = $_POST['depdrop_all_params'];
+                    $dep_id = null;
+                    if($params["plan_id"]){
+                        $dep_id = $params["plan_id"];
+                    }
+                    if($params["exam_plan_id"]){
+                        $dep_id = $params["exam_plan_id"];
+                    }
+                    $plan = StudyPlan::findOne(['id'=>$dep_id]);
+                    $subject_list = ArrayHelper::map($plan->studySubjects, 'id', 'title');
+                    $out = DepDropHelper::convertMap($subject_list);
+                    if (empty($dep_id)) {
+                        $out = '';
+                    }
+                    return ['output' => $out, 'selected' => ''];
+                }
+            }
+        }
+        return ['output' => '', 'selected' => ''];
     }
 
     /**
