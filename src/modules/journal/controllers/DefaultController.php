@@ -5,18 +5,18 @@ namespace app\modules\journal\controllers;
 use app\components\DepDropHelper;
 use app\modules\directories\models\StudyYear;
 use app\modules\journal\models\record\JournalMark;
+use app\modules\journal\models\record\JournalRecord;
 use app\modules\journal\models\record\JournalStudent;
 use app\modules\journal\models\reports\SubjectReport;
 use app\modules\journal\models\SelectForm;
+use app\modules\load\models\Load;
 use app\modules\rbac\filters\AccessControl;
 use nullref\core\interfaces\IAdminController;
+use Yii;
 use yii\filters\VerbFilter;
 use yii\helpers\Json;
 use yii\web\Controller;
-use Yii;
-use app\modules\load\models\Load;
 use yii\web\NotFoundHttpException;
-use app\modules\journal\models\record\JournalRecord;
 
 /**
  * Default controller for the `journal` module
@@ -45,6 +45,7 @@ class DefaultController extends Controller implements IAdminController
             ]
         ];
     }
+
     /**
      * Renders the index view for the module
      * @return string
@@ -61,6 +62,11 @@ class DefaultController extends Controller implements IAdminController
         }
     }
 
+    /**
+     * @param $id
+     * @return string
+     * @throws NotFoundHttpException
+     */
     public function actionView($id)
     {
         $model = $this->findModel($id);
@@ -75,11 +81,31 @@ class DefaultController extends Controller implements IAdminController
         ]);
     }
 
+    /**
+     * @param $id
+     * @return Load|null
+     * @throws NotFoundHttpException
+     */
+    protected function findModel($id)
+    {
+        if (($model = Load::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    /**
+     * @param $id
+     */
     public function actionDocument($id)
     {
         return SubjectReport::getReport($id);
     }
 
+    /**
+     * @return string
+     */
     public function actionGetGroups()
     {
         if (isset($_POST['depdrop_parents'])) {
@@ -99,6 +125,9 @@ class DefaultController extends Controller implements IAdminController
         }
     }
 
+    /**
+     * @return string
+     */
     public function actionGetLoads()
     {
         if (isset($_POST['depdrop_parents'])) {
@@ -115,16 +144,6 @@ class DefaultController extends Controller implements IAdminController
                 }
             }
             return Json::encode(['output' => [], 'selected' => Yii::t('app', 'Select ...')]);
-        }
-    }
-
-    protected function findModel($id)
-    {
-        if ($id == 228) return Load::getZaglushka();
-        if (($model = Load::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
 }

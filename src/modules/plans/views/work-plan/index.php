@@ -1,5 +1,6 @@
 <?php
 
+use app\modules\plans\models\WorkPlan;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\grid\GridView;
@@ -44,17 +45,21 @@ $this->params['breadcrumbs'][] = $this->title;
                 'contentOptions' => ['style' => 'width: 750px'],
                 'label' => 'title',
                 'format' => 'raw',
-                'value' => function ($model) {
+                'value' => function (WorkPlan $model) {
                     return $model->getTitle();
                 },
             ],
             [
-                'header' => Yii::t('app', 'Updated'),
-                'value' => 'updatedForm'
+                'attribute' => 'updated',
+                'format'=>'datetime'
+            ],
+            [
+                'attribute' => 'created',
+                'format'=>'datetime'
             ],
             [
                 'header' => Yii::t('app', 'Actions'),
-                'class' => ActionColumn::className(),
+                'class' => ActionColumn::class,
                 'contentOptions' => ['style' => 'width: 90px'],
                 'template' => '{view} {update} {export} {delete}',
                 'buttons' => [
@@ -63,7 +68,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'title' => Yii::t('plans', 'Export'),
                         ];
                         $url = Url::toRoute(['work-plan/export', 'id' => $model->id]);
-                        return Html::a('<span class="glyphicon glyphicon-file"</span>', $url, $options);
+                        return Html::a('<span class="glyphicon glyphicon-file"></span>', $url, $options);
                     }
                 ]
             ],

@@ -5,9 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\modules\directories\models\StudyYear */
 
-$this->title = Yii::t('app', 'Update study year', [
-        'modelClass' => 'Study Year',
-    ]) . $model->id;
+$this->title = Yii::t('app', 'Update study year');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Study years list'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
@@ -20,6 +18,11 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
             </h1>
         </div>
     </div>
+
+    <p>
+        <?= Html::a(Yii::t('app', 'List'), ['index'], ['class' => 'btn btn-success']) ?>
+    </p>
+
     <?= $this->render('_form', [
         'model' => $model,
     ]) ?>

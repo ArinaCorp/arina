@@ -24,7 +24,7 @@ use yii\helpers\Html;
         <?php if (!$model->isNewRecord): ?>
             <?= Html::activeHiddenInput($model, "[{$index}]id"); ?>
         <?php endif ?>
-        <?= $form->field($model, "[{$index}]type_id")->dropDownList(FamilyRelationType::getList(), [
+        <?= $form->field($model, "[{$index}]type_id")->dropDownList(FamilyRelationType::getMap('title'), [
             'prompt' => Yii::t('app', 'Select') . ' ' . Yii::t('app', 'Family tie type'),
         ]); ?>
 

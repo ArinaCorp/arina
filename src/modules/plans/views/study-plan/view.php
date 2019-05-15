@@ -12,7 +12,7 @@ use app\modules\plans\widgets\SubjectTable;
  * @var $model StudyPlan
  */
 
-$this->title = $model->specialityQualification->title;
+$this->title = $model->specialityQualification->getFullTitle();
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('plans', 'Study plans'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;

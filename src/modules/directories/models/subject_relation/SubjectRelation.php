@@ -93,9 +93,9 @@ class SubjectRelation extends ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'subject_id', 'speciality_qualification_id', 'subject_cycle_id'], 'required'],
-            [['id', 'subject_id', 'speciality_qualification_id', 'subject_cycle_id'], 'integer'],
-            [['id', 'subject_id', ], 'safe'],
+            [['subject_id', 'speciality_qualification_id', 'subject_cycle_id'], 'required'],
+            [['subject_id', 'speciality_qualification_id', 'subject_cycle_id'], 'integer'],
+            [['subject_id'], 'safe'],
         ];
     }
 
@@ -104,7 +104,7 @@ class SubjectRelation extends ActiveRecord
      */
     public function getSubject()
     {
-        return $this->hasOne(Subject::className(), ['id' => 'subject_id']);
+        return $this->hasOne(Subject::class, ['id' => 'subject_id']);
     }
 
     /**
@@ -112,7 +112,7 @@ class SubjectRelation extends ActiveRecord
      */
     public function getSubjectCycle()
     {
-        return $this->hasOne(SubjectCycle::className(), ['id' => 'subject_cycle_id']);
+        return $this->hasOne(SubjectCycle::class, ['id' => 'subject_cycle_id']);
     }
 
     /**
@@ -120,7 +120,7 @@ class SubjectRelation extends ActiveRecord
      */
     public function getSpecialityQualification()
     {
-        return $this->hasOne(SpecialityQualification::className(), ['id' => 'speciality_qualification_id']);
+        return $this->hasOne(SpecialityQualification::class, ['id' => 'speciality_qualification_id']);
     }
 
     /**

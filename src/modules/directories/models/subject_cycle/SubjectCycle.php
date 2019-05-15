@@ -2,12 +2,12 @@
 
 namespace app\modules\directories\models\subject_cycle;
 
+use app\modules\directories\models\subject_relation\SubjectRelation;
+use app\modules\journal\models\evaluation\EvaluationSystem;
+use nullref\useful\traits\Mappable;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
-use yii\helpers\ArrayHelper;
-
-use app\modules\directories\models\subject_relation\SubjectRelation;
 
 /**
  * This is the model class for table "subject_cycle".
@@ -15,11 +15,20 @@ use app\modules\directories\models\subject_relation\SubjectRelation;
  * The followings are the available columns in table 'subject_cycle':
  * @property integer $id
  * @property string $title
+ * @property int $evaluation_system_id
+ * @property int $parent_id
  *
- * @property $relations SubjectRelation[]
+ * @property SubjectRelation[] $subjectRelations
+ * @property EvaluationSystem $evaluationSystem
+ * @property SubjectCycle $parentCycle
+ * @property SubjectCycle[] $subCycles
  */
 class SubjectCycle extends ActiveRecord
 {
+    use Mappable;
+
+    const ROOT_ID = 0;
+
     /**
      * @inheritdoc
      */
@@ -34,9 +43,10 @@ class SubjectCycle extends ActiveRecord
     public function rules()
     {
         return [
-            [['title'], 'required'],
-            [['id'], 'integer'],
-            [['id'], 'unique']
+            [['title', 'evaluation_system_id'], 'required'],
+            [['id', 'evaluation_system_id', 'parent_id'], 'integer'],
+            [['id'], 'unique'],
+            [['evaluation_system_id'], 'exist', 'skipOnError' => true, 'targetClass' => EvaluationSystem::class, 'targetAttribute' => ['evaluation_system_id' => 'id']],
         ];
     }
 
@@ -48,24 +58,40 @@ class SubjectCycle extends ActiveRecord
         return [
             'id' => Yii::t('subject', 'Cycle number'),
             'title' => Yii::t('app', 'Title'),
+            'evaluation_system_id' => Yii::t('app', 'Evaluation system'),
+            'parent_id' => Yii::t('app', 'Subject cycle'),
         ];
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getSubjectRelation()
+    public function getSubjectRelations()
     {
-        return $this->hasMany(SubjectRelation::className(), ['subject_cycle_id' => 'id']);
+        return $this->hasMany(SubjectRelation::class, ['subject_cycle_id' => 'id']);
     }
 
     /**
-     * @return mixed
+     * @return ActiveQuery
      */
-    public static function getList()
+    public function getEvaluationSystem()
     {
-        return ArrayHelper::map(SubjectCycle::find()->all(), 'id', 'title');
-
+        return $this->hasOne(EvaluationSystem::class, ['id' => 'evaluation_system_id']);
     }
 
+    /**
+     * @return ActiveQuery
+     */
+    public function getParentCycle()
+    {
+        return $this->hasOne(self::class, ['id' => 'parent_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getSubCycles()
+    {
+        return $this->hasMany(self::class, ['parent_id' => 'id']);
+    }
 }

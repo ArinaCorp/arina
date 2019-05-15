@@ -16,15 +16,9 @@ class Module extends BaseModule implements IAdminModule
      */
     public $controllerNamespace = 'app\modules\directories\controllers';
 
-    public function behaviors()
-    {
-        return [
- //           'as AccessBehavior' => [
- //               'class' => \developeruz\db_rbac\behaviors\AccessBehavior::className(),
- //           ]
-        ];
-    }
-
+    /**
+     * @return array
+     */
     public static function getAdminMenu()
     {
         return [
@@ -40,6 +34,11 @@ class Module extends BaseModule implements IAdminModule
                     'label' => Yii::t('app', 'Subject'),
                     'url' => ['/directories/subject'],
                     'icon' => 'book',
+                ],
+                [
+                    'label' => Yii::t('app','Subject blocks'),
+                    'url' => ['/directories/subject-block'],
+                    'icon' => 'th-list'
                 ],
                 [
                     'label' => Yii::t('app', 'Departments'),

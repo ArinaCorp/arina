@@ -3,7 +3,11 @@
 namespace app\modules\load\models;
 
 use app\modules\directories\models\StudyYear;
+use app\modules\directories\models\subject_relation\SubjectRelation;
 use app\modules\employee\models\Employee;
+use app\modules\journal\models\evaluation\EvaluationSystem;
+use app\modules\journal\models\record\JournalRecord;
+use app\modules\journal\models\record\JournalRecordType;
 use app\modules\plans\models\WorkSubject;
 use app\modules\students\models\Group;
 use nullref\useful\JsonBehavior;
@@ -11,7 +15,6 @@ use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
-use yii\web\NotFoundHttpException;
 
 /**
  *
@@ -23,7 +26,7 @@ use yii\web\NotFoundHttpException;
  * @property integer $employee_id
  * @property integer $group_id
  * @property integer $work_subject_id
- * @property integer $type
+ * @property integer $evaluation_system_id
  * @property integer $course
  * @property array $consult
  * @property array $students
@@ -35,6 +38,9 @@ use yii\web\NotFoundHttpException;
  * @property Group $group
  * @property Employee $employee
  * @property WorkSubject $workSubject
+ * @property JournalRecord[] $journalRecords
+ * @property EvaluationSystem $evaluationSystem
+ * @property JournalRecordType $type
  */
 class Load extends ActiveRecord
 {
@@ -48,14 +54,20 @@ class Load extends ActiveRecord
     const HOURS_PROJECT = 2;
     const HOURS_CHECK = 3;
     const HOURS_CONTROL = 4;
-
+    protected static $HOURS = ['', '', '', '', ''];
+    public $workType;
     protected $WORK_RATE = [1, 1, 1];
     protected $PROJECT_RATE = [2, 1, 1];
     protected $DIPLOMA_RATE = [4, 4, 4];
 
-    public $workType;
-
-    protected static $HOURS = ['', '', '', '', ''];
+    /**
+     * @inheritdoc
+     * @return LoadQuery the active query used by this AR class.
+     */
+    public static function find()
+    {
+        return new LoadQuery(get_called_class());
+    }
 
     /**
      * @return string the associated database table name
@@ -63,6 +75,38 @@ class Load extends ActiveRecord
     public static function tableName()
     {
         return '{{%load}}';
+    }
+
+    /**
+     * @return array
+     */
+    public static function getTypes()
+    {
+        return [
+            0 => Yii::t('load', 'Course work'),
+            1 => Yii::t('load', 'Course project'),
+            2 => Yii::t('load', 'Diploma project'),
+        ];
+    }
+
+    /**
+     * @param $group_id
+     * @param null $year_id
+     * @return array
+     */
+    public static function getListByGroupAndYear($group_id, $year_id = null)
+    {
+        return ArrayHelper::map(self::getArrayByGroupAndYear($group_id, $year_id), 'id', 'labelInfo');
+    }
+
+    /**
+     * @param $group_id
+     * @param null $study_year_id
+     * @return Load[]
+     */
+    public static function getArrayByGroupAndYear($group_id, $study_year_id = null)
+    {
+        return self::findAll(['group_id' => $group_id, 'study_year_id' => $study_year_id]);
     }
 
     /**
@@ -77,6 +121,8 @@ class Load extends ActiveRecord
                 'value' => !empty($this->spring_hours) ? ArrayHelper::merge(self::$HOURS, $this->spring_hours) : self::$HOURS],
             [['consult'], 'validateConsultation'],
             [['employee_id'], 'required', 'on' => 'project'],
+            [['employee_id'], 'safe'],
+            [['evaluation_system_id'], 'integer'],
         ];
     }
 
@@ -85,7 +131,7 @@ class Load extends ActiveRecord
      */
     public function getStudyYear()
     {
-        return $this->hasOne(StudyYear::className(), ['id' => 'study_year_id']);
+        return $this->hasOne(StudyYear::class, ['id' => 'study_year_id']);
     }
 
     /**
@@ -93,7 +139,7 @@ class Load extends ActiveRecord
      */
     public function getEmployee()
     {
-        return $this->hasOne(Employee::className(), ['id' => 'employee_id']);
+        return $this->hasOne(Employee::class, ['id' => 'employee_id']);
     }
 
     /**
@@ -101,7 +147,7 @@ class Load extends ActiveRecord
      */
     public function getGroup()
     {
-        return $this->hasOne(Group::className(), ['id' => 'group_id']);
+        return $this->hasOne(Group::class, ['id' => 'group_id']);
     }
 
     /**
@@ -109,7 +155,15 @@ class Load extends ActiveRecord
      */
     public function getWorkSubject()
     {
-        return $this->hasOne(WorkSubject::className(), ['id' => 'work_subject_id']);
+        return $this->hasOne(WorkSubject::class, ['id' => 'work_subject_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getEvaluationSystem()
+    {
+        return $this->hasOne(EvaluationSystem::class, ['id' => 'evaluation_system_id']);
     }
 
     /**
@@ -119,7 +173,7 @@ class Load extends ActiveRecord
     {
         return [
             'JsonBehavior' => [
-                'class' => JsonBehavior::className(),
+                'class' => JsonBehavior::class,
                 'fields' => ['consult', 'students', 'fall_hours', 'spring_hours'],
             ],
         ];
@@ -322,9 +376,9 @@ class Load extends ActiveRecord
     public function getProject($semester)
     {
         if ($semester & 1) {
-            $project = $this->fall_hours[self::HOURS_PROJECT];
+            $project = $this->fall_hours[self::HOURS_PROJECT] ?? '';
         } else {
-            $project = $this->spring_hours[self::HOURS_PROJECT];
+            $project = $this->spring_hours[self::HOURS_PROJECT] ?? '';
         }
         return !empty($project) ? $project : '';
     }
@@ -336,9 +390,9 @@ class Load extends ActiveRecord
     public function getCheck($semester)
     {
         if ($semester & 1) {
-            $check = $this->fall_hours[self::HOURS_CHECK];
+            $check = $this->fall_hours[self::HOURS_CHECK] ?? '';
         } else {
-            $check = $this->spring_hours[self::HOURS_CHECK];
+            $check = $this->spring_hours[self::HOURS_CHECK] ?? '';
         }
         return !empty($check) ? $check : '';
     }
@@ -350,9 +404,9 @@ class Load extends ActiveRecord
     public function getControl($semester)
     {
         if ($semester & 1) {
-            $control = $this->fall_hours[self::HOURS_CONTROL];
+            $control = $this->fall_hours[self::HOURS_CONTROL] ?? '';
         } else {
-            $control = $this->spring_hours[self::HOURS_CONTROL];
+            $control = $this->spring_hours[self::HOURS_CONTROL] ?? '';
         }
         return !empty($control) ? $control : '';
     }
@@ -457,7 +511,6 @@ class Load extends ActiveRecord
         return $this->workSubject->getSelfwork($fall - 1) + $this->workSubject->getSelfwork($spring - 1);
     }
 
-
     public function validateConsultation()
     {
         if (!$this->hasErrors() && $this->scenario != 'project') {
@@ -507,6 +560,17 @@ class Load extends ActiveRecord
                 }
 
             }
+
+            $relation = SubjectRelation::find()
+                ->joinWith('subjectCycle')
+                ->where([
+                    'subject_id' => $this->workSubject->subject_id,
+                    'speciality_qualification_id' => $this->workSubject->workPlan->speciality_qualification_id,
+                ])->one();
+            $evaluation_system_id = $relation->subjectCycle->evaluation_system_id;
+
+            $this->evaluation_system_id = $evaluation_system_id;
+
             return true;
         } else {
             return false;
@@ -514,43 +578,13 @@ class Load extends ActiveRecord
     }
 
     /**
-     * @return array
+     * @return string
      */
-    public static function getTypes()
+    public function getLabelITitle()
     {
-        return [
-            0 => Yii::t('load', 'Course work'),
-            1 => Yii::t('load', 'Course project'),
-            2 => Yii::t('load', 'Diploma project'),
-        ];
-    }
-
-    protected function findModel($id)
-    {
-        if (($model = self::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
-    }
-
-    /**
-     * @param $group_id
-     * @param null $year_id
-     * @return static[]
-     */
-    public static function getArrayByGroupAndYear($group_id, $year_id = null)
-    {
-        if (is_null($year_id)) {
-            $year_id = StudyYear::getCurrentYear()->id;
-        }
-        if ($year_id == 5 && $group_id == 8) {
-            $models = [];
-            $models[] = self::getZaglushka();
-            return $models;
-        }
-        return [];
-        return self::findAll(['group_id' => $group_id, 'year_id' => $year_id]);
+        //@TODO move html from model
+        return
+            "<h2>" . Yii::t('app', 'Subject') . ':' . $this->getSubjectName() . '</h2><h3>' . Yii::t('app', 'Teacher ID') . ': ' . $this->getTeacherFullName() . "</h3>";
     }
 
     /**
@@ -566,42 +600,27 @@ class Load extends ActiveRecord
      */
     public function getTeacherFullName()
     {
-        return $this->employee->getFullName();
+        return $this->employee ? $this->employee->getShortName() : Yii::t('base', 'Not selected');
     }
 
     /**
      * @return string
      */
-    public function getLabelITitle()
-    {
-        return
-            "<h2>" . Yii::t('app', 'Subject') . ':' . $this->getSubjectName() . '</h2><h3>' . Yii::t('app', 'Teacher ID') . ': ' . $this->getTeacherFullName() . "</h3>";
-    }
-
     public function getLabelInfo()
     {
         return Yii::t('app', 'Subject') . ':' . $this->getSubjectName() . '.' . Yii::t('app', 'Teacher ID') . ': ' . $this->getTeacherFullName();
     }
 
     /**
-     * @param $group_id
-     * @param null $year_id
-     * @return array
+     * @return string
      */
-    public static function getListByGroupAndYear($group_id, $year_id = null)
+    public function getFullTitle()
     {
-        return ArrayHelper::map(self::getArrayByGroupAndYear($group_id, $year_id), 'id', 'labelInfo');
+        return $this->group->title . ' ' . $this->workSubject->subject->title;
     }
 
-    public static function getZaglushka()
+    public function getJournalRecords()
     {
-        WorkSubject::findOne(12);
-        $model = new Load();
-        $model->id = 228;
-        $model->work_subject_id = 3;
-        $model->study_year_id = 5;
-        $model->group_id = 8;
-        $model->employee_id = 1;
-        return $model;
+        return $this->hasMany(JournalRecord::class, ['load_id' => 'id']);
     }
 }

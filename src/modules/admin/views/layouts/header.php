@@ -220,8 +220,8 @@ use yii\helpers\Url;
         <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                 <i class="fa fa-user fa-fw"></i>
-                <?php if (!Yii::$app->get('admin')->isGuest): ?>
-                    <?= Yii::$app->get('admin')->getIdentity()->email ?>
+                <?php if (!Yii::$app->user->isGuest): ?>
+                    <?= Yii::$app->user->getIdentity()->email ?>
                 <?php endif ?>
                 <i class="fa fa-caret-down"></i>
             </a>

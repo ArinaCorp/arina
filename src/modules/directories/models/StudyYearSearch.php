@@ -2,7 +2,6 @@
 
 namespace app\modules\directories\models;
 
-use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 
@@ -34,9 +33,11 @@ class StudyYearSearch extends StudyYear
      * @param array $params
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search($params, $query = null)
     {
-        $query = StudyYear::find();
+        if ($query === null) {
+            $query = StudyYear::find();
+        }
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -54,6 +55,8 @@ class StudyYearSearch extends StudyYear
             'active' => $this->active,
         ]);
 
+        echo $query->createCommand()->rawSql;
+        die;
         return $dataProvider;
     }
 }

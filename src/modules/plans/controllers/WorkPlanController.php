@@ -104,7 +104,7 @@ class WorkPlanController extends Controller implements IAdminController
 
             if ($model->save()) {
                 $model->scenario = WorkPlan::SCENARIO_GRAPH;
-                return $this->redirect(['graph', 'id' => $model->id]);
+                return $this->redirect(['view', 'id' => $model->id]);
             }
         }
 
@@ -118,7 +118,6 @@ class WorkPlanController extends Controller implements IAdminController
     public function actionGraph($id)
     {
         $model = WorkPlan::findOne($id);
-
         if (Yii::$app->request->post()) {
             if (isset(Yii::$app->session['weeks'])) {
                 $model->semesters = Yii::$app->session['weeks'];
@@ -203,8 +202,7 @@ class WorkPlanController extends Controller implements IAdminController
         /** @var WorkSubject $model */
         $model = WorkSubject::findOne($id);
 
-        if (Yii::$app->request->post()) {
-            $model->attributes = $_POST['WorkSubject'];
+        if ($model->load(Yii::$app->request->post())) {
             if ($model->save()) {
                 return $this->redirect(['view', 'id' => $model->work_plan_id]);
             }
@@ -219,11 +217,9 @@ class WorkPlanController extends Controller implements IAdminController
      */
     public function actionCreateSubject($id)
     {
-        $model = new WorkSubject();
-        $model->work_plan_id = $id;
+        $model = new WorkSubject(['work_plan_id' => $id]);
 
-        if (Yii::$app->request->post()) {
-            $model->attributes = $_POST['WorkSubject'];
+        if ($model->load(Yii::$app->request->post())) {
             if ($model->save())
                 return $this->redirect(['view', 'id' => $model->work_plan_id]);
         }
@@ -284,7 +280,7 @@ class WorkPlanController extends Controller implements IAdminController
                     $t = $semesters[$groupId + 1];
                     if (($t[2] != $lastYear[2]) || ($t[1] != $lastYear[1])) {
                         $errors[$groupName] = Yii::t('plans',
-                                'Number of weeks is different for same groups of course (group') . $groupName .')';
+                                'Number of weeks is different for same groups of course (group') . $groupName . ')';
                     }
                 }
                 $semestersForGroups[$groupName] = $semesters[$groupId + 1];

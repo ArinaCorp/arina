@@ -18,7 +18,7 @@ class SubjectCycleSearch extends SubjectCycle
     public function rules()
     {
         return [
-            [['title'], 'safe', 'on' => 'search'],
+            [['title', 'parent_id', 'evaluation_system_id'], 'safe'],
         ];
     }
 
@@ -59,6 +59,7 @@ class SubjectCycleSearch extends SubjectCycle
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
+            'parent_id' => $this->parent_id,
         ]);
 
         $query->andFilterWhere(['like', 'title', $this->title]);

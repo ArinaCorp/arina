@@ -16,11 +16,11 @@ class Module extends BaseModule implements IAdminModule
     {
         return [
 //            'as AccessBehavior' => [
-//                'class' => \developeruz\db_rbac\behaviors\AccessBehavior::className(),
+//                'class' => \developeruz\db_rbac\behaviors\AccessBehavior::class,
 //            ]
         ];
     }
-    
+
     /**
      * @inheritdoc
      */
@@ -58,6 +58,12 @@ class Module extends BaseModule implements IAdminModule
                     'label' => Yii::t('plans', 'Create work plan'),
                     'url' => ['/plans/work-plan/create'],
                     'icon' => 'plus',
+                    'roles' => ['head-of-department', 'head-of-cyclic-commission'],
+                ],
+                [
+                    'label' => Yii::t('plans', 'Student plans'),
+                    'url' => ['/plans/student-plan/index'],
+                    'icon' => 'th-list',
                     'roles' => ['head-of-department', 'head-of-cyclic-commission'],
                 ]
             ],

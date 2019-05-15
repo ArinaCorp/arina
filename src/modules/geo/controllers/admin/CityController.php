@@ -30,13 +30,13 @@ class CityController extends Controller implements IAdminController
     {
         parent::init();
         if ($this->modelClass === null) {
-            $this->modelClass = City::className();
+            $this->modelClass = City::class;
         }
         if ($this->modelRegionClass === null) {
-            $this->modelRegionClass = Region::className();
+            $this->modelRegionClass = Region::class;
         }
         if ($this->modelDistrictClass === null) {
-            $this->modelDistrictClass = District::className();
+            $this->modelDistrictClass = District::class;
         }
     }
 
@@ -44,7 +44,7 @@ class CityController extends Controller implements IAdminController
     {
         return [
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
                 ],

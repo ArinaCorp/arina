@@ -15,7 +15,7 @@
  */
 ?>
 
-<?php $this->beginContent('@dektrium/user/views/admin/update.php', ['user' => $user]) ?>
+<?php $this->beginContent('@app/modules/user/views/admin/update.php', ['user' => $user]) ?>
 
 <table class="table">
     <tr>

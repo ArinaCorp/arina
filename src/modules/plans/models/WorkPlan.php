@@ -85,11 +85,11 @@ class WorkPlan extends ActiveRecord
                 'message' => Yii::t('plans', 'Click "Generate" and check the data'), 'on' => 'graphs'
             ],
             [['study_year_id'], 'unique', 'targetAttribute' => ['study_year_id', 'speciality_qualification_id']],
-            [['speciality_qualification_id',], 'integer'],
+            [['speciality_qualification_id'], 'integer'],
             [['created', 'updated'], 'safe'],
             [['id', 'speciality_qualification_id'], 'safe', 'on' => 'search'],
             [['study_plan_origin', 'work_plan_origin'], 'checkOrigin', 'on' => 'insert'],
-            [['semesters',], 'required', 'on' => self::SCENARIO_GRAPH],
+            [['semesters'], 'required', 'on' => self::SCENARIO_GRAPH],
 
         ];
     }
@@ -214,8 +214,8 @@ class WorkPlan extends ActiveRecord
             'id' => 'ID',
             'study_year_id' => Yii::t('app', 'Study year'),
             'speciality_qualification_id' => Yii::t('app', 'Speciality qualification'),
-            'created' => Yii::t('plans', 'Date of creation'),
-            'updated' => Yii::t('plans', 'Date of update'),
+            'created' => Yii::t('app', 'Created at'),
+            'updated' => Yii::t('app', 'Updated at'),
             'study_plan_origin' => Yii::t('plans', 'The study plan for the base'),
             'work_plan_origin' => Yii::t('plans', 'The work plan for the base'),
             'title' => Yii::t('plans', 'Work plan'),
@@ -227,7 +227,7 @@ class WorkPlan extends ActiveRecord
      */
     public function getTitle()
     {
-        return $this->getSpecialityQualificationTitle() . ' - ' . $this->getYearTitle();
+        return $this->specialityQualification->getFullTitle() . ' - ' . $this->getYearTitle();
     }
 
     public function checkOrigin()
@@ -285,6 +285,7 @@ class WorkPlan extends ActiveRecord
             }
         }
         $this->graph = $graph;
+        $this->semesters = $origin->semesters;
         foreach ($origin->studySubjects as $subject) {
             $model = new WorkSubject();
             $model->work_plan_id = $this->id;
@@ -299,12 +300,18 @@ class WorkPlan extends ActiveRecord
             $model->control_hours = $control_hours;
             $model->weeks = $subject->weeks;
             $model->control = $subject->control;
-            $model->total = ["0", "0", "0", "0", "0", "0", "0", "0"];
-            $model->lectures = ["", "", "", "", "", "", "", ""];
-            $model->lab_works = ["", "", "", "", "", "", "", ""];
-            $model->practices = ["", "", "", "", "", "", "", ""];
-            $model->diploma_name = "";
-            $model->certificate_name = "";
+            $total = [];
+            foreach ($subject->weeks as $id => $hoursPerWeek) {
+                // count total hours per semester
+                $total[] = $hoursPerWeek * $this->semesters[$id];
+            }
+            $model->total = $total;
+            $undefArr = ["0", "0", "0", "0", "0", "0", "0", "0"];
+            $model->lectures = $undefArr;
+            $model->lab_works = $undefArr;
+            $model->practices = $undefArr;
+            $model->diploma_name = $subject->diploma_name;
+            $model->certificate_name = $subject->certificate_name;
             $model->save(false);
         }
     }
@@ -384,26 +391,32 @@ class WorkPlan extends ActiveRecord
     }
 
     /**
+     * Returns an array of work subjects which are present in defined course
+     * @param integer $course
+     * @param bool $absentOnes Search those which are absent for defined course
+     * @return WorkSubject[]
+     */
+    public function getSubjectsForCourse($course, $absentOnes = false)
+    {
+        $result = [];
+        foreach($this->workSubjects as $subject){
+            if($absentOnes && !$subject->presentIn($course)){
+                $result[]=$subject;
+            }elseif(!$absentOnes && $subject->presentIn($course)){
+                $result[]=$subject;
+            }
+        }
+        return $result;
+    }
+
+    /**
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
     public function getDocument()
     {
-        //@TODO move to component
-//        Yii::$app->excel->makeWorkPlan($this);
-        ExportToExcel::getDocument('WorkPlan',$this);
-    }
-
-    /**
-     * @return string
-     */
-    public function getSpecialityQualificationTitle()
-    {
-        if (!empty($this->specialityQualification)) {
-            return $this->specialityQualification->title;
-        }
-        return '';
+        ExportToExcel::getDocument('WorkPlan', $this);
     }
 
 }

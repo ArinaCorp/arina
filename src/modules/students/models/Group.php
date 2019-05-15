@@ -26,7 +26,7 @@ use yii\helpers\Url;
  *
  * @property SpecialityQualification $specialityQualification
  * @property Student $groupLeader
- * @property StudyYear $studyYear;
+ * @property StudyYear $studyYear
  *
  */
 class Group extends ActiveRecord
@@ -385,6 +385,14 @@ class Group extends ActiveRecord
         if (!isset($year)) {
             $year = StudyYear::getCurrentYear();
         }
+        //TODO: remove later
+//        var_dump($year->getYearEnd());
+//        var_dump($this->studyYear->year_start);
+//        if($this->id == 1) {
+//            var_dump($this->studyYear->year_start);
+//            var_dump($year->getYearEnd());
+//            die;
+//        }
         $value = $year->getYearEnd() - $this->studyYear->year_start;
         return $value;
     }
@@ -427,6 +435,12 @@ class Group extends ActiveRecord
     public function getTitleAndLink()
     {
         return Html::a($this->title, Url::to(['/students/group/view', 'id' => $this->id]));
+    }
+
+    public function getStudents()
+    {
+        return $this->hasMany(Student::class, ['id' => 'student_id'])
+            ->viaTable('student_group', ['group_id' => 'id']);
     }
 
 }

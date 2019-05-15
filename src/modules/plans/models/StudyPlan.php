@@ -3,19 +3,19 @@
 namespace app\modules\plans\models;
 
 use app\components\ExportToExcel;
+use app\modules\directories\models\department\Department;
+use app\modules\directories\models\speciality_qualification\SpecialityQualification;
+use app\modules\directories\models\subject\Subject;
 use app\modules\user\helpers\UserHelper;
 use app\modules\user\models\User;
-use Yii;
-use yii\db\ActiveRecord;
-use yii\db\ActiveQuery;
-use yii\data\ActiveDataProvider;
-use yii\helpers\ArrayHelper;
 use nullref\useful\behaviors\JsonBehavior;
+use nullref\useful\traits\Mappable;
+use Yii;
 use yii\behaviors\TimestampBehavior;
-
-use app\modules\directories\models\speciality_qualification\SpecialityQualification;
-use app\modules\directories\models\department\Department;
-use app\modules\directories\models\subject\Subject;
+use yii\data\ActiveDataProvider;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "study_plan".
@@ -34,25 +34,9 @@ use app\modules\directories\models\subject\Subject;
  */
 class StudyPlan extends ActiveRecord
 {
-    public $study_plan_origin;
+    use Mappable;
 
-    /**
-     * @return array
-     */
-    public function behaviors()
-    {
-        return [
-            'JsonBehavior' => [
-                'class' => JsonBehavior::className(),
-                'fields' => ['graph', 'semesters'],
-            ],
-            'TimestampBehavior' => [
-                'class' => TimestampBehavior::className(),
-                'createdAtAttribute' => 'created',
-                'updatedAtAttribute' => 'updated',
-            ]
-        ];
-    }
+    public $study_plan_origin;
 
     /**
      * @return string the associated database table name
@@ -63,35 +47,18 @@ class StudyPlan extends ActiveRecord
     }
 
     /**
-     * @return array validation rules for model attributes.
-     */
-    public function rules()
-    {
-        return [
-            [['speciality_qualification_id'], 'required'],
-            [['semesters'], 'required', 'message' => Yii::t('plans', 'Click "Generate" and check the data')],
-            [['id', 'speciality_qualification_id'], 'integer'],
-            [['created', 'updated'], 'safe'],
-
-            [['id', 'speciality_qualification_id'], 'safe', 'on' => 'search'],
-            [['id'], 'unique'],
-        ];
-    }
-
-
-    /**
-     * @param $id
+     * @param $headId
      * @return array
      */
-    public static function getList($id = NULL)
+    public static function getList($headId = NULL)
     {
         /** @var Department $department */
-        if (isset($id)) {
-            $department = Department::find()->where(['head_id' => $id])->all();
+        if (isset($headId)) {
+            $department = Department::find()->where(['head_id' => $headId])->all();
             if (isset($department)) {
                 $list = [];
                 foreach ($department->specialities as $speciality) {
-                    $list[$speciality->title] = ArrayHelper::map($speciality->studyPlans, 'id', 'title');
+                    $list[$speciality->title] = ArrayHelper::map($speciality->studyPlans, 'id', 'titleWithDate');
                 }
                 return $list;
             }
@@ -113,13 +80,47 @@ class StudyPlan extends ActiveRecord
                             ->column();
                         return ArrayHelper::map(StudyPlan::find()
                             ->andWhere(['speciality_qualification_id' => $spQIds])
-                            ->all(), 'id', 'title');
+                            ->all(), 'id', 'titleWithDate');
                     }
                 } else {
-                    return ArrayHelper::map(StudyPlan::find()->all(), 'id', 'title');
+                    return ArrayHelper::map(StudyPlan::find()->all(), 'id', 'titleWithDate');
                 }
             }
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function behaviors()
+    {
+        return [
+            'JsonBehavior' => [
+                'class' => JsonBehavior::class,
+                'fields' => ['graph', 'semesters'],
+            ],
+            'TimestampBehavior' => [
+                'class' => TimestampBehavior::class,
+                'createdAtAttribute' => 'created',
+                'updatedAtAttribute' => 'updated',
+            ],
+        ];
+    }
+
+    /**
+     * @return array validation rules for model attributes.
+     */
+    public function rules()
+    {
+        return [
+            [['speciality_qualification_id'], 'required'],
+            [['semesters'], 'required', 'message' => Yii::t('plans', 'Click "Generate" and check the data')],
+            [['id', 'speciality_qualification_id'], 'integer'],
+            [['created', 'updated'], 'safe'],
+
+            [['id', 'speciality_qualification_id'], 'safe', 'on' => 'search'],
+            [['id'], 'unique'],
+        ];
     }
 
     /**
@@ -149,7 +150,7 @@ class StudyPlan extends ActiveRecord
      */
     public function getSpecialityQualification()
     {
-        return $this->hasOne(SpecialityQualification::className(), ['id' => 'speciality_qualification_id']);
+        return $this->hasOne(SpecialityQualification::class, ['id' => 'speciality_qualification_id']);
     }
 
     /**
@@ -157,7 +158,7 @@ class StudyPlan extends ActiveRecord
      */
     public function getStudySubjects()
     {
-        return $this->hasMany(StudySubject::className(), ['study_plan_id' => 'id']);
+        return $this->hasMany(StudySubject::class, ['study_plan_id' => 'id']);
     }
 
     /**
@@ -189,8 +190,8 @@ class StudyPlan extends ActiveRecord
             'speciality_qualification_id' => Yii::t('app', 'Speciality qualification'),
             'semesters' => Yii::t('plans', 'Semesters'),
             'graph' => Yii::t('plans', 'Graph'),
-            'created' => Yii::t('app', 'Date of creation'),
-            'updated' => Yii::t('app', 'Date of update'),
+            'created' => Yii::t('app', 'Created at'),
+            'updated' => Yii::t('app', 'Updated at'),
         ];
     }
 
@@ -245,7 +246,15 @@ class StudyPlan extends ActiveRecord
      */
     public function getTitle()
     {
-        return $this->specialityQualification->title . ' - ' . date('d.m.Y H:i', $this->created);
+        return $this->specialityQualification->getFullTitle();
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitleWithDate()
+    {
+        return $this->getTitle() . ' - ' . date('d.m.Y H:i', $this->created);
     }
 
     /**

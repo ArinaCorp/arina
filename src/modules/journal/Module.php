@@ -19,7 +19,7 @@ class Module extends BaseModule implements IAdminModule
     {
         return [
             //           'as AccessBehavior' => [
-            //               'class' => \developeruz\db_rbac\behaviors\AccessBehavior::className(),
+            //               'class' => \developeruz\db_rbac\behaviors\AccessBehavior::class,
             //           ]
         ];
     }
@@ -68,6 +68,12 @@ class Module extends BaseModule implements IAdminModule
                 [
                     'label' => Yii::t('app', 'Journal pages'),
                     'url' => ['/journal'],
+                    'icon' => 'files-o',
+                    'roles' => ['teacher'],
+                ],
+                [
+                    'label' => Yii::t('app', 'Marks Accounting'),
+                    'url' => ['/journal/marks-accounting'],
                     'icon' => 'files-o',
                     'roles' => ['teacher'],
                 ],

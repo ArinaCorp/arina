@@ -19,7 +19,7 @@ use kartik\date\DatePicker;
     ]); ?>
     <div class="row">
         <div class="col-sm-4">
-            <?= $form->field($model, 'category_id')->widget(Select2::className(), [
+            <?= $form->field($model, 'category_id')->widget(Select2::class, [
                 'name' => 'category',
                 'data' => StudentsHistory::getStudentCategoryList(),
                 'options' => [
@@ -29,7 +29,7 @@ use kartik\date\DatePicker;
             ?>
         </div>
         <div class="col-sm-4">
-            <?= $form->field($model, 'group_search_id')->widget(DepDrop::className(), [
+            <?= $form->field($model, 'group_search_id')->widget(DepDrop::class, [
                 'name' => 'group',
                 'data' => [],
                 'options' => ['placeholder' => 'Select group'],
@@ -44,7 +44,7 @@ use kartik\date\DatePicker;
             ?>
         </div>
         <div class="col-sm-4">
-            <?= $form->field($model, 'student_id')->widget(DepDrop::className(),
+            <?= $form->field($model, 'student_id')->widget(DepDrop::class,
                 [
                     'data' => [],
                     'options' => ['placeholder' => Yii::t('app','Select ...')],
@@ -61,7 +61,7 @@ use kartik\date\DatePicker;
     </div>
     <div class="row">
         <div class="col-sm-4">
-            <?= $form->field($model, 'date')->widget(DatePicker::className(), [
+            <?= $form->field($model, 'date')->widget(DatePicker::class, [
                 'language' => Yii::$app->language,
                 'pluginOptions' => [
                     'format' => 'dd.mm.yyyy',
@@ -69,7 +69,7 @@ use kartik\date\DatePicker;
             ]); ?>
         </div>
         <div class="col-sm-4">
-            <?= $form->field($model, 'parent_id')->widget(DepDrop::className(),
+            <?= $form->field($model, 'parent_id')->widget(DepDrop::class,
                 [
                     'data' => [],
                     'options' => ['placeholder' => Yii::t('app','Select ...')],
@@ -83,7 +83,7 @@ use kartik\date\DatePicker;
                 ]) ?>
         </div>
         <div class="col-sm-4">
-            <?= $form->field($model, 'action_type')->widget(DepDrop::className(),
+            <?= $form->field($model, 'action_type')->widget(DepDrop::class,
                 [
                     'data' => [],
                     'options' => ['placeholder' => Yii::t('app','Select ...')],

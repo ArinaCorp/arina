@@ -21,7 +21,7 @@ use kartik\daterange\DateRangePicker;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'group_id')->widget(Select2::className(),
+    <?= $form->field($model, 'group_id')->widget(Select2::class,
         [
             'data' => Group::getActiveGroupsList(),
             'pluginOptions' => [
@@ -34,7 +34,7 @@ use kartik\daterange\DateRangePicker;
         ]
     ); ?>
 
-    <?= $form->field($model, 'student_id')->widget(DepDrop::className(),
+    <?= $form->field($model, 'student_id')->widget(DepDrop::class,
         [
             'data' => StudentsHistory::getActiveStudentByGroupList($model->group_id),
             'pluginOptions' => [
@@ -49,8 +49,8 @@ use kartik\daterange\DateRangePicker;
         ]
     ); ?>
 
-    <?= $form->field($model, 'exemption_id')->widget(Select2::className(), [
-        'data' => Exemption::getList(),
+    <?= $form->field($model, 'exemption_id')->widget(Select2::class, [
+        'data' => Exemption::getMap('title'),
         'pluginOptions' => [
             'placeholder' => Yii::t('app', 'Select exemption')
         ]

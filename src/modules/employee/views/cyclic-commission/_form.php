@@ -18,7 +18,7 @@ use app\modules\employee\models\Employee;
 
     <?= $form->field($model, 'short_title')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'head_id')->widget(Select2::className(), [
+    <?= $form->field($model, 'head_id')->widget(Select2::class, [
         'data' => Employee::getAllTeacherList(),
         'options' =>
             [

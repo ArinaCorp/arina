@@ -14,8 +14,8 @@ use app\modules\journal\models\record\JournalRecordType;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'type')->widget(Select2::className(), [
-        'data' => JournalRecordType::getList(),
+    <?= $form->field($model, 'type')->widget(Select2::class, [
+        'data' => JournalRecordType::getMap('title'),
     ]) ?>
 
     <div class="form-group">

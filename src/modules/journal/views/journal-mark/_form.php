@@ -21,7 +21,7 @@ use app\modules\journal\models\evaluation\Evaluation;
     <?php
     $form = ActiveForm::begin(); ?>
     <?php if ($type->present) : ?>
-        <?= $form->field($model, 'presence')->widget(SwitchInput::classname(), [
+        <?= $form->field($model, 'presence')->widget(SwitchInput::class, [
             'options' => [
                 'id' => 'not-present-check',
             ],
@@ -38,7 +38,7 @@ use app\modules\journal\models\evaluation\Evaluation;
             ]
         ]); ?>
         <div id="not-presence-container" style="">
-            <?= $form->field($model, 'not_presence_reason_id')->widget(Select2::className(), [
+            <?= $form->field($model, 'not_presence_reason_id')->widget(Select2::class, [
                 'data' => NotPresenceType::getAllList(),
                 'options' => [
                     'class' => 'hidden',
@@ -50,8 +50,8 @@ use app\modules\journal\models\evaluation\Evaluation;
             ]) ?>
         </div>
     <?php endif; ?>
-    <?= $form->field($model, 'evaluation_system_id')->widget(Select2::className(), [
-        'data' => EvaluationSystem::getList(),
+    <?= $form->field($model, 'evaluation_system_id')->widget(Select2::class, [
+        'data' => EvaluationSystem::getMap('title'),
         'options' => [
             'placeholder' => Yii::t('app', "Set evaluation system"),
         ],
@@ -65,7 +65,7 @@ use app\modules\journal\models\evaluation\Evaluation;
         $evaluation = Evaluation::getListBySystem($model->evaluation_system_id);
     }
     ?>
-    <?= $form->field($model, 'evaluation_id')->widget(DepDrop::className(), [
+    <?= $form->field($model, 'evaluation_id')->widget(DepDrop::class, [
         'data' => $evaluation,
         'options' => [
             'placeholder' => Yii::t('app', 'Select mark')
@@ -80,7 +80,7 @@ use app\modules\journal\models\evaluation\Evaluation;
     <?php if ($type->ticket) : ?>
         <?= $form->field($model, 'ticket')->textInput() ?>
     <?php endif; ?>
-    <?= $form->field($model, 'retake_evaluation_id')->widget(DepDrop::className(), ['data' => $evaluation,
+    <?= $form->field($model, 'retake_evaluation_id')->widget(DepDrop::class, ['data' => $evaluation,
         'options' => [
             'placeholder' => Yii::t('app', 'Select mark')
         ],

@@ -21,7 +21,7 @@ use app\modules\employee\models\Employee;
         </div>
 
         <div class="col-sm-6">
-            <?= $form->field($model, 'head_id')->widget(Select2::className(), [
+            <?= $form->field($model, 'head_id')->widget(Select2::class, [
                 'data' => Employee::getAllTeacherList(),
                 'options' =>
                     [

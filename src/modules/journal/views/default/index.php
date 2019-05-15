@@ -42,7 +42,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= $form->field($model, 'speciality_qualification_id')->widget(Select2::class,
             [
 
-                'data' => SpecialityQualification::getList(),
+                'data' => SpecialityQualification::getMap('title'),
                 'pluginOptions' => [
                     'id' => 'speciality_qualification_id',
                     'placeholder' => Yii::t('app', 'Select speciality qualification'),

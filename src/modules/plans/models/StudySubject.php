@@ -50,7 +50,7 @@ class StudySubject extends ActiveRecord
     {
         return [
             'JsonBehavior' => [
-                'class' => JsonBehavior::className(),
+                'class' => JsonBehavior::class,
                 'fields' => ['control', 'weeks'],
             ],
         ];
@@ -62,7 +62,7 @@ class StudySubject extends ActiveRecord
     public function rules()
     {
         return [
-            [['study_plan_id', 'subject_id', 'total'], 'required', 'message' => Yii::t('plans', 'Specify').'{attribute}'],
+            [['study_plan_id', 'subject_id', 'total'], 'required', 'message' => Yii::t('plans', 'Specify') . '{attribute}'],
             [['weeks'], 'checkWeeks'],
             [['total'], 'checkHours'],
             [['practice_weeks'], 'checkPractice'],
@@ -86,7 +86,7 @@ class StudySubject extends ActiveRecord
      */
     public function getStudyPlan()
     {
-        return $this->hasOne(StudyPlan::className(), ['id' => 'study_plan_id']);
+        return $this->hasOne(StudyPlan::class, ['id' => 'study_plan_id']);
     }
 
     /**
@@ -94,7 +94,7 @@ class StudySubject extends ActiveRecord
      */
     public function getSubject()
     {
-        return $this->hasOne(Subject::className(), ['id' => 'subject_id']);
+        return $this->hasOne(Subject::class, ['id' => 'subject_id']);
     }
 
     /**
@@ -293,7 +293,7 @@ class StudySubject extends ActiveRecord
                     $sum += $weekly * $this->studyPlan->semesters[$semester];
                 }
             }
-            if (!$this->subject->practice && ($sum < $this->getClasses())) {
+            if ($sum < $this->getClasses()) {
                 $this->addError('lectures', Yii::t('plans', 'Not enough hours a week for proofreading'));
             }
         }

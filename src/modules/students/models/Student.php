@@ -6,7 +6,6 @@ namespace app\modules\students\models;
 use nullref\useful\behaviors\RelatedBehavior;
 use voskobovich\linker\LinkerBehavior;
 use Yii;
-use yii\base\Model;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 use yii\helpers\ArrayHelper;
@@ -55,45 +54,8 @@ use yii\web\UploadedFile;
  */
 class Student extends \yii\db\ActiveRecord
 {
-
     public $payment_type;
     public $has_characteristics;
-
-    public function behaviors()
-    {
-        return [
-            'timestamp' => TimestampBehavior::className(),
-            'image_upload' => [
-                'class' => '\yiidreamteam\upload\ImageUploadBehavior',
-                'attribute' => 'photo',
-                'thumbs' => [
-                    'thumb' => ['width' => 300, 'height' => 400, 'quality' => 50],
-                ],
-                'filePath' => '@webroot/uploads/students/photo/[[model]]_[[pk]].[[extension]]',
-                'fileUrl' => '/uploads/students/photo/[[model]]_[[pk]].[[extension]]',
-                'thumbPath' => '@webroot/uploads/students/photo/[[model]]_[[profile]]_[[pk]].[[extension]]',
-                'thumbUrl' => '/uploads/students/photo/[[model]]_[[profile]]_[[pk]].[[extension]]',
-            ],
-            'linker' => [
-                'class' => LinkerBehavior::className(),
-                'relations' => [
-                    'exemption_ids' => 'exemptions',
-                ],
-            ],
-
-            'related' => [
-                'class' => RelatedBehavior::className(),
-                'mappedType' => RelatedBehavior::MAPPED_TYPE_PK_FIELD,
-                'fields' => [
-                    'familyRelations' => FamilyRelation::className(),
-                    'phones' => StudentsPhone::className(),
-                    'emails' => StudentsEmail::className(),
-                    'socialNetworks' => StudentSocialNetwork::className(),
-                ],
-            ]
-        ];
-
-    }
 
     /**
      * @inheritdoc
@@ -104,136 +66,10 @@ class Student extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
-     */
-    public function rules()
-    {
-        return [
-            [['sseed_id', 'user_id', 'gender', 'status', 'created_at', 'updated_at'], 'integer'],
-            [['last_name', 'first_name', 'middle_name', 'gender', 'country_id', 'region_id', 'district_id'], 'required'],
-            [['birth_day', 'passport_issued_date'], 'safe'],
-            [['exemption_ids'], 'each', 'rule' => ['integer']],
-            [['student_code', 'passport_code', 'birth_certificate'], 'string', 'max' => 12],
-            [['last_name', 'first_name', 'middle_name', 'passport_issued'], 'string', 'max' => 255],
-            [['tax_id'], 'string', 'min' => 10, 'max' => 10],
-            [['student_code'], 'unique'],
-            [['sseed_id'], 'unique'],
-            [['user_id'], 'unique'],
-            [['passport_code'], 'unique'],
-            [['tax_id'], 'unique'],
-            ['photo', 'file', 'extensions' => 'jpeg, jpg, gif, png'],
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'id' => 'ID',
-            'student_code' => Yii::t('app', 'Student Code'),
-            'sseed_id' => Yii::t('app', 'Sseed ID'),
-            'user_id' => Yii::t('app', 'User ID'),
-            'last_name' => Yii::t('app', 'Last Name'),
-            'first_name' => Yii::t('app', 'First Name'),
-            'middle_name' => Yii::t('app', 'Middle Name'),
-            'country_id' => Yii::t('app', 'Country'),
-            'region_id' => Yii::t('app', 'Region'),
-            'district_id' => Yii::t('app', 'District'),
-            'gender' => Yii::t('app', 'Gender'),
-            'birth_day' => Yii::t('app', 'Birth Day'),
-            'passport_code' => Yii::t('app', 'Passport Code'),
-            'payment_type' => Yii::t('app', 'Payment Type'),
-            'paymentTypeLabel' => Yii::t('app', 'Payment Type'),
-            'tax_id' => Yii::t('app', 'Tax Code'),
-            'status' => Yii::t('app', 'Status'),
-            'birth_certificate' => Yii::t('app', 'Birth Certificate'),
-            'created_at' => Yii::t('app', 'Created At'),
-            'updated_at' => Yii::t('app', 'Updated At'),
-            'passport_issued' => Yii::t('app', 'Passport issued'),
-            'photo' => Yii::t('app', 'Photo'),
-            'passport_issued_date' => Yii::t('app', 'Passport issued date'),
-            'exemptions' => Yii::t('app', 'Exemptions'),
-            'exemption_ids' => Yii::t('app', 'Exemptions'),
-        ];
-    }
-
-    public function beforeSave($insert)
-    {
-        if (parent::beforeSave($insert)) {
-            $this->birth_day = date('Y-m-d', strtotime($this->birth_day));
-            if (is_null(!$this->passport_issued_date)) {
-                $this->passport_issued_date = date('Y-m-d', strtotime($this->passport_issued_date));
-            }
-
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public function afterFind()
-    {
-        parent::afterFind();
-        $this->birth_day = date('d.m.Y', strtotime($this->birth_day));
-        if (!is_null($this->passport_issued_date)) {
-            $this->passport_issued_date = date('d.m.Y', strtotime($this->passport_issued_date));
-        }
-    }
-
-    public function getGenderName()
-    {
-        return $this->gender ? Yii::t('app', 'Female') : Yii::t('app', 'Male');
-    }
-
-    public function getFullNameAndCode()
-    {
-        return $this->getFullName() . ' ' . $this->student_code;
-    }
-
-    public function getFullName()
-    {
-        return $this->last_name . ' ' . $this->first_name . ' ' . $this->middle_name;
-    }
-
-    public function getShortName()
-    {
-        return $this->last_name . ' ' . mb_substr($this->first_name, 0, 1, 'UTF-8') . '.' . mb_substr($this->middle_name, 0, 1, 'UTF-8') . '.';
-    }
-
-    public function getShortNameInitialFirst()
-    {
-        return mb_substr($this->first_name, 0, 1, 'UTF-8') . '.' . mb_substr($this->middle_name, 0, 1, 'UTF-8') . '.' . ' ' . $this->last_name;
-    }
-
-    public function getFullNameAndBirthDate()
-    {
-        return $this->fullName . " " . $this->birth_day;
-    }
-
-    public function getLink()
-    {
-        return Html::a($this->getFullName(), ['/students/default/view', 'id' => $this->id], ['target' => '_blank']);
-    }
-
-    public function getPhoto()
-    {
-        if (!is_null($this->getImageFileUrl('photo'))) {
-            return Html::img($this->getImageFileUrl('photo'), ['height' => 200, 'width' => 150]);
-        }
-        return Yii::t('app', 'Image not set');
-    }
-
-    public function getPaymentTypeLabel()
-    {
-        return mb_substr(StudentsHistory::getPayments()[$this->payment_type], 0, 1, 'UTF-8');
-    }
-
-    /**
      * @param $file
      *
      * @TODO move to component
+     * @TODO check if it used
      */
     public static function importXml($file)
     {
@@ -284,6 +120,7 @@ class Student extends \yii\db\ActiveRecord
      * @throws \PHPExcel_Reader_Exception
      *
      * @TODO move to component
+     * @TODO check if it used
      */
     public static function importExcel($file)
     {
@@ -317,6 +154,218 @@ class Student extends \yii\db\ActiveRecord
         }
     }
 
+    /**
+     * @return ActiveQuery
+     */
+    public static function find()
+    {
+        return parent::find()->orderBy(['last_name' => SORT_ASC, 'first_name' => SORT_ASC, 'middle_name' => SORT_ASC]);
+    }
+
+    /**
+     * @return array
+     */
+    public function behaviors()
+    {
+        return [
+            'timestamp' => TimestampBehavior::class,
+            'image_upload' => [
+                'class' => '\yiidreamteam\upload\ImageUploadBehavior',
+                'attribute' => 'photo',
+                'thumbs' => [
+                    'thumb' => ['width' => 300, 'height' => 400, 'quality' => 50],
+                ],
+                'filePath' => '@webroot/uploads/students/photo/[[model]]_[[pk]].[[extension]]',
+                'fileUrl' => '/uploads/students/photo/[[model]]_[[pk]].[[extension]]',
+                'thumbPath' => '@webroot/uploads/students/photo/[[model]]_[[profile]]_[[pk]].[[extension]]',
+                'thumbUrl' => '/uploads/students/photo/[[model]]_[[profile]]_[[pk]].[[extension]]',
+            ],
+            'linker' => [
+                'class' => LinkerBehavior::class,
+                'relations' => [
+                    'exemption_ids' => 'exemptions',
+                ],
+            ],
+
+            'related' => [
+                'class' => RelatedBehavior::class,
+                'mappedType' => RelatedBehavior::MAPPED_TYPE_PK_FIELD,
+                'fields' => [
+                    'familyRelations' => FamilyRelation::class,
+                    'phones' => StudentsPhone::class,
+                    'emails' => StudentsEmail::class,
+                    'socialNetworks' => StudentSocialNetwork::class,
+                ],
+            ]
+        ];
+
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            [['sseed_id', 'user_id', 'gender', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['last_name', 'first_name', 'middle_name', 'gender'], 'required'],
+//            [['last_name', 'first_name', 'middle_name', 'gender', 'country_id', 'region_id', 'district_id'], 'required'],
+            [['birth_day', 'passport_issued_date'], 'safe'],
+            [['exemption_ids'], 'each', 'rule' => ['integer']],
+            [['student_code', 'passport_code', 'birth_certificate'], 'string', 'max' => 12],
+            [['last_name', 'first_name', 'middle_name', 'passport_issued'], 'string', 'max' => 255],
+            [['tax_id'], 'string', 'min' => 10, 'max' => 10],
+            [['student_code'], 'unique'],
+            [['sseed_id'], 'unique'],
+            [['user_id'], 'unique'],
+            [['passport_code'], 'unique'],
+            [['tax_id'], 'unique'],
+            ['photo', 'file', 'extensions' => 'jpeg, jpg, gif, png'],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'id' => 'ID',
+            'student_code' => Yii::t('app', 'Student Code'),
+            'sseed_id' => Yii::t('app', 'Sseed ID'),
+            'user_id' => Yii::t('app', 'User ID'),
+            'last_name' => Yii::t('app', 'Last Name'),
+            'first_name' => Yii::t('app', 'First Name'),
+            'middle_name' => Yii::t('app', 'Middle Name'),
+            'country_id' => Yii::t('app', 'Country'),
+            'region_id' => Yii::t('app', 'Region'),
+            'district_id' => Yii::t('app', 'District'),
+            'gender' => Yii::t('app', 'Gender'),
+            'birth_day' => Yii::t('app', 'Birth Day'),
+            'passport_code' => Yii::t('app', 'Passport Code'),
+            'payment_type' => Yii::t('app', 'Payment Type'),
+            'paymentTypeLabel' => Yii::t('app', 'Payment Type'),
+            'tax_id' => Yii::t('app', 'Tax Code'),
+            'status' => Yii::t('app', 'Status'),
+            'birth_certificate' => Yii::t('app', 'Birth Certificate'),
+            'created_at' => Yii::t('app', 'Created At'),
+            'updated_at' => Yii::t('app', 'Updated At'),
+            'passport_issued' => Yii::t('app', 'Passport issued'),
+            'photo' => Yii::t('app', 'Photo'),
+            'passport_issued_date' => Yii::t('app', 'Passport issued date'),
+            'exemptions' => Yii::t('app', 'Exemptions'),
+            'exemption_ids' => Yii::t('app', 'Exemptions'),
+        ];
+    }
+
+    /**
+     * @param bool $insert
+     * @return bool
+     */
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            $this->birth_day = date('Y-m-d', strtotime($this->birth_day));
+            if (!is_null($this->passport_issued_date)) {
+                $this->passport_issued_date = date('Y-m-d', strtotime($this->passport_issued_date));
+            }
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     *
+     */
+    public function afterFind()
+    {
+        parent::afterFind();
+        $this->birth_day = date('d.m.Y', strtotime($this->birth_day));
+        if (!is_null($this->passport_issued_date)) {
+            $this->passport_issued_date = date('d.m.Y', strtotime($this->passport_issued_date));
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getGenderName()
+    {
+        return $this->gender ? Yii::t('app', 'Female') : Yii::t('app', 'Male');
+    }
+
+    /**
+     * @return string
+     */
+    public function getFullNameAndCode()
+    {
+        return $this->getFullName() . ' ' . $this->student_code;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFullName()
+    {
+        return $this->last_name . ' ' . $this->first_name . ' ' . $this->middle_name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getShortName()
+    {
+        return $this->last_name . ' ' . mb_substr($this->first_name, 0, 1, 'UTF-8') . '.' . mb_substr($this->middle_name, 0, 1, 'UTF-8') . '.';
+    }
+
+    /**
+     * @return string
+     */
+    public function getShortNameInitialFirst()
+    {
+        return mb_substr($this->first_name, 0, 1, 'UTF-8') . '.' . mb_substr($this->middle_name, 0, 1, 'UTF-8') . '.' . ' ' . $this->last_name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFullNameAndBirthDate()
+    {
+        return $this->fullName . " " . $this->birth_day;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLink()
+    {
+        return Html::a($this->getFullName(), ['/students/default/view', 'id' => $this->id], ['target' => '_blank']);
+    }
+
+    /**
+     * @return string
+     */
+    public function getPhoto()
+    {
+        if (!is_null($this->getImageFileUrl('photo'))) {
+            return Html::img($this->getImageFileUrl('photo'), ['height' => 200, 'width' => 150]);
+        }
+        return Yii::t('app', 'Image not set');
+    }
+
+    /**
+     * @return string
+     */
+    public function getPaymentTypeLabel()
+    {
+        return mb_substr(StudentsHistory::getPayments()[$this->payment_type], 0, 1, 'UTF-8');
+    }
+
+    /**
+     * @return string
+     */
     public function getGroupLinksList()
     {
         $groups = $this->groups;
@@ -331,6 +380,23 @@ class Student extends \yii\db\ActiveRecord
     }
 
     /**
+     * @return array
+     */
+    public static function getList()
+    {
+        $models = self::find()->all();
+        return ArrayHelper::map($models, 'id', 'fullNameAndCode');
+    }
+
+    /**
+     * @return array
+     */
+    public function getGroupArray()
+    {
+        return StudentsHistory::getGroupArray($this->id);
+    }
+
+    /**
      * @return ActiveQuery
      */
     public function getStudentsHistory()
@@ -340,109 +406,62 @@ class Student extends \yii\db\ActiveRecord
 
     public function getFamilyRelations()
     {
-        return $this->hasMany(FamilyRelation::className(), ['student_id' => 'id']);
+        return $this->hasMany(FamilyRelation::class, ['student_id' => 'id']);
     }
 
     public function getPhones()
     {
-        return $this->hasMany(StudentsPhone::className(), ['student_id' => 'id']);
+        return $this->hasMany(StudentsPhone::class, ['student_id' => 'id']);
     }
 
     public function getSocialNetworks()
     {
-        return $this->hasMany(StudentSocialNetwork::className(), ['student_id' => 'id']);
+        return $this->hasMany(StudentSocialNetwork::class, ['student_id' => 'id']);
     }
 
     public function getEmails()
     {
-        return $this->hasMany(StudentsEmail::className(), ['student_id' => 'id']);
+        return $this->hasMany(StudentsEmail::class, ['student_id' => 'id']);
     }
 
-    public function getGroupArray()
-    {
-        return StudentsHistory::getGroupArray($this->id);
-    }
-
-    public function getAlumnusGroupArray()
-    {
-        return StudentsHistory::getAlumnusGroupArray($this->id);
-    }
-
-
+    /**
+     * @return array|\yii\db\ActiveRecord[]
+     */
     public function getGroups()
     {
         return Group::find()->where(['id' => array_keys($this->getGroupArray())])->all();
     }
 
+    /**
+     * @return array|\yii\db\ActiveRecord[]
+     */
     public function getAlumnusGroup()
     {
         return Group::find()->where(['id' => $this->getAlumnusGroupArray()])->all();
     }
 
-    public function getExemptions()
-    {
-        return $this->hasMany(Exemption::className(), ['id' => 'exemption_id'])->viaTable('{{%exemptions_students_relations}}', ['student_id' => 'id']);
-    }
-
-    public static function getList()
-    {
-        $models = self::find()->all();
-        return ArrayHelper::map($models, 'id', 'fullNameAndCode');
-    }
-
     /**
-     * @param string $modelClass
-     * @param array $multipleModels
-     * @param string $pk
      * @return array
      */
-    public static function createMultiple($modelClass, $multipleModels = [], $pk = 'id')
+    public function getAlumnusGroupArray()
     {
-        /** @var Model $model */
-        $model = new $modelClass;
-        $formName = $model->formName();
-        $post = Yii::$app->request->post($formName);
-        $models = [];
-
-        if (!empty($multipleModels)) {
-            $keys = array_keys(ArrayHelper::map($multipleModels, $pk, $pk));
-            $multipleModels = array_combine($keys, $multipleModels);
-        }
-
-        if ($post && is_array($post)) {
-            foreach ($post as $i => $item) {
-                if (isset($item[$pk]) && !empty($item[$pk]) && isset($multipleModels[$item[$pk]])) {
-                    $models[] = $multipleModels[$item[$pk]];
-                } else {
-                    $models[] = new $modelClass;
-                }
-            }
-        }
-
-        unset($model, $formName, $post);
-
-        return $models;
+        return StudentsHistory::getAlumnusGroupArray($this->id);
     }
-
 
     /**
      * @return ActiveQuery
      */
-    public static function find()
+    public function getExemptions()
     {
-        return parent::find()->orderBy(['last_name' => SORT_ASC, 'first_name' => SORT_ASC, 'middle_name' => SORT_ASC]);
+        return $this->hasMany(Exemption::class, ['id' => 'exemption_id'])->viaTable('{{%exemptions_students_relations}}', ['student_id' => 'id']);
     }
 
-    public function _save($runValidation = true, $attributeNames = null, $withAllParams = true)
+    /**
+     * @return integer
+     */
+    public function getCourse()
     {
-        $saved = parent::save($runValidation, $attributeNames);
-        if ($saved && $withAllParams) {
-            FamilyRelation::saveSt($this->id, $this);
-            StudentsPhone::saveSt($this->id, $this);
-            StudentsEmail::saveSt($this->id, $this);
-            StudentSocialNetwork::saveSt($this->id, $this);
-        }
-        return $saved;
+        return $this->getGroups()[0]->getCourse();
     }
 }
 

@@ -37,6 +37,7 @@ class AccessControl extends BaseAccessControl
         $controller = $controllerClass->id;
         $action = $controllerClass->action->id;
         $this->rules = $this->getRules($module, $controller, $action);
+
         /**
          * @param $rule AccessRule|null
          * @param $action ErrorAction|InlineAction

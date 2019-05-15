@@ -38,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'title',
             'max_hours_1',
-            'max_hours_1',
+            'max_hours_2',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

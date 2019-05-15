@@ -5,6 +5,7 @@
  * @var LoadDocGenerateModel $model
  * @author Dmytro Karpovych <ZAYEC77@gmail.com>
  */
+//@TODO refactor to yii2
 $this->breadcrumbs = array(
     Yii::t('base', 'Load') => $this->createUrl('index'),
     $year->title => $this->createUrl('view', array('id' => $year->id)),
