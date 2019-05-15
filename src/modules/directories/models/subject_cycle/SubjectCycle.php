@@ -15,6 +15,7 @@ use yii\db\ActiveRecord;
  * The followings are the available columns in table 'subject_cycle':
  * @property integer $id
  * @property string $title
+ * @property string $fullTitle
  * @property int $evaluation_system_id
  * @property int $parent_id
  *
@@ -35,6 +36,16 @@ class SubjectCycle extends ActiveRecord
     public static function tableName()
     {
         return '{{%subject_cycle}}';
+    }
+
+    /**
+     * @inheritdoc
+     * @return SubjectCycleQuery the active query used by this AR class.
+     */
+
+    public static function find()
+    {
+        return new SubjectCycleQuery(get_called_class());
     }
 
     /**
@@ -61,6 +72,11 @@ class SubjectCycle extends ActiveRecord
             'evaluation_system_id' => Yii::t('app', 'Evaluation system'),
             'parent_id' => Yii::t('app', 'Subject cycle'),
         ];
+    }
+
+    public function getFullTitle()
+    {
+        return $this->parent_id ? $this->parentCycle->title . ' | ' . $this->title : $this->title;
     }
 
     /**

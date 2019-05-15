@@ -132,6 +132,7 @@ class SubjectRelation extends ActiveRecord
             'subject_id' => Yii::t('app', 'Subject'),
             'speciality_qualification_id' => Yii::t('app', 'Speciality qualification'),
             'subject_cycle_id' => Yii::t('app', 'Subject cycle'),
+            'subject' => Yii::t('app', 'Subject'),
         ];
     }
 }

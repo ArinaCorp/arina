@@ -37,7 +37,7 @@ use yii\widgets\Pjax;
 
         <div class="col-sm-6">
             <?= $form->field($model, 'subject_cycle_id')->widget(Select2::class, [
-                'data' => SubjectCycle::getMap('title'),
+                'data' => SubjectCycle::find()->getMap('fullTitle'),
                 'options' => [
                     'placeholder' => Yii::t('app', 'Select subject cycle')
                 ]
@@ -50,7 +50,7 @@ use yii\widgets\Pjax;
 
         <div class="col-sm-6">
             <?= $form->field($model, 'speciality_qualification_id')->widget(Select2::class, [
-                'data' => SpecialityQualification::getMap('fullTitle', 'id', [], false),
+                'data' => SpecialityQualification::find()->getMap('fullTitle'),
                 'options' => [
                     'placeholder' => Yii::t('app', 'Select speciality qualification')
                 ]

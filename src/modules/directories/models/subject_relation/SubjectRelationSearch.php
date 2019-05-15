@@ -2,7 +2,6 @@
 
 namespace app\modules\directories\models\subject_relation;
 
-use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 
@@ -12,6 +11,8 @@ use yii\data\ActiveDataProvider;
  */
 class SubjectRelationSearch extends SubjectRelation
 {
+    public $subject;
+
     /**
      * @inheritdoc
      */
@@ -19,7 +20,7 @@ class SubjectRelationSearch extends SubjectRelation
     {
         return [
             [['id', 'subject_id', 'speciality_qualification_id', 'subject_cycle_id'], 'integer'],
-            [['id', 'subject_id', 'speciality_qualification_id', 'subject_cycle_id'], 'safe'],
+            [['subject'], 'safe'],
         ];
     }
 
@@ -45,15 +46,18 @@ class SubjectRelationSearch extends SubjectRelation
 
         // add conditions that should always apply here
 
+        $query->joinWith('subject');
+
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
 
-        $this->load($params);
+        $dataProvider->sort->attributes['subject'] = [
+            'asc' => ['subject.title' => SORT_ASC],
+            'desc' => ['subject.title' => SORT_DESC]
+        ];
 
-        if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
+        if (!($this->load($params) && $this->validate())) {
             return $dataProvider;
         }
 
@@ -64,6 +68,8 @@ class SubjectRelationSearch extends SubjectRelation
             'speciality_qualification_id' => $this->speciality_qualification_id,
             'subject_cycle_id' => $this->subject_cycle_id,
         ]);
+
+        $query->andFilterWhere(['like', 'subject.title', $this->subject]);
 
         return $dataProvider;
     }

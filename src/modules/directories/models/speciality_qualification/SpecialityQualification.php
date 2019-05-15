@@ -19,6 +19,7 @@ use yii\helpers\ArrayHelper;
  *
  * @property integer $id
  * @property string $title
+ * @property string $fullTitle
  * @property integer $years_count
  * @property integer $months_count
  * @property integer $qualification_id
@@ -39,6 +40,16 @@ class SpecialityQualification extends ActiveRecord
     public static function tableName()
     {
         return '{{%speciality_qualification}}';
+    }
+
+    /**
+     * @inheritdoc
+     * @return SpecialityQualificationQuery the active query used by this AR class.
+     */
+
+    public static function find()
+    {
+        return new SpecialityQualificationQuery(get_called_class());
     }
 
     /**
