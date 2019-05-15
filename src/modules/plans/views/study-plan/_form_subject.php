@@ -140,19 +140,24 @@ $this->registerJs($js);
     <h3>
         <?= Yii::t('plans', 'Hours') ?>
     </h3>
-    <h4 class="text-center">
-        <div class="col-sm-3 p1">
-            <?= Yii::t('plans', 'Classes') ?> <span id="classes-total-val"></span>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="text-center">
+                <div class="col-sm-3 p1">
+                    <?= Yii::t('plans', 'Classes') ?> <span id="classes-total-val"></span>
+                </div>
+                <div class="col-sm-9 p1">
+                    <div id="classes-left">
+                        <?= Yii::t('plans', 'Class hours left to distribute') ?> <span id="classes-left-val"></span>
+                    </div>
+                    <div id="classes-excess">
+                        <?= Yii::t('plans', 'Excessive class hours') ?> <span id="classes-excess-val"></span>
+                    </div>
+                </div>
+            </h4>
         </div>
-        <div class="col-sm-9 p1">
-            <div id="classes-left">
-                <?= Yii::t('plans', 'Class hours left to distribute') ?> <span id="classes-left-val"></span>
-            </div>
-            <div id="classes-excess">
-                <?= Yii::t('plans', 'Excessive class hours') ?> <span id="classes-excess-val"></span>
-            </div>
-        </div>
-    </h4>
+    </div>
 
     <div class="row">
         <div class="col-sm-3">
