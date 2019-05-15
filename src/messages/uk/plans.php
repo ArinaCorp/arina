@@ -128,5 +128,8 @@ return [
     'Student plans' => 'Індивідуальні плани',
     'Student plan' => 'Індивідуальний план студента',
     'Student plan editing' => 'Редагування індивідуального плану студента',
-    'Subjects which are absent on this course' => 'Предмети відсутні на даному курсі'
+    'Subjects which are absent on this course' => 'Предмети відсутні на даному курсі',
+    'Class hours left to distribute' => 'Залишилось розподілити аудиторних годин',
+    'Excessive class hours' => 'Надлишок аудиторних годин',
+    'hrs.' => 'год.'
 ];
