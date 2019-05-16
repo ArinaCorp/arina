@@ -32,11 +32,13 @@ function getTotalClasses() {
     return total_classes;
 }
 
+//init
 jQuery('#classes-total-val').text(getTotalClasses());
 
 semesters.forEach((weeks, semester) => {
+    //init
     showHoursForSemester(semester, weeks);
-    
+
     jQuery('#studysubject-weeks-' + semester).on('input', function () {
         showHoursForSemester(semester, weeks);
         jQuery('#classes-total-val').text(getTotalClasses());
@@ -66,6 +68,7 @@ function checkClasses() {
     }
 }
 
+//init
 checkClasses();
 
 jQuery('#studysubject-lectures, #studysubject-lab_works, #studysubject-practices').on('input', () => checkClasses());
