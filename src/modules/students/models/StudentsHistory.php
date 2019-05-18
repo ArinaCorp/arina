@@ -2,10 +2,6 @@
 
 namespace app\modules\students\models;
 
-use app\modules\directories\models\department\Department;
-use app\modules\directories\models\qualification\Qualification;
-use app\modules\directories\models\speciality\Speciality;
-use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
@@ -29,7 +25,6 @@ use yii\helpers\ArrayHelper;
  * @property integer $updated_at
  *
  * @property Student $student
- * @property StudentsHistory $lastChild
  */
 class StudentsHistory extends ActiveRecord
 {
@@ -109,17 +104,16 @@ class StudentsHistory extends ActiveRecord
      */
     public static function find()
     {
-        return parent::find()->alias('studentsHistory')->orderBy(['id' => SORT_DESC]);
+        // return parent::find()->alias('studentsHistory')->orderBy(['id' => SORT_DESC]);
+        return parent::find();
     }
 
-    public
-    static function getNewStudentList()
+    public static function getNewStudentList()
     {
         return ArrayHelper::map(self::getNewStudents(), 'id', 'fullName');
     }
 
-    public
-    static function getNewStudents()
+    public static function getNewStudents()
     {
         $students = Student::find()->all();
         foreach ($students as $key => $student) {
@@ -132,8 +126,7 @@ class StudentsHistory extends ActiveRecord
      * @param integer $student_id
      * @return StudentsHistory[]
      */
-    public
-    static function getParents($student_id)
+    public static function getParents($student_id)
     {
         $history = self::getStudentHistory($student_id);
         $parents = [];
@@ -156,8 +149,7 @@ class StudentsHistory extends ActiveRecord
         return self::$_HISTORY[$id];
     }
 
-    private
-    function buildTree()
+    private function buildTree()
     {
         $child = self::findOne(['parent_id' => $this->id]);
         $this->isAnalized = true;
@@ -191,22 +183,18 @@ class StudentsHistory extends ActiveRecord
         return $data1;
     }
 
-    public
-    static
-    function getLastChild($story)
+    public static function getLastChild($story)
     {
         if (!is_null($story->child)) $story = self::getLastChild($story->child);
         return $story;
     }
 
-    public
-    static function getActiveStudentByGroupList($id)
+    public static function getActiveStudentByGroupList($id)
     {
         return ArrayHelper::map(self::getActiveStudentByGroup($id), 'id', 'fullNameAndCode');
     }
 
-    public
-    static function getActiveStudentByGroup($id)
+    public static function getActiveStudentByGroup($id)
     {
         /**
          * @var $students Student[]
@@ -260,29 +248,6 @@ class StudentsHistory extends ActiveRecord
         return $students;
     }
 
-    public static function getInformationById($id)
-    {
-        $empty = StudentsHistory::findOne(['id' => $id]);
-        $history = self::getFromHistory($empty);
-
-    }
-
-    /**
-     * @param $current StudentsHistory
-     * @return bool
-     */
-    public static function getFromHistory($current)
-    {
-        $history = self::getStudentHistory($current->student_id);
-        foreach ($history as $trees) {
-            while (!is_null($trees)) {
-                if ($trees->id == $current->id) return $trees;
-                $trees = $trees->child;
-            }
-        }
-
-    }
-
     public static function getStudentParentsList($id)
     {
         return ArrayHelper::map(self::getStudentParents($id), 'id', 'text');
@@ -297,52 +262,6 @@ class StudentsHistory extends ActiveRecord
                 $data[] = ['id' => $parent->id, 'text' => $parent->getInformation()];
             }
         return $data;
-    }
-
-    public static function getInformationById($id)
-    {
-        $empty = StudentsHistory::findOne(['id' => $id]);
-        $history = self::getFromHistory($empty);
-
-    }
-
-    public static function getActiveStudents()
-    {
-        $res = StudentsHistory::findAll(['action_type' => StudentsHistory::$TYPE_INCLUDE]);
-        return $res;
-    }
-
-    public static function getActiveStudentsList()
-    {
-        return ArrayHelper::map(self::getActiveStudents(), 'id', 'action_type');
-    }
-
-    public static function getStateStudents()
-    {
-        $model = self::findAll(['payment_type' => StudentsHistory::$PAYMENT_STATE]);
-        return $model;
-    }
-
-    public static function getStateStudentsList()
-    {
-        return ArrayHelper::map(self::getStateStudents(), 'id', 'payment_type');
-    }
-
-    public static function getContractStudents()
-    {
-        $model = self::findAll(['payment_type' => StudentsHistory::$PAYMENT_CONTRACT]);
-        return $model;
-    }
-
-
-    public static function getContractStudentsList()
-    {
-        return ArrayHelper::map(self::getContractStudents(), 'id', 'payment_type');
-    }
-
-    public static function getStudentParentsList($id)
-    {
-        return ArrayHelper::map(self::getStudentParents($id), 'id', 'text');
     }
 
     public function getInformation()
@@ -438,6 +357,22 @@ class StudentsHistory extends ActiveRecord
         return $text;
     }
 
+    /**
+     * @param $current StudentsHistory
+     * @return bool
+     */
+    public static function getFromHistory($current)
+    {
+        $history = self::getStudentHistory($current->student_id);
+        foreach ($history as $trees) {
+            while (!is_null($trees)) {
+                if ($trees->id == $current->id) return $trees;
+                $trees = $trees->child;
+            }
+        }
+
+    }
+
     public static function getPaymentTitleById($id)
     {
         $arr = self::getPayments();
@@ -450,6 +385,45 @@ class StudentsHistory extends ActiveRecord
             self::$PAYMENT_CONTRACT => Yii::t('app', 'Contract payment'),
             self::$PAYMENT_STATE => Yii::t('app', 'State payment'),
         ];
+    }
+
+    public static function getInformationById($id)
+    {
+        $empty = StudentsHistory::findOne(['id' => $id]);
+        $history = self::getFromHistory($empty);
+    }
+
+    public static function getActiveStudentsList()
+    {
+        return ArrayHelper::map(self::getActiveStudents(), 'id', 'action_type');
+    }
+
+    public static function getActiveStudents()
+    {
+        $res = StudentsHistory::findAll(['action_type' => StudentsHistory::$TYPE_INCLUDE]);
+        return $res;
+    }
+
+    public static function getStateStudentsList()
+    {
+        return ArrayHelper::map(self::getStateStudents(), 'id', 'payment_type');
+    }
+
+    public static function getStateStudents()
+    {
+        $model = self::findAll(['payment_type' => StudentsHistory::$PAYMENT_STATE]);
+        return $model;
+    }
+
+    public static function getContractStudentsList()
+    {
+        return ArrayHelper::map(self::getContractStudents(), 'id', 'payment_type');
+    }
+
+    public static function getContractStudents()
+    {
+        $model = self::findAll(['payment_type' => StudentsHistory::$PAYMENT_CONTRACT]);
+        return $model;
     }
 
     public static function getPermittedActionList($action_id)
@@ -647,34 +621,11 @@ class StudentsHistory extends ActiveRecord
     }
 
     /**
-     * @return ActiveQuery;
-     */
-    public static function find()
-    {
-        // return parent::find()->alias('studentsHistory')->orderBy(['id' => SORT_DESC]);
-        return parent::find();
-    }
-
-    /**
      * @return ActiveQuery
      */
     public function getStudent()
     {
         return $this->hasOne(Student::class, ['id' => 'student_id']);
-    }
-
-    /**
-     * @param $groupIds
-     * @return array
-     */
-    public static function getActiveStudentsIdsByGroups($groupIds)
-    {
-        return self::find()
-            ->select('students_history.student_id')
-            ->andWhere(['students_history.action_type' => StudentsHistory::$TYPE_INCLUDE])
-            ->andWhere(['students_history.group_id' => $groupIds])
-            ->groupBy('students_history.student_id')
-            ->column();
     }
 
     /**
