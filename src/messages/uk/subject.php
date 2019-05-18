@@ -18,4 +18,5 @@
  */
 return [
     'Cycle number' => '',
+    'The combination of this subject, subject cycle and speciality qualification "{speciality_qualification}" has already been added' => 'Зв\'язок з таким предметом, предметним циклом та з кваліфікацією спеціальності "{speciality_qualification}" вже додано',
 ];

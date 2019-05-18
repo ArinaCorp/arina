@@ -95,7 +95,7 @@ class SubjectRelation extends ActiveRecord
         return [
             [['subject_id', 'speciality_qualification_id', 'subject_cycle_id'], 'required'],
             [['subject_id', 'speciality_qualification_id', 'subject_cycle_id'], 'integer'],
-            [['subject_id'], 'safe'],
+            [['subject_id', 'speciality_qualification_id', 'subject_cycle_id'], 'unique', 'targetAttribute' => ['subject_id', 'speciality_qualification_id', 'subject_cycle_id']],
         ];
     }
 

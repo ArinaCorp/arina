@@ -17,6 +17,9 @@ class CreateSubjectRelationForm extends Model
     public $subject_cycle_id;
     public $speciality_qualification_ids = [];
 
+    /**@var $subjectRelations SubjectRelation[] */
+    protected $subjectRelations = [];
+
     /**
      * @return array validation rules for model attributes.
      */
@@ -24,9 +27,8 @@ class CreateSubjectRelationForm extends Model
     {
         return [
             [['subject_id', 'subject_cycle_id', 'speciality_qualification_ids'], 'required'],
-//            [['subject_id', 'subject_cycle_id', 'speciality_qualification_ids'], 'unique', 'targetAttribute' => ['subject_id', 'subject_cycle_id', 'speciality_qualification_ids']],
+            [['subject_id', 'subject_cycle_id', 'speciality_qualification_ids'], 'checkUnique'],
             [['subject_id', 'subject_cycle_id'], 'integer'],
-            [['subject_id'], 'safe'],
         ];
     }
 
@@ -42,19 +44,43 @@ class CreateSubjectRelationForm extends Model
         ];
     }
 
-    public function process()
+    public function checkUnique()
     {
-        if (!$this->validate()) {
-            return false;
+        if (!$this->hasErrors()) {
+            foreach ($this->subjectRelations as $subjectRelation) {
+                if (!$subjectRelation->validate()) {
+                    $this->addError(
+                        'speciality_qualification_ids',
+                        Yii::t(
+                            'subject',
+                            'The combination of this subject, subject cycle and speciality qualification "{speciality_qualification}" has already been added',
+                            ['speciality_qualification' => $subjectRelation->specialityQualification->fullTitle]
+                        )
+                    );
+                    return false;
+                }
+            }
         }
 
+        return true;
+    }
+
+    public function process()
+    {
         foreach ($this->speciality_qualification_ids as $speciality_qualification_id) {
-            $model = new SubjectRelation([
+            $this->subjectRelations[] = new SubjectRelation([
                 'subject_id' => $this->subject_id,
                 'subject_cycle_id' => $this->subject_cycle_id,
                 'speciality_qualification_id' => $speciality_qualification_id
             ]);
-            $model->save();
+        }
+
+        if (!$this->validate()) {
+            return false;
+        }
+
+        foreach ($this->subjectRelations as $subjectRelation) {
+            $subjectRelation->save();
         }
 
         return true;
