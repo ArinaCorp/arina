@@ -46,9 +46,9 @@ class Position extends ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'max_hours_1', 'max_hours_2'], 'integer'],
+            [['max_hours_1', 'max_hours_2'], 'integer'],
             [['title'], 'string', 'max' => 255],
-            [['id', 'title'], 'required'],
+            [['title'], 'required'],
         ];
     }
 
