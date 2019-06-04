@@ -17,9 +17,8 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Cancel' => 'Відміна',
-    'Not selected' => 'Не задано',
-    'Load' => '',
-    'Create' => '',
-    'Save' => '',
+    'Attestation' => '',
+    'Choose subject' => '',
+    'Choose type' => '',
+    'Exam' => '',
 ];

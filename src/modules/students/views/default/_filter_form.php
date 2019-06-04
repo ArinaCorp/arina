@@ -81,7 +81,7 @@ $this->registerJs(
                     <div class="form-group">
                         <div class="form-group">
                             <?= $form->field($search, 'department')->widget(Select2::classname(), [
-                                'data' => Department::getList(),
+                                'data' => Department::getMap('title'),
                                 'pluginOptions' => [
                                     'placeholder' => Yii::t('app', 'Select department'),
                                     'allowClear' => true
@@ -125,9 +125,9 @@ $this->registerJs(
 
                         ])->label(Yii::t('app', 'Group')) ?>
                     </div>
-<!--                    --><?//= $form->field($search, 'excluded')->checkbox([
-//                        'label' => Yii::t('app', 'Excluded'),
-//                    ]) ?>
+                    <!--                    --><? //= $form->field($search, 'excluded')->checkbox([
+                    //                        'label' => Yii::t('app', 'Excluded'),
+                    //                    ]) ?>
 
                     <?= $form->field($search, 'active')->checkbox([
                         'label' => Yii::t('app', 'Active'),
@@ -139,9 +139,9 @@ $this->registerJs(
                         'label' => Yii::t('app', 'Renewal'),
                     ]) ?>
 
-<!--                    --><?//= $form->field($search, 'academic')->checkbox([
-//                        'label' => Yii::t('app', 'Academic leave'),
-//                    ]) ?>
+                    <!--                    --><? //= $form->field($search, 'academic')->checkbox([
+                    //                        'label' => Yii::t('app', 'Academic leave'),
+                    //                    ]) ?>
                 </div>
 
             </div>
@@ -199,7 +199,7 @@ $this->registerJs(
     <div class="form-group" style="text-align: right">
         <?= Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-primary']) ?>
         <?= Html::a(Yii::t('app', 'Reset'), ['filter'], ['class' => 'btn btn-default']) ?>
-        <?= Html::a(Yii::t('app', 'Excel'), ['default/document','params'=>Yii::$app->request->queryParams], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('app', 'Excel'), ['default/document', 'params' => Yii::$app->request->queryParams], ['class' => 'btn btn-success']) ?>
     </div>
 <?php ActiveForm::end(); ?>
 <?php //\yii\widgets\Pjax::end();

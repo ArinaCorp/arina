@@ -2,6 +2,8 @@
 
 namespace app\modules\plans\models;
 
+use app\modules\directories\models\subject_cycle\SubjectCycle;
+use app\modules\directories\models\subject_relation\SubjectRelation;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\data\ActiveDataProvider;
@@ -17,6 +19,7 @@ use app\modules\directories\models\subject\Subject;
  * @property integer $id
  * @property integer $study_plan_id
  * @property integer $subject_id
+ * @property integer $subject_cycle_id
  * @property integer $total
  * @property integer $lectures
  * @property integer $lab_works
@@ -36,9 +39,13 @@ use app\modules\directories\models\subject\Subject;
  * The followings are the available model relations:
  * @property StudyPlan $studyPlan
  * @property Subject $subject
+ * @property SubjectCycle $subjectCycle
+ * @property SubjectRelation $subjectRelation
  */
 class StudySubject extends ActiveRecord
 {
+    public $subjectRelationId;
+
     /**
      * @return string the associated database table name
      */
@@ -66,7 +73,7 @@ class StudySubject extends ActiveRecord
     public function rules()
     {
         return [
-            [['study_plan_id', 'subject_id', 'total'], 'required', 'message' => Yii::t('plans', 'Specify') . '{attribute}'],
+            [['study_plan_id', 'subjectRelationId', 'total'], 'required', 'message' => Yii::t('plans', 'Specify') . '{attribute}'],
             [['weeks'], 'checkWeeks'],
             [['total'], 'checkHours'],
             [['practice_weeks'], 'checkPractice'],
@@ -102,6 +109,33 @@ class StudySubject extends ActiveRecord
     }
 
     /**
+     * @return ActiveQuery
+     */
+    public function getSubjectCycle()
+    {
+        return $this->hasOne(SubjectCycle::class, ['id' => 'subject_cycle_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getSubjectRelation()
+    {
+        return $this->hasOne(SubjectRelation::class, ['id' => 'subjectRelationId']);
+    }
+
+    public function afterFind()
+    {
+        parent::afterFind();
+        $this->subjectRelationId = SubjectRelation::find()
+            ->where([
+                'subject_id' => $this->subject_id,
+                'subject_cycle_id' => $this->subject_cycle_id,
+                'speciality_qualification_id' => $this->studyPlan->speciality_qualification_id
+            ])->one()->id;
+    }
+
+    /**
      * @return array customized attribute labels (name=>label)
      */
     public function attributeLabels()
@@ -110,6 +144,7 @@ class StudySubject extends ActiveRecord
             'id' => Yii::t('plans', 'Study subject'),
             'study_plan_id' => Yii::t('plans', 'Study plan'),
             'subject_id' => Yii::t('app', 'Subject'),
+            'subjectRelationId' => Yii::t('app', 'Subject'),
             'total' => Yii::t('app', 'Total'),
             'lectures' => Yii::t('plans', 'Lectures'),
             'lab_works' => Yii::t('plans', 'Lab works'),
@@ -286,7 +321,7 @@ class StudySubject extends ActiveRecord
     public function checkHours()
     {
         if (!$this->hasErrors()) {
-            if ($this->total < ($this->lectures + $this->lab_works + $this->practices)) {
+            if ($this->total < $this->getClasses()) {
                 $this->addError('total', Yii::t('plans', 'Classroom hours more than the total number'));
             }
         }
@@ -352,4 +387,11 @@ class StudySubject extends ActiveRecord
         }
     }
 
+    public function beforeSave($insert)
+    {
+        $subjectRelation = $this->subjectRelation;
+        $this->subject_cycle_id = $subjectRelation->subject_cycle_id;
+        $this->subject_id = $subjectRelation->subject_id;
+        return parent::beforeSave($insert);
+    }
 }

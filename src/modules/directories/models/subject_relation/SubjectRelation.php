@@ -2,6 +2,9 @@
 
 namespace app\modules\directories\models\subject_relation;
 
+use app\modules\plans\models\StudyPlan;
+use app\modules\plans\models\StudySubject;
+use nullref\useful\traits\Mappable;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
@@ -26,6 +29,8 @@ use app\modules\directories\models\speciality_qualification\SpecialityQualificat
  */
 class SubjectRelation extends ActiveRecord
 {
+    use Mappable;
+
     public static function getProviderById($id)
     {
         $deleted = isset(Yii::$app->session['subject']['delete']) ? Yii::$app->session['subject']['delete'] : [];
@@ -85,6 +90,50 @@ class SubjectRelation extends ActiveRecord
     public static function tableName()
     {
         return '{{%subject_relation}}';
+    }
+
+    /**
+     * @param $id integer - study_plan_id
+     * @return array
+     */
+    public static function getListByStudyPlanId($id)
+    {
+        $studyPlan = StudyPlan::findOne($id);
+
+        $usedSubjectsQuery = StudySubject::find()
+            ->where(['study_plan_id' => $id]);
+
+        $list = [];
+
+        /**@var $relations SubjectRelation[] */
+        $relations = self::find()
+            ->joinWith(['subject', 'subjectCycle'])
+            ->where(['speciality_qualification_id' => $studyPlan->speciality_qualification_id])
+            ->andWhere(['not', [
+                'subject_id' => $usedSubjectsQuery->select('subject_id')->column(),
+                'subject_cycle_id' => $usedSubjectsQuery->select('subject_cycle_id')->column()
+            ]])
+            ->all();
+
+        foreach ($relations as $relation) {
+            $cycleTitle = $relation->subjectCycle->fullTitle;
+            if (!isset($list[$cycleTitle])) {
+                $list[$cycleTitle] = [];
+            }
+            $list[$cycleTitle][$relation->id] = $relation->subject->title;
+        }
+
+        return $list;
+    }
+
+    /**
+     * @inheritdoc
+     * @return SubjectRelationQuery the active query used by this AR class.
+     */
+
+    public static function find()
+    {
+        return new SubjectRelationQuery(get_called_class());
     }
 
     /**

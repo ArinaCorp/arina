@@ -7,7 +7,7 @@ use kartik\select2\Select2;
 use kartik\touchspin\TouchSpin;
 
 use app\modules\plans\models\StudySubject;
-use app\modules\directories\models\subject\Subject;
+use app\modules\directories\models\subject_relation\SubjectRelation;
 
 /**
  * @var $this View
@@ -101,20 +101,21 @@ $this->registerJs($js);
     <?php echo $form->errorSummary($model); ?>
 
     <div class="row">
-        <div class="col-sm-4">
-            <?= $form->field($model, 'subject_id')->widget(Select2::class,
+        <div class="col-sm-5">
+            <?= $form->field($model, 'subjectRelationId')->widget(Select2::class,
                 [
-                    'data' => $model->isNewRecord ?
-                        $model->studyPlan->getUnusedSubjects() :
-                        Subject::getListForSpecialityQualification($model->studyPlan->speciality_qualification_id),
+                    'data' => SubjectRelation::getListByStudyPlanId($model->study_plan_id),
                     'options' => ['placeholder' => Yii::t('plans', 'Select subject')]
                 ]) ?>
         </div>
-        <div class="col-sm-4">
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6">
             <?= $form->field($model, 'diploma_name')->textInput(['maxlength' => true,
                 'placeholder' => $model->getAttributeLabel('diploma_name')]) ?>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-6">
             <?= $form->field($model, 'certificate_name')->textInput(['maxlength' => true,
                 'placeholder' => $model->getAttributeLabel('certificate_name')]) ?>
         </div>
