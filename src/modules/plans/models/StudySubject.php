@@ -29,6 +29,10 @@ use app\modules\directories\models\subject\Subject;
  * @property string $diploma_name
  * @property string $certificate_name
  *
+ * @property string $examSemesters
+ * @property string $sfeSemesters State Final Examination Semesters
+ * @property string $seSemesters State Examination Semesters
+ *
  * The followings are the available model relations:
  * @property StudyPlan $studyPlan
  * @property Subject $subject
@@ -120,10 +124,12 @@ class StudySubject extends ActiveRecord
             'selfWork' => Yii::t('plans', 'Self work'),
             'credit' => Yii::t('plans', 'Credit'),
             'exam' => Yii::t('app', 'Exam'),
-            'workSemesters' => Yii::t('plans', 'Work semester'),
-            'projectSemesters' => Yii::t('plans', 'Project semester'),
+            'workSemesters' => Yii::t('plans', 'Course work (sem.)'),
+            'projectSemesters' => Yii::t('plans', 'Course project (sem.)'),
             'testSemesters' => Yii::t('plans', 'Test semesters'),
-            'examSemesters' => Yii::t('plans', 'Exam semesters'),
+            'examSemesters' => Yii::t('plans', 'Exam (sem.)'),
+            'sfeSemesters' => Yii::t('plans', 'State final examination (sem.)'),
+            'seSemesters' => Yii::t('plans', 'State examination (sem.)'),
         ];
     }
 
@@ -193,7 +199,6 @@ class StudySubject extends ActiveRecord
                 $semesters[] = $semester + 1;
             }
         }
-
         return implode(', ', $semesters);
     }
 
@@ -207,11 +212,35 @@ class StudySubject extends ActiveRecord
             if (!empty($control[1])) {
                 $semesters[] = $semester + 1;
             }
-            if (!empty($control[2])) {
-                $semesters[] = ($semester + 1) . Yii::t('plans', 'State final examination');
-            }
+        }
+        return implode(', ', $semesters);
+    }
+
+    /**
+     * State Examination Semesters
+     * @return string
+     */
+    public function getSeSemesters()
+    {
+        $semesters = array();
+        foreach ($this->control as $semester => $control) {
             if (!empty($control[3])) {
-                $semesters[] = ($semester + 1) . Yii::t('plans', 'State examination');
+                $semesters[] = $semester + 1;
+            }
+        }
+        return implode(', ', $semesters);
+    }
+
+    /**
+     * State Final Examination Semesters
+     * @return string
+     */
+    public function getSfeSemesters()
+    {
+        $semesters = array();
+        foreach ($this->control as $semester => $control) {
+            if (!empty($control[2])) {
+                $semesters[] = $semester + 1;
             }
         }
         return implode(', ', $semesters);
