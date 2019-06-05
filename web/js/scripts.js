@@ -73,24 +73,28 @@ let attestationBtn= $("#attestation");
 let semesterBtn = $("#semester");
 let examBtn = $("#exam");
 let zalikBtn = $("#zalik");
+let navbar = $(".sidebar");
 
-// console.log(background);
 background.click(function () {
-    $('.dialog-window').css('display', 'none');
+    $('.dialog-window').fadeOut(200);
 });
+function showDialog(button,form){
+    form.fadeIn(200);
+    form.css('display', 'flex');
+}
 
 zalikBtn.click(() => {
-    $('#zalik-window').css('display', 'flex');
+    showDialog(zalikBtn,$('#zalik-window'));
 });
 
 attestationBtn.click(() => {
-    $('#attestation-window').css('display', 'flex');
+    showDialog(attestationBtn,$('#attestation-window'));
 });
 
 semesterBtn.click(() => {
-    $('#semester-window').css('display', 'flex');
+    showDialog(semesterBtn,$('#semester-window'));
 });
 
 examBtn.click(() => {
-    $('#exam-window').css('display', 'flex');
+    showDialog(examBtn,$('#exam-window'));
 });

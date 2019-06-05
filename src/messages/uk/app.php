@@ -37,7 +37,7 @@ return [
     'Emails' => '',
     'Employee record is saved!' => '',
     'Errors' => '',
-    'Exam' => '',
+    'Exam' => 'Екзамен',
     'Exemption Student Relations' => '',
     'File Path' => '',
     'Footer contact block' => '',
@@ -484,5 +484,13 @@ return [
     'Select teachers'=>'Виберіть викладачів',
     'Please enter a "course" value'=>'Будь ласка заповніть поле "Курс"',
     'Input year'=>'Введіть рік',
-    'Select plan'=>'Виберіть план'
+    'Select plan'=>'Виберіть план',
+    'Quality'=>'Якість',
+    'Success'=>'Успішність',
+    'Curator'=>'Куратор',
+    'Time'=>'Час',
+    'Credit'=>'Залік',
+    'Course projects'=>'Курсові',
+    'DPA'=>'ДПА'
+
 ];

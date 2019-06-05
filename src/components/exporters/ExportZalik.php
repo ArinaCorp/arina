@@ -72,7 +72,7 @@ class ExportZalik
         }
         $cursor->removeRow($current);
         $cursor->removeRow($current);
-        $cursor->setCellValue('C' . ($current + 8), "Дата: " . date('d.m.Y') . "  Час: " . date('H:i:s'));
+        $cursor->setCellValue('C' . ($current + 8), Yii::t('app', 'Date') . ": " . date('d.m.Y') . "  " . Yii::t('app', 'Time') . ": " . date('H:i:s'));
 
         return $spreadsheet;
     }

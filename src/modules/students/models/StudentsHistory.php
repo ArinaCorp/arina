@@ -104,13 +104,13 @@ class StudentsHistory extends ActiveRecord
         return $records;
     }
 
-    /**
-     * @return ActiveQuery;
-     */
-    public static function find()
-    {
-        return parent::find()->alias('studentsHistory')->orderBy(['id' => SORT_DESC]);
-    }
+//    /**
+//     * @return ActiveQuery;
+//     */
+//    public static function find()
+//    {
+//        return parent::find()->alias('studentsHistory')->orderBy(['id' => SORT_DESC]);
+//    }
 
     public
     static function getNewStudentList()
@@ -260,13 +260,6 @@ class StudentsHistory extends ActiveRecord
         return $students;
     }
 
-    public static function getInformationById($id)
-    {
-        $empty = StudentsHistory::findOne(['id' => $id]);
-        $history = self::getFromHistory($empty);
-
-    }
-
     /**
      * @param $current StudentsHistory
      * @return bool
@@ -281,11 +274,6 @@ class StudentsHistory extends ActiveRecord
             }
         }
 
-    }
-
-    public static function getStudentParentsList($id)
-    {
-        return ArrayHelper::map(self::getStudentParents($id), 'id', 'text');
     }
 
     public static function getStudentParents($id)
@@ -515,20 +503,6 @@ class StudentsHistory extends ActiveRecord
             }
         }
         return false;
-    }
-
-    /**
-     * @param $groupIds
-     * @return array
-     */
-    public static function getActiveStudentsIdsByGroups($groupIds)
-    {
-        return self::find()
-            ->select('studentsHistory.student_id')
-            ->andWhere(['studentsHistory.action_type' => StudentsHistory::$TYPE_INCLUDE])
-            ->andWhere(['studentsHistory.group_id' => $groupIds])
-            ->groupBy('studentsHistory.student_id')
-            ->column();
     }
 
     /**

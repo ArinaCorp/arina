@@ -55,7 +55,6 @@ class ExportExam
         $cursor->setCellValue("K106",$teachers);
 
         $id = $data["data"]["group_id"];
-//        var_dump($id);die;
         $group = Group::findOne($id);
         $students = $group->getStudentsArray();
 
@@ -73,7 +72,7 @@ class ExportExam
         }
         $cursor->removeRow($current);
         $cursor->removeRow($current);
-        $cursor->setCellValue('C' . ($current + 10), "Дата: " . date('d.m.Y') . "  Час: " . date('H:i:s'));
+        $cursor->setCellValue('C' . ($current + 10), Yii::t('app', 'Date').": " . date('d.m.Y') ." "  . Yii::t('app', 'Time') .": " . date('H:i:s'));
 
         return $spreadsheet;
     }

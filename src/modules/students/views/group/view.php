@@ -260,19 +260,21 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <style>
-    .dialog-window, .dialog-background {
+
+    .dialog-window,.dialog-background {
         position: fixed;
         flex-direction: column;
         justify-content: center;
         height: 100vh;
-        width: 100vw;
+        width: calc(100vw - 250px);
         top: 0;
         left: 0;
-        z-index: 998;
+        margin-left: 250px;
+        /*z-index: 998;*/
     }
 
     .dialog-background {
-        background-color: rgba(0, 0, 0, .1);
+        background-color: rgba(255,255,255, .8);
     }
 
     .dialog-card {
@@ -282,8 +284,8 @@ $this->params['breadcrumbs'][] = $this->title;
         padding: 10px 20px 10px 20px;
         background: white;
         text-align: center;
-        box-shadow: 0 3px 6px rgba(0, 0, 0, .4);
-        z-index: 999;
+        box-shadow: 0 1px 6px rgba(0, 0, 0, .2);
+        z-index: 999999;
     }
 
     .dialog-header {
@@ -296,11 +298,4 @@ $this->params['breadcrumbs'][] = $this->title;
         padding-top: 30px;
     }
 
-    /*.dialog-input {*/
-    /*    border: none;*/
-    /*    border-bottom: solid 1.5px rgba(0, 0, 0, .2);*/
-    /*    text-align: center;*/
-    /*    !*margin-bottom: 20px;*!*/
-    /*    outline: none;*/
-    /*}*/
 </style>

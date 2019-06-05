@@ -67,11 +67,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 return Html::a(FA::icon('eye'), Url::to(['/students/default/view', 'id' => $model->primaryKey]), [
                         'title' => Yii::t('app', 'View'),
                         'style' => 'text-align:center;margin:0 5px',
-                        'target'=>'_blank', 'data-pjax'=>"0"
-                    ]) . Html::a(FA::icon('file'), ['/students/default/document', 'params' => ['student_id' => $model->primaryKey, 'search' =>Yii::$app->request->queryParams]], [
+                        'target' => '_blank', 'data-pjax' => "0"
+                    ]) . Html::a(FA::icon('file'), ['/students/default/document', 'params' => ['student_id' => $model->primaryKey, 'search' => Yii::$app->request->queryParams]], [
                         'title' => Yii::t('app', 'Print'),
                         'style' => 'text-align:center;margin:0 5px',
-                        'target'=>'_blank', 'data-pjax'=>"0"
+                        'target' => '_blank', 'data-pjax' => "0"
                     ]);
             }
         ],
@@ -81,9 +81,25 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php Pjax::begin(['id' => 'notes']); ?>
     <?= GridView::widget([
         'dataProvider' => $student,
-        'columns' => $gridColumns
+        'columns' => $gridColumns,
+        'id' => 'studentsList'
     ]); ?>
     <?php Pjax::end(); ?>
+    <?php
+    $script = <<< JS
+    $(document).ready(()=>{
+        $(document.documentElement).animate({
+        scrollTop: $("#export").position().top-20
+    }, 300);
+    })
+    
+JS;
+//    var_dump($_GET);die;
+
+    if(isset($_GET["StudentSearch"]) && count($_GET["StudentSearch"])!=0){
+    $this->registerJs($script, yii\web\View::POS_READY);
+    }
+    ?>
     <div class="m-100" style="padding-bottom: 100px;"></div>
 
 </div>
