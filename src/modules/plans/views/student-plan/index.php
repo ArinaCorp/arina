@@ -12,7 +12,6 @@ use yii\helpers\Url;
 use app\modules\plans\models\StudyPlanSearch;
 
 /* @var $this View
- * @var $searchModel StudentPlanSearch;
  * @var $dataProvider ActiveDataProvider
  */
 
@@ -41,7 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn',
                 'contentOptions' => ['style' => 'width: 50px']],
             [
-                'header' => Yii::t('plans', 'Student plans'),
+                'header' => Yii::t('app', 'Student'),
                 'contentOptions' => ['style' => 'width: 750px'],
                 'label' => 'title',
                 'format' => 'raw',
@@ -53,6 +52,11 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'header' => Yii::t('app', 'Course'),
                 'value' => 'course',
+            ],
+            [
+                'header' => Yii::t('app', 'Updated'),
+                'value' => 'created',
+                'format' => 'date'
             ],
             [
                 'header' => Yii::t('app', 'Updated'),

@@ -74,7 +74,7 @@ class SubjectBlock extends ActiveRecord
             [['speciality_id'], 'integer'],
             [['speciality_id', 'course'], 'required'],
             [['course'], 'integer', 'min' => 1, 'max' => 4],
-            [['created'], 'string'],
+            [['created', 'updated'], 'integer'],
             ['selectedSubjects', 'each', 'rule' => ['integer']]
         ];
     }
@@ -89,9 +89,10 @@ class SubjectBlock extends ActiveRecord
             'speciality_id' => Yii::t('app', 'Speciality'),
             'course' => Yii::t('app', 'Course'),
             'selectedSubjects' => Yii::t('app', 'Selected subject'),
-            'created' => Yii::t('app','Created At'),
-            'subjectCount' => Yii::t('app','Subject count'),
-            'specialityTitle' => Yii::t('app','Speciality title'),
+            'created' => Yii::t('app', 'Created At'),
+            'updated' => Yii::t('app', 'Updated At'),
+            'subjectCount' => Yii::t('app', 'Subject count'),
+            'specialityTitle' => Yii::t('app', 'Speciality title'),
         ];
     }
 
@@ -173,9 +174,8 @@ class SubjectBlock extends ActiveRecord
         $student = Student::findOne($studentId);
         /** @var Group $group */
         $group = $student->getGroups()[0];
-        return ArrayHelper::Map(SubjectBlock::findAll(['course'=>$group->getCourse(), 'speciality_id' => $group->specialityQualification->speciality_id]), 'id','created');
+        return ArrayHelper::Map(SubjectBlock::findAll(['course' => $group->getCourse(), 'speciality_id' => $group->specialityQualification->speciality_id]), 'id', 'created');
     }
-
 
 
 }

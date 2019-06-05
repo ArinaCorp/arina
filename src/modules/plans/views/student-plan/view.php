@@ -40,6 +40,9 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 
     <h5><?= Html::encode(Yii::t('app', 'Created At') . ' ' . Yii::$app->formatter->asDate($model->created, 'dd.mm.y')); ?></h5>
+    <?php if($model->updated): ?>
+    <h5><?= Html::encode(Yii::t('app', 'Updated At') . ' ' . Yii::$app->formatter->asDate($model->updated, 'dd.mm.y')); ?></h5>
+    <?php endif; ?>
     <h4><?= Html::encode(Yii::t('app', 'Group curator') . ' ' . $model->student->groups[0]->getCuratorFullName()); ?></h4>
 
 </div>

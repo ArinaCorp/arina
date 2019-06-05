@@ -59,12 +59,15 @@ class ExportStudentplan
         $activeSheet->setCellValue('A14', 'Освітній рівень: ' . $workplan->specialityQualification->qualification->title);
 
         // Set date of creation
-        $activeSheet->setCellValue('A24', Yii::$app->formatter->asDate($plan->created,'dd.mm.y'));
+        $date = $plan->updated
+            ? Yii::$app->formatter->asDate($plan->updated, 'dd.mm.y')
+            : Yii::$app->formatter->asDate($plan->created, 'dd.mm.y');
+        $activeSheet->setCellValue('A26', $date);
 
         // Start listing out the mandatory subjects
         // Begin with headers, template expects them to come on row 17 and have 11 columns ( A - K included )
         // Headers could be included in template, but if we ever need to put localization here such approach would be nice.
-        $headerRow =  17;
+        $headerRow = 17;
         $activeSheet->setCellValue("A$headerRow", '№ п/п');
         $activeSheet->setCellValue("B$headerRow", 'Назва навчальної дисципліни');
         $activeSheet->setCellValue("C$headerRow", 'Кільк. кред. ЄКТС');
@@ -110,7 +113,7 @@ class ExportStudentplan
         foreach ($plan->getWorkSubjects() as $subject) {
             $activeSheet->setCellValue("A$mandatoryRow", $counter);
             $activeSheet->setCellValue("B$mandatoryRow", $subject->subject->title);
-            $activeSheet->setCellValue("C$mandatoryRow", ($subject->total[${$semester}])/30);
+            $activeSheet->setCellValue("C$mandatoryRow", ($subject->total[${$semester}]) / 30);
             $activeSheet->setCellValue("D$mandatoryRow", $subject->total[${$semester}]);
             $activeSheet->setCellValue("E$mandatoryRow", $subject->lectures[${$semester}]);
             $activeSheet->setCellValue("F$mandatoryRow", $subject->lab_works[${$semester}]);
@@ -118,7 +121,7 @@ class ExportStudentplan
             $activeSheet->setCellValue("H$mandatoryRow", $subject->getSelfWork(${$semester}));
             $activeSheet->setCellValue("I$mandatoryRow", $subject->project_hours ? $subject->project_hours : '0');
             $activeSheet->setCellValue("J$mandatoryRow", 'WIP');
-            $activeSheet->setCellValue("K$mandatoryRow", $subject->cyclicCommission->short_title ? $subject->cyclicCommission->short_title : '');
+            $activeSheet->setCellValue("K$mandatoryRow", $subject->cyclicCommission ? $subject->cyclicCommission->short_title : '');
             //Here is our row 17, well for the first iteration
             $activeSheet->insertNewRowBefore($mandatoryRow + 1);
             $mandatoryRow++;
@@ -153,7 +156,7 @@ class ExportStudentplan
             foreach ($plan->getWorkSubjectsBlock() as $subject) {
                 $activeSheet->setCellValue("A$selectableRow", $counter);
                 $activeSheet->setCellValue("B$selectableRow", $subject->subject->title);
-                $activeSheet->setCellValue("C$selectableRow", ($subject->total[${$semester}])/30);
+                $activeSheet->setCellValue("C$selectableRow", ($subject->total[${$semester}]) / 30);
                 $activeSheet->setCellValue("D$selectableRow", $subject->total[${$semester}]);
                 $activeSheet->setCellValue("E$selectableRow", $subject->lectures[${$semester}]);
                 $activeSheet->setCellValue("F$selectableRow", $subject->lab_works[${$semester}]);
@@ -161,7 +164,7 @@ class ExportStudentplan
                 $activeSheet->setCellValue("H$selectableRow", $subject->getSelfWork(${$semester}));
                 $activeSheet->setCellValue("I$selectableRow", $subject->project_hours ? $subject->project_hours : '0');
                 $activeSheet->setCellValue("J$selectableRow", 'WIP');
-                $activeSheet->setCellValue("K$selectableRow", $subject->cyclicCommission->short_title);
+                $activeSheet->setCellValue("K$selectableRow", $subject->cyclicCommission ? $subject->cyclicCommission->short_title : '');
 
                 $activeSheet->insertNewRowBefore($selectableRow + 1);
                 $selectableRow++;
