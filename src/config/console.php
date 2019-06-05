@@ -29,6 +29,14 @@ return [
             'channel' => 'default',
             'mutex' => \yii\mutex\MysqlMutex::class,
         ],
+        'i18n' => [
+            'translations' => [
+                '*' => ['class' => 'yii\i18n\PhpMessageSource'],
+                'admin' => ['class' => \nullref\core\components\i18n\PhpMessageSource::class],
+                'rbac' => ['class' => \nullref\core\components\i18n\PhpMessageSource::class],
+                'user' => ['class' => \nullref\core\components\i18n\PhpMessageSource::class],
+            ],
+        ],
     ],
     'controllerMap' => [
         'migrate' => [
