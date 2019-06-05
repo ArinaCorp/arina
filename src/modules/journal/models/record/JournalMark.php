@@ -52,7 +52,7 @@ class JournalMark extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['record_id', 'student_id'], 'required'],
+            [['record_id', 'student_id', 'evaluation_id'], 'required'],
             [['record_id', 'student_id', 'presence', 'not_presence_reason_id', 'evaluation_system_id', 'evaluation_id', 'retake_evaluation_id'], 'integer'],
             [['date', 'retake_date'], 'safe'],
             [['comment', 'ticket', 'retake_ticket'], 'string'],
@@ -206,5 +206,12 @@ class JournalMark extends \yii\db\ActiveRecord
     public function getReason()
     {
         return $this->hasOne(NotPresenceType::class, ['id' => 'not_presence_reason_id']);
+    }
+
+    public static function getListOfEvaluations($evaluation_system_id)
+    {
+        $evaluations = Evaluation::getListBySystem($evaluation_system_id);
+        $evaluations[null] = Yii::t('app', 'Not defined');
+        return $evaluations;
     }
 }

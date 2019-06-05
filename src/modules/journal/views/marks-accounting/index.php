@@ -8,10 +8,11 @@
 
 use app\modules\journal\models\record\JournalMark;
 use app\modules\journal\models\record\JournalRecord;
+use app\modules\journal\models\record\JournalRecordType;
+use app\modules\journal\helpers\JournalHtmlHelper;
 use app\modules\load\models\Load;
 use kartik\date\DatePicker;
 use kartik\select2\Select2;
-use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
@@ -30,7 +31,9 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php
 $actionUrl = Url::to(['marks-accounting/index']);
 
-$this->registerJS(<<<JS
+$js = '';
+
+$js .= <<<JS
     $('#load_select').on('change', function(){
         $.pjax.reload({
             container: '#marks-accounting-widget', 
@@ -45,11 +48,66 @@ $this->registerJS(<<<JS
     jQuery('body').on('submit', '#recordCreateFrom', function(){
         jQuery('#recordCreateModal').modal('hide');
     });
-JS
-);
+JS;
+
+
+$actionCreateMarkUrl = Url::to(['marks-accounting/create-mark']);
+$actionUpdateMarkUrl = Url::to(['marks-accounting/update-mark']);
+$actionDeleteMarkUrl = Url::to(['marks-accounting/delete-mark']);
+
+$js .= <<<JS
+    jQuery('td[data-id] select').on('change', function() {
+        var cell = jQuery(this).parent();
+        var JournalMark = {
+            id: cell.data('id'),
+            student_id: cell.data('student'),
+            record_id: cell.data('record'),
+            evaluation_id: cell.find('select').val(),
+            ticket: cell.find('input').val()
+        };
+        
+        var action = '$actionCreateMarkUrl';
+        
+        if(JournalMark.id){
+            action = '$actionDeleteMarkUrl'.addUrlParam('id', JournalMark.id);
+            if(JournalMark.evaluation_id){
+                action = '$actionUpdateMarkUrl'.addUrlParam('id', JournalMark.id);
+            }
+        }
+        
+        $.ajax({
+            url: action,
+            type: 'POST',
+            data: {JournalMark: JournalMark},
+            dataType: "json",
+            success: function(res){
+                if(res){
+                    if (res.data && res.data.id) {
+                        cell.data('id', res.data.id);
+                    }else{
+                        cell.data('id', null);
+                    }
+                    $.notify({
+                        "icon": "glyphicon glyphicon-info-sign",
+                        "title": '',
+                        "message": res.message,
+                    }, {
+                        "type": "info",
+                        "allow_dismiss": true,
+                        "newest_on_top": true,
+                        "placement": {"from": "top", "align": "right"},
+                        "delay": "500"
+                    })
+                }
+            },
+        });
+    });
+JS;
+
+$this->registerJS($js);
 ?>
 
-<div>
+<div class="journal">
 
     <div class="row">
         <div class="col-lg-12">
@@ -83,11 +141,6 @@ JS
     <?php if ($load->id): ?>
         <p>
             <?= Html::button(Yii::t('app', 'Add column'), ['class' => 'btn btn-success', 'data-toggle' => 'modal', 'data-target' => '#recordCreateModal']) ?>
-            <?= Html::submitButton(FA::icon('floppy-o'), [
-                'title' => Yii::t('app', 'Save and stay here'),
-                'data-action' => 'save',
-                'class' => 'btn btn-info save-btn',
-            ]) ?>
         </p>
     <?php endif ?>
 
@@ -109,7 +162,7 @@ JS
                     <?= $form->field($record, 'load_id')->hiddenInput()->label(false) ?>
 
                     <?= $form->field($record, 'type')->widget(Select2::class, [
-                        'data' => JournalRecord::getTypes(),
+                        'data' => JournalRecordType::getMap('title'),
                         'pluginOptions' => [
                             'placeholder' => Yii::t('journal', 'Choose type')
                         ]
@@ -135,23 +188,43 @@ JS
 
 
     <?php if ($load->id): ?>
-        <table class="table table-striped table-condensed table-bordered table-hover">
+        <table class="table table-condensed table-bordered table-hover">
             <thead>
             <tr>
+                <th style="width: 35px;"><?= Yii::t('app', 'N p/p'); ?></th>
                 <th><?= Yii::t('app', 'Student'); ?></th>
                 <?php foreach ($load->journalRecords as $record): ?>
-                    <th style="width: 40px;">
-                        <?= $record->date . ' ' . $record->getType() ?>
+                    <th>
+                        <?= $record->getLabel() ?>
                     </th>
                 <?php endforeach ?>
             </tr>
             </thead>
+
             <tbody>
-            <?php foreach ($load->group->getStudentsArray() as $student): ?>
+            <?php foreach ($load->group->getStudentsArray() as $index => $student): ?>
                 <tr>
+                    <td><?= $index + 1 ?></td>
                     <td><?= $student->getShortName(); ?></td>
                     <?php foreach ($load->journalRecords as $record): ?>
-                        <td> <?= Html::input('text', 'mark', $marks[$student->id][$record->id] ?? '') ?></td>
+                        <td class="<?= JournalHtmlHelper::getRecordCssClass($record) ?>"
+                            data-id="<?= $marks[$student->id][$record->id]->id ?>"
+                            data-student="<?= $student->id ?>"
+                            data-record="<?= $record->id ?>"
+                        >
+                            <div>
+                                <?= Html::dropDownList('mark', $marks[$student->id][$record->id]->evaluation_id ?? '', JournalMark::getListOfEvaluations($load->evaluation_system_id), [
+                                    'class' => 'form-control',
+                                ]) ?>
+
+                                <?php if ($record->typeObj->ticket): ?>
+                                    <?= Html::input('text', 'ticket', $marks[$student->id][$record->id]->ticket ?? '', [
+                                        'class' => 'form-control',
+                                        'placeholder' => Yii::t('journal', 'Ticket')
+                                    ]) ?>
+                                <?php endif; ?>
+                            </div>
+                        </td>
                     <?php endforeach ?>
                 </tr>
             <?php endforeach; ?>

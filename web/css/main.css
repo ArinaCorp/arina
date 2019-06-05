@@ -95,3 +95,19 @@
 .p5{
     padding: 5%;
 }
+
+.journal table .journal-mark-with-ticket div {
+    display: flex;
+}
+
+.journal table .journal-mark {
+    width: 100px;
+}
+
+.journal table .journal-mark-with-ticket {
+    width: 250px;
+}
+
+.journal table .journal-mark-with-ticket .form-control {
+    width: 100%;
+}
