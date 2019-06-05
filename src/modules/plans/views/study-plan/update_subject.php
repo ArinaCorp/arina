@@ -12,7 +12,7 @@ use yii\helpers\Url;
  * @var $model StudyPlan
  */
 
-$this->title = Yii::t('plans', 'Edit subject');
+$this->title = Yii::t('plans', 'Edit study subject');
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('plans', 'Study plans'), 'url' => ['index']];
 ?>

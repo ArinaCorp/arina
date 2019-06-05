@@ -93,10 +93,13 @@ class SubjectRelation extends ActiveRecord
     }
 
     /**
+     * Get list of relations with subjects that not used in Study plan
+     *
      * @param $id integer - study_plan_id
+     * @param null $subject_relation_id - subjectRelation when update study_subject
      * @return array
      */
-    public static function getListByStudyPlanId($id)
+    public static function getListByStudyPlanId($id, $subject_relation_id = null)
     {
         $studyPlan = StudyPlan::findOne($id);
 
@@ -105,15 +108,21 @@ class SubjectRelation extends ActiveRecord
 
         $list = [];
 
-        /**@var $relations SubjectRelation[] */
-        $relations = self::find()
+        $subjectRelationsQuery = self::find()
             ->joinWith(['subject', 'subjectCycle'])
             ->where(['speciality_qualification_id' => $studyPlan->speciality_qualification_id])
             ->andWhere(['not', [
                 'subject_id' => $usedSubjectsQuery->select('subject_id')->column(),
                 'subject_cycle_id' => $usedSubjectsQuery->select('subject_cycle_id')->column()
-            ]])
-            ->all();
+            ]]);
+
+        if ($subject_relation_id) {
+            $subjectRelationsQuery = $subjectRelationsQuery
+                ->union(self::find()->where(['id' => $subject_relation_id]));
+        }
+
+        /**@var $relations SubjectRelation[] */
+        $relations = $subjectRelationsQuery->all();
 
         foreach ($relations as $relation) {
             $cycleTitle = $relation->subjectCycle->fullTitle;
