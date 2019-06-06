@@ -491,6 +491,10 @@ return [
     'Time'=>'Час',
     'Credit'=>'Залік',
     'Course projects'=>'Курсові',
-    'DPA'=>'ДПА'
+    'DPA'=>'ДПА',
+    'Excellent'=>'Відмінно',
+    'Good'=>'Добре',
+    'Satisfactorily'=>'Задовільно',
+    'Unsatisfactorily'=>'Незадовільно'
 
 ];

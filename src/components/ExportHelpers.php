@@ -7,6 +7,7 @@ namespace app\components;
 use codemix\excelexport\ActiveExcelSheet;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Color;
+use Yii;
 
 class ExportHelpers
 {
@@ -65,37 +66,39 @@ class ExportHelpers
     public static function coundLengthOfMultipleArrays($_array = [])
     {
         $count = 0;
-        foreach ($_array as $array){
-            if(is_array($array)){
-            $count+=count($array);
+        foreach ($_array as $array) {
+            if (is_array($array)) {
+                $count += count($array);
             }
         }
         return $count;
     }
 
-    public static function getMarks($subjects =[],$students=[]){
+    public static function getMarks($subjects = [], $students = [])
+    {
         $marks = [];
-        foreach ($subjects as $subject){
-            foreach ($students as $student){
-                array_push($marks,[
-                    'value'=>rand(2,5),
-                    'subject_id'=>$subject->id,
-                    'student_id'=>$student->id
+        $range = [2, 5, 4, 5, 3, 4, 5, 3, 4, 5, 3];
+        foreach ($subjects as $subject) {
+            foreach ($students as $student) {
+                array_push($marks, [
+                    'value' => $range[array_rand($range)],
+                    'subject_id' => $subject->id,
+                    'student_id' => $student->id
                 ]);
             }
         }
         return $marks;
     }
 
-    public static function getPropusk($students=[])
+    public static function getPropusk($students = [])
     {
         $propusks = [];
-        foreach ($students as $student){
-            $hours = rand(0,100);
-            array_push($propusks,[
-                "student_id"=>$student->id,
-                "hours"=>$hours,
-                "with_reason"=>rand(0,$hours)
+        foreach ($students as $student) {
+            $hours = rand(0, 100);
+            array_push($propusks, [
+                "student_id" => $student->id,
+                "hours" => $hours,
+                "with_reason" => rand(0, $hours)
             ]);
         }
         return $propusks;
@@ -107,9 +110,9 @@ class ExportHelpers
      *
      * @return
      */
-    public static function MarkColorized($spreadSheet,$mark,$cords)
+    public static function MarkColorized($spreadSheet, $mark, $cords)
     {
-        switch ($mark){
+        switch ($mark) {
             case 5:
                 return $spreadSheet->getActiveSheet()->getStyle($cords)->getFont()->getColor()->setARGB(Color::COLOR_RED);
                 break;
@@ -124,6 +127,34 @@ class ExportHelpers
                 break;
 
         }
+    }
+
+    public static function getMarkLabels()
+    {
+        return [
+            Yii::t('app', 'Excellent'),
+            Yii::t('app', 'Good'),
+            Yii::t('app', 'Satisfactorily'),
+            Yii::t('app', 'Unsatisfactorily'),
+        ];
+    }
+
+    public static function textBetween($words, $spaces)
+    {
+
+        $string = $words[0];
+        $wordLength = strlen($words[0]);
+        foreach ($spaces as $index=>$space) {
+
+            $after = strlen($string)+$space-$wordLength;
+            while (strlen($string) <= $after) {
+                $string .= " ";
+            }
+            $wordLength = strlen($words[$index+1]);
+            $string .= $words[$index+1];
+        }
+
+        return $string;
     }
 
 }

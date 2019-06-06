@@ -42,6 +42,12 @@ class ExportAttestation
             $subject_titles = [];
             $subjects = [];
             $excel = $spreadsheet->getActiveSheet();
+            $failed_students = [];
+            $pass = ExportHelpers::getPropusk($students);
+            $hours_sum = [0, 0];
+            $pass_row_start_letter = "";
+            $avg_marks = [];
+            $footer_current = 0;
             foreach ($studyPlan->studySubjects as $item) {
                 if ($item->weeks[$semester - 1] != 0) {
                     array_push($subject_titles, $item->subject->title);
@@ -89,16 +95,13 @@ class ExportAttestation
                     }
 
                     $excel->setCellValue('G' . ($current + 7), Yii::t('app', 'Curator') . "________/" . $group->getCuratorShortNameInitialFirst() . "/");
+                    $excel->getStyle('G' . ($current + 7))->getFont()->setBold(0)->setSize(12);
                     $excel->setCellValue('G' . ($current + 8), Yii::t('app', 'Student') . "________/" . $group->getGroupLeaderShortNameInitialFirst() . "/");
+                    $excel->getStyle('G' . ($current + 8))->getFont()->setBold(0)->setSize(12);
                     $excel->setCellValue('B' . ($current + 8), Yii::t('app', 'Date') . ": " . date('d.m.Y') . "  " . Yii::t('app', 'Time') . ": " . date('H:i:s'));
-                    $excel->getStyle('G' . ($current + 7))->getFont()->setBold(1000)->setSize(12);
-                    $excel->getStyle('G' . ($current + 8))->getFont()->setBold(1000)->setSize(12);
                     $current = $startRow;
                     $letter = 'C';
-                    $faild_students = [];
-                    $pass = ExportHelpers::getPropusk($students);
-                    $hours_sum = [0, 0];
-                    $pass_row_start_letter = "";
+
                     foreach ($students as $student) {
                         $letter = "C";
                         $avg = 0;
@@ -114,8 +117,9 @@ class ExportAttestation
                             $letter++;
                         }
                         $avg = $avg / count($subjects);
-                        if ($avg <= 3) {
-                            array_push($faild_students, $student);
+                        array_push($avg_marks, $avg);
+                        if ($avg < 3.5) {
+                            array_push($failed_students, $student);
                         }
                         $excel->setCellValue("${letter}${current}", $avg);
                         $current_pass = $pass[array_search($student->id, array_column($pass, "student_id"))];
@@ -134,14 +138,30 @@ class ExportAttestation
                     $excel->setCellValue("${letter}${current}", $hours_sum[1]);
                     $letter = $pass_row_start_letter;
                     $current++;
-                    $excel->setCellValue("${letter}${current}", $hours_sum[0]/count($pass));
+                    $excel->setCellValue("${letter}${current}", $hours_sum[0] / count($pass));
                     $letter++;
-                    $excel->setCellValue("${letter}${current}", $hours_sum[1]/count($pass));
-                    $quality = (count($students) - count($faild_students)) / count($students) * 100;
+                    $excel->setCellValue("${letter}${current}", $hours_sum[1] / count($pass));
+                    $quality = round((count($students) - count($failed_students)) / count($students) * 100, 2);
                     $current += 2;
-                    $excel->setCellValue("I${current}", "Якість       ${quality}%");
+                    $footer_current = $current;
+                    $excel->setCellValue("I${current}", "Якість       ${quality} %");
+                    $excel->getStyle("I${current}")->getFont()->setBold(0);
                     $current++;
-                    $excel->setCellValue("I${current}", "Успішність       ${quality}%");
+                    $excel->setCellValue("I${current}", "Успішність       ${quality} %");
+                    $excel->getStyle("I${current}")->getFont()->setBold(0);
+                    $marks_sum = [0, 0, 0, 0];
+                    foreach ($avg_marks as $mark) {
+                        $marks_sum[0] += ($mark >= 4.5) ? 1 : 0;
+                        $marks_sum[1] += ($mark >= 3.5 && $mark < 4.5) ? 1 : 0;
+                        $marks_sum[2] += ($mark >= 2.5 && $mark < 3.5) ? 1 : 0;
+                        $marks_sum[3] += ($mark < 2.5 && $mark < 3.5) ? 1 : 0;
+                    }
+                    $current = $footer_current;
+                    foreach ($marks_sum as $index=>$sum){
+                    $excel->setCellValue("B${current}",ExportHelpers::textBetween([ExportHelpers::getMarkLabels()[$index],$sum,"студ."],[45,5]));
+                    $excel->getStyle("B${current}")->getAlignment()->setHorizontal('left');
+                    $current++;
+                        }
                 }
             }
         }
