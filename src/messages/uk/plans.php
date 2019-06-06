@@ -68,6 +68,7 @@ return [
     'Dual laboratory work' => 'Роздвоєння лабораторних',
     'Dual practice work' => 'Роздвоєння практичних робіт',
     'Edit work subject' => 'Редагування предмету робочого навчального плану',
+    'Edit study subject' => 'Редагування предмету навчального плану',
     'Exam' => 'Екзамен',
     'Exam semesters' => 'Екзаменаційний семестр',
     'Excessive class hours' => 'Надлишок аудиторних годин',

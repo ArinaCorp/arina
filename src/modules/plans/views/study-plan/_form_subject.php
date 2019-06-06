@@ -104,7 +104,7 @@ $this->registerJs($js);
         <div class="col-sm-5">
             <?= $form->field($model, 'subjectRelationId')->widget(Select2::class,
                 [
-                    'data' => SubjectRelation::getListByStudyPlanId($model->study_plan_id),
+                    'data' => SubjectRelation::getListByStudyPlanId($model->study_plan_id, $model->subjectRelationId),
                     'options' => ['placeholder' => Yii::t('plans', 'Select subject')]
                 ]) ?>
         </div>
