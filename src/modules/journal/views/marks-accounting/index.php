@@ -56,8 +56,8 @@ $actionUpdateMarkUrl = Url::to(['marks-accounting/update-mark']);
 $actionDeleteMarkUrl = Url::to(['marks-accounting/delete-mark']);
 
 $js .= <<<JS
-    jQuery('td[data-id] select').on('change', function() {
-        var cell = jQuery(this).parent();
+    jQuery('td[data-id] select, td[data-id] input').on('change', function() {
+        var cell = jQuery(this).parents('td[data-id]');
         var JournalMark = {
             id: cell.data('id'),
             student_id: cell.data('student'),
@@ -65,7 +65,6 @@ $js .= <<<JS
             evaluation_id: cell.find('select').val(),
             ticket: cell.find('input').val()
         };
-        
         var action = '$actionCreateMarkUrl';
         
         if(JournalMark.id){
@@ -74,7 +73,6 @@ $js .= <<<JS
                 action = '$actionUpdateMarkUrl'.addUrlParam('id', JournalMark.id);
             }
         }
-        
         $.ajax({
             url: action,
             type: 'POST',
@@ -210,17 +208,16 @@ $this->registerJS($js);
                         <td class="<?= JournalHtmlHelper::getRecordCssClass($record) ?>"
                             data-id="<?= $marks[$student->id][$record->id]->id ?>"
                             data-student="<?= $student->id ?>"
-                            data-record="<?= $record->id ?>"
-                        >
+                            data-record="<?= $record->id ?>">
                             <div>
                                 <?= Html::dropDownList('mark', $marks[$student->id][$record->id]->evaluation_id ?? '', JournalMark::getListOfEvaluations($load->evaluation_system_id), [
                                     'class' => 'form-control',
                                 ]) ?>
 
                                 <?php if ($record->typeObj->ticket): ?>
-                                    <?= Html::input('text', 'ticket', $marks[$student->id][$record->id]->ticket ?? '', [
-                                        'class' => 'form-control',
-                                        'placeholder' => Yii::t('journal', 'Ticket')
+                                    <?= Html::input('number', 'ticket', $marks[$student->id][$record->id]->ticket ?? '', [
+                                        'class' => 'form-control no-spinner',
+                                        'placeholder' => Yii::t('journal', 'Ticket'),
                                     ]) ?>
                                 <?php endif; ?>
                             </div>

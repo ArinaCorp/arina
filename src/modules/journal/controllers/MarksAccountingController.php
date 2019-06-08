@@ -92,9 +92,10 @@ class MarksAccountingController extends Controller implements IAdminController
                     foreach ($marksRecords as $mark) {
                         if ($student->id == $mark->student_id && $journalRecord->id == $mark->record_id) {
                             $marks[$mark->student_id][$mark->record_id] = $mark;
-                        } else {
-                            $marks[$student->id][$journalRecord->id] = new JournalMark();
                         }
+                    }
+                    if (!isset($marks[$student->id][$journalRecord->id])) {
+                        $marks[$student->id][$journalRecord->id] = new JournalMark();
                     }
                 }
             }

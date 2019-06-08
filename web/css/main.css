@@ -58,42 +58,62 @@
 .form-template {
     display: none;
 }
+
 #select2-group-speciality_qualifications_id-results .select2-results__option .select2-results__option,
 #select2-workplan-speciality_qualification_id-results .select2-results__option .select2-results__option,
 #select2-studyplan-speciality_qualification_id-results .select2-results__option .select2-results__option {
     padding-left: 35px;
 }
 
-.m1{
+.m1 {
     margin: 1%;
 }
-.m2{
+
+.m2 {
     margin: 2%;
 }
-.m3{
+
+.m3 {
     margin: 3%;
 }
-.m4{
+
+.m4 {
     margin: 4%;
 }
-.m5{
+
+.m5 {
     margin: 5%;
 }
 
-.p1{
+.p1 {
     padding: 1%;
 }
-.p2{
+
+.p2 {
     padding: 2%;
 }
-.p3{
+
+.p3 {
     padding: 3%;
 }
-.p4{
+
+.p4 {
     padding: 4%;
 }
-.p5{
+
+.p5 {
     padding: 5%;
+}
+
+/* If spinners on input zaebali you */
+.no-spinner {
+    -moz-appearance: textfield;
+}
+
+.no-spinner::-webkit-inner-spin-button,
+.no-spinner::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 .journal table .journal-mark-with-ticket div {
