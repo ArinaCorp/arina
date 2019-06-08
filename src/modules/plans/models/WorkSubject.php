@@ -123,6 +123,7 @@ class WorkSubject extends ActiveRecord
             'course_work' => Yii::t('plans', 'Course work'),
             'course_project' => Yii::t('plans', 'Course project'),
             'classes' => Yii::t('plans', 'Classes'),
+            'self_work' => Yii::t('plans', 'Slf. Wrk.'),
         ];
     }
 
@@ -179,7 +180,7 @@ class WorkSubject extends ActiveRecord
      */
     public function getClasses($semester)
     {
-        return $this->weeks[$semester] ?? 0 * $this->workPlan->semesters[$semester] ?? 0;
+        return $this->lectures[$semester] + $this->practices[$semester] + $this->lab_works[$semester];
     }
 
     /**

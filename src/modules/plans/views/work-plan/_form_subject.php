@@ -16,6 +16,64 @@ use app\modules\directories\models\subject\Subject;
  * @var ActiveForm $form
  */
 
+$jSemesters = json_encode($model->workPlan->semesters);
+
+$js = <<<JS
+//weeks in semesters, not used right now
+let semesters = $jSemesters;
+
+function showClassesForSemester(semester) {
+    jQuery('#classes-' + semester).val(
+        parseInt(jQuery('#worksubject-lectures-' + semester).val())
+        + parseInt(jQuery('#worksubject-lab_works-' + semester).val())
+        + parseInt(jQuery('#worksubject-practices-' + semester).val())
+    );
+}
+
+function showSelfWorkForSemester(semester) {
+    jQuery('#self_work-' + semester).val(
+        parseInt(jQuery('#worksubject-total-' + semester).val()) - parseInt(jQuery('#classes-' + semester).val())
+    );
+}
+
+function checkClasses(semester) {
+    //total hours - distributed class hours
+    let diff = parseInt(jQuery('#worksubject-total-' + semester).val()) - parseInt(jQuery('#classes-' + semester).val());
+    if (diff === 0) {
+        jQuery('#classes-excess-' + semester).addClass('hidden');
+    } else if (diff > 0) {
+        jQuery('#classes-excess-' + semester).addClass('hidden')
+    } else if (diff < 0) {
+        jQuery('#classes-excess-' + semester).removeClass('hidden');
+        jQuery('#classes-excess-val-' + semester).text(diff);
+    }
+}
+
+function calculateForSemester(semester) {
+    //Order is important here, classes are used to calculate self work
+    showClassesForSemester(semester);
+    showSelfWorkForSemester(semester);
+    checkClasses(semester);
+}
+
+//init
+for (let semester = 0; semester < 8; semester++) {
+    //init
+    calculateForSemester(semester);
+
+    jQuery(
+        '#worksubject-weeks-' + semester
+        + ', #worksubject-lectures-' + semester
+        + ', #worksubject-practices-' + semester
+        + ', #worksubject-lab_works-' + semester
+        + ', #worksubject-total-' + semester
+    ).on('input', () => calculateForSemester(semester));
+}
+
+JS;
+$this->registerJs($js);
+
+
 ?>
 
 <div class="work-subject-form">
@@ -78,9 +136,17 @@ use app\modules\directories\models\subject\Subject;
 
     <?php for ($i = 0; $i < 8; $i++): ?>
         <div class="span6 semester" id="semester_<?= $i; ?>">
-            <h4><?php echo $i + 1; ?> <?= Yii::t('plans', 'Semester'); ?>:
-                <?= $model->workPlan->semesters[$i]; ?> <?= Yii::t('plans', 'OfWeeks'); ?>
-                (<span class="total">0</span> <?= Yii::t('plans', 'OfHours'); ?>)</h4>
+            <div class="row">
+                <div class="h4">
+                    <div class="col-sm-3 p1"><?php echo $i + 1; ?> <?= Yii::t('plans', 'Semester'); ?>:
+                        <?= $model->workPlan->semesters[$i]; ?> <?= Yii::t('plans', 'OfWeeks'); ?>
+                        (<span class="total">0</span> <?= Yii::t('plans', 'OfHours'); ?>)
+                    </div>
+                    <div class="col-sm-9 p1 text-center" id="classes-excess-<?= $i ?>">
+                        <?= Yii::t('plans', 'Excessive class hours') ?> <span id="classes-excess-val-<?= $i ?>"></span>
+                    </div>
+                </div>
+            </div>
 
             <div class="row">
                 <div class="col-sm-2">
@@ -91,13 +157,23 @@ use app\modules\directories\models\subject\Subject;
                     ); ?>
                 </div>
 
-                <div class="col-sm-2">
+                <div class="col-sm-1">
                     <label class="control-label" for="classes"><?= $model->getAttributeLabel('classes') ?></label>
                     <?= Html::textInput(
-                        "classes_$i",
+                        "classes-$i",
                         '',
                         ['type' => 'number', 'min' => 0, 'placeholder' => $model->getAttributeLabel('classes'),
-                            'readonly' => true, 'style' => 'width:140px', 'class' => 'form-control']
+                            'readonly' => true, 'class' => 'form-control', 'id' => "classes-$i"]
+                    ); ?>
+                </div>
+
+                <div class="col-sm-1">
+                    <label class="control-label" for="classes"><?= $model->getAttributeLabel('self_work') ?></label>
+                    <?= Html::textInput(
+                        "self_work-$i",
+                        '',
+                        ['type' => 'number', 'min' => 0, 'placeholder' => $model->getAttributeLabel('self_work'),
+                            'readonly' => true, 'class' => 'form-control', 'id' => "self_work-$i"]
                     ); ?>
                 </div>
 

@@ -7,7 +7,7 @@ use yii\web\View;
 /* @var $this View
  * @var $model SubjectBlock */
 
-$this->title = Yii::t('app', 'Update Subject Block: ') . ' ' . $model->id;
+$this->title = Yii::t('app', 'Update Subject Block:') . ' ' . $model->id;
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Subjects'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];

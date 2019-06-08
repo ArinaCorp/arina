@@ -147,7 +147,7 @@ $this->registerJs($js);
 
     <div class="row">
         <div class="col-sm-12">
-            <h4 class="text-center">
+            <div class="h4 text-center">
                 <div class="col-sm-3 p1">
                     <?= Yii::t('plans', 'Classes') ?> <span id="classes-total-val"></span>
                 </div>
@@ -159,7 +159,7 @@ $this->registerJs($js);
                         <?= Yii::t('plans', 'Excessive class hours') ?> <span id="classes-excess-val"></span>
                     </div>
                 </div>
-            </h4>
+            </div>
         </div>
     </div>
 

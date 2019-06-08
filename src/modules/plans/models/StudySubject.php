@@ -387,11 +387,13 @@ class StudySubject extends ActiveRecord
         }
     }
 
-    public function beforeSave($insert)
+    // Temporary fix (?) TODO: Discuss subjectRelation/subject&subject_cycle
+    public function beforeValidate()
     {
         $subjectRelation = $this->subjectRelation;
         $this->subject_cycle_id = $subjectRelation->subject_cycle_id;
         $this->subject_id = $subjectRelation->subject_id;
-        return parent::beforeSave($insert);
+        return parent::beforeValidate();
     }
+
 }

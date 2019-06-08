@@ -6,7 +6,7 @@ use yii\base\Model;
 use yii\data\ActiveDataProvider;
 
 /**
- * SubjectBlockSearch represents the model behind the search form about `app\modules\directories\models\subject\Subject`.
+ * SubjectBlockSearch represents the model behind the search form about `app\modules\directories\models\subject_block\SubjectBlock`.
  */
 class SubjectBlockSearch extends SubjectBlock
 {
