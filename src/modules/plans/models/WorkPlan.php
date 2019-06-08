@@ -312,7 +312,8 @@ class WorkPlan extends ActiveRecord
             // Default hour array
             $defaultArr = ["0", "0", "0", "0", "0", "0", "0", "0"];
             // Check if subject has hours only in one semester
-            if (array_count_values($total)['0'] == count($total) - 1) {
+            $valCount = array_count_values($total);
+            if (array_key_exists('0', $valCount) && $valCount['0'] == count($total) - 1) {
                 // If so, fill in total distributed hours as distributed hours per semester
                 foreach ($total as $semester => $hours) {
                     if ((int)$hours > 0) {
