@@ -136,12 +136,6 @@ return [
     'Work plans' => 'Робочі плани',
     'Course work (sem.)' => 'Курсова робота (сем.)',
     'Work subject creation' => 'Додання предмету до робочого плану',
-    'Create student plan' => 'Створити індивідуальний план',
-    'Student plans' => 'Індивідуальні плани',
-    'Student plan' => 'Індивідуальний план студента',
-    'Student plan editing' => 'Редагування індивідуального плану студента',
-    'Subjects which are absent on this course' => 'Предмети відсутні на даному курсі',
-    'Class hours left to distribute' => 'Залишилось розподілити аудиторних годин',
-    'Excessive class hours' => 'Надлишок аудиторних годин',
-    'hrs.' => 'год.'
+    'hrs.' => 'год.',
+    'Slf. Wrk.' => 'Сам. Опр.',
 ];

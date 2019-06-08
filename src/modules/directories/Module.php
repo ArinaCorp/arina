@@ -80,6 +80,11 @@ class Module extends BaseModule implements IAdminModule
                     'url' => ['/directories/subject-cycle'],
                     'icon' => 'flag',
                 ],
+                [
+                    'label' => Yii::t('app', 'Study forms'),
+                    'url' => ['/directories/study-form'],
+                    'icon' => 'calendar',
+                ],
             ],
         ];
     }
