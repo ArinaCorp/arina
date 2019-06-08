@@ -95,3 +95,45 @@
 .p5{
     padding: 5%;
 }
+
+.dialog-window,.dialog-background{
+    position: fixed;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    overflow: hidden;
+    width:100%;
+    top: 0;
+    left: 0;
+}
+
+.dialog-background {
+    background-color: rgba(255,255,255, .8);
+}
+
+.dialog-card {
+    position: relative;
+    margin: 50px auto;
+    width: 330px;
+    padding: 10px 20px 10px 20px;
+    background: white;
+    text-align: center;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, .2);
+    z-index: 10;
+}
+
+@media all and (max-width:767px){
+    .dialog-card {
+        width: 90%;
+    }
+}
+
+.dialog-header {
+    color: rgba(0, 0, 0, .6);
+    border-bottom: solid 1.5px rgba(0, 0, 0, .2);
+    user-select: none;
+}
+
+.dialog-content {
+    padding-top: 30px;
+}

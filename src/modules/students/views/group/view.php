@@ -121,13 +121,12 @@ $this->params['breadcrumbs'][] = $this->title;
     ?>
 
 </div>
-
+<?php $exportParams->plan_id = StudyPlan::findOne(["speciality_qualification_id" => $model->specialityQualification]) ?>
 <div class="dialog-window" id="attestation-window" style="display: none">
     <?php $form = ActiveForm::begin(['action' => ['attestation']]); ?>
     <div class="dialog-card">
         <div class="dialog-header text-left"><h4><?= Yii::t('app', 'Attestation note') ?></h4></div>
         <div class="dialog-content">
-            <?php $exportParams->plan_id = StudyPlan::findOne(["speciality_qualification_id" => $model->specialityQualification]) ?>
             <?= $form->field($exportParams, 'plan_id')->widget(Select2::classname(), [
                 'data' => StudyPlan::getList(),
                 'options' => ['class' => 'text-center', 'placeholder' => Yii::t('app', 'Select plan')],
@@ -135,7 +134,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'allowClear' => true,
                 ],
             ])->label(false);
-            ?>
+//            ?>
             <?= $form->field($exportParams, 'semester')->textInput(['placeholder' => 'Семестр', 'class' => 'dialog-input form-control text-center', 'type' => 'number'])->label(false) ?>
             <?= $form->field($exportParams, 'date')->textInput(['placeholder' => 'Дата початку дії д.м.р', 'class' => 'dialog-input form-control text-center'])->label(false) ?>
             <?= $form->field($exportParams, 'group_id')->textInput(['readonly' => true, 'class' => 'dialog-input form-control'])->hiddenInput(['value' => $model->id])->label(false) ?>
@@ -258,44 +257,3 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php ActiveForm::end(); ?>
     <div class="dialog-background"></div>
 </div>
-
-<style>
-
-    .dialog-window,.dialog-background {
-        position: fixed;
-        flex-direction: column;
-        justify-content: center;
-        height: 100vh;
-        width: calc(100vw - 250px);
-        top: 0;
-        left: 0;
-        margin-left: 250px;
-        /*z-index: 998;*/
-    }
-
-    .dialog-background {
-        background-color: rgba(255,255,255, .8);
-    }
-
-    .dialog-card {
-        position: relative;
-        margin: auto;
-        width: 330px;
-        padding: 10px 20px 10px 20px;
-        background: white;
-        text-align: center;
-        box-shadow: 0 1px 6px rgba(0, 0, 0, .2);
-        z-index: 999999;
-    }
-
-    .dialog-header {
-        color: rgba(0, 0, 0, .6);
-        border-bottom: solid 1.5px rgba(0, 0, 0, .2);
-        user-select: none;
-    }
-
-    .dialog-content {
-        padding-top: 30px;
-    }
-
-</style>

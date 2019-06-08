@@ -33,8 +33,6 @@ class ExportZalik
         $semester = ExportHelpers::ConvertToRoman($data["data"]["semester"]);
         $cours = $data["data"]["course"];
         $group = Group::findOne(['id' => $data["data"]["group_id"]])->title;
-        $studyPlan_id = $data["data"]["plan_id"];
-        $studyPlan = StudyPlan::findOne(['id' => $studyPlan_id]);
         /**
          * @var $teachers Employee
          */
@@ -57,9 +55,6 @@ class ExportZalik
         $group = Group::findOne($id);
         $students = $group->getStudentsArray();
         $failed_students = 0;
-        $pass = ExportHelpers::getPropusk($students);
-        $hours_sum = [0, 0];
-        $footer_current = 0;
         $avg = 0;
         $subjects = [$subject];
         $student_mark = ExportHelpers::getMarks($subjects, $students);
@@ -72,7 +67,6 @@ class ExportZalik
             $mark = $student_mark[array_search($student->id, array_column($student_mark, "student_id"))];
             $avg += $mark['value'];
             $failed_students += $mark['value'] < 3.5 ? 1 : 0;
-//            var_dump($mark);die;
             $cursor->setCellValue("F${current}", $mark['value']);
             $cursor->setCellValue("A${current}", $i);
 
@@ -82,7 +76,7 @@ class ExportZalik
         }
         $cursor->removeRow($current);
         $cursor->removeRow($current);
-        $cursor->setCellValue("F${current}", $avg / count($student_mark));
+        $cursor->setCellValue("F${current}", round($avg / count($student_mark),2));
         $quality = round((count($students) - $failed_students) / count($students) * 100, 2);
         $current+=2;
         $footer_current = $current;

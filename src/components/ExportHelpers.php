@@ -144,17 +144,28 @@ class ExportHelpers
 
         $string = $words[0];
         $wordLength = strlen($words[0]);
-        foreach ($spaces as $index=>$space) {
+        foreach ($spaces as $index => $space) {
 
-            $after = strlen($string)+$space-$wordLength;
+            $after = strlen($string) + $space - $wordLength;
             while (strlen($string) <= $after) {
                 $string .= " ";
             }
-            $wordLength = strlen($words[$index+1]);
-            $string .= $words[$index+1];
+            $wordLength = strlen($words[$index + 1]);
+            $string .= $words[$index + 1];
         }
 
         return $string;
     }
+
+    public static function getTickets($count)
+    {
+        $tickets = [];
+        for ($i = 1; $i <= $count; $i++) {
+            array_push($tickets, $i);
+        }
+        shuffle($tickets);
+        return $tickets;
+    }
+
 
 }
