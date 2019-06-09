@@ -2,7 +2,7 @@
 
 namespace app\modules\plans\controllers;
 
-use app\modules\directories\models\StudyYear;
+use app\modules\directories\models\study_year\StudyYear;
 use app\modules\plans\components\Calendar;
 use app\modules\rbac\filters\AccessControl;
 use nullref\core\interfaces\IAdminController;

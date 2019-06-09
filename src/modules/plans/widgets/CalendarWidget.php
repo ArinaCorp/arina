@@ -9,7 +9,7 @@ namespace app\modules\plans\widgets;
 
 
 use app\helpers\GlobalHelper;
-use app\modules\directories\models\StudyYear;
+use app\modules\directories\models\study_year\StudyYear;
 use app\modules\plans\components\Calendar;
 use yii\base\Widget;
 

@@ -9,7 +9,7 @@ namespace app\modules\plans\components;
 
 
 use app\helpers\GlobalHelper;
-use app\modules\directories\models\StudyYear;
+use app\modules\directories\models\study_year\StudyYear;
 use app\modules\plans\components\exceptions\Calendar as CalendarException;
 use yii\base\Component;
 use yii\web\Session;
