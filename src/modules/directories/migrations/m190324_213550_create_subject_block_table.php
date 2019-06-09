@@ -16,8 +16,8 @@ class m190324_213550_create_subject_block_table extends Migration
             'id' => $this->primaryKey(11),
             'speciality_id' => $this->integer(11),
             'course' => $this->integer(11),
-            'created' => $this->timestamp(),
-            'updated' => $this->timestamp(),
+            'created' => $this->integer(),
+            'updated' => $this->integer(),
         ]);
 
         $this->createIndex(

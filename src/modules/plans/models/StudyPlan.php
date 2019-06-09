@@ -6,6 +6,7 @@ use app\components\ExportToExcel;
 use app\modules\directories\models\department\Department;
 use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 use app\modules\directories\models\subject\Subject;
+use app\modules\directories\models\subject_cycle\SubjectCycle;
 use app\modules\user\helpers\UserHelper;
 use app\modules\user\models\User;
 use nullref\useful\behaviors\JsonBehavior;
@@ -154,14 +155,6 @@ class StudyPlan extends ActiveRecord
     }
 
     /**
-     * @return ActiveQuery
-     */
-    public function getStudySubjects()
-    {
-        return $this->hasMany(StudySubject::class, ['study_plan_id' => 'id']);
-    }
-
-    /**
      * Group subject by cycles
      * @return array
      */
@@ -178,6 +171,54 @@ class StudyPlan extends ActiveRecord
             }
         }
         return $list;
+    }
+
+    /**
+     * Group subject by cycles
+     * @return array
+     */
+    public function getCyclesWithSubjects()
+    {
+        $subjectCyclesIds = $this->getStudySubjects()
+            ->select(['subject_cycle_id'])
+            ->union($this->getStudySubjects()
+                ->joinWith('subjectCycle')
+                ->select(['subject_cycle.parent_id'])
+            )
+            ->distinct()
+            ->column();
+
+        $subjectCycles = SubjectCycle::find()
+            ->where(['id' => $subjectCyclesIds])
+            ->all();
+
+        $subjectCycles = SubjectCycle::getTree([], $subjectCycles);
+
+        function mapSubjectsToCycles($subjectCycles, $studySubjects)
+        {
+            return array_map(function ($subjectCycle) use ($studySubjects) {
+                $subjectCycle['subjects'] = array_reduce($studySubjects, function ($acc, StudySubject $item) use ($subjectCycle) {
+                    if ($item->subject_cycle_id == $subjectCycle['id']) {
+                        $acc[] = $item;
+                    }
+                    return $acc;
+                });
+                if (isset($subjectCycle['children'])) {
+                    $subjectCycle['children'] = mapSubjectsToCycles($subjectCycle['children'], $studySubjects);
+                }
+                return $subjectCycle;
+            }, $subjectCycles);
+        }
+
+        return mapSubjectsToCycles($subjectCycles, $this->studySubjects);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getStudySubjects()
+    {
+        return $this->hasMany(StudySubject::class, ['study_plan_id' => 'id']);
     }
 
     /**
@@ -241,20 +282,20 @@ class StudyPlan extends ActiveRecord
     }
 
     /**
+     * @return string
+     */
+    public function getTitleWithDate()
+    {
+        return $this->getTitle() . ' - ' . date('d.m.Y H:i', $this->created);
+    }
+
+    /**
      * Get full title with update datetime
      * @return string
      */
     public function getTitle()
     {
         return $this->specialityQualification->getFullTitle();
-    }
-
-    /**
-     * @return string
-     */
-    public function getTitleWithDate()
-    {
-        return $this->getTitle() . ' - ' . date('d.m.Y H:i', $this->created);
     }
 
     /**

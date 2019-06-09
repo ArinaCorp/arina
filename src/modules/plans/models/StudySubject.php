@@ -2,6 +2,8 @@
 
 namespace app\modules\plans\models;
 
+use app\modules\directories\models\subject_cycle\SubjectCycle;
+use app\modules\directories\models\subject_relation\SubjectRelation;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\data\ActiveDataProvider;
@@ -17,6 +19,7 @@ use app\modules\directories\models\subject\Subject;
  * @property integer $id
  * @property integer $study_plan_id
  * @property integer $subject_id
+ * @property integer $subject_cycle_id
  * @property integer $total
  * @property integer $lectures
  * @property integer $lab_works
@@ -29,12 +32,20 @@ use app\modules\directories\models\subject\Subject;
  * @property string $diploma_name
  * @property string $certificate_name
  *
+ * @property string $examSemesters
+ * @property string $sfeSemesters State Final Examination Semesters
+ * @property string $seSemesters State Examination Semesters
+ *
  * The followings are the available model relations:
  * @property StudyPlan $studyPlan
  * @property Subject $subject
+ * @property SubjectCycle $subjectCycle
+ * @property SubjectRelation $subjectRelation
  */
 class StudySubject extends ActiveRecord
 {
+    public $subjectRelationId;
+
     /**
      * @return string the associated database table name
      */
@@ -62,7 +73,7 @@ class StudySubject extends ActiveRecord
     public function rules()
     {
         return [
-            [['study_plan_id', 'subject_id', 'total'], 'required', 'message' => Yii::t('plans', 'Specify') . '{attribute}'],
+            [['study_plan_id', 'subjectRelationId', 'total'], 'required', 'message' => Yii::t('plans', 'Specify') . '{attribute}'],
             [['weeks'], 'checkWeeks'],
             [['total'], 'checkHours'],
             [['practice_weeks'], 'checkPractice'],
@@ -98,6 +109,33 @@ class StudySubject extends ActiveRecord
     }
 
     /**
+     * @return ActiveQuery
+     */
+    public function getSubjectCycle()
+    {
+        return $this->hasOne(SubjectCycle::class, ['id' => 'subject_cycle_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getSubjectRelation()
+    {
+        return $this->hasOne(SubjectRelation::class, ['id' => 'subjectRelationId']);
+    }
+
+    public function afterFind()
+    {
+        parent::afterFind();
+        $this->subjectRelationId = SubjectRelation::find()
+            ->where([
+                'subject_id' => $this->subject_id,
+                'subject_cycle_id' => $this->subject_cycle_id,
+                'speciality_qualification_id' => $this->studyPlan->speciality_qualification_id
+            ])->one()->id;
+    }
+
+    /**
      * @return array customized attribute labels (name=>label)
      */
     public function attributeLabels()
@@ -106,6 +144,7 @@ class StudySubject extends ActiveRecord
             'id' => Yii::t('plans', 'Study subject'),
             'study_plan_id' => Yii::t('plans', 'Study plan'),
             'subject_id' => Yii::t('app', 'Subject'),
+            'subjectRelationId' => Yii::t('app', 'Subject'),
             'total' => Yii::t('app', 'Total'),
             'lectures' => Yii::t('plans', 'Lectures'),
             'lab_works' => Yii::t('plans', 'Lab works'),
@@ -120,10 +159,12 @@ class StudySubject extends ActiveRecord
             'selfWork' => Yii::t('plans', 'Self work'),
             'credit' => Yii::t('plans', 'Credit'),
             'exam' => Yii::t('app', 'Exam'),
-            'workSemesters' => Yii::t('plans', 'Work semester'),
-            'projectSemesters' => Yii::t('plans', 'Project semester'),
+            'workSemesters' => Yii::t('plans', 'Course work (sem.)'),
+            'projectSemesters' => Yii::t('plans', 'Course project (sem.)'),
             'testSemesters' => Yii::t('plans', 'Test semesters'),
-            'examSemesters' => Yii::t('plans', 'Exam semesters'),
+            'examSemesters' => Yii::t('plans', 'Exam (sem.)'),
+            'sfeSemesters' => Yii::t('plans', 'State final examination (sem.)'),
+            'seSemesters' => Yii::t('plans', 'State examination (sem.)'),
         ];
     }
 
@@ -193,7 +234,6 @@ class StudySubject extends ActiveRecord
                 $semesters[] = $semester + 1;
             }
         }
-
         return implode(', ', $semesters);
     }
 
@@ -207,11 +247,35 @@ class StudySubject extends ActiveRecord
             if (!empty($control[1])) {
                 $semesters[] = $semester + 1;
             }
-            if (!empty($control[2])) {
-                $semesters[] = ($semester + 1) . Yii::t('plans', 'State final examination');
-            }
+        }
+        return implode(', ', $semesters);
+    }
+
+    /**
+     * State Examination Semesters
+     * @return string
+     */
+    public function getSeSemesters()
+    {
+        $semesters = array();
+        foreach ($this->control as $semester => $control) {
             if (!empty($control[3])) {
-                $semesters[] = ($semester + 1) . Yii::t('plans', 'State examination');
+                $semesters[] = $semester + 1;
+            }
+        }
+        return implode(', ', $semesters);
+    }
+
+    /**
+     * State Final Examination Semesters
+     * @return string
+     */
+    public function getSfeSemesters()
+    {
+        $semesters = array();
+        foreach ($this->control as $semester => $control) {
+            if (!empty($control[2])) {
+                $semesters[] = $semester + 1;
             }
         }
         return implode(', ', $semesters);
@@ -257,7 +321,7 @@ class StudySubject extends ActiveRecord
     public function checkHours()
     {
         if (!$this->hasErrors()) {
-            if ($this->total < ($this->lectures + $this->lab_works + $this->practices)) {
+            if ($this->total < $this->getClasses()) {
                 $this->addError('total', Yii::t('plans', 'Classroom hours more than the total number'));
             }
         }
@@ -321,6 +385,15 @@ class StudySubject extends ActiveRecord
                 $this->addError('subject_id', Yii::t('plans', 'Record about this subject exists in this study plan'));
             }
         }
+    }
+
+    // Temporary fix (?) TODO: Discuss subjectRelation/subject&subject_cycle
+    public function beforeValidate()
+    {
+        $subjectRelation = $this->subjectRelation;
+        $this->subject_cycle_id = $subjectRelation->subject_cycle_id;
+        $this->subject_id = $subjectRelation->subject_id;
+        return parent::beforeValidate();
     }
 
 }

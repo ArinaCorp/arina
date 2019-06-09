@@ -9,7 +9,7 @@ use yii\web\View;
  * @var $model \app\modules\directories\models\subject_block\SubjectBlock
  */
 
-$this->title = $model->id . Yii::t('app', 'Created at') . $model->created;
+$this->title = Yii::t('app', 'Subject block');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Subject Blocks'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
@@ -40,9 +40,16 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
             'specialityTitle',
             'course',
+            [
+                'attribute' => 'created',
+                'format' => 'datetime'
+            ],
+            [
+                'attribute' => 'updated',
+                'format' => 'datetime'
+            ],
         ],
     ]) ?>
 

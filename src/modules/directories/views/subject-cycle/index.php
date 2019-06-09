@@ -1,22 +1,22 @@
 <?php
 
-use app\modules\directories\models\subject_cycle\SubjectCycle;
-use app\modules\directories\models\subject_cycle\SubjectCycleSearch;
-use app\modules\journal\models\evaluation\EvaluationSystem;
-use yii\data\ActiveDataProvider;
-use yii\grid\GridView;
 use yii\helpers\Html;
+use app\modules\directories\assets\SubjectCycleTreeAsset;
 use yii\web\View;
-
-/* @var $this View */
-/* @var $searchModel SubjectCycleSearch */
-/* @var $dataProvider ActiveDataProvider */
-/* @var $model SubjectCycle */
+/**
+ * @var $this View
+ * @var $id integer
+ * @var $formName string
+ * @var $subjectCycles \app\modules\directories\models\subject_cycle\SubjectCycle[]
+ */
+$this->registerJs("var selectedCategoryId = $id;", View::POS_BEGIN);
+SubjectCycleTreeAsset::register($this);
 
 $this->title = Yii::t('app', 'Subject cycles');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="row">
+
+<div class="category-index">
 
     <div class="row">
         <div class="col-lg-12">
@@ -25,28 +25,19 @@ $this->params['breadcrumbs'][] = $this->title;
             </h1>
         </div>
     </div>
-
     <p>
-        <?= Html::a(Yii::t('app', 'Create subject cycle'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('app', 'Create'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-            'title',
-            [
-                'filter' => EvaluationSystem::getMap('title'),
-                'attribute' => 'evaluation_system_id',
-                'value' => 'evaluationSystem.title',
-            ],
-            [
-                'filter' => SubjectCycle::getMap('title', 'id', ['parent_id' => SubjectCycle::ROOT_ID]),
-                'attribute' => 'parent_id',
-                'value' => 'parentCycle.title',
-            ],
 
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
+    <div class="tree" id="treeView" data-form-name="<?= $formName ?>">
+        <?php if (count($subjectCycles)): ?>
+            <ol class="category-list">
+                <?php foreach ($subjectCycles as $subjectCycle): ?>
+                    <?= $this->render('_item', [
+                        'category' => $subjectCycle
+                    ]) ?>
+                <?php endforeach; ?>
+            </ol>
+        <?php endif ?>
+    </div>
 </div>

@@ -2,6 +2,9 @@
 
 namespace app\modules\directories\models\subject_relation;
 
+use app\modules\plans\models\StudyPlan;
+use app\modules\plans\models\StudySubject;
+use nullref\useful\traits\Mappable;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
@@ -26,6 +29,8 @@ use app\modules\directories\models\speciality_qualification\SpecialityQualificat
  */
 class SubjectRelation extends ActiveRecord
 {
+    use Mappable;
+
     public static function getProviderById($id)
     {
         $deleted = isset(Yii::$app->session['subject']['delete']) ? Yii::$app->session['subject']['delete'] : [];
@@ -88,6 +93,59 @@ class SubjectRelation extends ActiveRecord
     }
 
     /**
+     * Get list of relations with subjects that not used in Study plan
+     *
+     * @param $id integer - study_plan_id
+     * @param null $subject_relation_id - subjectRelation when update study_subject
+     * @return array
+     */
+    public static function getListByStudyPlanId($id, $subject_relation_id = null)
+    {
+        $studyPlan = StudyPlan::findOne($id);
+
+        $usedSubjectsQuery = StudySubject::find()
+            ->where(['study_plan_id' => $id]);
+
+        $list = [];
+
+        $subjectRelationsQuery = self::find()
+            ->joinWith(['subject', 'subjectCycle'])
+            ->where(['speciality_qualification_id' => $studyPlan->speciality_qualification_id])
+            ->andWhere(['not', [
+                'subject_id' => $usedSubjectsQuery->select('subject_id')->column(),
+                'subject_cycle_id' => $usedSubjectsQuery->select('subject_cycle_id')->column()
+            ]]);
+
+        if ($subject_relation_id) {
+            $subjectRelationsQuery = $subjectRelationsQuery
+                ->union(self::find()->where(['id' => $subject_relation_id]));
+        }
+
+        /**@var $relations SubjectRelation[] */
+        $relations = $subjectRelationsQuery->all();
+
+        foreach ($relations as $relation) {
+            $cycleTitle = $relation->subjectCycle->fullTitle;
+            if (!isset($list[$cycleTitle])) {
+                $list[$cycleTitle] = [];
+            }
+            $list[$cycleTitle][$relation->id] = $relation->subject->title;
+        }
+
+        return $list;
+    }
+
+    /**
+     * @inheritdoc
+     * @return SubjectRelationQuery the active query used by this AR class.
+     */
+
+    public static function find()
+    {
+        return new SubjectRelationQuery(get_called_class());
+    }
+
+    /**
      * @return array validation rules for model attributes.
      */
     public function rules()
@@ -95,7 +153,7 @@ class SubjectRelation extends ActiveRecord
         return [
             [['subject_id', 'speciality_qualification_id', 'subject_cycle_id'], 'required'],
             [['subject_id', 'speciality_qualification_id', 'subject_cycle_id'], 'integer'],
-            [['subject_id'], 'safe'],
+            [['subject_id', 'speciality_qualification_id', 'subject_cycle_id'], 'unique', 'targetAttribute' => ['subject_id', 'speciality_qualification_id', 'subject_cycle_id']],
         ];
     }
 
@@ -132,6 +190,7 @@ class SubjectRelation extends ActiveRecord
             'subject_id' => Yii::t('app', 'Subject'),
             'speciality_qualification_id' => Yii::t('app', 'Speciality qualification'),
             'subject_cycle_id' => Yii::t('app', 'Subject cycle'),
+            'subject' => Yii::t('app', 'Subject'),
         ];
     }
 }

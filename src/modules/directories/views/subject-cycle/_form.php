@@ -46,7 +46,7 @@ use app\modules\journal\models\evaluation\EvaluationSystem;
             <?= $form->field($model, 'parent_id')->widget(Select2::class, [
                 'data' => SubjectCycle::getMap('title', 'id', ['parent_id' => SubjectCycle::ROOT_ID]),
                 'options' => [
-                    'placeholder' => Yii::t('app', "Set cycle"),
+                    'placeholder' => Yii::t('app', 'Select subject cycle'),
                 ],
                 'pluginOptions' => [
                     'allowClear' => true,

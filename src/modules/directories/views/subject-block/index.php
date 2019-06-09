@@ -8,7 +8,8 @@ use yii\grid\GridView;
  * @var $model app\modules\directories\models\subject_block\SubjectBlock
  * @var $form ActiveForm
  * @var $dataProvider yii\data\ActiveDataProvider
- * @var $searchModel \app\modules\directories\models\subject_block\SubjectBlockSearch */
+ * @var $searchModel \app\modules\directories\models\subject_block\SubjectBlockSearch
+ */
 
 $this->title = Yii::t('app', 'Subject blocks');
 $this->params['breadcrumbs'][] = $this->title;
@@ -37,7 +38,14 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             'specialityTitle',
-            'created',
+            [
+                'attribute' => 'updated',
+                'format' => 'datetime'
+            ],
+            [
+                'attribute' => 'created',
+                'format' => 'datetime'
+            ],
             'subjectCount',
 
             ['class' => 'yii\grid\ActionColumn'],

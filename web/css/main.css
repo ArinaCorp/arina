@@ -137,3 +137,30 @@
 .dialog-content {
     padding-top: 30px;
 }
+
+/* If spinners on input zaebali you */
+.no-spinner {
+    -moz-appearance: textfield;
+}
+
+.no-spinner::-webkit-inner-spin-button,
+.no-spinner::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.journal table .journal-mark-with-ticket div {
+    display: flex;
+}
+
+.journal table .journal-mark {
+    width: 100px;
+}
+
+.journal table .journal-mark-with-ticket {
+    width: 250px;
+}
+
+.journal table .journal-mark-with-ticket .form-control {
+    width: 100%;
+}

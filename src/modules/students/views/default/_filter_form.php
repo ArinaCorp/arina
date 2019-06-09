@@ -81,7 +81,7 @@ $this->registerJs(
                     <div class="form-group">
                         <div class="form-group">
                             <?= $form->field($search, 'department')->widget(Select2::classname(), [
-                                'data' => Department::getMap('title'),
+                                'data' => Department::getList(),
                                 'pluginOptions' => [
                                     'placeholder' => Yii::t('app', 'Select department'),
                                     'allowClear' => true
@@ -202,5 +202,4 @@ $this->registerJs(
         <?= Html::a(Yii::t('app', 'Excel'), ['default/document','params'=>Yii::$app->request->queryParams], ['class' => 'btn btn-success','id'=>'export']) ?>
     </div>
 <?php ActiveForm::end(); ?>
-
 <?php //\yii\widgets\Pjax::end();

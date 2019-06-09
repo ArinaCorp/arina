@@ -303,13 +303,34 @@ class WorkPlan extends ActiveRecord
             $total = [];
             foreach ($subject->weeks as $id => $hoursPerWeek) {
                 // count total hours per semester
-                $total[] = $hoursPerWeek * $this->semesters[$id];
+                // cast to string, for consistency
+                // TODO: decide something about string values in these arrays
+                $total[] = (string)($hoursPerWeek * $this->semesters[$id]);
             }
             $model->total = $total;
-            $undefArr = ["0", "0", "0", "0", "0", "0", "0", "0"];
-            $model->lectures = $undefArr;
-            $model->lab_works = $undefArr;
-            $model->practices = $undefArr;
+
+            // Default hour array
+            $defaultArr = ["0", "0", "0", "0", "0", "0", "0", "0"];
+            // Check if subject has hours only in one semester
+            $valCount = array_count_values($total);
+            if (array_key_exists('0', $valCount) && $valCount['0'] == count($total) - 1) {
+                // If so, fill in total distributed hours as distributed hours per semester
+                foreach ($total as $semester => $hours) {
+                    if ((int)$hours > 0) {
+                        $lectures = $lab_works = $practices = $defaultArr;
+                        $lectures[$semester] = (string)$subject->lectures;
+                        $lab_works[$semester] = (string)$subject->lab_works;
+                        $practices[$semester] = (string)$subject->practices;
+                        $model->lectures = $lectures;
+                        $model->lab_works = $lab_works;
+                        $model->practices = $practices;
+                    }
+                }
+            } else {
+                // Assign default values
+                $model->lectures = $model->lab_works = $model->practices = $defaultArr;
+            };
+
             $model->diploma_name = $subject->diploma_name;
             $model->certificate_name = $subject->certificate_name;
             $model->save(false);
@@ -399,11 +420,11 @@ class WorkPlan extends ActiveRecord
     public function getSubjectsForCourse($course, $absentOnes = false)
     {
         $result = [];
-        foreach($this->workSubjects as $subject){
-            if($absentOnes && !$subject->presentIn($course)){
-                $result[]=$subject;
-            }elseif(!$absentOnes && $subject->presentIn($course)){
-                $result[]=$subject;
+        foreach ($this->workSubjects as $subject) {
+            if ($absentOnes && !$subject->presentIn($course)) {
+                $result[] = $subject;
+            } elseif (!$absentOnes && $subject->presentIn($course)) {
+                $result[] = $subject;
             }
         }
         return $result;

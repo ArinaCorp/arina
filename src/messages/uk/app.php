@@ -37,7 +37,7 @@ return [
     'Emails' => '',
     'Employee record is saved!' => '',
     'Errors' => '',
-    'Exam' => 'Екзамен',
+    'Exam' => '',
     'Exemption Student Relations' => '',
     'File Path' => '',
     'Footer contact block' => '',
@@ -495,6 +495,10 @@ return [
     'Excellent'=>'Відмінно',
     'Good'=>'Добре',
     'Satisfactorily'=>'Задовільно',
-    'Unsatisfactorily'=>'Незадовільно'
-
+    'Unsatisfactorily'=>'Незадовільно',
+    'Academic leave' => 'Академічна відпустка',
+    'Filtered students' => 'Фільтровані студенти',
+    'Date create' => 'Дата створення',
+    'Study forms' => 'Форми навчання',
+    'Create study form' => 'Створити форму навчання',
 ];

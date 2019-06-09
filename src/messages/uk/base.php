@@ -18,8 +18,8 @@
  */
 return [
     'Cancel' => 'Відміна',
-    'Create' => '',
-    'Load' => '',
     'Not selected' => 'Не задано',
+    'Load' => '',
+    'Create' => '',
     'Save' => '',
 ];

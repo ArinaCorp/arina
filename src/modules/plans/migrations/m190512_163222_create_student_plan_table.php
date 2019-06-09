@@ -19,8 +19,8 @@ class m190512_163222_create_student_plan_table extends Migration
             'semester' => $this->integer(11),
             'work_plan_id' => $this->integer(11),
             'subject_block_id' => $this->integer(11),
-            'created' => $this->timestamp(),
-            'updated' => $this->timestamp(),
+            'created' => $this->integer(),
+            'updated' => $this->integer(),
         ]);
 
         $this->createIndex(
@@ -46,7 +46,7 @@ class m190512_163222_create_student_plan_table extends Migration
         );
 
         $this->addForeignKey(
-            'fk-student_plan-student_id',
+            'fk-student_plan-work_plan_id',
             'student_plan',
             'work_plan_id',
             'work_plan',

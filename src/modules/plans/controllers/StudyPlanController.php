@@ -175,18 +175,17 @@ class StudyPlanController extends Controller implements IAdminController
     }
 
     /**
-     * @param $id
+     * @param $id integer - study_plan_id
      * @return string
      */
     public function actionCreateSubject($id)
     {
-        $model = new StudySubject();
-        $model->study_plan_id = $id;
-
-        if (isset($_POST['StudySubject'])) {
-            $model->attributes = $_POST['StudySubject'];
+        $model = new StudySubject([
+            'study_plan_id' => $id
+        ]);
+        if ($model->load(Yii::$app->request->post())) {
             if ($model->save()) {
-                return $this->redirect(Url::toRoute(['study-plan/view', 'id' => $id]));
+                return $this->redirect(['view', 'id' => $id]);
             }
         }
         return $this->render('create_subject', ['model' => $model]);
@@ -229,7 +228,21 @@ class StudyPlanController extends Controller implements IAdminController
     }
 
     /**
-     * @param $id
+     * @param integer $id
+     * @return StudyPlan
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModel($id)
+    {
+        if (($model = StudyPlan::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    /**
+     * @param $id integer - study_plan_id
      * @return string|Response
      */
     public function actionUpdateSubject($id)
@@ -237,10 +250,9 @@ class StudyPlanController extends Controller implements IAdminController
         /** @var StudySubject $model */
         $model = StudySubject::findOne($id);
 
-        if (isset($_POST['StudySubject'])) {
-            $model->setAttributes($_POST['StudySubject'], false);
+        if ($model->load(Yii::$app->request->post())) {
             if ($model->save()) {
-                return $this->redirect(Url::toRoute(['study-plan/view', 'id' => $model->study_plan_id]));
+                return $this->redirect(['view', 'id' => $model->study_plan_id]);
             }
         }
 
@@ -267,20 +279,6 @@ class StudyPlanController extends Controller implements IAdminController
     {
         $this->findModel($id)->delete();
         return $this->redirect(['index']);
-    }
-
-    /**
-     * @param integer $id
-     * @return StudyPlan
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = StudyPlan::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
     }
 
     /**

@@ -7,6 +7,8 @@ use yii\data\ActiveDataProvider;
 
 use app\modules\directories\models\subject_relation\SubjectRelation;
 use app\modules\directories\models\subject_relation\SubjectRelationSearch;
+use app\modules\directories\models\subject_cycle\SubjectCycle;
+use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 
 /* @var $this View */
 /* @var $searchModel SubjectRelationSearch */
@@ -31,32 +33,23 @@ $this->params['breadcrumbs'][] = $this->title;
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
             [
-
-                'attribute' => 'subject_id',
-                'format' => 'raw',
-                'value' => function ($model, $key, $index, $widget) {
-                    return $model->subject->title;
-                }
+                'attribute' => 'subject',
+                'value' => 'subject.title'
             ],
             [
-
+                'filter' => SpecialityQualification::find()->getMap('fullTitle'),
                 'attribute' => 'speciality_qualification_id',
-                'format' => 'raw',
-                'value' => function ($model, $key, $index, $widget) {
-                    return $model->specialityQualification->title;
-                }
+                'value' => 'specialityQualification.fullTitle'
             ],
             [
-
+                'filter' => SubjectCycle::find()->getMap('fullTitle'),
                 'attribute' => 'subject_cycle_id',
-                'format' => 'raw',
-                'value' => function ($model, $key, $index, $widget) {
-                    return $model->subjectCycle->title;
-                }
+                'value' => 'subjectCycle.fullTitle'
             ],
 
             ['class' => 'yii\grid\ActionColumn'],

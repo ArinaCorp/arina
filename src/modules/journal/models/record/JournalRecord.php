@@ -33,9 +33,6 @@ use yii\db\Query;
  */
 class JournalRecord extends \yii\db\ActiveRecord
 {
-    const TYPE_ATTESTATION = 0;
-    const TYPE_EXAM = 1;
-
     /**
      * @param $loadId
      * @param int $employeeId
@@ -147,19 +144,6 @@ class JournalRecord extends \yii\db\ActiveRecord
         ];
     }
 
-    public function getType()
-    {
-        return self::getTypes()[$this->type];
-    }
-
-    public static function getTypes()
-    {
-        return [
-            self::TYPE_ATTESTATION => Yii::t('journal', 'Attestation'),
-            self::TYPE_EXAM => Yii::t('journal', 'Exam')
-        ];
-    }
-
     public function getJournalMarks()
     {
         return $this->hasMany(JournalMark::class, ['record_id' => 'id']);
@@ -172,15 +156,12 @@ class JournalRecord extends \yii\db\ActiveRecord
         if ($this->typeObj && $this->typeObj->date && !$this->typeObj->is_report) {
             $label = date('d', strtotime($this->date)) . '<br/>' . date('m', strtotime($this->date));
         } else {
-            $label = $this->typeObj ? $this->typeObj->title : '';
+            $label = $this->typeObj ? $this->typeObj->title . '<br/>' . $this->date : '';
             $options = ['class' => 'vertical-label'];
         }
         return Html::tag(
             'div',
-            Html::a(
-                $label,
-                ['journal-record/view', 'id' => $this->id],
-                $options)
+            Html::a($label, ['journal-record/view', 'id' => $this->id], $options)
         );
     }
 

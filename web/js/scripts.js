@@ -98,3 +98,7 @@ semesterBtn.click(() => {
 examBtn.click(() => {
     showDialog(examBtn,$('#exam-window'));
 });
+
+$('.no-spinner').on('mousewheel', function(){
+    $(this).blur();
+});

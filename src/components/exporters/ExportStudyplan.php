@@ -14,6 +14,7 @@ use app\modules\plans\models\StudyPlan;
 use app\modules\plans\models\StudySubject;
 use PhpOffice\PhpSpreadsheet\Calculation\Calculation;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Yii;
 
 class ExportStudyplan
@@ -128,6 +129,7 @@ class ExportStudyplan
 
         //SHEET #2
 //        $sheet = $sheet = $objPHPExcel->setActiveSheetIndex(2);
+        /** @var Worksheet $sheet */
         $sheet = $spreadsheet->setActiveSheetIndex(2);
 
         $j = 'N';
@@ -139,35 +141,58 @@ class ExportStudyplan
         $i++;
         $j = 1;
         $totals = array();
-        foreach ($plan->getSubjectsByCycles() as $name => $group) {
-            $sheet->setCellValue("B$i", $name)
+
+        /**
+         * @param Worksheet $sheet
+         * @param StudySubject $item
+         * @param $i
+         */
+        function processSubject($sheet, $item, $i)
+        {
+            $sheet->setCellValue("A$i", $item->subject->code);
+            $sheet->setCellValue("B$i", $item->getTitle());
+            $sheet->setCellValue("C$i", $item->getExamSemesters());
+            $sheet->setCellValue("D$i", $item->getTestSemesters());
+            $sheet->setCellValue("E$i", $item->getWorkSemesters());
+            $sheet->setCellValue("F$i", $item->getProjectSemesters());
+            $sheet->setCellValue("G$i", round($item->total / 54, 2));
+            $sheet->setCellValue("H$i", $item->total);
+            $sheet->setCellValue("I$i", $item->getClasses());
+            $sheet->setCellValue("J$i", $item->lectures);
+            $sheet->setCellValue("K$i", $item->lab_works);
+            $sheet->setCellValue("L$i", $item->practices);
+            $sheet->setCellValue("M$i", $item->getSelfwork());
+            $char = 'N';
+            foreach ($item->weeks as $key => $week) {
+                $sheet->setCellValue($char . $i, $week);
+                $char++;
+            }
+            $sheet->insertNewRowBefore($i + 1, 1);
+        }
+
+        foreach ($plan->getCyclesWithSubjects() as $cycle) {
+            $sheet->setCellValue("B$i", $j . '. ' . $cycle['title'])
                 ->insertNewRowBefore($i + 1, 1);
             $i++;
             $begin = $i;
             $jj = 1;
-            foreach ($group as $item) {
-                /**@var $item StudySubject */
-                $sheet->setCellValue("A$i", $item->subject->code);
-                $sheet->setCellValue("B$i", $item->subject->getCycle($plan->speciality_qualification_id)->id . '.' . $jj . $item->getTitle());
-                $sheet->setCellValue("C$i", $item->getExamSemesters());
-                $sheet->setCellValue("D$i", $item->getTestSemesters());
-                $sheet->setCellValue("E$i", $item->getWorkSemesters());
-                $sheet->setCellValue("F$i", $item->getProjectSemesters());
-                $sheet->setCellValue("G$i", round($item->total / 54, 2));
-                $sheet->setCellValue("H$i", $item->total);
-                $sheet->setCellValue("I$i", $item->getClasses());
-                $sheet->setCellValue("J$i", $item->lectures);
-                $sheet->setCellValue("K$i", $item->lab_works);
-                $sheet->setCellValue("L$i", $item->practices);
-                $sheet->setCellValue("M$i", $item->getSelfwork());
-                $char = 'N';
-                foreach ($item->weeks as $key => $week) {
-                    $sheet->setCellValue($char . $i, $week);
-                    $char++;
+            if (isset($cycle['subjects'])) {
+                foreach ($cycle['subjects'] as $subject) {
+                    processSubject($sheet, $subject, $i);
+                    $i++;
                 }
-                $sheet->insertNewRowBefore($i + 1, 1);
-                $i++;
-                $jj++;
+            }
+            if (isset($cycle['children'])) {
+                foreach ($cycle['children'] as $subcycle) {
+                    $sheet->setCellValue("B$i", $j . '.' . $jj . ' ' . $subcycle['title'])
+                        ->insertNewRowBefore($i + 1, 1);
+                    $i++;
+                    foreach ($subcycle['subjects'] as $subject) {
+                        processSubject($sheet, $subject, $i);
+                        $i++;
+                    }
+                    $jj++;
+                }
             }
             $end = $i - 1;
             $sheet->setCellValue("B$i", Yii::t('app', 'Total'));
@@ -179,6 +204,7 @@ class ExportStudyplan
             $i++;
             $j++;
         }
+
         $sheet->setCellValue("B$i", Yii::t('app', 'Total amount'));
         for ($c = 'G'; $c < 'V'; $c++) {
             $sheet->setCellValue("$c$i", "=SUM($c" . implode("+$c", $totals) . ')');
@@ -188,7 +214,7 @@ class ExportStudyplan
         $spreadsheet->setActiveSheetIndex(0);
 
         Calculation::getInstance()->disableCalculationCache();
-        
+
         return $spreadsheet;
     }
 }
