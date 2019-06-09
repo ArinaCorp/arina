@@ -17,15 +17,18 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 use yii\widgets\Pjax;
+use app\modules\plans\models\WorkPlan;
+use kartik\depdrop\DepDrop;
 
 /**
+ * @var bool $isTeacher
  * @var array $loads
  * @var Load $load
  * @var JournalRecord $record
  * @var JournalMark[] $marks
  */
 
-$this->title = Yii::t('app', 'Journal Marks');
+$this->title = Yii::t('app', 'Marks accounting');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <?php
@@ -115,20 +118,50 @@ $this->registerJS($js);
         </div>
     </div>
 
+    <?php if (!$isTeacher): ?>
+        <div class="form-group">
+            <?= Select2::widget([
+                'name' => 'work_plan_id',
+                'data' => WorkPlan::getList(),
+                'options' => [
+                    'id' => 'work_plan_id',
+                    'placeholder' => Yii::t('app', 'Choose work plan')
+                ],
+                'pluginOptions' => ['allowClear' => true],
+            ]) ?>
+        </div>
+
+        <div class="form-group">
+            <?= DepDrop::widget([
+                'name' => 'group_id',
+                'type' => DepDrop::TYPE_SELECT2,
+                'options' => ['id' => 'group_id'],
+                'pluginOptions' => [
+                    'depends' => ['work_plan_id'],
+                    'url' => Url::to(['marks-accounting/get-groups']),
+                    'placeholder' => Yii::t('app', 'Choose group'),
+                ]
+            ]) ?>
+        </div>
+    <?php endif ?>
+
     <div class="form-group">
-        <?= Select2::widget([
-            'options' => [
-                'id' => 'load_select'
-            ],
+        <?= DepDrop::widget([
             'name' => 'load_id',
-            'value' => $load->id ?? '',
             'data' => $loads,
-            'pluginOptions' => [
-                'placeholder' => Yii::t('journal', 'Choose subject')
+            'value' => $load->id ?? '',
+            'type' => DepDrop::TYPE_SELECT2,
+            'options' => [
+                'id' => 'load_select',
+                'placeholder' => '',
             ],
+            'pluginOptions' => [
+                'depends' => ['work_plan_id', 'group_id'],
+                'url' => Url::to(['marks-accounting/get-loads']),
+                'placeholder' => Yii::t('app', 'Choose subject'),
+            ]
         ]) ?>
     </div>
-
 
     <?php Pjax::begin([
         'id' => 'marks-accounting-widget',

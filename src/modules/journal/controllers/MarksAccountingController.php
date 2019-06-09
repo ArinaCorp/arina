@@ -8,15 +8,19 @@
 
 namespace app\modules\journal\controllers;
 
+use app\components\DepDropHelper;
 use app\modules\directories\models\StudyYear;
 use app\modules\journal\models\record\JournalMark;
 use app\modules\journal\models\record\JournalRecord;
 use app\modules\load\models\Load;
+use app\modules\plans\models\WorkPlan;
 use app\modules\rbac\filters\AccessControl;
+use app\modules\user\helpers\UserHelper;
 use app\modules\user\models\User;
 use nullref\core\interfaces\IAdminController;
 use Yii;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 
 class MarksAccountingController extends Controller implements IAdminController
@@ -49,14 +53,19 @@ class MarksAccountingController extends Controller implements IAdminController
         /** @var User $user */
         $user = Yii::$app->user->identity;
 
-        $current_year = StudyYear::getCurrentYear();
-        $loads = Load::find()
-            ->joinWith('workSubject.subject')
-            ->joinWith('group')
-            ->where([
-                'employee_id' => $user->employee_id,
-                'study_year_id' => $current_year->id,
-            ])->getMap('fullTitle');
+        $loads = [];
+
+        $isTeacher = UserHelper::hasRole($user, 'teacher');
+        if ($isTeacher) {
+            $current_year = StudyYear::getCurrentYear();
+            $loads = Load::find()
+                ->joinWith('workSubject.subject')
+                ->joinWith('group')
+                ->where([
+                    'employee_id' => $user->employee_id,
+                    'study_year_id' => $current_year->id,
+                ])->getMap('fullTitle');
+        }
 
         $marks = [];
 
@@ -67,12 +76,12 @@ class MarksAccountingController extends Controller implements IAdminController
 
         $load->employee_id = $user->employee_id;
 
-        $record = JournalRecord::create($load->id, $user->employee_id);
+        $record = JournalRecord::create($load->id, $user->id);
 
         if (Yii::$app->request->isPost) {
             //@TODO save with validation
             if ($record->load(Yii::$app->request->post()) && $record->save(false)) {
-                $record = JournalRecord::create($load->id, $user->employee_id);
+                $record = JournalRecord::create($load->id, $user->id);
             }
         }
 
@@ -100,13 +109,43 @@ class MarksAccountingController extends Controller implements IAdminController
                 }
             }
         }
-
         return $this->render('index', [
+            'isTeacher' => $isTeacher,
             'loads' => $loads,
             'load' => $load,
             'record' => $record,
             'marks' => $marks
         ]);
+    }
+
+    public function actionGetGroups()
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        if ($parents = Yii::$app->request->post('depdrop_parents')) {
+            if ($parents) {
+                $work_plan_id = $parents[0];
+                $groups = WorkPlan::findOne(['id' => $work_plan_id])->specialityQualification->groups;
+                $out = DepDropHelper::convertMap(ArrayHelper::map($groups, 'id', 'title'));
+                return ['output' => $out, 'selected' => Yii::t('app', 'Select group')];
+            }
+        }
+        return ['output' => '', 'selected' => ''];
+    }
+
+    public function actionGetLoads()
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        if ($parents = Yii::$app->request->post('depdrop_parents')) {
+            if ($parents) {
+                $work_plan_id = empty($parents[0]) ? null : $parents[0];
+                $group_id = empty($parents[1]) ? null : $parents[1];
+                if ($work_plan_id && $group_id) {
+                    $out = DepDropHelper::convertMap(Load::getMapByWorkPlanIdAndGroupId($work_plan_id, $group_id));
+                    return ['output' => $out, 'selected' => Yii::t('app', 'Select load')];
+                }
+            }
+        }
+        return ['output' => '', 'selected' => ''];
     }
 
     public function actionCreateMark()

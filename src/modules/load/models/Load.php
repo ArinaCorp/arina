@@ -8,6 +8,7 @@ use app\modules\employee\models\Employee;
 use app\modules\journal\models\evaluation\EvaluationSystem;
 use app\modules\journal\models\record\JournalRecord;
 use app\modules\journal\models\record\JournalRecordType;
+use app\modules\plans\models\WorkPlan;
 use app\modules\plans\models\WorkSubject;
 use app\modules\students\models\Group;
 use nullref\useful\JsonBehavior;
@@ -107,6 +108,28 @@ class Load extends ActiveRecord
     public static function getArrayByGroupAndYear($group_id, $study_year_id = null)
     {
         return self::findAll(['group_id' => $group_id, 'study_year_id' => $study_year_id]);
+    }
+
+    public static function getMapByWorkPlanIdAndGroupId($work_plan_id, $group_id)
+    {
+        $workPlan = WorkPlan::findOne($work_plan_id);
+        $workSubjects = $workPlan->getWorkSubjects()
+            ->select(['id'])
+            ->column();
+
+        $loads = self::find()
+            ->joinWith('workSubject')
+            ->joinWith('workSubject.subject')
+            ->joinWith('group')
+            ->where([
+                'group_id' => $group_id,
+                'work_subject_id' => $workSubjects,
+                'study_year_id' => $workPlan->study_year_id
+            ])
+            ->andWhere(['not', ['employee_id' => null]])
+            ->getMap('workSubject.title');
+
+        return $loads;
     }
 
     /**

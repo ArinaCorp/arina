@@ -487,4 +487,5 @@ return [
     'Updated' => 'Оновлено',
     'Deleted' => 'Видалено',
     'Not defined' => 'Немає',
+    'Marks accounting' => 'Облік успішності'
 ];
