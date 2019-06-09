@@ -151,7 +151,6 @@ class DefaultController extends Controller implements IAdminController
         $students[2] = $group->getCountByPayment(2);
         $model->students = $students;
         $model->save();
-//        print_r($model->errors);
     }
 
     /**

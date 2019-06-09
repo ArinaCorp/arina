@@ -7,7 +7,7 @@ class JournalHtmlHelper
     public static function getRecordCssClass($record)
     {
         $class = 'form-inline journal-mark';
-        if ($record->typeObj->ticket) {
+        if ($record->typeObj && $record->typeObj->ticket) {
             return $class . '-with-ticket';
         }
         return $class;

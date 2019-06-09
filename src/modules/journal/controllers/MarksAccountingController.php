@@ -120,32 +120,31 @@ class MarksAccountingController extends Controller implements IAdminController
 
     public function actionGetGroups()
     {
-        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         if ($parents = Yii::$app->request->post('depdrop_parents')) {
             if ($parents) {
                 $work_plan_id = $parents[0];
                 $groups = WorkPlan::findOne(['id' => $work_plan_id])->specialityQualification->groups;
                 $out = DepDropHelper::convertMap(ArrayHelper::map($groups, 'id', 'title'));
-                return ['output' => $out, 'selected' => Yii::t('app', 'Select group')];
+                return $this->asJson(['output' => $out, 'selected' => Yii::t('app', 'Select group')]);
             }
         }
-        return ['output' => '', 'selected' => ''];
+        return $this->asJson(['output' => '', 'selected' => '']);
     }
 
     public function actionGetLoads()
     {
-        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         if ($parents = Yii::$app->request->post('depdrop_parents')) {
             if ($parents) {
                 $work_plan_id = empty($parents[0]) ? null : $parents[0];
                 $group_id = empty($parents[1]) ? null : $parents[1];
                 if ($work_plan_id && $group_id) {
-                    $out = DepDropHelper::convertMap(Load::getMapByWorkPlanIdAndGroupId($work_plan_id, $group_id));
-                    return ['output' => $out, 'selected' => Yii::t('app', 'Select load')];
+                    $items = Load::find()->byWorkPlanForGroup($work_plan_id, $group_id)->getMap('workSubject.title');
+                    $out = DepDropHelper::convertMap($items);
+                    return $this->asJson(['output' => $out, 'selected' => Yii::t('app', 'Select load')]);
                 }
             }
         }
-        return ['output' => '', 'selected' => ''];
+        return $this->asJson(['output' => '', 'selected' => '']);
     }
 
     public function actionCreateMark()

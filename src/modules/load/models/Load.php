@@ -110,28 +110,6 @@ class Load extends ActiveRecord
         return self::findAll(['group_id' => $group_id, 'study_year_id' => $study_year_id]);
     }
 
-    public static function getMapByWorkPlanIdAndGroupId($work_plan_id, $group_id)
-    {
-        $workPlan = WorkPlan::findOne($work_plan_id);
-        $workSubjects = $workPlan->getWorkSubjects()
-            ->select(['id'])
-            ->column();
-
-        $loads = self::find()
-            ->joinWith('workSubject')
-            ->joinWith('workSubject.subject')
-            ->joinWith('group')
-            ->where([
-                'group_id' => $group_id,
-                'work_subject_id' => $workSubjects,
-                'study_year_id' => $workPlan->study_year_id
-            ])
-            ->andWhere(['not', ['employee_id' => null]])
-            ->getMap('workSubject.title');
-
-        return $loads;
-    }
-
     /**
      * @return array validation rules for model attributes.
      */

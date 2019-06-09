@@ -6,19 +6,19 @@
  * Time: 13:31
  */
 
+use app\modules\journal\helpers\JournalHtmlHelper;
 use app\modules\journal\models\record\JournalMark;
 use app\modules\journal\models\record\JournalRecord;
 use app\modules\journal\models\record\JournalRecordType;
-use app\modules\journal\helpers\JournalHtmlHelper;
 use app\modules\load\models\Load;
+use app\modules\plans\models\WorkPlan;
 use kartik\date\DatePicker;
+use kartik\depdrop\DepDrop;
 use kartik\select2\Select2;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 use yii\widgets\Pjax;
-use app\modules\plans\models\WorkPlan;
-use kartik\depdrop\DepDrop;
 
 /**
  * @var bool $isTeacher
@@ -247,7 +247,7 @@ $this->registerJS($js);
                                     'class' => 'form-control',
                                 ]) ?>
 
-                                <?php if ($record->typeObj->ticket): ?>
+                                <?php if ($record->typeObj && $record->typeObj->ticket): ?>
                                     <?= Html::input('number', 'ticket', $marks[$student->id][$record->id]->ticket ?? '', [
                                         'class' => 'form-control no-spinner',
                                         'placeholder' => Yii::t('app', 'Ticket'),
