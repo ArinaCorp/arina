@@ -34,8 +34,8 @@ $actionUrl = Url::to(['marks-accounting/index']);
 $js = '';
 
 $js .= <<<JS
-    $('#load_select').on('change', function(){
-        $.pjax.reload({
+    jQuery('#load_select').on('change', function(){
+        jQuery.pjax.reload({
             container: '#marks-accounting-widget', 
             url: '$actionUrl', 
             data: {
@@ -56,7 +56,7 @@ $actionUpdateMarkUrl = Url::to(['marks-accounting/update-mark']);
 $actionDeleteMarkUrl = Url::to(['marks-accounting/delete-mark']);
 
 $js .= <<<JS
-    jQuery('td[data-id] select, td[data-id] input').on('change', function() {
+    jQuery('body').on('change', 'td[data-id] select, td[data-id] input', function(){
         var cell = jQuery(this).parents('td[data-id]');
         var JournalMark = {
             id: cell.data('id'),
@@ -217,7 +217,7 @@ $this->registerJS($js);
                                 <?php if ($record->typeObj->ticket): ?>
                                     <?= Html::input('number', 'ticket', $marks[$student->id][$record->id]->ticket ?? '', [
                                         'class' => 'form-control no-spinner',
-                                        'placeholder' => Yii::t('journal', 'Ticket'),
+                                        'placeholder' => Yii::t('app', 'Ticket'),
                                     ]) ?>
                                 <?php endif; ?>
                             </div>
