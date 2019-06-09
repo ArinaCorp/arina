@@ -58,7 +58,7 @@ $this->registerJS($js);
     </div>
 
     <div class="row">
-        <div class="col-md-2">
+        <div class="col-md-3">
             <div class="form-group">
                 <?= Html::label(Yii::t('app', 'Current study year')) ?>
                 <?= Html::dropDownList('current_year', $currentYear->id, $studyYears, [

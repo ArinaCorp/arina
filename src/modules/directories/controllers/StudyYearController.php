@@ -54,7 +54,7 @@ class StudyYearController extends Controller implements IAdminController
             ],
         ]);
 
-        $currentYear = StudyYear::getCurrentYear();
+        $currentYear = StudyYear::getActiveYear();
         $studyYears = StudyYear::find()
             ->orderBy(['year_start' => SORT_ASC])
             ->getMap('title');

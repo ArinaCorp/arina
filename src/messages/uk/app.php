@@ -489,6 +489,6 @@ return [
     'Deleted' => 'Видалено',
     'Not defined' => 'Немає',
     'Week' => 'Тиждень',
-    '{study_year} has been set as current study year' => '{study_year} - встановлений поточним навчальним роком'
-    'Marks accounting' => 'Облік успішності'
+    '{study_year} has been set as current study year' => '{study_year} - встановлений поточним навчальним роком',
+    'Marks accounting' => 'Облік успішності',
 ];
