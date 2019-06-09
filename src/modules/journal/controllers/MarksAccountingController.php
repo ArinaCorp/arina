@@ -14,17 +14,35 @@ use app\modules\journal\models\record\JournalMark;
 use app\modules\journal\models\record\JournalRecord;
 use app\modules\load\models\Load;
 use app\modules\plans\models\WorkPlan;
+use app\modules\plans\components\Calendar;
 use app\modules\rbac\filters\AccessControl;
 use app\modules\user\helpers\UserHelper;
 use app\modules\user\models\User;
 use nullref\core\interfaces\IAdminController;
 use Yii;
+use yii\base\Module;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 
 class MarksAccountingController extends Controller implements IAdminController
 {
+    /** @var Calendar */
+    protected $_calendar;
+
+    /**
+     * MarksAccountingController constructor.
+     * @param string $id
+     * @param Module $module
+     * @param Calendar $calendar
+     * @param array $config
+     */
+    public function __construct(string $id, Module $module, Calendar $calendar, array $config = [])
+    {
+        $this->_calendar = $calendar;
+        parent::__construct($id, $module, $config);
+    }
+
     /**
      * @inheritdoc
      */
@@ -48,6 +66,11 @@ class MarksAccountingController extends Controller implements IAdminController
         ];
     }
 
+    /**
+     * @param null $load_id
+     * @return string
+     * @throws \app\modules\plans\components\exceptions\Calendar
+     */
     public function actionIndex($load_id = null)
     {
         /** @var User $user */
@@ -57,7 +80,7 @@ class MarksAccountingController extends Controller implements IAdminController
 
         $isTeacher = UserHelper::hasRole($user, 'teacher');
         if ($isTeacher) {
-            $current_year = StudyYear::getCurrentYear();
+            $current_year = $this->_calendar->getCurrentYear();
             $loads = Load::find()
                 ->joinWith('workSubject.subject')
                 ->joinWith('group')

@@ -1,9 +1,6 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: vyach
- * Date: 19.03.2019
- * Time: 17:10
+ *
  */
 
 namespace app\components\importers;
@@ -205,7 +202,7 @@ class ImportStudent
                 'target' => 'course',
                 'label' => 'Курс',
                 'value' => function ($line) {
-                    $currentYear = StudyYear::getCurrentYear()->year_start;
+                    $currentYear = StudyYear::getActiveYear()->year_start;
                     $startYear = date('Y', strtotime($line[15]));
                     return $currentYear - $startYear;
                 }

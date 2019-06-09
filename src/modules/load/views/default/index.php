@@ -47,7 +47,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => Yii::t('app', 'Study year'),
                 'format' => 'raw',
                 'value' => function (StudyYear $model, $key, $index, $widget) {
-                    return $model->getFullName();
+                    return $model->getTitle();
                 }
             ],
             [
