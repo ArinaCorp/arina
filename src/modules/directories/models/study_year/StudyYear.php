@@ -1,11 +1,13 @@
 <?php
 
-namespace app\modules\directories\models;
+namespace app\modules\directories\models\study_year;
 
 use app\modules\directories\models\speciality_qualification\SpecialityQualification;
+use app\modules\directories\models\study_year\StudyYearQuery;
 use app\modules\load\models\Load;
 use app\modules\plans\models\WorkPlan;
 use nullref\useful\traits\Mappable;
+use phpDocumentor\Reflection\Types\Self_;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
@@ -16,6 +18,7 @@ use yii\db\ActiveRecord;
  * @property integer $id
  * @property integer $year_start
  * @property integer $active
+ * @property string $title
  *
  * @property WorkPlan[] $workPlans
  * @property Load[] $loads
@@ -23,6 +26,9 @@ use yii\db\ActiveRecord;
 class StudyYear extends ActiveRecord
 {
     use Mappable;
+
+    const ACTIVE = 1;
+    const INACTIVE = 0;
 
     /**
      * @inheritdoc
@@ -39,9 +45,14 @@ class StudyYear extends ActiveRecord
     {
         return [
             ['year_start', 'required'],
-            [['year_start'], 'integer'],
+            ['year_start', 'integer'],
             ['active', 'boolean'],
         ];
+    }
+
+    public static function find()
+    {
+        return new StudyYearQuery(get_called_class());
     }
 
     /**
@@ -82,14 +93,6 @@ class StudyYear extends ActiveRecord
     {
         $str = (string)$this->year_start;
         return $str[sizeof($this) - 2] . $str[sizeof($this) - 1];
-    }
-
-    /**
-     * @return ActiveQuery
-     */
-    public static function find()
-    {
-        return parent::find();
     }
 
     /**
@@ -137,8 +140,23 @@ class StudyYear extends ActiveRecord
      */
     public static function getCurrentYear()
     {
-        $cur_year = self::findOne(['active' => 1]);
-        return $cur_year;
+        return self::findOne(['active' => self::ACTIVE]);
+    }
+
+    /**
+     * Reassignment current year
+     * Get previous current year and set its inactive
+     * Set new year as current
+     * @return bool
+     */
+    public function setCurrent()
+    {
+        $currentYear = StudyYear::getCurrentYear();
+        $currentYear->active = self::INACTIVE;
+        $currentYear->save();
+
+        $this->active = self::ACTIVE;
+        return $this->save();
     }
 
     /**

@@ -199,6 +199,7 @@ return [
     'Curator Groups' => 'Група - куратор',
     'Curator ID' => 'Куратор',
     'Current' => 'Поточний',
+    'Current study year' => 'Поточний навчальний рік',
     'Cyclic Commission' => 'Циклова комісія',
     'Cyclic Commissions' => 'Циклові комісії',
     'Date' => 'Дата',
@@ -484,4 +485,5 @@ return [
     'Date create' => 'Дата створення',
     'Study forms' => 'Форми навчання',
     'Create study form' => 'Створити форму навчання',
+    '{study_year} has been set as current study year' => '{study_year} - встановлений поточним навчальним роком'
 ];
