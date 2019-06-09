@@ -60,6 +60,7 @@ class JournalRecordController extends Controller implements IAdminController
      * Displays a single JournalRecordType model.
      * @param integer $id
      * @return mixed
+     * @throws NotFoundHttpException
      */
     public function actionView($id)
     {
@@ -87,6 +88,8 @@ class JournalRecordController extends Controller implements IAdminController
     /**
      * Creates a new JournalRecordType model.
      * If creation is successful, the browser will be redirected to the 'view' page.
+     * @param $load_id
+     * @param $type
      * @return mixed
      */
     public function actionCreate($load_id, $type)
@@ -126,6 +129,7 @@ class JournalRecordController extends Controller implements IAdminController
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
+     * @throws NotFoundHttpException
      */
     public function actionUpdate($id)
     {
@@ -146,6 +150,9 @@ class JournalRecordController extends Controller implements IAdminController
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
+     * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function actionDelete($id)
     {

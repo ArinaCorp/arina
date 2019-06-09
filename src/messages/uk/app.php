@@ -435,7 +435,7 @@ return [
     'TeacherName' => 'Відповідальний',
     'The record date should be greater or equal' => 'Дата запису має бути більша або рівна ',
     'Third' => 'Третій',
-    'Ticket' => 'Екземенаційні білети',
+    'Ticket' => 'Білет',
     'Title' => 'Назва',
     'Total' => 'Загальна',
     'Total amount' => 'Загальна кількість',
@@ -469,7 +469,6 @@ return [
     'Update position: ' => 'Оновити посаду: ',
     'Update student: ' => 'Оновлення: ',
     'Update study year' => 'Редагувати навчальний рік',
-    'Updated' => 'Оновлено',
     'Updated At' => 'Оновлено',
     'Value' => 'Значення',
     'Villages' => 'Село',
@@ -485,5 +484,10 @@ return [
     'Date create' => 'Дата створення',
     'Study forms' => 'Форми навчання',
     'Create study form' => 'Створити форму навчання',
+    'Created' => 'Додано',
+    'Updated' => 'Оновлено',
+    'Deleted' => 'Видалено',
+    'Not defined' => 'Немає',
+    'Week' => 'Тиждень',
     '{study_year} has been set as current study year' => '{study_year} - встановлений поточним навчальним роком'
 ];
