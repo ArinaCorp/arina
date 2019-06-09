@@ -487,4 +487,5 @@ return [
     'Updated' => 'Оновлено',
     'Deleted' => 'Видалено',
     'Not defined' => 'Немає',
+    'Week' => 'Тиждень',
 ];

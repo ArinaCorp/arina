@@ -1,16 +1,12 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: vyach
- * Date: 19.03.2019
- * Time: 17:10
+ *
  */
 
 namespace app\components\importers;
 
 
 use app\modules\students\models\CsvImportDocument as Document;
-use app\modules\students\models\CsvImportDocument;
 use yii\base\BaseObject;
 use yii\queue\JobInterface;
 

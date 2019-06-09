@@ -61,9 +61,9 @@ class StudyYear extends ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'year_start' => Yii::t('app', 'Start of the study year'),
-            'yearend' => Yii::t('app', 'End of the study year'),
+            'yearEnd' => Yii::t('app', 'End of the study year'),
             'active' => Yii::t('app', 'Current'),
-            'fullName' => Yii::t('app', 'Study year'),
+            'title' => Yii::t('app', 'Study year'),
         ];
     }
 
@@ -103,17 +103,9 @@ class StudyYear extends ActiveRecord
             /**
              * @var StudyYear $studyYear
              */
-            $items[$studyYear->id] = $studyYear->getFullName();
+            $items[$studyYear->id] = $studyYear->getTitle();
         }
         return $items;
-    }
-
-    /**
-     * @return string
-     */
-    public function getFullName()
-    {
-        return $this->year_start . '/' . $this->getYearEnd();
     }
 
     /**
@@ -135,7 +127,7 @@ class StudyYear extends ActiveRecord
     /**
      * @return StudyYear|static
      */
-    public static function getCurrentYear()
+    public static function getActiveYear()
     {
         $cur_year = self::findOne(['active' => 1]);
         return $cur_year;

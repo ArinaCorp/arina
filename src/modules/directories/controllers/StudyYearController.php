@@ -42,7 +42,7 @@ class StudyYearController extends Controller implements IAdminController
         ]);
         $dataProvider->setSort([
             'attributes' => [
-                'fullName' => [
+                'title' => [
                     'asc' => [
                         'year_start' => SORT_ASC,
                     ],

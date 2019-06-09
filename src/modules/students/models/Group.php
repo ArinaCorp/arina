@@ -383,7 +383,8 @@ class Group extends ActiveRecord
             $year = StudyYear::findOne(['id' => $yearId]);
         }
         if (!isset($year)) {
-            $year = StudyYear::getCurrentYear();
+            //TODO refactor it
+            $year = Yii::$app->get('calendar')->getCurrentYear();
         }
         //TODO: remove later
 //        var_dump($year->getYearEnd());
