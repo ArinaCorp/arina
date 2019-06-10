@@ -6,7 +6,7 @@
 namespace app\components\importers;
 
 use app\modules\directories\models\speciality_qualification\SpecialityQualification;
-use app\modules\directories\models\StudyYear;
+use app\modules\directories\models\study_year\StudyYear;
 use app\modules\students\models\CsvImportDocument as Document;
 use app\modules\students\models\CsvImportDocumentItem as DocumentItem;
 use app\modules\students\models\Student;

@@ -5,7 +5,7 @@ use yii\grid\GridView;
 use yii\bootstrap\ActiveForm;
 use kartik\select2\Select2;
 use kartik\depdrop\DepDrop;
-use app\modules\directories\models\StudyYear;
+use app\modules\directories\models\study_year\StudyYear;
 use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 use yii\helpers\Url;
 use app\modules\load\models\Load;

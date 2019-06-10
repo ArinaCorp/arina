@@ -81,6 +81,7 @@ class Graph extends Widget
     {
         return $this->render('graph', [
             'graphProcessLink' => $this->graphProcessLink,
+            'studyPlan' => $this->studyPlan,
             'map' => $this->map,
             'list' => $this->list,
             'rows' => $this->rows,

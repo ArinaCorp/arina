@@ -5,7 +5,7 @@
  *
  * @var $this \yii\web\View
  *
- * @var $year \app\modules\directories\models\StudyYear
+ * @var $year \app\modules\directories\models\study_year\StudyYear
  * @var $years array
  * @var $week integer
  * @var $weeks array
@@ -47,6 +47,7 @@ jQuery('.calendar-widget [name="year"]').on('change', function () {
             if (data.success) {
                 notify(data.message);
                 jQuery('.calendar-widget-year-title').text(select.find('[value="'+id+'"]').text());
+                jQuery('body').trigger('calendar.change');
             }
         }
     });
@@ -64,6 +65,7 @@ jQuery('.calendar-widget [name="week"]').on('change', function () {
             if (data.success) {
                 notify(data.message);
                 jQuery('.calendar-widget-week-title').text(week);
+                jQuery('body').trigger('calendar.change');
             }
         }
     });

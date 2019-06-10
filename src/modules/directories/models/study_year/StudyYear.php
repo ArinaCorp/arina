@@ -130,7 +130,7 @@ class StudyYear extends ActiveRecord
     /**
      * @return StudyYear|static
      */
-    public static function getActiveYear()
+    public static function getActive()
     {
         return self::findOne(['active' => self::ACTIVE]);
     }
@@ -141,9 +141,9 @@ class StudyYear extends ActiveRecord
      * Set new year as current
      * @return bool
      */
-    public function setCurrent()
+    public function setActive()
     {
-        $currentYear = StudyYear::getCurrentYear();
+        $currentYear = StudyYear::getActive();
         $currentYear->active = self::INACTIVE;
         $currentYear->save();
 

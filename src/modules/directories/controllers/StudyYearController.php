@@ -54,7 +54,7 @@ class StudyYearController extends Controller implements IAdminController
             ],
         ]);
 
-        $currentYear = StudyYear::getActiveYear();
+        $currentYear = StudyYear::getActive();
         $studyYears = StudyYear::find()
             ->orderBy(['year_start' => SORT_ASC])
             ->getMap('title');
@@ -85,10 +85,15 @@ class StudyYearController extends Controller implements IAdminController
         }
     }
 
+    /**
+     * @param $id
+     * @return \yii\web\Response
+     * @throws NotFoundHttpException
+     */
     public function actionSetCurrentYear($id)
     {
         $model = $this->findModel($id);
-        if ($model->setCurrent()) {
+        if ($model->setActive()) {
             return $this->asJson([
                 'message' => Yii::t('app', '{study_year} has been set as current study year', ['study_year' => $model->title])
             ]);

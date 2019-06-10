@@ -9,7 +9,7 @@
 namespace app\modules\journal\controllers;
 
 use app\components\DepDropHelper;
-use app\modules\directories\models\StudyYear;
+use app\modules\directories\models\study_year\StudyYear;
 use app\modules\journal\models\record\JournalMark;
 use app\modules\journal\models\record\JournalRecord;
 use app\modules\load\models\Load;

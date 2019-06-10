@@ -2,7 +2,7 @@
 
 namespace app\modules\load\models;
 
-use app\modules\directories\models\StudyYear;
+use app\modules\directories\models\study_year\StudyYear;
 use app\modules\directories\models\subject_relation\SubjectRelation;
 use app\modules\employee\models\Employee;
 use app\modules\journal\models\evaluation\EvaluationSystem;

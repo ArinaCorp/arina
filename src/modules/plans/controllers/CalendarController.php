@@ -4,6 +4,7 @@ namespace app\modules\plans\controllers;
 
 use app\modules\directories\models\study_year\StudyYear;
 use app\modules\plans\components\Calendar;
+use app\modules\plans\models\WorkPlan;
 use app\modules\rbac\filters\AccessControl;
 use nullref\core\interfaces\IAdminController;
 use Yii;
@@ -82,5 +83,23 @@ class CalendarController extends Controller implements IAdminController
             return $this->redirect(Yii::$app->request->referrer ?? Yii::$app->homeUrl);
         }
         throw new BadRequestHttpException();
+    }
+
+    /**
+     * @param int $work_plan_id
+     * @param int $course
+     * @return string
+     */
+    public function actionInfo($work_plan_id = 1, $course = 1)
+    {
+        $workPlan = WorkPlan::findOne(['id' => $work_plan_id]);
+        $semester = $this->_calendar->getCurrentSemester($workPlan, $course);
+
+        return $this->render('info', [
+            'workPlan' => $workPlan,
+            'course' => $course,
+            'semester' => $semester,
+            'week' => $this->_calendar->getCurrentWeek(),
+        ]);
     }
 }

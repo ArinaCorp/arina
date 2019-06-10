@@ -3,8 +3,8 @@
 namespace app\modules\load\controllers;
 
 use app\components\DepDropHelper;
-use app\modules\directories\models\StudyYear;
-use app\modules\directories\models\StudyYearSearch;
+use app\modules\directories\models\study_year\StudyYear;
+use app\modules\directories\models\study_year\StudyYearSearch;
 use app\modules\employee\models\CyclicCommission;
 use app\modules\load\models\Load;
 use app\modules\load\models\LoadSearch;

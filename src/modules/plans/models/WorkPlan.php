@@ -15,7 +15,7 @@ use yii\data\ActiveDataProvider;
 use yii\behaviors\TimestampBehavior;
 use nullref\useful\behaviors\JsonBehavior;
 
-use app\modules\directories\models\StudyYear;
+use app\modules\directories\models\study_year\StudyYear;
 use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 use app\modules\directories\models\department\Department;
 use app\modules\directories\models\subject\Subject;
@@ -362,7 +362,7 @@ class WorkPlan extends ActiveRecord
     public function getYearTitle()
     {
         if (isset($this->studyYear)) {
-            return $this->studyYear->getFullName();
+            return $this->studyYear->getTitle();
         }
         return '';
     }

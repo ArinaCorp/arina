@@ -1,8 +1,7 @@
 <?php
 
-use yii\helpers\Url;
-
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\web\View;
 
 /**
@@ -12,6 +11,7 @@ use yii\web\View;
  * @var array $list
  * @var array $rows
  * @var array $map
+ * @var boolean $studyPlan
  */
 
 ?>
@@ -72,10 +72,15 @@ use yii\web\View;
         <?php
         $j = 0;
         foreach ($rows as $key => $name): ?>
-            <tr class="line">
-                <td><span><?= $key; ?></span>
+            <tr class="line" data-course-number="<?= $name ?>">
+                <td>
+                    <?php if ($studyPlan): ?>
+                        <span><?= $key; ?></span>
+                    <?php else: ?>
+                        <span><?= $name ?> - <?= $key; ?></span>
+                    <?php endif ?>
                     <input
-                        name="<?= "groups[$name][$j]"; ?>" data-state="<?= $key; ?>" type="hidden"/>
+                        name="<?= "groups[$name][$j]"; ?>" data-state="<?= $name ?> - <?= $key; ?>" type="hidden"/>
                 </td>
                 <?php for ($i = 0; $i < $amount; $i++): ?>
                     <td>
@@ -83,7 +88,9 @@ use yii\web\View;
                             name="<?= "graph[$j][$i]"; ?>"
                             type="button" class="btn"
                             value="<?= Yii::t('plans', $map[$j][$i]); ?>"
-                            data-state="<?= $map[$j][$i]; ?>"/>
+                            data-state="<?= $map[$j][$i]; ?>"
+                            data-week-number="<?= $i+1?>"
+                        />
                     </td>
                 <?php endfor; ?>
             </tr>

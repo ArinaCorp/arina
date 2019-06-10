@@ -11,7 +11,7 @@ use nullref\useful\behaviors\JsonBehavior;
 
 use app\modules\directories\models\subject\Subject;
 use app\modules\employee\models\CyclicCommission;
-use app\modules\directories\models\StudyYear;
+use app\modules\directories\models\study_year\StudyYear;
 
 /**
  * This is the model class for table "work_subject".

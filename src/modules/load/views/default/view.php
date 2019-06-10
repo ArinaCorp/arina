@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @var \app\modules\directories\models\StudyYear $year
+ * @var \app\modules\directories\models\study_year\StudyYear $year
  * @var \yii\data\ActiveDataProvider $dataProvider
  * @var \app\modules\load\models\LoadSearch $model
  * @var \yii\bootstrap\ActiveForm $form

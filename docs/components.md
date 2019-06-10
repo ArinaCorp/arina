@@ -8,6 +8,7 @@ Provide current study week and year for current session
 
 Public methods:
 - `getCurrentYear(): StudyYear`
+- `getCurrentSemester(WorkPlan $workPlan, int $course): int`
 - `getCurrentMonth(): int`
 - `getCurrentWeek(): int`
 

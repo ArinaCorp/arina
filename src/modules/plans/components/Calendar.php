@@ -11,6 +11,7 @@ namespace app\modules\plans\components;
 use app\helpers\GlobalHelper;
 use app\modules\directories\models\study_year\StudyYear;
 use app\modules\plans\components\exceptions\Calendar as CalendarException;
+use app\modules\plans\models\WorkPlan;
 use yii\base\Component;
 use yii\web\Session;
 
@@ -50,7 +51,7 @@ class Calendar extends Component
 
             //If can't find year, try to find active
             if ($year == null) {
-                $year = StudyYear::getActiveYear();
+                $year = StudyYear::getActive();
             }
 
             //If can't find year, try to create it
@@ -162,6 +163,39 @@ class Calendar extends Component
     public function setCurrentWeek($week)
     {
         $this->_session->set(self::CALENDAR_WEEK_NUMBER, $week);
+    }
+
+    /**
+     * @param WorkPlan $workPlan
+     * @param int $course
+     * @return int
+     */
+    public function getCurrentSemester(WorkPlan $workPlan, int $course)
+    {
+        $courseGraph = $workPlan->graph[$course - 1];
+        $currentWeek = $this->getCurrentWeek();
+        $findFirst = false;
+        $findHoliday = false;
+        $findSecond = false;
+        foreach ($courseGraph as $week => $type) {
+            if ($week >= $currentWeek) {
+                break;
+            }
+            if ($type == ' ') {
+                break;
+            }
+            if (($type != 'T') && ($type != 'P') && (!$findFirst)) {
+                $findFirst = true;
+            } elseif (($type == 'H') && ($findFirst) && !$findHoliday) {
+                $findHoliday = true;
+            } elseif (($type == 'T') && ($findFirst) && $findHoliday) {
+                $findSecond = true;
+            }
+        }
+        if ($findSecond) {
+            return 2;
+        }
+        return 1;
     }
 
 

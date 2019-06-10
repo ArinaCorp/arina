@@ -6,7 +6,7 @@
 namespace app\components\exporters;
 
 
-use app\modules\directories\models\StudyYear;
+use app\modules\directories\models\study_year\StudyYear;
 use app\modules\students\models\Group;
 use app\modules\students\models\Student;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
