@@ -3,6 +3,9 @@
 
 namespace app\modules\students\models;
 
+use app\modules\directories\models\department\Department;
+use app\modules\directories\models\speciality\Speciality;
+use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 use nullref\useful\behaviors\RelatedBehavior;
 use voskobovich\linker\LinkerBehavior;
 use Yii;
@@ -47,6 +50,11 @@ use yii\web\UploadedFile;
  * @property StudentSocialNetwork[] $socialNetworks
  * @property StudentSocialNetwork[] $socialNetworksList
  * @property Group[] $groups
+ *
+ * @property SpecialityQualification $specialityQualification
+ * @property Speciality $speciality
+ * @property Department $department
+ *
  *
  *
  * @method loadWithRelations($data, $formName = null)
@@ -463,5 +471,31 @@ class Student extends \yii\db\ActiveRecord
     {
         return $this->getGroups()[0]->getCourse();
     }
+
+    /**
+     * @return SpecialityQualification
+     */
+    public function getSpecialityQualification()
+    {
+        //TODO: Implement a proper "Get current group method"
+        return $this->groups[count($this->groups) - 1]->specialityQualification;
+    }
+
+    /**
+     * @return Speciality
+     */
+    public function getSpeciality()
+    {
+        return $this->specialityQualification->speciality;
+    }
+
+    /**
+     * @return Department
+     */
+    public function getDepartment()
+    {
+        return $this->speciality->department;
+    }
+
 }
 

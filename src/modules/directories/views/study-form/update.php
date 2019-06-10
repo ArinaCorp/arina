@@ -1,16 +1,21 @@
 <?php
 
+use app\modules\directories\models\subject_block\SubjectBlock;
 use yii\helpers\Html;
+use yii\web\View;
 
-/* @var $this yii\web\View */
-/* @var $model app\modules\students\models\SocialNetwork */
+/* @var $this View
+ * @var $model SubjectBlock */
 
-$this->title = Yii::t('app', 'Update Social Network') . ': ' . $model->title;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Social Networks'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->title, 'url' => ['view', 'id' => $model->id]];
+$this->title = Yii::t('app', 'Update study form:') . ' ' . $model->id;
+
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Study forms'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
+
 ?>
-<div class="social-network-update">
+
+<div class="subject-update">
 
     <div class="row">
         <div class="col-lg-12">

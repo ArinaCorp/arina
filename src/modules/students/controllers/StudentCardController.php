@@ -1,20 +1,14 @@
 <?php
 
 namespace app\modules\students\controllers;
-/* @author VasyaKog */
-use yii\filters\VerbFilter;
+
+use app\modules\students\models\StudentCard;
 use yii\web\Controller;
-use app\modules\students\models\StudentSearch;
-use app\modules\students\models\Student;
-use yii\web\NotFoundHttpException;
 
 use nullref\core\interfaces\IAdminController;
 use Yii;
 
-/**
- * Default controller for the `students` module
- */
-class CardController extends Controller implements IAdminController
+class StudentCardController extends Controller implements IAdminController
 {
     /**
      * @inheritdoc
@@ -22,105 +16,50 @@ class CardController extends Controller implements IAdminController
     public function behaviors()
     {
         return [
-            'verbs' => [
-                'class' => VerbFilter::class,
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
+
         ];
     }
 
     /**
-     * Lists all Student models.
+     * Index form.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new StudentSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $model = new StudentCard();
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            return $this->redirect(['student-card/view', 'student_id' => $model->studentId, 'study_year_id' => $model->studyYearId]);
+        }
 
         return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+            'model' => $model,
         ]);
     }
 
     /**
-     * Displays a single Student model.
-     * @param integer $id
-     * @return mixed
+     * Generate and view the student card.
+     * @param $student_id
+     * @param $study_year_id
+     * @return string
      */
-    public function actionView($id)
+    public function actionView($student_id, $study_year_id)
     {
+        $model = new StudentCard(['studentId' => $student_id, 'studyYearId' => $study_year_id]);
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 
     /**
-     * Creates a new Student model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
+     * Export the generated card.
+     * @param $student_id
+     * @param $study_year_id
      */
-    public function actionCreate()
+    public function actionExport($student_id, $study_year_id)
     {
-        $model = new Student();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    /**
-     * Updates an existing Student model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    /**
-     * Deletes an existing Student model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
-    }
-
-    /**
-     * Finds the Student model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return Student the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = Student::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
+        $model = new StudentCard(['studentId' => $student_id, 'studyYearId' => $study_year_id]);
+        $model->getDocument();
     }
 }

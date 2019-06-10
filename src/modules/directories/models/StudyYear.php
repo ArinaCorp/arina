@@ -17,6 +17,9 @@ use yii\db\ActiveRecord;
  * @property integer $year_start
  * @property integer $active
  *
+ * @property string $fullName
+ * @property string $title
+ *
  * @property WorkPlan[] $workPlans
  * @property Load[] $loads
  */

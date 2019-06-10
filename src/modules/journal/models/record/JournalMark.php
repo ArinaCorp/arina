@@ -5,6 +5,8 @@ namespace app\modules\journal\models\record;
 use app\modules\journal\models\evaluation\Evaluation;
 use app\modules\journal\models\evaluation\EvaluationSystem;
 use app\modules\journal\models\presence\NotPresenceType;
+use app\modules\load\models\Load;
+use app\modules\plans\models\WorkSubject;
 use app\modules\students\models\Student;
 use Yii;
 use yii\bootstrap\Html;
@@ -25,8 +27,10 @@ use yii\bootstrap\Html;
  * @property string $retake_ticket
  * @property string $retake_date
  * @property string $comment
- * @property integer $value
  *
+ * @property int $value
+ * @property string $valueLiteral
+ * @property string $valueScale
  * @property Evaluation $evaluation
  * @property EvaluationSystem $evaluationSystem
  * @property Evaluation $retakeEvaluation
@@ -34,6 +38,8 @@ use yii\bootstrap\Html;
  * @property JournalRecord $journalRecord
  * @property Student $student
  * @property NotPresenceType $reason
+ *
+ * @property WorkSubject $workSubject
  */
 class JournalMark extends \yii\db\ActiveRecord
 {
@@ -126,6 +132,15 @@ class JournalMark extends \yii\db\ActiveRecord
         }
     }
 
+    /**
+     * Value shortcut
+     * @return string
+     */
+    public function getValue()
+    {
+        return $this->evaluation->value;
+    }
+
     public function getEvaluation()
     {
         return $this->hasOne(Evaluation::class, ['id' => 'evaluation_id']);
@@ -213,5 +228,70 @@ class JournalMark extends \yii\db\ActiveRecord
         $evaluations = Evaluation::getListBySystem($evaluation_system_id);
         $evaluations[null] = Yii::t('app', 'Not defined');
         return $evaluations;
+    }
+
+    /**
+     * @return \app\modules\plans\models\WorkSubject
+     */
+    public function getWorkSubject()
+    {
+        return Load::findOne($this->journalRecord->load_id)->workSubject;
+    }
+
+    public function getValueLiteral()
+    {
+        //TODO: Put somewhere to utilize better? And prob. make it localized
+        $markDict = [
+            '2' => 'два',
+            '3' => 'три',
+            '4' => 'чотири',
+            '5' => 'п\'ять',
+            '6' => 'шість',
+            '7' => 'сім',
+            '8' => 'вісім',
+            '9' => 'дев\'ять',
+            '10' => 'десять',
+            '11' => 'одинадцять',
+            '12' => 'дванадцять',
+        ];
+        return $markDict[$this->value];
+    }
+
+    public function getValueScale()
+    {
+        //TODO: Put somewhere to utilize better? And prob. make it localized
+        //TODO: How to detect the system? Or is it constant?
+        if ($this->evaluation->system_id == 1) {
+            if ($this->value == 2) {
+                return 'незадовільно';
+            }
+            if ($this->value == 3) {
+                return 'задовільно';
+            }
+            if ($this->value == 4) {
+                return 'добре';
+            }
+            if ($this->value == 5) {
+                return 'відмінно';
+            }
+            return 'peacedata';
+        }
+        //TODO: Check this shit(?)
+        if ($this->evaluation->system_id == 2) {
+            if ($this->value < 5) {
+                return 'незадовільно';
+            }
+            if ($this->value < 7) {
+                return 'задовільно';
+            }
+            if ($this->value < 10) {
+                return 'добре';
+            }
+            if ($this->value < 13) {
+                return 'відмінно';
+            }
+            return 'peacedata';
+        }
+        return 'peacedeath';
     }
 }
