@@ -4,7 +4,7 @@ namespace app\modules\students\models;
 
 use app\components\ExportToExcel;
 use app\modules\directories\models\speciality_qualification\SpecialityQualification;
-use app\modules\directories\models\StudyYear;
+use app\modules\directories\models\study_year\StudyYear;
 use app\modules\employee\models\Employee;
 use Yii;
 use yii\bootstrap\Html;
@@ -383,7 +383,8 @@ class Group extends ActiveRecord
             $year = StudyYear::findOne(['id' => $yearId]);
         }
         if (!isset($year)) {
-            $year = StudyYear::getCurrentYear();
+            //TODO refactor it
+            $year = Yii::$app->get('calendar')->getCurrentYear();
         }
         //TODO: remove later
 //        var_dump($year->getYearEnd());

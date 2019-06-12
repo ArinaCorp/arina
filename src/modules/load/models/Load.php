@@ -2,12 +2,13 @@
 
 namespace app\modules\load\models;
 
-use app\modules\directories\models\StudyYear;
+use app\modules\directories\models\study_year\StudyYear;
 use app\modules\directories\models\subject_relation\SubjectRelation;
 use app\modules\employee\models\Employee;
 use app\modules\journal\models\evaluation\EvaluationSystem;
 use app\modules\journal\models\record\JournalRecord;
 use app\modules\journal\models\record\JournalRecordType;
+use app\modules\plans\models\WorkPlan;
 use app\modules\plans\models\WorkSubject;
 use app\modules\students\models\Group;
 use nullref\useful\JsonBehavior;

@@ -4,7 +4,7 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model app\modules\directories\models\StudyYear */
+/* @var $model app\modules\directories\models\study_year\StudyYear */
 
 $this->title = Yii::t('app', 'Adding new study year');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Study years list' ), 'url' => ['index']];

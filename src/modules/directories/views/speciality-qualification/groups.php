@@ -28,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php $form = \yii\widgets\ActiveForm::begin() ?> ?>
     <?= \kartik\select2\Select2::widget([
         'name' => 'year_id',
-        'data' => \app\modules\directories\models\StudyYear::getYearList(),
+        'data' => \app\modules\directories\models\study_year\StudyYear::getYearList(),
     ]); ?>
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

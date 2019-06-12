@@ -1,15 +1,12 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: wenceslaus
- * Date: 5/21/18
- * Time: 7:36 PM
+ *
  */
 
 namespace app\components\exporters;
 
 
-use app\modules\directories\models\StudyYear;
+use app\modules\directories\models\study_year\StudyYear;
 use app\modules\students\models\Group;
 use app\modules\students\models\Student;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -27,7 +24,7 @@ class ExportGroup
     {
         $spreadsheet->setActiveSheetIndex(0);
         $spreadsheet->getActiveSheet()->SetCellValue('B2', $group->title);
-        $spreadsheet->getActiveSheet()->SetCellValue('B3', StudyYear::getCurrentYear()->fullName . " навчального року");
+        $spreadsheet->getActiveSheet()->SetCellValue('B3', Yii::$app->get('calendar')->getCurrentYear()->fullName . " навчального року");
         /**
          * @var Student[] $students
          */

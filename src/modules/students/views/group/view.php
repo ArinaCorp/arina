@@ -114,7 +114,7 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
         [
             'attribute' => 'created_study_year_id',
-            'value' => $model->studyYear->getFullName(),
+            'value' => $model->studyYear->getTitle(),
         ],
         'number_group',
         [
@@ -175,7 +175,6 @@ $this->params['breadcrumbs'][] = $this->title;
     ?>
 
 </div>
-
 
 <div class="dialog-window" id="attestation-window" style="display: none">
     <?php $form = ActiveForm::begin(['action' => ['attestation']]); ?>

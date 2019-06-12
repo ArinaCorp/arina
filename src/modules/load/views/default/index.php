@@ -1,6 +1,6 @@
 <?php
 
-use app\modules\directories\models\StudyYear;
+use app\modules\directories\models\study_year\StudyYear;
 use app\modules\load\models\LoadSearch;
 use yii\data\ActiveDataProvider;
 use yii\grid\ActionColumn;
@@ -47,7 +47,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => Yii::t('app', 'Study year'),
                 'format' => 'raw',
                 'value' => function (StudyYear $model, $key, $index, $widget) {
-                    return $model->getFullName();
+                    return $model->getTitle();
                 }
             ],
             [

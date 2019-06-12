@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\directories\models;
+namespace app\modules\directories\models\study_year;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
@@ -55,8 +55,6 @@ class StudyYearSearch extends StudyYear
             'active' => $this->active,
         ]);
 
-        echo $query->createCommand()->rawSql;
-        die;
         return $dataProvider;
     }
 }
