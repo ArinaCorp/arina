@@ -1,7 +1,7 @@
 <?php
 
 use app\modules\directories\models\speciality_qualification\SpecialityQualification;
-use app\modules\directories\models\StudyYear;
+use app\modules\directories\models\study_year\StudyYear;
 use app\modules\plans\models\StudyPlan;
 use app\modules\plans\models\WorkPlan;
 use kartik\select2\Select2;

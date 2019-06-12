@@ -5,7 +5,7 @@ namespace app\modules\directories\controllers;
 use nullref\core\interfaces\IAdminController;
 use nullref\core\interfaces\IAdminModule;
 use Yii;
-use app\modules\directories\models\StudyYear;
+use app\modules\directories\models\study_year\StudyYear;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -42,7 +42,7 @@ class StudyYearController extends Controller implements IAdminController
         ]);
         $dataProvider->setSort([
             'attributes' => [
-                'fullName' => [
+                'title' => [
                     'asc' => [
                         'year_start' => SORT_ASC,
                     ],
@@ -54,8 +54,15 @@ class StudyYearController extends Controller implements IAdminController
             ],
         ]);
 
+        $currentYear = StudyYear::getActive();
+        $studyYears = StudyYear::find()
+            ->orderBy(['year_start' => SORT_ASC])
+            ->getMap('title');
+
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+            'currentYear' => $currentYear,
+            'studyYears' => $studyYears
         ]);
     }
 
@@ -75,6 +82,37 @@ class StudyYearController extends Controller implements IAdminController
             return $this->render('create', [
                 'model' => $model,
             ]);
+        }
+    }
+
+    /**
+     * @param $id
+     * @return \yii\web\Response
+     * @throws NotFoundHttpException
+     */
+    public function actionSetCurrentYear($id)
+    {
+        $model = $this->findModel($id);
+        if ($model->setActive()) {
+            return $this->asJson([
+                'message' => Yii::t('app', '{study_year} has been set as current study year', ['study_year' => $model->title])
+            ]);
+        }
+    }
+
+    /**
+     * Finds the StudyYear model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param integer $id
+     * @return StudyYear the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModel($id)
+    {
+        if (($model = StudyYear::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
 
@@ -108,21 +146,5 @@ class StudyYearController extends Controller implements IAdminController
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
-    }
-
-    /**
-     * Finds the StudyYear model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return StudyYear the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = StudyYear::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
     }
 }

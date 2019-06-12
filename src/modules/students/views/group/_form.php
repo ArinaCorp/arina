@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\select2\Select2;
 use app\modules\directories\models\speciality_qualification\SpecialityQualification;
-use app\modules\directories\models\StudyYear;
+use app\modules\directories\models\study_year\StudyYear;
 use kartik\touchspin\TouchSpin;
 
 /* @var $this yii\web\View */

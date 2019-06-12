@@ -87,6 +87,9 @@ $config = [
             'channel' => 'default',
             'mutex' => \yii\mutex\MysqlMutex::class,
         ],
+        'calendar' => [
+            'class' => \app\modules\plans\components\Calendar::class,
+        ],
     ],
     'modules' => $modules,
     'params' => $params,

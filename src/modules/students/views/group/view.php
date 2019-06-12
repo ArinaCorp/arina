@@ -60,7 +60,7 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
         [
             'attribute' => 'created_study_year_id',
-            'value' => $model->studyYear->getFullName(),
+            'value' => $model->studyYear->getTitle(),
         ],
         'number_group',
         [

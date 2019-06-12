@@ -8,19 +8,41 @@
 
 namespace app\modules\journal\controllers;
 
-use app\modules\directories\models\StudyYear;
+use app\components\DepDropHelper;
+use app\modules\directories\models\study_year\StudyYear;
 use app\modules\journal\models\record\JournalMark;
 use app\modules\journal\models\record\JournalRecord;
 use app\modules\load\models\Load;
+use app\modules\plans\models\WorkPlan;
+use app\modules\plans\components\Calendar;
 use app\modules\rbac\filters\AccessControl;
+use app\modules\user\helpers\UserHelper;
 use app\modules\user\models\User;
 use nullref\core\interfaces\IAdminController;
 use Yii;
+use yii\base\Module;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 
 class MarksAccountingController extends Controller implements IAdminController
 {
+    /** @var Calendar */
+    protected $_calendar;
+
+    /**
+     * MarksAccountingController constructor.
+     * @param string $id
+     * @param Module $module
+     * @param Calendar $calendar
+     * @param array $config
+     */
+    public function __construct(string $id, Module $module, Calendar $calendar, array $config = [])
+    {
+        $this->_calendar = $calendar;
+        parent::__construct($id, $module, $config);
+    }
+
     /**
      * @inheritdoc
      */
@@ -44,19 +66,29 @@ class MarksAccountingController extends Controller implements IAdminController
         ];
     }
 
+    /**
+     * @param null $load_id
+     * @return string
+     * @throws \app\modules\plans\components\exceptions\Calendar
+     */
     public function actionIndex($load_id = null)
     {
         /** @var User $user */
         $user = Yii::$app->user->identity;
 
-        $current_year = StudyYear::getCurrentYear();
-        $loads = Load::find()
-            ->joinWith('workSubject.subject')
-            ->joinWith('group')
-            ->where([
-                'employee_id' => $user->employee_id,
-                'study_year_id' => $current_year->id,
-            ])->getMap('fullTitle');
+        $loads = [];
+
+        $isTeacher = UserHelper::hasRole($user, 'teacher');
+        if ($isTeacher) {
+            $current_year = $this->_calendar->getCurrentYear();
+            $loads = Load::find()
+                ->joinWith('workSubject.subject')
+                ->joinWith('group')
+                ->where([
+                    'employee_id' => $user->employee_id,
+                    'study_year_id' => $current_year->id,
+                ])->getMap('fullTitle');
+        }
 
         $marks = [];
 
@@ -67,12 +99,12 @@ class MarksAccountingController extends Controller implements IAdminController
 
         $load->employee_id = $user->employee_id;
 
-        $record = JournalRecord::create($load->id, $user->employee_id);
+        $record = JournalRecord::create($load->id, $user->id);
 
         if (Yii::$app->request->isPost) {
             //@TODO save with validation
             if ($record->load(Yii::$app->request->post()) && $record->save(false)) {
-                $record = JournalRecord::create($load->id, $user->employee_id);
+                $record = JournalRecord::create($load->id, $user->id);
             }
         }
 
@@ -100,13 +132,42 @@ class MarksAccountingController extends Controller implements IAdminController
                 }
             }
         }
-
         return $this->render('index', [
+            'isTeacher' => $isTeacher,
             'loads' => $loads,
             'load' => $load,
             'record' => $record,
             'marks' => $marks
         ]);
+    }
+
+    public function actionGetGroups()
+    {
+        if ($parents = Yii::$app->request->post('depdrop_parents')) {
+            if ($parents) {
+                $work_plan_id = $parents[0];
+                $groups = WorkPlan::findOne(['id' => $work_plan_id])->specialityQualification->groups;
+                $out = DepDropHelper::convertMap(ArrayHelper::map($groups, 'id', 'title'));
+                return $this->asJson(['output' => $out, 'selected' => Yii::t('app', 'Select group')]);
+            }
+        }
+        return $this->asJson(['output' => '', 'selected' => '']);
+    }
+
+    public function actionGetLoads()
+    {
+        if ($parents = Yii::$app->request->post('depdrop_parents')) {
+            if ($parents) {
+                $work_plan_id = empty($parents[0]) ? null : $parents[0];
+                $group_id = empty($parents[1]) ? null : $parents[1];
+                if ($work_plan_id && $group_id) {
+                    $items = Load::find()->byWorkPlanForGroup($work_plan_id, $group_id)->getMap('workSubject.title');
+                    $out = DepDropHelper::convertMap($items);
+                    return $this->asJson(['output' => $out, 'selected' => Yii::t('app', 'Select load')]);
+                }
+            }
+        }
+        return $this->asJson(['output' => '', 'selected' => '']);
     }
 
     public function actionCreateMark()

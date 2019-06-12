@@ -3,8 +3,8 @@
 namespace app\modules\load\controllers;
 
 use app\components\DepDropHelper;
-use app\modules\directories\models\StudyYear;
-use app\modules\directories\models\StudyYearSearch;
+use app\modules\directories\models\study_year\StudyYear;
+use app\modules\directories\models\study_year\StudyYearSearch;
 use app\modules\employee\models\CyclicCommission;
 use app\modules\load\models\Load;
 use app\modules\load\models\LoadSearch;
@@ -151,7 +151,6 @@ class DefaultController extends Controller implements IAdminController
         $students[2] = $group->getCountByPayment(2);
         $model->students = $students;
         $model->save();
-        print_r($model->errors);
     }
 
     /**

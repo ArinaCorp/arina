@@ -132,6 +132,14 @@
     width: 100%;
 }
 
+.user-login .login-panel {
+    margin-top: 50px;
+}
+
+.calendar-widget {
+    padding: 10px 15px;
+}
+
 .fw-normal{
     font-weight: normal;
 }

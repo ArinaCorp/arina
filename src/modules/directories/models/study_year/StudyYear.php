@@ -1,11 +1,13 @@
 <?php
 
-namespace app\modules\directories\models;
+namespace app\modules\directories\models\study_year;
 
 use app\modules\directories\models\speciality_qualification\SpecialityQualification;
+use app\modules\directories\models\study_year\StudyYearQuery;
 use app\modules\load\models\Load;
 use app\modules\plans\models\WorkPlan;
 use nullref\useful\traits\Mappable;
+use phpDocumentor\Reflection\Types\Self_;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
@@ -16,6 +18,7 @@ use yii\db\ActiveRecord;
  * @property integer $id
  * @property integer $year_start
  * @property integer $active
+ * @property string $title
  *
  * @property string $fullName
  * @property string $title
@@ -26,6 +29,9 @@ use yii\db\ActiveRecord;
 class StudyYear extends ActiveRecord
 {
     use Mappable;
+
+    const ACTIVE = 1;
+    const INACTIVE = 0;
 
     /**
      * @inheritdoc
@@ -42,9 +48,14 @@ class StudyYear extends ActiveRecord
     {
         return [
             ['year_start', 'required'],
-            [['year_start'], 'integer'],
+            ['year_start', 'integer'],
             ['active', 'boolean'],
         ];
+    }
+
+    public static function find()
+    {
+        return new StudyYearQuery(get_called_class());
     }
 
     /**
@@ -64,9 +75,9 @@ class StudyYear extends ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'year_start' => Yii::t('app', 'Start of the study year'),
-            'yearend' => Yii::t('app', 'End of the study year'),
+            'yearEnd' => Yii::t('app', 'End of the study year'),
             'active' => Yii::t('app', 'Current'),
-            'fullName' => Yii::t('app', 'Study year'),
+            'title' => Yii::t('app', 'Study year'),
         ];
     }
 
@@ -88,14 +99,6 @@ class StudyYear extends ActiveRecord
     }
 
     /**
-     * @return ActiveQuery
-     */
-    public static function find()
-    {
-        return parent::find();
-    }
-
-    /**
      * @return array
      */
     public static function getYearList()
@@ -106,17 +109,9 @@ class StudyYear extends ActiveRecord
             /**
              * @var StudyYear $studyYear
              */
-            $items[$studyYear->id] = $studyYear->getFullName();
+            $items[$studyYear->id] = $studyYear->getTitle();
         }
         return $items;
-    }
-
-    /**
-     * @return string
-     */
-    public function getFullName()
-    {
-        return $this->year_start . '/' . $this->getYearEnd();
     }
 
     /**
@@ -138,10 +133,25 @@ class StudyYear extends ActiveRecord
     /**
      * @return StudyYear|static
      */
-    public static function getCurrentYear()
+    public static function getActive()
     {
-        $cur_year = self::findOne(['active' => 1]);
-        return $cur_year;
+        return self::findOne(['active' => self::ACTIVE]);
+    }
+
+    /**
+     * Reassignment current year
+     * Get previous current year and set its inactive
+     * Set new year as current
+     * @return bool
+     */
+    public function setActive()
+    {
+        $currentYear = StudyYear::getActive();
+        $currentYear->active = self::INACTIVE;
+        $currentYear->save();
+
+        $this->active = self::ACTIVE;
+        return $this->save();
     }
 
     /**

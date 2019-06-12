@@ -1,6 +1,6 @@
 <?php
 
-use app\modules\directories\models\StudyYear;
+use app\modules\directories\models\study_year\StudyYear;
 use kartik\select2\Select2;
 use yii\helpers\Html;
 use yii\web\View;

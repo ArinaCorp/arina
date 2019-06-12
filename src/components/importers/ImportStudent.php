@@ -1,15 +1,12 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: vyach
- * Date: 19.03.2019
- * Time: 17:10
+ *
  */
 
 namespace app\components\importers;
 
 use app\modules\directories\models\speciality_qualification\SpecialityQualification;
-use app\modules\directories\models\StudyYear;
+use app\modules\directories\models\study_year\StudyYear;
 use app\modules\students\models\CsvImportDocument as Document;
 use app\modules\students\models\CsvImportDocumentItem as DocumentItem;
 use app\modules\students\models\Student;
@@ -205,7 +202,7 @@ class ImportStudent
                 'target' => 'course',
                 'label' => 'Курс',
                 'value' => function ($line) {
-                    $currentYear = StudyYear::getCurrentYear()->year_start;
+                    $currentYear = StudyYear::getActiveYear()->year_start;
                     $startYear = date('Y', strtotime($line[15]));
                     return $currentYear - $startYear;
                 }
