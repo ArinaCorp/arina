@@ -5,12 +5,7 @@ namespace app\components\exporters;
 
 use app\modules\directories\models\subject\Subject;
 use app\modules\employee\models\Employee;
-use app\modules\employee\models\Teacher;
-use app\modules\plans\models\StudyPlan;
 use app\modules\students\models\Group;
-use app\modules\students\models\Student;
-use DateTime;
-use Mpdf\Tag\Em;
 use PhpOffice\PhpSpreadsheet;
 use Yii;
 use app\components\ExportHelpers;
@@ -29,7 +24,7 @@ class ExportCredit
         $spreadsheet->setActiveSheetIndex(0);
         $cursor = $spreadsheet->getActiveSheet();
         $subject = Subject::findOne(['id' => $data["data"]["subject_id"]]);
-        $specialnist = Group::findOne(['id' => $data["data"]["group_id"]])->specialityQualification->speciality->title;
+        $speciality = Group::findOne(['id' => $data["data"]["group_id"]])->specialityQualification->speciality->title;
         $semester = ExportHelpers::ConvertToRoman($data["data"]["semester"]);
         $group = Group::findOne(['id' => $data["data"]["group_id"]])->title;
         /**
@@ -44,7 +39,7 @@ class ExportCredit
         $teachers = join($teachers_list, ", ");
 
         $cursor->setCellValue("J101", $subject->title);
-        $cursor->setCellValue("J102", $specialnist);
+        $cursor->setCellValue("J102", $speciality);
         $cursor->setCellValue("J103", $semester);
         $cursor->setCellValue("J104", round($data["data"]["semester"]/2));
         $cursor->setCellValue("J105", $group);
@@ -55,7 +50,7 @@ class ExportCredit
         $students = $group->getStudentsArray();
         $failed_students = 0;
         $avg = 0;
-        $subjects = [$subject];
+        $subjects = [['subject'=>$subject]];
         $student_mark = [];
         if ($data["data"]['marks_checker']) {
             $student_mark = ExportHelpers::getMarks($subjects, $students);
@@ -93,7 +88,7 @@ class ExportCredit
         }
         $cursor->removeRow($current);
         $cursor->removeRow($current);
-        $cursor->setCellValue("G${current}", count($student_mark) != 0 ? (round($avg /  count($student_mark), 2)):"");
+        $cursor->setCellValue("F${current}", count($student_mark) != 0 ? (round($avg /  count($student_mark), 2)):"");
         $quality = count($student_mark) != 0 ? (round((count($students) - $count[2]) / count($student_mark) * 100, 2)) : "  ";
         $success_rate = count($student_mark) != 0 ? (round((count($students) - $count[0]) / count($student_mark) * 100, 2)) : "  ";;
         $current += 2;

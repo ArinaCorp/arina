@@ -509,4 +509,13 @@ return [
     'Week' => 'Тиждень',
     '{study_year} has been set as current study year' => '{study_year} - встановлений поточним навчальним роком',
     'Marks accounting' => 'Облік успішності',
+    'Choose start date' => 'Початкова дата',
+    'Choose finish date' => 'Кінцева дата',
+    'Marks' => 'Оцінки',
+    'With marks' => 'З оцінками',
+    'Without marks' => 'Без оцінок',
+    'Fifth'=>'П\'ятий',
+    'Sixth'=>'Шостий',
+    'Seventh'=>'Сьомий',
+    'Eighth'=>'Восьмий'
 ];

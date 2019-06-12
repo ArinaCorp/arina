@@ -182,7 +182,15 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="dialog-header text-left"><h4><?= Yii::t('app', 'Attestation note') ?></h4></div>
         <div class="dialog-content">
 
-            <?= $form->field($exportParams, 'semester')->textInput(['placeholder' => 'Семестр', 'class' => 'dialog-input form-control text-center', 'type' => 'number'])->label(false) ?>
+            <?= $form->field($exportParams, 'semester')->widget(Select2::class, [
+                'data' => ExportHelpers::getSemesterList(),
+                'options' => [
+                    'placeholder' => Yii::t('app', 'Input semester'),
+                    'id' => 'att-sem',
+                    'class' => 'dialog-input form-control text-center',
+                ]
+            ])->label(false) ?>
+
             <?= $form->field($exportParams, 'dateFrom')->widget(DatePicker::class, [
                 'options' => [
                     'placeHolder' => Yii::t('app', 'Choose start date'),
@@ -273,7 +281,15 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="dialog-card">
         <div class="dialog-header text-left"><h4><?= Yii::t('app', 'Semester note') ?></h4></div>
         <div class="dialog-content">
-            <?= $form->field($exportParams, 'semester')->textInput(['placeholder' => Yii::t('app', 'Input semester'), 'class' => 'dialog-input text-center form-control', 'type' => 'number'])->label(false) ?>
+            <?= $form->field($exportParams, 'semester')->widget(Select2::class, [
+                'data' => ExportHelpers::getSemesterList(),
+                'options' => [
+                    'placeholder' => Yii::t('app', 'Input semester'),
+                    'id' => 'sem-sem',
+                    'class' => 'dialog-input form-control text-center',
+                ]
+            ])->label(false) ?>
+
             <?= $form->field($exportParams, 'dateFrom')->widget(DatePicker::class, [
                 'options' => [
                     'placeHolder' => Yii::t('app', 'Choose start date'),

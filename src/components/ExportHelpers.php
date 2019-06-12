@@ -4,6 +4,7 @@
 namespace app\components;
 
 
+use app\modules\plans\models\StudySubject;
 use codemix\excelexport\ActiveExcelSheet;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Color;
@@ -78,12 +79,15 @@ class ExportHelpers
     {
         $marks = [];
         $range = [2, 5, 4, 5, 3, 4, 5, 3, 4, 5, 3];
+//        var_dump($subjects[0]);die;
         foreach ($subjects as $subject) {
             foreach ($students as $student) {
+                $subject_type = isset($subject['type'])? $subject['type'] : "NaN";
                 array_push($marks, [
                     'value' => $range[array_rand($range)],
-                    'subject_id' => $subject->id,
-                    'student_id' => $student->id
+                    'subject_id' => $subject['subject']->id,
+                    'student_id' => $student->id,
+                    'type'=>$subject_type
                 ]);
             }
         }

@@ -51,10 +51,9 @@ class ExportAttestation
             foreach ($studyPlan->studySubjects as $item) {
                 if ($item->weeks[$semester - 1] != 0) {
                     array_push($subject_titles, $item->subject->title);
-                    array_push($subjects, $item->subject);
+                    array_push($subjects, ['subject'=>$item->subject]);
                 }
             }
-            $student_mark = ExportHelpers::getMarks($subjects, $students);
             if (count($subject_titles) != 0) {
                 $excel->setCellValue('A300', $romanSemester);
                 $excel->setCellValue('A301', Date('d.m', strtotime($data['data']['dateFrom'])));
@@ -99,13 +98,14 @@ class ExportAttestation
                     $count = [0, 0, 0];
 
                     if ($data["data"]['marks_checker']) {
+                        $student_mark = ExportHelpers::getMarks($subjects, $students);
                         $current = $startRow;
                         foreach ($students as $student) {
                             $letter = "C";
                             $avg = 0;
                             foreach ($subjects as $subject) {
                                 foreach ($student_mark as $mark) {
-                                    if ($mark["student_id"] == $student->id && $mark["subject_id"] == $subject->id) {
+                                    if ($mark["student_id"] == $student->id && $mark["subject_id"] == $subject['subject']->id) {
                                         $cords = "${letter}${current}";
                                         $excel->setCellValue($cords, $mark["value"]);
                                         $avg += $mark["value"];
