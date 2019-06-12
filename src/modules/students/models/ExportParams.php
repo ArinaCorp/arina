@@ -4,17 +4,24 @@
 namespace app\modules\students\models;
 
 
+use DateTime;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 use Yii;
 
 class ExportParams extends \yii\base\Model
 {
     public $plan_id;
     public $semester;
-    public $date;
+    public $dateFrom;
+    public $dateTo;
+    public $year;
     public $subject_id;
     public $course;
     public $teachers_id;
     public $group_id;
+    public $plan;
+    public $marks_checker;
+
     public function rules()
     {
         return [
@@ -26,8 +33,9 @@ class ExportParams extends \yii\base\Model
             ['course','integer','max' => 4, 'min'=>1,
                 'tooBig'=>Yii::t('app','Course value must be >1 and <4'),
                 'tooSmall'=>Yii::t('app','Course value must be >1 and <4')],
-            [['group_id','course','subject_id','plan_id'],'required'],
-            [['date'],'string'],
+            [['group_id','course','subject_id','plan_id','plan'],'required'],
+            [['date-from','date-to','year'],'date'],
+            [['marks_checker'],'boolean'],
             ['teachers_id', 'each', 'rule' => ['integer']],
         ];
     }
@@ -35,11 +43,12 @@ class ExportParams extends \yii\base\Model
     {
         return [
             'semester' => Yii::t('app', 'Semester'),
-            'date' => Yii::t('app', 'Date'),
             'course' => Yii::t('app', 'Course'),
             'teachers_id' => Yii::t('app', 'Teachers'),
             'subject_id' => Yii::t('app', 'Subject'),
             'plan_id' => Yii::t('app', 'Plan'),
+            'marks_checker'=>Yii::t('app', 'Marks'),
         ];
     }
+
 }

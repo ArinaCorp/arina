@@ -249,21 +249,22 @@ class DefaultController extends Controller implements IAdminController
         $search = new StudentSearch();
         $students = null;
         $parameters = null;
-
+        $model = [];
+        $model['student_id'] = NULL;
         /* submit with links*/
-        if (!is_null($params["student_id"])) {
+        if (isset($params["student_id"])) {
             $parameters = $params["search"]["StudentSearch"];
             $students = $search->search($params["search"]);
-        }else{
-            $students = $search->search($params);
-            $parameters = $params["StudentSearch"];
+            $model['student_id'] = $params["student_id"];
+            array_push($model, ['student_id' => $params["student_id"]]);
+        } else {
+            $students = $search->search($params["search"]);
+            if (isset($params['search']["StudentSearch"])) {
+                $parameters = $params['search']["StudentSearch"];
+            }
         }
-
-        $model = [
-            'students' => $students,
-            'parameters' => $parameters,
-            'student_id'=>$params["student_id"],
-        ];
+        $model['students'] = $students;
+        $model['parameters'] = $parameters;
         ExportToExcel::getDocument('filteredStudents', $model);
     }
 }

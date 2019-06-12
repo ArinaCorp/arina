@@ -524,7 +524,19 @@ class StudentsHistory extends ActiveRecord
             'information' => Yii::t('app', 'Information'),
         ];
     }
-
+    /**
+     * @param $groupIds
+     * @return array
+     */
+    public static function getActiveStudentsIdsByGroups($groupIds)
+    {
+        return self::find()
+            ->select('students_history.student_id')
+            ->andWhere(['students_history.action_type' => StudentsHistory::$TYPE_INCLUDE])
+            ->andWhere(['students_history.group_id' => $groupIds])
+            ->groupBy('students_history.student_id')
+            ->column();
+    }
     public function beforeSave($insert)
     {
         if (parent::beforeSave($insert)) {

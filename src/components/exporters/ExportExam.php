@@ -24,35 +24,32 @@ class ExportExam
      * @return PhpSpreadsheet\Spreadsheet
      * @throws PhpSpreadsheet\Exception
      */
-    public static function getSpreadsheet($spreadsheet,$data)
+    public static function getSpreadsheet($spreadsheet, $data)
     {
         $spreadsheet->setActiveSheetIndex(0);
         $cursor = $spreadsheet->getActiveSheet();
-        $subject = Subject::findOne(['id'=>$data["data"]["subject_id"]]);
-        $specialnist = Group::findOne(['id'=>$data["data"]["group_id"]])->specialityQualification->speciality->title;
+        $subject = Subject::findOne(['id' => $data["data"]["subject_id"]]);
+        $specialnist = Group::findOne(['id' => $data["data"]["group_id"]])->specialityQualification->speciality->title;
         $semester = ExportHelpers::ConvertToRoman($data["data"]["semester"]);
-        $cours = $data["data"]["course"];
-        $group = Group::findOne(['id'=>$data["data"]["group_id"]])->title;
-        $studyPlan_id = $data["data"]["plan_id"];
-        $studyPlan = StudyPlan::findOne(['id' => $studyPlan_id]);
+        $group = Group::findOne(['id' => $data["data"]["group_id"]])->title;
 
         /**
          * @var $teachers Employee
          */
         $teachers = Employee::findAll($data["data"]["teachers_id"]);
         $teachers_list = [];
-        foreach ($teachers as $teacher){
-            array_push($teachers_list,$teacher->getFullName());
+        foreach ($teachers as $teacher) {
+            array_push($teachers_list, $teacher->getFullName());
         }
 
-        $teachers = join($teachers_list,", ");
+        $teachers = join($teachers_list, ", ");
 
-        $cursor->setCellValue("K101",$subject->title);
-        $cursor->setCellValue("K102",$specialnist);
-        $cursor->setCellValue("K103",$semester);
-        $cursor->setCellValue("K104",$cours);
-        $cursor->setCellValue("K105",$group);
-        $cursor->setCellValue("K106",$teachers);
+        $cursor->setCellValue("K101", $subject->title);
+        $cursor->setCellValue("K102", $specialnist);
+        $cursor->setCellValue("K103", $semester);
+        $cursor->setCellValue("K104", round($data["data"]["semester"]/2));
+        $cursor->setCellValue("K105", $group);
+        $cursor->setCellValue("K106", $teachers);
 
         $id = $data["data"]["group_id"];
         $group = Group::findOne($id);
@@ -60,36 +57,58 @@ class ExportExam
         $failed_students = 0;
         $avg = 0;
         $subjects = [$subject];
-        $student_mark = ExportHelpers::getMarks($subjects, $students);
-        $tickets = ExportHelpers::getTickets(count($students));
+        $student_mark = [];
+        $tickets = [];
+        if ($data["data"]['marks_checker']) {
+            $student_mark = ExportHelpers::getMarks($subjects, $students);
+            $tickets = ExportHelpers::getTickets(count($students));
+        }
+        $student_marks_two_three = [];
+        $count = [0, 0, 0];
         $current = 19;
         $i = 1;
-        foreach ($students as $index=>$student) {
-            $cursor->insertNewRowBefore($current+1);
+        foreach ($students as $index => $student) {
+            $cursor->insertNewRowBefore($current + 1);
             $cursor->mergeCells("B${current}:E${current}");
             $cursor->mergeCells("G${current}:H${current}");
-            $mark = $student_mark[array_search($student->id, array_column($student_mark, "student_id"))];
-            $avg += $mark['value'];
-            $failed_students += $mark['value'] < 3.5 ? 1 : 0;
-            $cursor->setCellValue("F${current}", $tickets[$index])->getStyle("F${current}")->getAlignment()->setHorizontal('center');
-            $cursor->setCellValue("G${current}", $mark['value']);
             $cursor->setCellValue("A${current}", $i);
-
             $cursor->setCellValue('B' . $current, $student->getFullName());
+            if (!empty($student_mark)) {
+                $mark = $student_mark[array_search($student->id, array_column($student_mark, "student_id"))];
+                $avg += $mark['value'];
+                $failed_students += $mark['value'] < 3.5 ? 1 : 0;
+                $cursor->setCellValue("F${current}", $tickets[$index])->getStyle("F${current}")->getAlignment()->setHorizontal('center');
+                $cursor->setCellValue("G${current}", $mark['value']);
+                array_push($student_marks_two_three, $mark["value"]);
+            }
             $i++;
             $current++;
+            $count[0] += array_filter($student_marks_two_three, function ($num) {
+                return (int)$num < 2.5;
+            }) ? 1 : 0;
+            $count[1] += array_filter($student_marks_two_three, function ($num) {
+                return (int)$num >= 2.5 && $num < 3.5;
+            }) ? 1 : 0;
+            $count[2] += array_filter($student_marks_two_three, function ($num) {
+                return (int)$num < 3.5;
+            }) ? 1 : 0;
+            $student_marks_two_three = [];
         }
+
         $cursor->removeRow($current);
         $cursor->removeRow($current);
-        $cursor->setCellValue("G${current}", round($avg / count($student_mark),2));
-        $quality = round((count($students) - $failed_students) / count($students) * 100, 2);
-        $current+=3;
+        $cursor->setCellValue("F${current}", count($student_mark) != 0 ? (round($avg /  count($student_mark), 2)):"");
+        $quality = count($student_mark) != 0 ? (round((count($students) - $count[2]) / count($student_mark) * 100, 2)) : "  ";
+        $success_rate = count($student_mark) != 0 ? (round((count($students) - $count[0]) / count($student_mark) * 100, 2)) : "  ";;
+        $current += 3;
         $footer_current = $current;
-        $cursor->setCellValue("I${current}", "${quality} %");
+        $cursor->setCellValue("I${current}", "${success_rate} %");
         $current++;
         $cursor->setCellValue("I${current}", "${quality} %");
         $marks_sum = [0, 0, 0, 0];
-        $marks = array_map(function($item){return $item["value"];},$student_mark);
+        $marks = array_map(function ($item) {
+            return $item["value"];
+        }, $student_mark);
         foreach ($marks as $mark) {
             $marks_sum[0] += ($mark >= 4.5) ? 1 : 0;
             $marks_sum[1] += ($mark >= 3.5 && $mark < 4.5) ? 1 : 0;
@@ -98,7 +117,7 @@ class ExportExam
         }
         $current = $footer_current;
         foreach ($marks_sum as $index => $sum) {
-            $cursor->setCellValue("B${current}", ExportHelpers::textBetween([ExportHelpers::getMarkLabels()[$index], $sum,"студ."], [40,5]));
+            $cursor->setCellValue("B${current}", ExportHelpers::textBetween([ExportHelpers::getMarkLabels()[$index], $sum, "студ."], [40, 5]));
             $cursor->getStyle("B${current}")->getAlignment()->setHorizontal('left');
             $current++;
         }
@@ -106,7 +125,6 @@ class ExportExam
 
         return $spreadsheet;
     }
-
 
 
 }

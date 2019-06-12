@@ -167,5 +167,18 @@ class ExportHelpers
         return $tickets;
     }
 
+    public static function getSemesterList()
+    {
+        return [
+            1 => Yii::t('app', 'First'),
+            2 => Yii::t('app', 'Second'),
+            3 => Yii::t('app', 'Third'),
+            4 => Yii::t('app', 'Fourth'),
+            5 => Yii::t('app', 'Fifth'),
+            6 => Yii::t('app', 'Sixth'),
+            7 => Yii::t('app', 'Seventh'),
+            8 => Yii::t('app', 'Eighth'),
+        ];
+    }
 
 }

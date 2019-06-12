@@ -26,7 +26,7 @@ class ExportSemester
         $cursor = $spreadsheet->getActiveSheet();
         $semester = $data["data"]["semester"];
         $group = Group::findOne(['id' => $data["data"]["group_id"]]);
-        $year = $data["data"]["date"];
+        $year = $data["data"]["dateFrom"];
         $year = $year . "/" . ($year + 1);
 
         $subjects = [];
@@ -79,8 +79,20 @@ class ExportSemester
                     }
                 }
             }
-//            var_dump(count($subjects));die;
-
+            $current = 9;
+            foreach ($students as $student) {
+                $cursor->insertNewRowBefore($current + 1);
+//                $current;
+                $cursor->setCellValue("A${current}", $i);
+                $i++;
+//              Name
+                $cursor->setCellValue('B' . $current, $student->getFullName());
+//              Payment
+                if (strcmp($student->getPaymentTypeLabel(), "К") == 0) {
+                    $spreadsheet->getActiveSheet()->setCellValue("I${current}", $student->getPaymentTypeLabel());
+                }
+                $current++;
+            }
             $student_mark = ExportHelpers::getMarks($subjects, $students);
 
             $curCol = "D";
@@ -142,64 +154,57 @@ class ExportSemester
             $cursor->mergeCells("C5:${end}5");
 //        Some new subject put here
 //        Use the code written above
-            $letter = $marks_column_begin;
             $current = 9;
             foreach ($students as $student) {
                 $avg = 0;
                 $letter = $marks_column_begin;
-                $cursor->insertNewRowBefore($current + 1);
-//                $current;
-                $cursor->setCellValue("A${current}", $i);
-                $i++;
 
-                foreach ($subjects as $subject) {
-                    foreach ($student_mark as $mark) {
-                        if ($mark["student_id"] == $student->id && $mark["subject_id"] == $subject->id) {
-                            $cords = "${letter}${current}";
-                            $cursor->setCellValue($cords, $mark["value"]);
-                            ExportHelpers::MarkColorized($spreadsheet, $mark["value"], $cords);
-                            $avg += $mark["value"];
+
+                if ($data["data"]['marks_checker']) {
+                    foreach ($subjects as $subject) {
+                        foreach ($student_mark as $mark) {
+                            if ($mark["student_id"] == $student->id && $mark["subject_id"] == $subject->id) {
+                                $cords = "${letter}${current}";
+                                $cursor->setCellValue($cords, $mark["value"]);
+                                ExportHelpers::MarkColorized($spreadsheet, $mark["value"], $cords);
+                                $avg += $mark["value"];
+                            }
                         }
+                        $letter++;
                     }
+
+//              Average mark
+                    if (count($subjects) != 0) {
+                        $avg = $avg / count($subjects);
+                    }
+                    $avg_avg += $avg;
+                    array_push($avg_marks, $avg);
+                    $cursor->setCellValue("${letter}${current}", $avg);
+
+//              Passes
+                    $current_pass = $pass[array_search($student->id, array_column($pass, "student_id"))];
+                    $hours_sum[0] += $current_pass["hours"];
+                    $hours_sum[1] += $current_pass["with_reason"];
+                    $letter++;
+                    $pass_row_start_letter = $letter;
+                    $cursor->setCellValue("${letter}${current}", $current_pass["hours"]);
+                    $letter++;
+                    $cursor->setCellValue("${letter}${current}", $current_pass["with_reason"]);
+                    $letter++;
+
+//              Behaviour
                     $letter++;
                 }
 
-//              Name
-                $cursor->setCellValue('B' . $current, $student->getFullName());
-
-//              Average mark
-                $avg = $avg / count($subjects);
-                $avg_avg += $avg;
-                array_push($avg_marks, $avg);
-                $cursor->setCellValue("${letter}${current}", $avg);
-
-//              Passes
-                $current_pass = $pass[array_search($student->id, array_column($pass, "student_id"))];
-                $hours_sum[0] += $current_pass["hours"];
-                $hours_sum[1] += $current_pass["with_reason"];
-                $letter++;
-                $pass_row_start_letter = $letter;
-                $cursor->setCellValue("${letter}${current}", $current_pass["hours"]);
-                $letter++;
-                $cursor->setCellValue("${letter}${current}", $current_pass["with_reason"]);
-                $letter++;
-
-//              Behaviour
-                $letter++;
-
-//              Payment
-                if (strcmp($student->getPaymentTypeLabel(), "К") == 0) {
-                    $spreadsheet->getActiveSheet()->setCellValue("${letter}${current}", $student->getPaymentTypeLabel());
-                }
 
                 $current++;
             }
-
 //          Delete excessive rows
             $cursor->removeRow(8);
             $cursor->removeRow($current--)->removeRow($current);
-
+        }
 //          Average marks in column ↓
+        if ($data["data"]['marks_checker']) {
             $letter = $marks_column_begin;
             $avg_columns = [];
             array_walk_recursive($subjects, function ($subject) use ($student_mark, $students, &$avg_columns) {
@@ -235,33 +240,32 @@ class ExportSemester
             $cursor->setCellValue("${letter}${current}", $hours_sum[1] / count($pass));
             $current += 2;
             $footer_current = $current;
+        }
 
 //          Counting marks count([5,4,3,2])
-            $marks_sum = [0, 0, 0, 0];
-            foreach ($avg_marks as $mark) {
-                $marks_sum[0] += ($mark >= 4.5) ? 1 : 0;
-                $marks_sum[1] += ($mark >= 3.5 && $mark < 4.5) ? 1 : 0;
-                $marks_sum[2] += ($mark >= 2.5 && $mark < 3.5) ? 1 : 0;
-                $marks_sum[3] += ($mark < 2.5 && $mark < 3.5) ? 1 : 0;
-            }
-            $current = $footer_current;
-            foreach ($marks_sum as $index => $sum) {
-                $cursor->setCellValue("B${current}", ExportHelpers::textBetween([ExportHelpers::getMarkLabels()[$index], $sum, "студ."], [45, 5]));
-                $cursor->getStyle("B${current}")->getAlignment()->setHorizontal('left');
-                $current++;
-            }
+        $marks_sum = [0, 0, 0, 0];
+        foreach ($avg_marks as $mark) {
+            $marks_sum[0] += ($mark >= 4.5) ? 1 : 0;
+            $marks_sum[1] += ($mark >= 3.5 && $mark < 4.5) ? 1 : 0;
+            $marks_sum[2] += ($mark >= 2.5 && $mark < 3.5) ? 1 : 0;
+            $marks_sum[3] += ($mark < 2.5 && $mark < 3.5) ? 1 : 0;
+        }
+        $current = $footer_current;
+        foreach ($marks_sum as $index => $sum) {
+            $cursor->setCellValue("B${current}", ExportHelpers::textBetween([ExportHelpers::getMarkLabels()[$index], $sum, "студ."], [45, 5]));
+            $cursor->getStyle("B${current}")->getAlignment()->setHorizontal('left');
+            $current++;
+        }
 
 //          Set date
-            $cursor->setCellValue('B' . ($current + 3), Yii::t('app', 'Date') . ": " . date('d.m.Y') . "  " . Yii::t('app', 'Time') . ": " . date('H:i:s'));
+        $cursor->setCellValue('B' . ($current + 3), Yii::t('app', 'Date') . ": " . date('d.m.Y') . "  " . Yii::t('app', 'Time') . ": " . date('H:i:s'));
 
 //            $cursor->setCellValue('C6', 'Підсумкові');
 
-            $cursor->setCellValue("J301", $year);
-            $cursor->setCellValue("J302", $group->title);
-            $cursor->setCellValue("J303", $romanSemester);
-        }
+        $cursor->setCellValue("J301", $year);
+        $cursor->setCellValue("J302", $group->title);
+        $cursor->setCellValue("J303", $romanSemester);
         return $spreadsheet;
     }
-
 
 }

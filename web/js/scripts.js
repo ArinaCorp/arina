@@ -72,7 +72,7 @@ let background = $(".dialog-background");
 let attestationBtn= $("#attestation");
 let semesterBtn = $("#semester");
 let examBtn = $("#exam");
-let zalikBtn = $("#zalik");
+let creditBtn = $("#credit");
 let navbar = $(".sidebar");
 
 background.click(function () {
@@ -83,8 +83,8 @@ function showDialog(button,form){
     form.css('display', 'flex');
 }
 
-zalikBtn.click(() => {
-    showDialog(zalikBtn,$('#zalik-window'));
+creditBtn.click(() => {
+    showDialog(creditBtn,$('#credit-window'));
 });
 
 attestationBtn.click(() => {

@@ -5,14 +5,11 @@ namespace app\modules\students\controllers;
 use app\components\DepDropHelper;
 use app\components\ExportToExcel;
 use app\modules\directories\models\speciality_qualification\SpecialityQualification;
-use app\modules\directories\models\subject\Subject;
 use app\modules\plans\models\StudyPlan;
+use app\modules\plans\models\StudySubject;
 use app\modules\rbac\filters\AccessControl;
-use app\modules\students\models\Exemption;
 use app\modules\students\models\ExportParams;
 use app\modules\students\models\Group;
-use app\modules\students\models\StudentFilter;
-use app\modules\students\models\StudentSearch;
 use app\modules\user\helpers\UserHelper;
 use app\modules\user\models\User;
 use nullref\core\interfaces\IAdminController;
@@ -118,12 +115,17 @@ class GroupController extends Controller implements IAdminController
     /**
      * Displays a single Group model.
      * @param integer $id
+     * @param ExportParams $exportParams
      * @return mixed
      * @throws NotFoundHttpException
      */
     public function actionView($id)
     {
         $exportParams = new ExportParams();
+        if (isset(Yii::$app->request->post()["ExportParams"])) {
+            $exportParams->load(Yii::$app->request->post());
+        }
+
         $dataProvider = new ArrayDataProvider([
             'allModels' => $this->findModel($id)->getStudentsArray(),
         ]);
@@ -198,13 +200,6 @@ class GroupController extends Controller implements IAdminController
         $model->getDocument();
     }
 
-//    public function actionAttestation($id)
-//    {
-//        $model = [
-//            'idGroup' => $id,
-//        ];
-//        ExportToExcel::getDocument('Attestation', $model);
-//    }
     public function actionAttestation()
     {
         $data = (Yii::$app->request->post()["ExportParams"]);
@@ -213,14 +208,16 @@ class GroupController extends Controller implements IAdminController
         ];
         ExportToExcel::getDocument('Attestation', $model);
     }
-    public function actionZalik()
+
+    public function actionCredit()
     {
         $data = (Yii::$app->request->post()["ExportParams"]);
         $model = [
             'data' => $data
         ];
-        ExportToExcel::getDocument('Zalik', $model);
+        ExportToExcel::getDocument('Credit', $model);
     }
+
     public function actionSemester()
     {
         $data = (Yii::$app->request->post()["ExportParams"]);
@@ -229,6 +226,7 @@ class GroupController extends Controller implements IAdminController
         ];
         ExportToExcel::getDocument('Semester', $model);
     }
+
     public function actionExam()
     {
         $data = (Yii::$app->request->post()["ExportParams"]);
@@ -247,16 +245,35 @@ class GroupController extends Controller implements IAdminController
             if ($parents != null) {
                 if (!empty($_POST['depdrop_all_params'])) {
                     $params = $_POST['depdrop_all_params'];
+                    $semester = null;
                     $dep_id = null;
                     if($params["plan_id"]){
                         $dep_id = $params["plan_id"];
                     }
-                    if($params["exam_plan_id"]){
-                        $dep_id = $params["exam_plan_id"];
-                    }
+
                     $plan = StudyPlan::findOne(['id'=>$dep_id]);
-                    $subject_list = ArrayHelper::map($plan->studySubjects, 'id', 'title');
+                    $subjects = $plan->studySubjects;
+                    $subject_list = ArrayHelper::map($subjects, 'id', 'title');
                     $out = DepDropHelper::convertMap($subject_list);
+
+                    if(!empty($params['ex-sem'])){
+                        $semester = $params["ex-sem"];
+
+                        $subjects = array_filter($subjects,function($sub)use($semester){
+                            /** @var StudySubject $sub*/
+                            return $sub->control[$semester - 1][1]==true;
+                        });
+                        $out = DepDropHelper::convertMap(ArrayHelper::map($subjects,'subject_id','title'));
+                    }
+                    if(!empty($params['cred-sem'])){
+                        $semester = $params["cred-sem"];
+
+                        $subjects = array_filter($subjects,function($sub)use($semester){
+                            /** @var StudySubject $sub*/
+                            return $sub->control[$semester - 1][0]==true;
+                        });
+                        $out = DepDropHelper::convertMap(ArrayHelper::map($subjects,'subject_id','title'));
+                    }
                     if (empty($dep_id)) {
                         $out = '';
                     }

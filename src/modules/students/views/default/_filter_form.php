@@ -81,7 +81,7 @@ $this->registerJs(
                     <div class="form-group">
                         <div class="form-group">
                             <?= $form->field($search, 'department')->widget(Select2::classname(), [
-                                'data' => Department::getList(),
+                                'data' => ArrayHelper::map(Department::find()->all(),'id','title'),
                                 'pluginOptions' => [
                                     'placeholder' => Yii::t('app', 'Select department'),
                                     'allowClear' => true
@@ -199,7 +199,7 @@ $this->registerJs(
     <div class="form-group" style="text-align: right">
         <?= Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-primary']) ?>
         <?= Html::a(Yii::t('app', 'Reset'), ['filter'], ['class' => 'btn btn-default']) ?>
-        <?= Html::a(Yii::t('app', 'Excel'), ['default/document','params'=>Yii::$app->request->queryParams], ['class' => 'btn btn-success','id'=>'export']) ?>
+        <?= Html::a(Yii::t('app', 'Excel'), ['default/document','params'=>['student_id'=>NULL,'search'=>Yii::$app->request->queryParams]], ['class' => 'btn btn-success','id'=>'export']) ?>
     </div>
 <?php ActiveForm::end(); ?>
 <?php //\yii\widgets\Pjax::end();
