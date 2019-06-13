@@ -29,7 +29,7 @@ class StudentCardController extends Controller implements IAdminController
         $model = new StudentCard();
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            return $this->redirect(['student-card/view', 'student_id' => $model->studentId, 'study_year_id' => $model->studyYearId]);
+            return $this->redirect(['student-card/view', 'student_id' => $model->studentId]);
         }
 
         return $this->render('index', [
@@ -40,12 +40,11 @@ class StudentCardController extends Controller implements IAdminController
     /**
      * Generate and view the student card.
      * @param $student_id
-     * @param $study_year_id
      * @return string
      */
-    public function actionView($student_id, $study_year_id)
+    public function actionView($student_id)
     {
-        $model = new StudentCard(['studentId' => $student_id, 'studyYearId' => $study_year_id]);
+        $model = new StudentCard(['studentId' => $student_id]);
 
         return $this->render('view', [
             'model' => $model,
@@ -55,11 +54,13 @@ class StudentCardController extends Controller implements IAdminController
     /**
      * Export the generated card.
      * @param $student_id
-     * @param $study_year_id
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
-    public function actionExport($student_id, $study_year_id)
+    public function actionExport($student_id)
     {
-        $model = new StudentCard(['studentId' => $student_id, 'studyYearId' => $study_year_id]);
+        $model = new StudentCard(['studentId' => $student_id]);
         $model->getDocument();
     }
 }

@@ -17,15 +17,6 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Calculation and control works' => 'Розрах. та контр. роб.',
-    'Consultations' => 'Консультації',
-    'Create load' => 'Створити навантаження',
-    'Load' => 'Навантаження',
-    'Load creating' => 'Створення запису про навантаження',
-    'Loads' => 'Навантаження',
-    'Practice management, diploma control, state qualification commissions' => 'Керівництво практикою, дипломне нормоконтроль, ДКК',
-    'Select study year' => 'Оберіть навчальний рік',
-    'View loads' => 'Переглянути навантаження',
     'Consultations amount exceeds maximum' => '',
     'Course project' => '',
     'Course work' => '',
@@ -35,4 +26,13 @@ return [
     'Total students on budget' => '',
     'Total students on contract' => '',
     '' => '',
+    'Calculation and control works' => 'Розрах. та контр. роб.',
+    'Consultations' => 'Консультації',
+    'Create load' => 'Створити навантаження',
+    'Load' => 'Навантаження',
+    'Load creating' => 'Створення запису про навантаження',
+    'Loads' => 'Навантаження',
+    'Practice management, diploma control, state qualification commissions' => 'Керівництво практикою, дипломне нормоконтроль, ДКК',
+    'Select study year' => 'Оберіть навчальний рік',
+    'View loads' => 'Переглянути навантаження',
 ];

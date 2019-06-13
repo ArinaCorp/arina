@@ -3,7 +3,6 @@
 namespace app\modules\students\models;
 
 use app\components\ExportToExcel;
-use app\modules\directories\models\StudyYear;
 use app\modules\journal\models\record\JournalMark;
 use Yii;
 use yii\base\Model;
@@ -12,12 +11,11 @@ use yii\web\View;
 /**
  * @property integer $id
  * @property Student $student
- * @property StudyYear $studyYear
  * @property JournalMark[] $marks
  */
 class StudentCard extends Model
 {
-    public $studentId, $studyYearId;
+    public $studentId;
 
     /**
      * @inheritdoc
@@ -25,8 +23,8 @@ class StudentCard extends Model
     public function rules()
     {
         return [
-            [['studentId', 'studyYearId'], 'required'],
-            [['studentId', 'studyYearId'], 'integer'],
+            [['studentId'], 'required'],
+            [['studentId'], 'integer'],
         ];
     }
 
@@ -37,7 +35,6 @@ class StudentCard extends Model
     {
         return [
             'studentId' => Yii::t('app', 'Student ID'),
-            'studyYearId' => Yii::t('app', 'Study year'),
         ];
     }
 
@@ -50,40 +47,21 @@ class StudentCard extends Model
     }
 
     /**
-     * @return StudyYear|null
-     */
-    public function getStudyYear()
-    {
-        return StudyYear::findOne($this->studyYearId);
-    }
-
-    /**
      * @param $semester
      * @return JournalMark[]|Group[]|array|\yii\db\ActiveRecord[]
      */
-    public function getMarks($semester = null)
+    public function getMarks()
     {
-        //TODO: temporary bullshit for demonstrative purposes
-        if ($semester) {
-            if ($semester < 5) {
-                $type = $semester + 3;
-                $where = [
-                    'student_id' => $this->studentId,
-                    'study_year_id' => $this->studyYearId,
-                    'journal_record.type' => $type,
-                ];
-            } else {
-                return null;
-            }
-        } else $where = [
-            'student_id' => $this->studentId,
-            'study_year_id' => $this->studyYearId,
-        ];
-        return JournalMark::find()
+        $allMarks = JournalMark::find()
             ->joinWith('journalRecord')
             ->joinWith('evaluation')
             ->leftJoin('load', 'load.id = journal_record.load_id')
-            ->where($where)->all();
+            ->where(['student_id' => $this->studentId])->all();
+//        $this->student->getCourse( TODO: Get the year for student's course
+        $map[1][1] = [
+
+        ];
+        return [];
     }
 
     /**

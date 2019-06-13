@@ -4,7 +4,10 @@
  */
 
 use app\modules\geo\models\Country;
+use app\modules\geo\models\Region;
 use kartik\depdrop\DepDrop;
+use kartik\select2\Select2;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\MaskedInput;
@@ -74,34 +77,49 @@ use yii\widgets\MaskedInput;
         <?= $form->field($model, 'sseed_id')->textInput() ?>
     </div>
 </div>
+
+<hr>
+
 <div class="row">
-    <div class="col-sm-4">
-        <?= $form->field($model, 'country_id')
-            ->dropDownList(Country::getDropDownArray(),
-                ['prompt' => Yii::t('app', 'Choose country')]);
-        ?>
+    <div class="col-sm-3">
+        <?= $form->field($model, 'country_id')->widget(Select2::class, [
+            'data' => Country::getMap('name', 'code', [], false),
+            'options' => [
+                'id' => 'country-id',
+                'placeholder' => Yii::t('app', 'Choose country'),
+                'value' => $model->country_id ?? 'UA', // default is Ukraine
+            ]]) ?>
     </div>
-    <div class="col-sm-4">
+
+    <div class="col-sm-3">
         <?= $form->field($model, 'region_id')->widget(DepDrop::class, [
-            'options' => ['id' => 'region_id'],
+            'type' => DepDrop::TYPE_SELECT2,
             'data' => [$model->region_id => 'default'],
-            'pluginOptions'=>[
-                'depends' => [Html::getInputId($model,'country_id')],
+            'options' => ['id' => 'region-id'],
+            'pluginOptions' => [
+                'depends' => ['country-id'],
                 'initialize' => true,
                 'placeholder' => Yii::t('app', 'Choose region'),
-                'url' => Url::to(['/geo/admin/city/region'])
+                'url' => Url::to(['/geo/admin/region/get-country-regions'])
             ]
         ]); ?>
     </div>
-    <div class="col-sm-4">
-        <?= $form->field($model, 'district_id')->widget(DepDrop::class, [
-            'options' => ['id' => 'district_id'],
-            'data' => [$model->district_id => 'default'],
-            'pluginOptions'=>[
-                'depends' => ['region_id'],
-                'placeholder' => Yii::t('app', 'Choose district'),
-                'url' => Url::to(['/geo/admin/city/district'])
+
+    <div class="col-sm-3">
+        <?= $form->field($model, 'city_id')->widget(DepDrop::class, [
+            'type' => DepDrop::TYPE_SELECT2,
+            'data' => [$model->city_id => 'default'],
+            'options' => ['id' => 'city-id'],
+            'pluginOptions' => [
+                'depends' => ['country-id', 'region-id'],
+                'placeholder' => Yii::t('app', 'Choose city'),
+                'url' => Url::to(['/geo/admin/city/get-region-cities'])
             ]
         ]); ?>
     </div>
+
+    <div class="col-sm-3">
+        <?= $form->field($model, 'address')->textInput(); ?>
+    </div>
+
 </div>

@@ -6,6 +6,9 @@ namespace app\modules\students\models;
 use app\modules\directories\models\department\Department;
 use app\modules\directories\models\speciality\Speciality;
 use app\modules\directories\models\speciality_qualification\SpecialityQualification;
+use app\modules\geo\models\City;
+use app\modules\geo\models\Country;
+use app\modules\geo\models\Region;
 use nullref\useful\behaviors\RelatedBehavior;
 use voskobovich\linker\LinkerBehavior;
 use Yii;
@@ -36,6 +39,10 @@ use yii\web\UploadedFile;
  * @property string $photo
  * @property string $passport_issued
  * @property string $passport_issued_date
+ * @property string $country_id
+ * @property string $region_id
+ * @property integer $city_id
+ * @property string $address
  *
  *
  * @property string $fullName
@@ -55,7 +62,9 @@ use yii\web\UploadedFile;
  * @property Speciality $speciality
  * @property Department $department
  *
- *
+ * @property Country $country
+ * @property Region $region
+ * @property City $city
  *
  * @method loadWithRelations($data, $formName = null)
  * @method validateWithRelations()
@@ -229,6 +238,8 @@ class Student extends \yii\db\ActiveRecord
             [['passport_code'], 'unique'],
             [['tax_id'], 'unique'],
             ['photo', 'file', 'extensions' => 'jpeg, jpg, gif, png'],
+            [['country_id', 'region_id', 'address'], 'string'],
+            [['city_id'], 'integer'],
         ];
     }
 
@@ -263,6 +274,9 @@ class Student extends \yii\db\ActiveRecord
             'passport_issued_date' => Yii::t('app', 'Passport issued date'),
             'exemptions' => Yii::t('app', 'Exemptions'),
             'exemption_ids' => Yii::t('app', 'Exemptions'),
+            'city_id' => Yii::t('app', 'City ID'),
+            'address' => Yii::t('app', 'Address'),
+            'fullAddress' => Yii::t('app','Full address'),
         ];
     }
 
@@ -495,6 +509,39 @@ class Student extends \yii\db\ActiveRecord
     public function getDepartment()
     {
         return $this->speciality->department;
+    }
+
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getCountry()
+    {
+        return $this->hasOne(Country::class, ['code' => 'country_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getRegion()
+    {
+        return $this->hasOne(Region::class, ['country_code' => 'country_id', 'division_code' => 'region_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getCity()
+    {
+        return $this->hasOne(City::class, ['geoname_id' => 'city_id']);
+    }
+
+    /**
+     * @return string
+     */
+    public function getFullAddress()
+    {
+        return implode(', ', [$this->country->name, $this->region->name, $this->city->name, $this->address]);
     }
 
 }

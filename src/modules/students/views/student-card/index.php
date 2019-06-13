@@ -39,13 +39,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
             ]); ?>
 
-            <?= $form->field($model, 'studyYearId')->widget(Select2::class, [
-                'data' => StudyYear::getYearList(),
-                'options' => [
-                    'placeholder' => Yii::t('app', 'Select ...'),
-                ],
-            ]); ?>
-
         </div>
 
     </div>
