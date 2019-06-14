@@ -24,6 +24,13 @@ use yii\helpers\ArrayHelper;
  * @property integer $created_at
  * @property integer $updated_at
  *
+ * @property string yearCmdString
+ * @property string cmdSinceString
+ *
+ * @property Group $group
+ *
+ * @property string $content
+ *
  * @property Student $student
  */
 class StudentsHistory extends ActiveRecord
@@ -34,6 +41,7 @@ class StudentsHistory extends ActiveRecord
     public static $_HISTORY;
     public static $PAYMENT_STATE = 1;
     public static $PAYMENT_CONTRACT = 2;
+    public static $PAYMENT_GOV_CREDIT = 3;
     public static $TYPE_EXCLUDE = 1;
 
     //@TODO change to const
@@ -634,5 +642,49 @@ class StudentsHistory extends ActiveRecord
     public function getStudentFullName()
     {
         return $this->student->getFullName();
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getGroup()
+    {
+        return $this->hasOne(Group::class, ['id' => 'group_id']);
+    }
+
+    /**
+     * @param null $lang
+     * @return string
+     */
+    public function getYearCmdString($lang = null)
+    {
+        return Yii::t('app', '{date} year №{cmd}', ['date' => $this->date, 'cmd' => $this->command], $lang);
+    }
+
+    /**
+     * @param null $lang
+     * @return string
+     */
+    public function getCmdSinceString($lang = null)
+    {
+        return Yii::t('app', '№{cmd} since {date} y.', ['date' => $this->date, 'cmd' => $this->command], $lang);
+    }
+
+    /**
+     * Returns edicts purpose(content) based on its action_type.
+     * @param null $lang
+     * @return string
+     */
+    public function getContent($lang = null)
+    {
+        return Yii::t('app', [
+                StudentsHistory::$TYPE_INCLUDE => 'Inclusion',
+                StudentsHistory::$TYPE_EXCLUDE => 'Exclusion',
+                StudentsHistory::$TYPE_RENEWAL => 'Renewal',
+                StudentsHistory::$TYPE_TRANSFER_COURSE => 'Course transfer',
+                StudentsHistory::$TYPE_TRANSFER_FOUNDING => 'Founding transfer',
+                StudentsHistory::$TYPE_TRANSFER_GROUP => 'Group transfer',
+                StudentsHistory::$TYPE_TRANSFER_SPECIALITY_QA => 'Speciality QA transfer',
+            ][$this->action_type] . ' edict', [], $lang);
     }
 }

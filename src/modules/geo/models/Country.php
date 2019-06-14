@@ -41,4 +41,14 @@ class Country extends \tigrov\country\Country
         ];
     }
 
+    /**
+     * Get name in current localization.
+     * @param null|string $lang Optional excplicit localization
+     * @return string
+     */
+    public function getName($lang = null)
+    {
+        return Yii::t('geo', $this->name_en, [], $lang);
+    }
+
 }

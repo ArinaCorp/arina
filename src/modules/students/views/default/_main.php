@@ -81,6 +81,18 @@ use yii\widgets\MaskedInput;
 <hr>
 
 <div class="row">
+    <div class="col-sm-8">
+        <?= $form->field($model, 'finished_inst')->textInput(['maxlength' => true]) ?>
+    </div>
+    <div class="col-sm-4">
+        <?= $form->field($model, 'finished_year')->input('number', ['class' => 'form-control no-spinner']) ?>
+
+    </div>
+</div>
+
+<hr>
+
+<div class="row">
     <div class="col-sm-3">
         <?= $form->field($model, 'country_id')->widget(Select2::class, [
             'data' => Country::getMap('name', 'code', [], false),

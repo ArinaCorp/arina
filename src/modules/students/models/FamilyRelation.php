@@ -25,6 +25,10 @@ use yii\web\BadRequestHttpException;
  */
 class FamilyRelation extends \yii\db\ActiveRecord
 {
+    //TODO: Create a seed migration with these id's for relation_type
+    const TYPE_MOTHER = 1,
+        TYPE_FATHER = 2,
+        TYPE_SPOUSE = 3;
 
     public function behaviors()
     {
@@ -52,7 +56,9 @@ class FamilyRelation extends \yii\db\ActiveRecord
             [['last_name', 'first_name', 'middle_name', 'type_id'], 'required'],
             [['last_name', 'first_name', 'middle_name', 'work_place', 'work_position'], 'string', 'max' => 255],
             [['email'], 'email'],
-            [['phone1', 'phone2'], 'integer'],
+            ['phone1', 'match', 'pattern' => '/^\+[0-9]{2} \([0-9]{3}\) ?[0-9]{3}-[0-9]{4}$/'],
+            ['phone2', 'match', 'pattern' => '/^\+[0-9]{2} \([0-9]{3}\) ?[0-9]{3}-[0-9]{4}$/'],
+            [['phone1', 'phone2'], 'string'],
         ];
     }
 

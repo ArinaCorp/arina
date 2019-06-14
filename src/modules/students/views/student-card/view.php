@@ -17,6 +17,7 @@ $this->title = Yii::t('app', 'Student card');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Study forms'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
+$student = $model->student;
 ?>
 
 <div class="subject-view">
@@ -52,17 +53,17 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-lg-8">
             <div class="clearfix">
                 <h4 class="pull-left"><?= Yii::t('app', 'Department') ?>:</h4>
-                <h4 class="pull-left fw-normal mx-1"><?= $model->student->department->title ?></h4>
+                <h4 class="pull-left fw-normal mx-1"><?= $student->department->title ?></h4>
             </div>
 
             <div class="clearfix">
                 <h4 class="pull-left"><?= Yii::t('app', 'Speciality Qualification ID') ?>:</h4>
-                <h4 class="pull-left fw-normal mx-1"><?= $model->student->specialityQualification->title ?></h4>
+                <h4 class="pull-left fw-normal mx-1"><?= $student->specialityQualification->title ?></h4>
             </div>
 
             <div class="clearfix">
                 <h4 class="pull-left"><?= Yii::t('app', 'Speciality') ?>:</h4>
-                <h4 class="pull-left fw-normal mx-1"><?= $model->student->speciality->title //TODO: speciality number (?)                           ?></h4>
+                <h4 class="pull-left fw-normal mx-1"><?= $student->speciality->title //TODO: speciality number (?)                                                                         ?></h4>
             </div>
         </div>
 
@@ -77,43 +78,42 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="row">
         <div class="col-lg-12 clearfix">
             <h4 class="pull-left"><?= Yii::t('app', 'Second name, first name, middle name') ?>:</h4>
-            <h4 class="pull-left fw-normal mx-1"><?= $model->student->fullName ?></h4>
+            <h4 class="pull-left fw-normal mx-1"><?= $student->fullName ?></h4>
         </div>
     </div>
 
     <div class="row">
         <div class="col-lg-12 clearfix">
             <h4 class="pull-left"><?= Yii::t('app', 'Birth Day') ?>:</h4>
-            <h4 class="pull-left fw-normal mx-1"><?= $model->student->birth_day ?></h4>
+            <h4 class="pull-left fw-normal mx-1"><?= $student->birth_day ?></h4>
         </div>
     </div>
 
     <div class="row">
         <div class="col-lg-12 clearfix">
             <h4 class="pull-left"><?= Yii::t('app', 'Citizenship') ?>:</h4>
-            <h4 class="pull-left fw-normal mx-1"><?= 'Україна' //TODO: Implement citizenship / Probably take country_id as citizenship                          ?></h4>
+            <h4 class="pull-left fw-normal mx-1"><?= $student->country->name; ?></h4>
         </div>
     </div>
 
     <div class="row">
         <div class="col-lg-12 clearfix">
             <h4 class="pull-left"><?= Yii::t('app', 'Finished') ?>:</h4>
-            <h4 class="pull-left fw-normal mx-1"><?= 'Заклад №0 ?-? ступенів м.Міста в 0000 році' //TODO: Implement prev. finished institution (?)                          ?></h4>
+            <h4 class="pull-left fw-normal mx-1"><?= $student->finishedInstitution ?></h4>
         </div>
     </div>
 
     <div class="row">
         <div class="col-lg-12 clearfix">
             <h4 class="pull-left"><?= Yii::t('app', 'Family status') ?>:</h4>
-            <h4 class="pull-left fw-normal mx-1"><?= 'Неодружений(на)' //TODO: Implement family status (?)                          ?></h4>
+            <h4 class="pull-left fw-normal mx-1"><?= $student->familyStatus ?></h4>
         </div>
     </div>
 
     <div class="row">
         <div class="col-lg-12 clearfix">
-            <h4 class="pull-left"><?= Yii::t('app', 'Living address') //TODO: Implement address                         ?>
-                :</h4>
-            <h4 class="pull-left fw-normal mx-1"><?= 'Хмельницька обл., м.Хмельницький, Пр.Миру, 92/1, кв.22, тел. матері 097-261-56-75, тел. батька 068-712-87-53, тел.студ._096-692-88-70' ?></h4>
+            <h4 class="pull-left"><?= Yii::t('app', 'Living address') ?>:</h4>
+            <h4 class="pull-left fw-normal mx-1"><?= $student->livingAddress ?></h4>
         </div>
     </div>
 
@@ -122,35 +122,35 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="row">
         <div class="col-lg-12 clearfix">
             <h4 class="pull-left"><?= Yii::t('app', 'Exemption presence upon entering') ?>:</h4>
-            <h4 class="pull-left fw-normal mx-1"><?= ' ? ' //TODO: Discuss wut is dis                         ?></h4>
+            <h4 class="pull-left fw-normal mx-1"><?= $student->fullExemptionString ?></h4>
         </div>
     </div>
 
     <div class="row">
         <div class="col-lg-12 clearfix">
             <h4 class="pull-left"><?= Yii::t('app', 'Enrolled by edict since') ?>:</h4>
-            <h4 class="pull-left fw-normal mx-1"><?= '11.08.2015 року №22 (?)' //TODO: Discuss implementation                         ?></h4>
+            <h4 class="pull-left fw-normal mx-1"><?= $student->enrollmentEdict->yearCmdString ?></h4>
         </div>
     </div>
 
     <div class="row">
         <div class="col-lg-12 clearfix">
-            <h4 class="pull-left"><?= Yii::t('app', 'By competition') ?>:</h4>
-            <h4 class="pull-left fw-normal mx-1"><?= 'зі стажем/без стажу (?)' //TODO: Discuss wtf is dis too                         ?></h4>
+            <h5 class="pull-left"><?= Yii::t('app', 'By competition') ?>:</h5>
+            <h5 class="pull-left fw-normal mx-1"><?= 'зі стажем/без стажу' ?></h5> <!-- TODO: Discuss -->
         </div>
     </div>
 
     <div class="row">
         <div class="col-lg-12 clearfix">
-            <h4 class="pull-left"><?= Yii::t('app', 'Transferred in order from') ?>:</h4>
-            <h4 class="pull-left fw-normal mx-1"><?= ' ? ' //TODO: Discuss                         ?></h4>
+            <h5 class="pull-left"><?= Yii::t('app', 'Transferred in order from') ?>:</h5>
+            <h5 class="pull-left fw-normal mx-1"><?= $student->finished_inst ?></h5> <!-- TODO: Discuss -->
         </div>
     </div>
 
     <div class="row">
         <div class="col-lg-12 clearfix">
             <h5 class="pull-left"><?= Yii::t('app', 'By direction') ?>:</h5>
-            <h5 class="pull-left fw-normal mx-1"><?= ' ? ' //TODO: Discuss                         ?></h5>
+            <h5 class="pull-left fw-normal mx-1"><?= 'Not used' ?></h5>
         </div>
     </div>
 
@@ -158,42 +158,36 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-lg-12 clearfix">
             <h5 class="pull-left"><?= Yii::t('app', 'By special conditions of partaking in the competition') ?>
                 :</h5>
-            <h5 class="pull-left fw-normal mx-1"><?= ' ? ' //TODO: Discuss                         ?></h5>
+            <h5 class="pull-left fw-normal mx-1"><?= 'Not used' ?></h5>
         </div>
     </div>
 
     <div class="row">
         <div class="col-lg-12 clearfix">
             <h5 class="pull-left"><?= Yii::t('app', 'Without competition') ?>:</h5>
-            <h5 class="pull-left fw-normal mx-1"><?= ' ? ' //TODO: Discuss                         ?></h5>
+            <h5 class="pull-left fw-normal mx-1"><?= $student->withoutCompetition ? Yii::t('app', 'On exemption basis') : '' ?></h5>
         </div>
     </div>
 
     <div class="row">
         <div class="col-lg-12 clearfix">
             <h5 class="pull-left"><?= Yii::t('app', 'On conditions of absolute refund') ?>:</h5>
-            <h5 class="pull-left fw-normal mx-1"><?= ' ? ' //TODO: Discuss                         ?></h5>
+            <h5 class="pull-left fw-normal mx-1"><?= 'Discuss' ?></h5>
         </div>
     </div>
 
     <div class="row">
         <div class="col-lg-12 clearfix">
-            <h5 class="pull-left"><?= Yii::t('app', 'By direction') ?>:</h5>
-            <h5 class="pull-left fw-normal mx-1"><?= ' ? ' //TODO: Discuss                         ?></h5>
+            <h4 class="pull-left"><?= Yii::t('app', 'Employment book') ?>:</h4>
+            <h4 class="pull-left fw-normal mx-1"><?= 'Not used' ?></h4>
         </div>
     </div>
 
     <div class="row">
         <div class="col-lg-12 clearfix">
-            <h4 class="pull-left"><?= Yii::t('app', 'Employment history') ?>:</h4>
-            <h4 class="pull-left fw-normal mx-1"><?= ' ? ' //TODO: Discuss                         ?></h4>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-lg-12 clearfix">
-            <h4 class="pull-left"><?= 'Довге речення з реєстраційним номером D' ?>:</h4>
-            <h4 class="pull-left fw-normal mx-1"><?= ' ? ' //TODO: Discuss                         ?></h4>
+            <h4 class="pull-left"><?= Yii::t('app',
+                    'Tax ID(or Passport Serial and Number)') ?>:</h4>
+            <h4 class="pull-left fw-normal mx-1"><?= $student->tax_id ?></h4>
         </div>
     </div>
 
@@ -206,9 +200,27 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 
     <div class="row">
-        <div class="col-lg-12 table-bordered" style="height: 300px">
-            <h3 class="alert alert-danger">Тут має бути таблиця з наказами</h3>
-        </div>
+        <table class="table table-bordered">
+            <tr>
+                <th><?= Yii::t('app', 'Course') ?></th>
+                <th><?= Yii::t('app', 'Number and date of an edict') ?></th>
+                <th><?= Yii::t('app', 'Content of an edict') ?></th>
+            </tr>
+            <?php if ($student->edicts):
+                foreach ($student->edicts as $edict): ?>
+                    <tr>
+                        <td><?= $edict->course ?></td>
+                        <td><?= $edict->cmdSinceString ?></td>
+                        <td><?= $edict->content ?></td>
+                    </tr>
+                <?php endforeach; else: ?>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            <?php endif; ?>
+        </table>
     </div>
 </div>
 
@@ -221,9 +233,9 @@ $this->params['breadcrumbs'][] = $this->title;
         'content' => $this->render('_course', ['model' => $model, 'course' => 1], true),
     ];
 
-    for ($course = 2; $course <= $model->student->getCourse(); $course++) {
+    for ($course = 2; $course <= $student->getCourse(); $course++) {
         $items[] = [
-            'label' => GlobalHelper::getCourseLiteral($course) . ' ' . Yii::t('app', 'course'),
+            'label' => GlobalHelper::getOrderLiteral($course) . ' ' . Yii::t('app', 'course'),
             'content' => $this->render('_course', ['model' => $model, 'course' => $course], true),
         ];
     }
@@ -236,6 +248,11 @@ $this->params['breadcrumbs'][] = $this->title;
     ?>
 
     <?php Pjax::end(); ?>
+
+    <?php
+    //    var_dump($student->getGroups());
+    //    die;
+    ?>
 </div>
 
 
