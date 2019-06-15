@@ -41,7 +41,7 @@ class StudentsHistory extends ActiveRecord
     public static $_HISTORY;
     public static $PAYMENT_STATE = 1;
     public static $PAYMENT_CONTRACT = 2;
-    public static $PAYMENT_GOV_CREDIT = 3;
+    public static $PAYMENT_STATE_CREDIT = 3;
     public static $TYPE_EXCLUDE = 1;
 
     //@TODO change to const

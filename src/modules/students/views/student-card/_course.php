@@ -80,7 +80,6 @@ switch ($course) {
         foreach ($model->getMarks($spring + 1) as $mark): ?>
             <tr>
                 <td><?= $mark->workSubject->title; ?></td>
-                <!--TODO: Total hours per semester should probably be taken from Load rather than Work Plan-->
                 <td><?= $mark->workSubject->total[$spring]; ?></td>
                 <td><?= number_format($mark->workSubject->total[$spring] / 30, 2); ?></td>
                 <td><?= $mark->valueLiteral; ?></td>

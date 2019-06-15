@@ -46,10 +46,10 @@ class StudentCard extends Model
     }
 
     /**
-     * @param $semester
-     * @return JournalMark[]|Group[]|array|\yii\db\ActiveRecord[]
+     * @param integer|null $semester
+     * @return JournalMark[]|\app\modules\plans\models\WorkPlan[]|Group[]|Student[]|array|\yii\db\ActiveRecord[]
      */
-    public function getMarks()
+    public function getMarks($semester = null)
     {
         return $this->student->getMarks($semester);
     }

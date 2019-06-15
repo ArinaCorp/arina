@@ -63,7 +63,7 @@ $student = $model->student;
 
             <div class="clearfix">
                 <h4 class="pull-left"><?= Yii::t('app', 'Speciality') ?>:</h4>
-                <h4 class="pull-left fw-normal mx-1"><?= $student->speciality->title //TODO: speciality number (?)                                                                         ?></h4>
+                <h4 class="pull-left fw-normal mx-1"><?= $student->speciality->title //TODO: speciality number (?)                                                                          ?></h4>
             </div>
         </div>
 
@@ -233,7 +233,8 @@ $student = $model->student;
         'content' => $this->render('_course', ['model' => $model, 'course' => 1], true),
     ];
 
-    for ($course = 2; $course <= $student->getCourse(); $course++) {
+    // TODO: Implement a better way to get group's course, as at some point it will return >4. Define Max course for a group? Define finishing year?
+    for ($course = 2; $course <= $student->currentGroup->getCourse($student->currentGroup->created_study_year_id+4); $course++) {
         $items[] = [
             'label' => GlobalHelper::getOrderLiteral($course) . ' ' . Yii::t('app', 'course'),
             'content' => $this->render('_course', ['model' => $model, 'course' => $course], true),
@@ -250,8 +251,9 @@ $student = $model->student;
     <?php Pjax::end(); ?>
 
     <?php
-    //    var_dump($student->getGroups());
-    //    die;
+//    var_dump($student->currentGroup->title);
+//    var_dump($student->currentGroup->getCourse($student->currentGroup->created_study_year_id+4));
+//    die;
     ?>
 </div>
 

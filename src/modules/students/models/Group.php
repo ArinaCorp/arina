@@ -87,7 +87,7 @@ class Group extends ActiveRecord
 
     /**
      * @return ActiveQuery
-     */
+     */ //TODO: Rename to getCreatedStudyYear(?)
     public function getStudyYear()
     {
         return $this->hasOne(StudyYear::class, ['id' => 'created_study_year_id']);
@@ -106,8 +106,9 @@ class Group extends ActiveRecord
      */
     public function getSystemYearPrefix()
     {
-        if(!is_null($this->specialityQualification))
-        return $this->studyYear->year_start % 100 - $this->specialityQualification->getOffsetYears();
+        if (!is_null($this->specialityQualification))
+            return $this->studyYear->year_start % 100 - $this->specialityQualification->getOffsetYears();
+        return null;
     }
 
     /**
@@ -375,6 +376,7 @@ class Group extends ActiveRecord
     /**
      * @param null $yearId
      * @return int
+     * @throws \yii\base\InvalidConfigException
      */
     public function getCourse($yearId = null)
     {

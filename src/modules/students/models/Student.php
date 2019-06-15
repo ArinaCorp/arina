@@ -6,6 +6,7 @@ namespace app\modules\students\models;
 use app\modules\directories\models\department\Department;
 use app\modules\directories\models\speciality\Speciality;
 use app\modules\directories\models\speciality_qualification\SpecialityQualification;
+use app\modules\directories\models\study_year\StudyYear;
 use app\modules\geo\models\City;
 use app\modules\geo\models\Country;
 use app\modules\geo\models\Region;
@@ -508,10 +509,22 @@ class Student extends \yii\db\ActiveRecord
 
     /**
      * @return integer
+     * @throws \yii\base\InvalidConfigException
      */
     public function getCourse()
     {
-        return $this->getGroups()[0]->getCourse();
+        return $this->currentGroup->getCourse();
+    }
+
+    /**
+     * Find a year, when student had a defined course.
+     * @param $course
+     * @return StudyYear|null
+     */
+    public function getCourseStudyYear($course)
+    {
+        //TODO: What if student switched groups? Does it matter?
+        return StudyYear::findOne($this->currentGroup->created_study_year_id + ($course - 1));
     }
 
     /**
