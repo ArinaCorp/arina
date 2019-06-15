@@ -9,6 +9,9 @@ use app\modules\directories\models\speciality_qualification\SpecialityQualificat
 use app\modules\geo\models\City;
 use app\modules\geo\models\Country;
 use app\modules\geo\models\Region;
+use app\modules\journal\models\record\JournalMark;
+use app\modules\journal\models\record\JournalRecord;
+use app\modules\load\models\Load;
 use nullref\useful\behaviors\RelatedBehavior;
 use voskobovich\linker\LinkerBehavior;
 use Yii;
@@ -698,6 +701,34 @@ class Student extends \yii\db\ActiveRecord
     public function getEdicts()
     {
         return $this->getStudentsHistory()->orderBy(['date' => SORT_ASC])->all();
+    }
+
+    /**
+     * @param integer|null $semester
+     * @return JournalMark[]|\app\modules\plans\models\WorkPlan[]|Group[]|Student[]|array|\yii\db\ActiveRecord[]
+     */
+    public function getMarks($semester = null)
+    {
+        $allMarks = JournalMark::find()
+            ->joinWith('journalRecord')
+            ->joinWith('evaluation')
+            ->leftJoin('load', 'load.id = journal_record.load_id')
+            ->where(['student_id' => $this->id])->all();
+
+        if ($semester) {
+            // TODO: Seems to be a heavy execution, implement differently?
+            return array_filter($allMarks, function (JournalMark $mark) use ($semester) {
+                $record = $mark->journalRecord;
+                $graph = $record->load->getGraphRow($record->load->study_year_id);
+                $recordWeek = Yii::$app->get('calendar')->getWeekNumberByDate(strtotime($record->date));
+                $recordSemester = Yii::$app->get('calendar')->getSemester($graph, $recordWeek);
+                // We compare the record semester on scale of 8 semester based on group's course at the date of a mark.
+                // Basically (course * 2) = even semester number; If recordSemester == 1, we subtract 1, to correct the value.
+                return ($record->load->group->getCourse($record->load->study_year_id) * 2) - ($recordSemester === 1 ? 1 : 0) === $semester;
+            });
+        }
+
+        return $allMarks;
     }
 
 }

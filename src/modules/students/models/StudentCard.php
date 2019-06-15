@@ -6,7 +6,6 @@ use app\components\ExportToExcel;
 use app\modules\journal\models\record\JournalMark;
 use Yii;
 use yii\base\Model;
-use yii\web\View;
 
 /**
  * @property integer $id
@@ -52,16 +51,7 @@ class StudentCard extends Model
      */
     public function getMarks()
     {
-        $allMarks = JournalMark::find()
-            ->joinWith('journalRecord')
-            ->joinWith('evaluation')
-            ->leftJoin('load', 'load.id = journal_record.load_id')
-            ->where(['student_id' => $this->studentId])->all();
-//        $this->student->getCourse( TODO: Get the year for student's course
-        $map[1][1] = [
-
-        ];
-        return [];
+        return $this->student->getMarks($semester);
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace app\modules\journal\models\record;
 
+use app\helpers\GlobalHelper;
 use app\modules\journal\models\evaluation\Evaluation;
 use app\modules\journal\models\evaluation\EvaluationSystem;
 use app\modules\journal\models\presence\NotPresenceType;
@@ -30,7 +31,7 @@ use yii\bootstrap\Html;
  *
  * @property int $value
  * @property string $valueLiteral
- * @property string $valueScale
+ * @property string $valueScaleLiteral
  * @property Evaluation $evaluation
  * @property EvaluationSystem $evaluationSystem
  * @property Evaluation $retakeEvaluation
@@ -236,5 +237,16 @@ class JournalMark extends \yii\db\ActiveRecord
     public function getWorkSubject()
     {
         return Load::findOne($this->journalRecord->load_id)->workSubject;
+    }
+
+    public function getValueLiteral()
+    {
+        return GlobalHelper::getNumberLiteral($this->value);
+    }
+
+    public function getValueScaleLiteral()
+    {
+        // TODO: WorkSubjects don't have subj. cycle implemented yet, so EvaluationSystem can only be accessed via StudySubject, it's supposed to be accessible from WorkSubject
+        return GlobalHelper::getMarkScaleLiteral($this->value, $this->evaluation_system_id);
     }
 }

@@ -36,22 +36,22 @@ switch ($course) {
 <table class="table table-bordered">
     <tr>
         <th rowspan="4"
-            style="vertical-align: top"><?= Yii::t('plans', 'Name of the academic discipline and academic practices'); ?></th>
+            style="vertical-align: top"><?= Yii::t('app', 'Name of the academic discipline and academic practices'); ?></th>
     </tr>
     <tr>
-        <th rowspan="1" colspan="2"><?= Yii::t('plans', 'Total amount'); ?></th>
-        <th rowspan="2" colspan="2"><?= Yii::t('plans', 'Semester control, grade'); ?></th>
-        <th rowspan="3"><?= Yii::t('plans', 'Semester control date and certificate number'); ?></th>
-    </tr>
-
-    <tr>
-        <th rowspan="2"><?= Yii::t('plans', 'Hours'); ?></th>
-        <th rowspan="2"><?= Yii::t('plans', 'Of ECTS credits'); ?></th>
+        <th rowspan="1" colspan="2"><?= Yii::t('app', 'Total amount'); ?></th>
+        <th rowspan="2" colspan="2"><?= Yii::t('app', 'Semester control, grade'); ?></th>
+        <th rowspan="3"><?= Yii::t('app', 'Semester control date and certificate number'); ?></th>
     </tr>
 
     <tr>
-        <th><?= Yii::t('plans', 'Grade'); ?></th>
-        <th><?= Yii::t('plans', 'By national scale'); ?></th>
+        <th rowspan="2"><?= Yii::t('app', 'Hours'); ?></th>
+        <th rowspan="2"><?= Yii::t('app', 'Of ECTS credits'); ?></th>
+    </tr>
+
+    <tr>
+        <th><?= Yii::t('app', 'Grade'); ?></th>
+        <th><?= Yii::t('app', 'By national scale'); ?></th>
     </tr>
 
     <tr>
@@ -66,7 +66,7 @@ switch ($course) {
                 <td><?= $mark->workSubject->total[$fall]; ?></td>
                 <td><?= number_format($mark->workSubject->total[$fall] / 30, 2); ?></td>
                 <td><?= $mark->valueLiteral; ?></td>
-                <td><?= $mark->valueScale; ?></td>
+                <td><?= $mark->valueScaleLiteral; ?></td>
                 <td><?= $mark->date; ?></td>
             </tr>
         <?php endforeach;
@@ -84,7 +84,7 @@ switch ($course) {
                 <td><?= $mark->workSubject->total[$spring]; ?></td>
                 <td><?= number_format($mark->workSubject->total[$spring] / 30, 2); ?></td>
                 <td><?= $mark->valueLiteral; ?></td>
-                <td><?= $mark->valueScale; ?></td>
+                <td><?= $mark->valueScaleLiteral; ?></td>
                 <td><?= $mark->date; ?></td>
             </tr>
         <?php endforeach;

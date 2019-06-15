@@ -391,6 +391,17 @@ class Group extends ActiveRecord
     }
 
     /**
+     * Return the StudyYear when this group was of given course.
+     * @param $course
+     * @return StudyYear|null
+     */
+    public function getStudyYearForCourse($course)
+    {
+        //TODO: This shit is kind of silly
+        return StudyYear::findOne($this->created_study_year_id + $course - 1);
+    }
+
+    /**
      * @return bool|int
      */
     public function getCuratorId()
