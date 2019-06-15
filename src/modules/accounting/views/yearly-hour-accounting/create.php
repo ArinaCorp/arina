@@ -4,13 +4,13 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model app\modules\accounting\models\AccountingYear */
+/* @var $model app\modules\accounting\models\YearlyHourAccounting */
 
-$this->title = 'Create Accounting Year';
-$this->params['breadcrumbs'][] = ['label' => 'Accounting Years', 'url' => ['index']];
+$this->title = Yii::t('app', 'Create Yearly Hour Accounting');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Yearly Hour Accountings'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="accounting-year-create">
+<div class="yearly-hour-accounting-create">
 
     <div class="row">
         <div class="col-lg-12">

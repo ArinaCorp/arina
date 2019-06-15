@@ -39,7 +39,7 @@ return array_merge(require(__DIR__ . '/installed_modules.php'), [
         'class' => 'app\modules\journal\Module',
     ],
     'accounting' => [
-        'class' => 'app\modules\accounting\Accounting',
+        'class' => app\modules\accounting\Module::class,
     ],
     'rbac' => [
         'class' => app\modules\rbac\Module::class,

@@ -10,7 +10,7 @@ use yii\base\Module as BaseModule;
 /**
  * accounting module definition class
  */
-class Accounting extends BaseModule implements IAdminModule, IAccessibleModule
+class Module extends BaseModule implements IAdminModule, IAccessibleModule
 {
 
     public function behaviors()
@@ -33,28 +33,13 @@ class Accounting extends BaseModule implements IAdminModule, IAccessibleModule
             'label' => Yii::t('app', 'Accounting'),
             'icon' => 'sticky-note',
             'items' => [
-                /*[
-                    'label' => Yii::t('app', 'Accounting teacher training hours per mounth'),
-                    'url' => ['/accounting/accounting-mounth'],
-                    'icon' => 'list',
-                ],
                 [
-                    'label' => Yii::t('app', 'Accounting teacher training hours per year'),
-                    'url' => ['/accounting/accounting-year'],
-                    'icon' => 'list',
-                ],*/
-                [
-                    'label' => Yii::t('app', 'Accounting per mounth'),
-                    'url' => ['/accounting/accounting'],
-                    'icon' => 'list',
-                ],
-                [
-                    'label' => Yii::t('app', 'Accounting teacher training hours per year'),
-                    'url' => ['/accounting/accounting-ye'],
+                    'label' => Yii::t('app', 'Yearly hour accounting'),
+                    'url' => ['/accounting/yearly-hour-accounting'],
                     'icon' => 'list',
                 ],
             ],
-            'roles' => ['staff-office'],
+            'roles' => ['teacher'],
         ];
     }
 
