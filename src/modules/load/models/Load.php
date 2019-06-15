@@ -624,4 +624,12 @@ class Load extends ActiveRecord
     {
         return $this->hasMany(JournalRecord::class, ['load_id' => 'id']);
     }
+
+    public function getGraphRow($yearId)
+    {
+        $workPlan = $this->workSubject->workPlan;
+        $rows = $workPlan->specialityQualification->getGroupsByStudyYear($yearId);
+        $graphIndex = array_search($this->group->getSystemTitle(), array_keys($rows));
+        return $workPlan->graph[$graphIndex];
+    }
 }
