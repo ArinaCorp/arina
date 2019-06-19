@@ -28,7 +28,7 @@ class ExportSemester
         $group = Group::findOne(['id' => $data["data"]["group_id"]]);
         $year = $data["data"]["dateFrom"];
         $year = $year . "/" . ($year + 1);
-        $mark_types = ['credit', 'exam', 'DPA', 'course'];
+        $subject_types = ['credit', 'exam', 'DPA', 'course'];
         $subjects = [];
         $creditSubjects = [];
         $courseSubject = [];
@@ -39,7 +39,6 @@ class ExportSemester
         $studyPlan = StudyPlan::findOne(['id' => $studyPlan_id]);
         $romanSemester = ExportHelpers::ConvertToRoman($semester);
         $students = $group->getStudentsArray();
-        $current = 9;
         $i = 1;
         $beforeRow = null;
         $pass = ExportHelpers::getPropusk($students);
@@ -81,7 +80,7 @@ class ExportSemester
             foreach ($students as $student) {
                 $cursor->insertNewRowBefore($current + 1);
 //                $current;
-                $cursor->setCellValue("A${current}", $i);
+                $cursor->setCellValue("A${current}", $i)->getStyle("A${current}")->getAlignment()->setHorizontal("center");
                 $i++;
 //              Name
                 $cursor->setCellValue('B' . $current, $student->getFullName());
@@ -91,7 +90,7 @@ class ExportSemester
                 }
                 $current++;
             }
-
+            $student_mark = ExportHelpers::getMarks($subjects, $students);
             $curCol = "D";
             if (ExportHelpers::isArrayAndIsEmpty($creditSubjects)) {
                 $start = $curCol;
@@ -158,17 +157,34 @@ class ExportSemester
                 $letter = $marks_column_begin;
 
                 if ($data["data"]['marks_checker']) {
-                    $student_mark = ExportHelpers::getMarks($subjects, $students);
-                    foreach ($subjects as $key => $subject) {
-                        foreach ($student_mark as $mark) {
-                            if ($mark["student_id"] == $student->id && $mark["subject_id"] == $subject['subject']->id) {
-                                $cords = "${letter}${current}";
-                                $cursor->setCellValue($cords, $mark["value"]);
-                                ExportHelpers::MarkColorized($spreadsheet, $mark["value"], $cords);
-                                $avg += $mark["value"];
+                    foreach ($subjects as $subject) {
+                        foreach ($subject_types as $type) {
+                            foreach ($student_mark as $mark) {
+                                $sb = $mark["subject_id"] == $subject['subject']->id;
+                                $st = $mark["student_id"] == $student->id;
+                                $sbt = $subject['type'] == $type;
+                                $tm = $type == $mark["type"];
+                                if ($st && $sb && $tm && $sbt) {
+                                    $cords = "${letter}${current}";
+                                    $cursor->setCellValue($cords, $mark["value"]);
+                                    ExportHelpers::MarkColorized($spreadsheet, $mark["value"], $cords);
+                                }
                             }
                         }
                         $letter++;
+                    }
+                    foreach ($subjects as $subject) {
+                        foreach ($subject_types as $type) {
+                            foreach ($student_mark as $mark) {
+                                $sb = $mark["subject_id"] == $subject['subject']->id;
+                                $st = $mark["student_id"] == $student->id;
+                                $sbt = $subject['type'] == $type;
+                                $tm = $type == $mark["type"];
+                                if ($sbt && $st && $sb && $tm) {
+                                    $avg += $mark["value"];
+                                }
+                            }
+                        }
                     }
 
 //              Average mark
@@ -193,7 +209,6 @@ class ExportSemester
                 $current++;
             }
 
-
 //          Delete excessive rows
             $cursor->removeRow(8);
             $cursor->removeRow($current--)->removeRow($current);
@@ -203,9 +218,12 @@ class ExportSemester
                 $avg_columns = [];
                 foreach ($subjects as $subject) {
                     $avg = 0;
-                    foreach ($mark_types as $type) {
+                    foreach ($subject_types as $type) {
                         foreach ($student_mark as $mark) {
-                            if ($subject['subject']->id == $mark['subject_id'] && $mark['type'] == $type) {
+                            $sb = $mark["subject_id"] == $subject['subject']->id;
+                            $sbt = $subject['type'] == $type;
+                            $tm = $type == $mark["type"];
+                            if ($sb && $sbt && $tm) {
                                 $avg += $mark['value'];
                             }
                         }
