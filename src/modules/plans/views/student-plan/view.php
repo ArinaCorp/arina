@@ -26,10 +26,11 @@ $this->params['breadcrumbs'][] = $this->title;
     <h2><?= Html::encode($this->title) ?></h2>
     <h3><?= Html::encode(Yii::t('app', 'Study year') . ' ' . $model->workPlan->getYearTitle()) ?></h3>
     <h4><?= Html::encode(Yii::t('app', 'Semester') . ': ' . $model->semester) ?></h4>
-    <h4><?= Html::encode(Yii::t('app', 'Student') . ': ' . $model->student->fullName . ' (' . $model->student->groups[0]->title . ')'); ?></h4>
+    <!-- TODO: get student group by workplan, it's inappropriate to show student's current group all the time -->
+    <h4><?= Html::encode(Yii::t('app', 'Student') . ': ' . $model->student->fullName . ' (' . $model->student->currentGroup->title . ')'); ?></h4>
     <h4><?= Html::encode(Yii::t('app', 'Department') . ': ' . $model->workPlan->specialityQualification->speciality->department->title); ?></h4>
     <h4><?= Html::encode(Yii::t('app', 'Speciality') . '/' . Yii::t('app', 'Education program') . ': ' . $model->workPlan->specialityQualification->speciality->title); ?></h4>
-    <h4><?= Html::encode(Yii::t('app', 'Study form') . ': ' . 'денна'); // TODO: implement study form  ?></h4>
+    <h4><?= Html::encode(Yii::t('app', 'Study form') . ': ' . 'денна'); // TODO: implement study form   ?></h4>
 
     <?= Html::a(Yii::t('app', 'Export'), Url::toRoute(['student-plan/export', 'id' => $model->id]), ['class' => 'btn btn-success']); ?>
     <?= Html::a(Yii::t('app', 'Update'), Url::toRoute(['student-plan/update', 'id' => $model->id]), ['class' => 'btn btn-info']); ?>
@@ -40,8 +41,8 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 
     <h5><?= Html::encode(Yii::t('app', 'Created At') . ' ' . Yii::$app->formatter->asDate($model->created, 'dd.mm.y')); ?></h5>
-    <?php if($model->updated): ?>
-    <h5><?= Html::encode(Yii::t('app', 'Updated At') . ' ' . Yii::$app->formatter->asDate($model->updated, 'dd.mm.y')); ?></h5>
+    <?php if ($model->updated): ?>
+        <h5><?= Html::encode(Yii::t('app', 'Updated At') . ' ' . Yii::$app->formatter->asDate($model->updated, 'dd.mm.y')); ?></h5>
     <?php endif; ?>
     <h4><?= Html::encode(Yii::t('app', 'Group curator') . ' ' . $model->student->groups[0]->getCuratorFullName()); ?></h4>
 

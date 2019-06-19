@@ -74,7 +74,6 @@ class SubjectBlock extends ActiveRecord
             [['speciality_id'], 'integer'],
             [['speciality_id', 'course'], 'required'],
             [['course'], 'integer', 'min' => 1, 'max' => 4],
-            [['created', 'updated'], 'integer'],
             ['selectedSubjects', 'each', 'rule' => ['integer']]
         ];
     }

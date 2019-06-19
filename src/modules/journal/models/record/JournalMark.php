@@ -3,6 +3,7 @@
 namespace app\modules\journal\models\record;
 
 use app\helpers\GlobalHelper;
+use app\modules\journal\helpers\MarkHelper;
 use app\modules\journal\models\evaluation\Evaluation;
 use app\modules\journal\models\evaluation\EvaluationSystem;
 use app\modules\journal\models\presence\NotPresenceType;
@@ -149,7 +150,9 @@ class JournalMark extends \yii\db\ActiveRecord
 
     public function getEvaluationSystem()
     {
-        return $this->hasOne(EvaluationSystem::class, ['id' => 'evaluation_system_id']);
+        return EvaluationSystem::findOne($this->journalRecord->load->evaluation_system_id);
+        // TODO: 'evaluation_system_id' is not used in JournalMark
+        //return $this->hasOne(EvaluationSystem::class, ['id' => 'evaluation_system_id']);
     }
 
     public function getRetakeEvaluation()
@@ -246,7 +249,7 @@ class JournalMark extends \yii\db\ActiveRecord
 
     public function getValueScaleLiteral()
     {
-        // TODO: WorkSubjects don't have subj. cycle implemented yet, so EvaluationSystem can only be accessed via StudySubject, it's supposed to be accessible from WorkSubject
-        return GlobalHelper::getMarkScaleLiteral($this->value, $this->evaluation_system_id);
+        // TODO: We're getting eval system from load (?)
+        return MarkHelper::getMarkScaleLiteral($this->value, $this->evaluationSystem->id);
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use app\helpers\GlobalHelper;
 use app\modules\plans\models\StudentPlan;
 use yii\web\View;
 use yii\bootstrap\Tabs;
@@ -16,7 +17,7 @@ use yii\widgets\Pjax;
 <?= Tabs::widget([
     'items' => [
         [
-            'label' => Yii::t('app', 'First').' '.Yii::t('app', 'course'),
+            'label' => GlobalHelper::getOrderLiteral($model->course) . ' ' . Yii::t('app', 'course'),
             'active' => true,
             'content' => $this->render('_course', ['model' => $model, 'course' => $model->course, 'semester' => $model->semester], true),
         ],

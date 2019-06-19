@@ -134,7 +134,7 @@ $student = $model->student;
     </div>
 
     <div class="row">
-        <div class="col-lg-12 clearfix">
+        <div class="col-lg-12 clearfix hidden">
             <h5 class="pull-left"><?= Yii::t('app', 'By competition') ?>:</h5>
             <h5 class="pull-left fw-normal mx-1"><?= 'зі стажем/без стажу' ?></h5> <!-- TODO: Discuss -->
         </div>
@@ -148,14 +148,14 @@ $student = $model->student;
     </div>
 
     <div class="row">
-        <div class="col-lg-12 clearfix">
+        <div class="col-lg-12 clearfix hidden">
             <h5 class="pull-left"><?= Yii::t('app', 'By direction') ?>:</h5>
             <h5 class="pull-left fw-normal mx-1"><?= 'Not used' ?></h5>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-lg-12 clearfix">
+        <div class="col-lg-12 clearfix hidden">
             <h5 class="pull-left"><?= Yii::t('app', 'By special conditions of partaking in the competition') ?>
                 :</h5>
             <h5 class="pull-left fw-normal mx-1"><?= 'Not used' ?></h5>
@@ -170,14 +170,14 @@ $student = $model->student;
     </div>
 
     <div class="row">
-        <div class="col-lg-12 clearfix">
+        <div class="col-lg-12 clearfix hidden">
             <h5 class="pull-left"><?= Yii::t('app', 'On conditions of absolute refund') ?>:</h5>
             <h5 class="pull-left fw-normal mx-1"><?= 'Discuss' ?></h5>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-lg-12 clearfix">
+        <div class="col-lg-12 clearfix hidden">
             <h4 class="pull-left"><?= Yii::t('app', 'Employment book') ?>:</h4>
             <h4 class="pull-left fw-normal mx-1"><?= 'Not used' ?></h4>
         </div>

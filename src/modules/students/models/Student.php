@@ -90,6 +90,7 @@ use yii\web\UploadedFile;
  * @property StudentsHistory $enrollmentEdict
  * @property Group $currentGroup
  * @property Group $firstGroup
+ * @property integer $course
  *
  * @method loadWithRelations($data, $formName = null)
  * @method validateWithRelations()
@@ -681,7 +682,7 @@ class Student extends \yii\db\ActiveRecord
     public function getCurrentGroup()
     {
         $lastHistoryRecord = StudentsHistory::find()->where(['student_id' => $this->id])->orderBy(['date' => SORT_DESC])->one();
-        return Group::findOne($lastHistoryRecord->group);
+        return Group::findOne($lastHistoryRecord->group->id);
     }
 
     /**
@@ -742,6 +743,16 @@ class Student extends \yii\db\ActiveRecord
         }
 
         return $allMarks;
+    }
+
+    /**
+     * Returns the edict which was used to transfer this student to a given course.
+     * @param int $course
+     * @return array|\yii\db\ActiveRecord|null|StudentsHistory
+     */
+    public function getCourseEdict(int $course)
+    {
+        return $this->getStudentsHistory()->where(['action_type' => StudentsHistory::$TYPE_TRANSFER_COURSE, 'course' => $course])->one();
     }
 
 }

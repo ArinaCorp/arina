@@ -11,6 +11,8 @@ namespace app\components\exporters;
 
 use app\components\ExportToExcel;
 use app\helpers\GlobalHelper;
+use app\modules\journal\helpers\MarkHelper;
+use app\modules\journal\models\record\JournalMark;
 use app\modules\plans\models\StudentPlan;
 use app\modules\plans\models\WorkPlan;
 use app\modules\plans\models\WorkSubject;
@@ -29,6 +31,7 @@ class ExportStudentcard
      * @param $studentCard StudentCard
      * @return Spreadsheet
      * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \yii\base\InvalidConfigException
      */
     public static function getSpreadsheet($spreadsheet, $studentCard)
     {
@@ -91,41 +94,45 @@ class ExportStudentcard
 
         }
 
+        // Page 2
         $spreadsheet->setActiveSheetIndex(1);
         $activeSheet = $spreadsheet->getActiveSheet();
 
-        //Roll the subjects, marks&stuff
-        //GlobalHelper used instead.
-        /*$orderDict = [
-            '1' => Yii::t('app', 'First'),
-            '2' => Yii::t('app', 'Second'),
-            '3' => Yii::t('app', 'Third'),
-            '4' => Yii::t('app', 'Fourth'),
-            '5' => Yii::t('app', 'Fifth'),
-            '6' => Yii::t('app', 'Sixth'),
-            '7' => Yii::t('app', 'Seventh'),
-            '8' => Yii::t('app', 'Eighth'),
-        ];*/
-
-
         //Semester 1: begins with 5
         $row = 5;
-        //$counter = 1; useless
         // TODO: Implement a better way to get group's course, as at some point it will return >4. Define Max course for a group? Define finishing year?
         // TODO: Start with the semester (Course) when student was enrolled.(It already does just put it in a method)
-        for ($semester = ($student->enrollmentEdict->course * 2) - 1; $semester < $student->currentGroup->getCourse($student->currentGroup->created_study_year_id+4) * 2; $semester++) {
-            if ($marks = $studentCard->getMarks($semester + 1)) {
-                if (($semester + 1) % 2) { // set this header for each new course (odd semester)
-                    $studyYear = $student->firstGroup->getStudyYearForCourse(GlobalHelper::getCourseForSemester($semester + 1));
-                    $courseHeader = mb_strtoupper(GlobalHelper::getOrderLiteral(GlobalHelper::getCourseForSemester($semester + 1), 'uk') . " $studyYear->title навчальний рік");
-                    $activeSheet->setCellValue("A$row", $courseHeader);
-                }
-                $semesterHeader = mb_strtoupper(GlobalHelper::getOrderLiteral($semester + 1, 'uk'));
-                $activeSheet->setCellValue("B$row", $semesterHeader);
+        for ($semester = ($student->enrollmentEdict->course * 2) - 1; $semester <= $student->currentGroup->getCourse($student->currentGroup->created_study_year_id + 4) * 2; $semester++) {
+            $semesterId = $semester - 1;
+
+            /** TODO: Don't forget another way of implementing StudentCard marks export.
+             * We have 4 tables for 4 courses on 2nd page of the template
+             *
+             * Right now the headers are written out even when no marks are found.
+             * The $row incrementation is currently distributed to if() conditions which check if any marks are found per given course.
+             *
+             * So, with this implementation headers are basically rewritten on the first table and the output begins with the first course that has marks.
+             * Ex.: table 1 has headers and is filled with 4th course marks, tables 2,3,4 are empty.
+             *
+             * Another way to do it is to ignore "marks per given course are present" conditions and simply fill the courses according to their tables
+             * Ex.: all tables have headers, table 1,2,4 are empty, table 3 is filled with 3rd course marks.
+             */
+
+            // Set up the headers even if there is no info to output
+            if (($semester) % 2) { // set this header for each new course (odd semester)
+                $studyYear = $student->firstGroup->getStudyYearForCourse(GlobalHelper::getCourseForSemester($semester));
+                $courseHeader = mb_strtoupper(GlobalHelper::getOrderLiteral(GlobalHelper::getCourseForSemester($semester), 'uk') . " $studyYear->title навчальний рік");
+                $activeSheet->setCellValue("A$row", $courseHeader);
+            }
+            $semesterHeader = mb_strtoupper(GlobalHelper::getOrderLiteral($semester, 'uk'));
+            $activeSheet->setCellValue("B$row", $semesterHeader);
+
+            if ($marks = $studentCard->getMarks($semester)) {
+                // Output marks if there are any
                 foreach ($marks as $mark) {
                     $activeSheet->setCellValue("C$row", $mark->workSubject->title);
-                    $activeSheet->setCellValue("D$row", $mark->workSubject->total[$semester]); // TODO: Same here, hours should probs be taken from load
-                    $activeSheet->setCellValue("E$row", number_format($mark->workSubject->total[$semester] / 30, 2));
+                    $activeSheet->setCellValue("D$row", $mark->workSubject->total[$semesterId]); // TODO: Same here, hours should probs be taken from load
+                    $activeSheet->setCellValue("E$row", number_format($mark->workSubject->total[$semesterId] / 30, 2));
                     $activeSheet->setCellValue("F$row", $mark->valueLiteral);
                     $activeSheet->setCellValue("G$row", $mark->valueScaleLiteral);
                     $activeSheet->setCellValue("H$row", $mark->retake_date ? $mark->retake_date : $mark->date);
@@ -136,15 +143,51 @@ class ExportStudentcard
                 // actually have to remove 2 rows, but PhpSpreadsheet fucks up a doc if you have merged rows nearby, so leave 1 empty
                 // TODO: Btw this empty row may be used for Average Grade per semester, seen these in some student card examples
                 $activeSheet->removeRow($row);
+                // TODO: Implement empty row here(before incrementation)
                 $row++;
-            }
-            // the offset is +7 per course, that is until edicts are implemented
-            if (!(($semester + 1) % 2)) { // the course ends on even semester
-                $row += 7;
+
+                // The offset is +7 per course, that is until edicts are implemented
+                if (!(($semester) % 2)) {
+                    // At the end of each course, output the line with the transfer edict.
+                    $courseEdict = $student->getCourseEdict(GlobalHelper::getCourseForSemester($semester));
+                    $courseTransferStr = 'Переведено на ' . GlobalHelper::getOrderLiteral($courseEdict->course, 'uk')
+                        . ' курс. Наказ від' . Yii::t('app', '{date} year №{cmd}', ['date' => $courseEdict->date, 'cmd' => $courseEdict->command]);
+                    $activeSheet->setCellValue("A$row", $courseEdict ? $courseTransferStr : 'ERR: Наказ не знайдено.');
+                    $row += 7;
+                }
+            } else {
+                //If no marks found for odd semester, increase row increment by 2
+                //But only if the next semester, which is even, has any marks
+                //TODO: Basically check if any marks are present for given course, implement a method later(?)
+                if (($semester % 2) && $student->getMarks($semester + 1)) {
+                    $row += 2;
+                }
             }
         }
 
-        //$activeSheet->setCellValue("C" . ($row + 7), 'SHIEEET BOIII');  High quality debugging
+        // Page 3
+        $spreadsheet->setActiveSheetIndex(2);
+        $activeSheet = $spreadsheet->getActiveSheet();
+
+        $allMarks = $student->getMarks();
+
+        $total = count($allMarks);
+        $satisfiable = count(array_filter($allMarks, function (JournalMark $mark) {
+            return MarkHelper::getMarkScale($mark->value, $mark->evaluationSystem->id) === MarkHelper::MARK_SCALE_SATISFIABLE;
+        }));
+        $good = count(array_filter($allMarks, function (JournalMark $mark) {
+            return MarkHelper::getMarkScale($mark->value, $mark->evaluationSystem->id) === MarkHelper::MARK_SCALE_GOOD;
+        }));
+        $excellent = count(array_filter($allMarks, function (JournalMark $mark) {
+            return MarkHelper::getMarkScale($mark->value, $mark->evaluationSystem->id) === MarkHelper::MARK_SCALE_EXCELLENT;
+        }));
+
+        //set total count
+        $activeSheet->setCellValue("F26", $total);
+        //set scale counts
+        $activeSheet->setCellValue("J30", $satisfiable);
+        $activeSheet->setCellValue("J29", $good);
+        $activeSheet->setCellValue("J28", $excellent);
 
         return $spreadsheet;
     }

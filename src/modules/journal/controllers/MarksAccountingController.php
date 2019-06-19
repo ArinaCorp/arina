@@ -4,7 +4,7 @@ namespace app\modules\journal\controllers;
 
 use app\components\DepDropHelper;
 use app\components\ExportToExcel;
-use app\modules\journal\helpers\MarksAccountingHelper;
+use app\modules\journal\helpers\MarkHelper;
 use app\modules\journal\models\record\JournalMark;
 use app\modules\journal\models\record\JournalRecord;
 use app\modules\load\models\Load;
@@ -129,7 +129,7 @@ class MarksAccountingController extends Controller implements IAdminController
                 return $recordSemester === $currentSemester;
             });
 
-            $marks = MarksAccountingHelper::getMarks($load->id, $records);
+            $marks = MarkHelper::getMarks($load->id, $records);
         }
         return $this->render('index', [
             'isTeacher' => $isTeacher,

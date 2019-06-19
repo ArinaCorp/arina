@@ -18,6 +18,9 @@ class EvaluationSystem extends \yii\db\ActiveRecord
 {
     use Mappable;
 
+    const FIVE_POINT_SCALE = 1;
+    const TWELVE_POINT_SCALE = 2;
+
     /**
      * @inheritdoc
      */
