@@ -2,6 +2,8 @@
 
 namespace app\helpers;
 
+use app\modules\user\helpers\UserHelper;
+use app\modules\user\models\User;
 use Yii;
 
 class GlobalHelper
@@ -146,5 +148,30 @@ class GlobalHelper
             8 => 4,
         ];
         return $semToCourse[$semester];
+    }
+
+    public static function getAppName()
+    {
+        $name = Yii::$app->name;
+
+        /** @var User $user */
+        $user = Yii::$app->user->identity;
+        if ($user) {
+            $profileName = '';
+            switch ($user) {
+                case UserHelper::hasRole($user, 'admin'):
+                    $profileName = Yii::t('app', 'Admin profile');
+                    break;
+                case UserHelper::hasRole($user, 'student'):
+                    $profileName = Yii::t('app', 'Student profile');
+                    break;
+                case UserHelper::hasRole($user, 'teacher'):
+                    $profileName = Yii::t('app', 'Teacher profile');
+                    break;
+            }
+
+            $name .= " – $profileName";
+        }
+        return $name;
     }
 }

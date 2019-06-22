@@ -558,4 +558,9 @@ return [
     '{something} in {year} year' => '{something} в {year} році',
     '{study_year} has been set as current study year' => '{study_year} - встановлений поточним навчальним роком',
     '№{cmd} since {date} y.' => '№{cmd} від {date} р.',
+    'Yearly Hour Accounting' => 'Річний облік годин',
+    'Yearly Hour Accountings' => 'Річні обліки годин',
+    'Admin profile' => 'Адміністрування',
+    'Teacher profile' => 'Кабінет викладача',
+    'Student profile' => 'Кабінет студента',
 ];
