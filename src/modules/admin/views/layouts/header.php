@@ -14,7 +14,7 @@ use yii\helpers\Url;
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="<?= Url::to(['/admin/main']) ?>"><?= Yii::$app->name ?></a>
+        <a class="navbar-brand" href="<?= Url::to(['/admin/main']) ?>"><?= \app\helpers\GlobalHelper::getAppName() ?></a>
     </div>
     <!-- /.navbar-header -->
 

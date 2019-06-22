@@ -1,15 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: vyach
- * Date: 30.04.2019
- * Time: 19:22
- */
 
 namespace app\modules\journal\controllers;
 
 use app\components\DepDropHelper;
-use app\modules\directories\models\study_year\StudyYear;
+use app\components\ExportToExcel;
+use app\modules\journal\helpers\MarkHelper;
 use app\modules\journal\models\record\JournalMark;
 use app\modules\journal\models\record\JournalRecord;
 use app\modules\load\models\Load;
@@ -81,16 +76,25 @@ class MarksAccountingController extends Controller implements IAdminController
         $isTeacher = UserHelper::hasRole($user, 'teacher');
         if ($isTeacher) {
             $current_year = $this->_calendar->getCurrentYear();
+            /** @var Load[] $loads */
             $loads = Load::find()
                 ->joinWith('workSubject.subject')
                 ->joinWith('group')
                 ->where([
                     'employee_id' => $user->employee_id,
                     'study_year_id' => $current_year->id,
-                ])->getMap('fullTitle');
-        }
+                ])->all();
 
-        $marks = [];
+            //get loads that have hours in current semester
+            $loads = array_filter($loads, function (Load $load) {
+                $course = $load->group->getCourse();
+                $graph = $load->getGraphRow($this->_calendar->getCurrentYear()->id);
+                $semesterIndex = $this->_calendar->getSemesterIndexByCourse($course, $this->_calendar->getCurrentSemester($graph));
+                return $load->workSubject->total[$semesterIndex];
+            });
+
+            $loads = ArrayHelper::map($loads, 'id', 'fullTitle');
+        }
 
         $load = Load::findOne($load_id);
         if (!$load) {
@@ -108,35 +112,31 @@ class MarksAccountingController extends Controller implements IAdminController
             }
         }
 
+        $records = [];
+        $marks = [];
+
         if ($load->id) {
-            $marksRecords = JournalMark::find()
-                ->joinWith('evaluation')
-                ->where([
-                    'record_id' => $load->getJournalRecords()->select('id')->column(),
-                ])->all();
-
-            $students = $load->group->getStudentsArray();
-
             $records = $load->journalRecords;
 
-            foreach ($students as $student) {
-                foreach ($records as $journalRecord) {
-                    foreach ($marksRecords as $mark) {
-                        if ($student->id == $mark->student_id && $journalRecord->id == $mark->record_id) {
-                            $marks[$mark->student_id][$mark->record_id] = $mark;
-                        }
-                    }
-                    if (!isset($marks[$student->id][$journalRecord->id])) {
-                        $marks[$student->id][$journalRecord->id] = new JournalMark();
-                    }
-                }
-            }
+            //get graph for load by group and workPlan
+            $graph = $load->getGraphRow($this->_calendar->getCurrentYear()->id);
+            $currentSemester = $this->_calendar->getCurrentSemester($graph);
+
+            //get records that were added in current semester
+            $records = array_filter($records, function (JournalRecord $record) use ($graph, $currentSemester) {
+                $recordWeek = $this->_calendar->getWeekNumberByDate(strtotime($record->date));
+                $recordSemester = $this->_calendar->getSemester($graph, $recordWeek);
+                return $recordSemester === $currentSemester;
+            });
+
+            $marks = MarkHelper::getMarks($load->id, $records);
         }
         return $this->render('index', [
             'isTeacher' => $isTeacher,
             'loads' => $loads,
             'load' => $load,
             'record' => $record,
+            'records' => $records,
             'marks' => $marks
         ]);
     }

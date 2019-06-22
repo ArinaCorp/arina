@@ -38,6 +38,13 @@ class CalendarController extends Controller implements IAdminController
         return [
             'access' => [
                 'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => [],
+                        'roles' => ['teacher'],
+                    ]
+                ]
             ],
         ];
     }
@@ -90,16 +97,22 @@ class CalendarController extends Controller implements IAdminController
      * @param int $course
      * @return string
      */
-    public function actionInfo($work_plan_id = 1, $course = 1)
+    public function actionInfo($work_plan_id, $group=null)
     {
         $workPlan = WorkPlan::findOne(['id' => $work_plan_id]);
-        $semester = $this->_calendar->getCurrentSemester($workPlan, $course);
+        if ($group) {
+            $rows = $workPlan->specialityQualification->getGroupsByStudyYear($workPlan->study_year_id);
+            $graphIndex = array_search($group, array_keys($rows));
+            $semester = $this->_calendar->getCurrentSemester($workPlan->graph[$graphIndex]);
+        }
 
+        $course = 1;
         return $this->render('info', [
             'workPlan' => $workPlan,
             'course' => $course,
             'semester' => $semester,
             'week' => $this->_calendar->getCurrentWeek(),
+            'group' => $group
         ]);
     }
 }

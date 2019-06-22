@@ -51,10 +51,10 @@ use yii\helpers\Html;
 
         <div class="row">
             <div class="col-sm-4">
-                <?= $form->field($model, "[{$index}]phone1")->textInput(['mask' => '(999) 999-9999']); ?>
+                <?= $form->field($model, "[{$index}]phone1")->textInput(['data' => ['mask' => '+99 (999) 999-9999']]); ?>
             </div>
             <div class="col-sm-4">
-                <?= $form->field($model, "[{$index}]phone2")->textInput(['mask' => '(999) 999-9999']); ?>
+                <?= $form->field($model, "[{$index}]phone2")->textInput(['data' => ['mask' => '+99 (999) 999-9999']]); ?>
             </div>
             <div class="col-sm-4">
                 <?= $form->field($model, "[{$index}]email")->textInput() ?>

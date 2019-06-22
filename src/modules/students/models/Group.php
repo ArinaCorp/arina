@@ -87,7 +87,7 @@ class Group extends ActiveRecord
 
     /**
      * @return ActiveQuery
-     */
+     */ //TODO: Rename to getCreatedStudyYear(?)
     public function getStudyYear()
     {
         return $this->hasOne(StudyYear::class, ['id' => 'created_study_year_id']);
@@ -106,8 +106,9 @@ class Group extends ActiveRecord
      */
     public function getSystemYearPrefix()
     {
-        if(!is_null($this->specialityQualification))
-        return $this->studyYear->year_start % 100 - $this->specialityQualification->getOffsetYears();
+        if (!is_null($this->specialityQualification))
+            return $this->studyYear->year_start % 100 - $this->specialityQualification->getOffsetYears();
+        return null;
     }
 
     /**
@@ -241,13 +242,15 @@ class Group extends ActiveRecord
     /**
      * @param bool $year_id
      * @return bool
+     * @throws \yii\base\InvalidConfigException
      */
     public function isActive($year_id = true)
     {
         if ($year_id) {
             $year = StudyYear::findOne($year_id);
         } else {
-            $year = StudyYear::findOne(['active' => 1]);
+//            $year = StudyYear::findOne(['active' => 1]);
+            $year = Yii::$app->get('calendar')->getCurrentYear();
         }
         if ($year->year_start < $this->studyYear->year_start) {
             return false;
@@ -375,27 +378,23 @@ class Group extends ActiveRecord
     /**
      * @param null $yearId
      * @return int
+     * @throws \yii\base\InvalidConfigException
      */
     public function getCourse($yearId = null)
     {
-        $year = null;
-        if (isset($yearId)) {
-            $year = StudyYear::findOne(['id' => $yearId]);
-        }
-        if (!isset($year)) {
-            //TODO refactor it
-            $year = Yii::$app->get('calendar')->getCurrentYear();
-        }
-        //TODO: remove later
-//        var_dump($year->getYearEnd());
-//        var_dump($this->studyYear->year_start);
-//        if($this->id == 1) {
-//            var_dump($this->studyYear->year_start);
-//            var_dump($year->getYearEnd());
-//            die;
-//        }
-        $value = $year->getYearEnd() - $this->studyYear->year_start;
-        return $value;
+        $year = $yearId ? StudyYear::findOne(['id' => $yearId]) : Yii::$app->get('calendar')->getCurrentYear();
+        return $year->getYearEnd() - $this->studyYear->year_start;
+    }
+
+    /**
+     * Return the StudyYear when this group was of given course.
+     * @param $course
+     * @return StudyYear|null
+     */
+    public function getStudyYearForCourse($course)
+    {
+        //TODO: This shit is kind of silly
+        return StudyYear::findOne($this->created_study_year_id + $course - 1);
     }
 
     /**

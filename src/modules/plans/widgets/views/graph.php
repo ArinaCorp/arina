@@ -72,7 +72,7 @@ use yii\web\View;
         <?php
         $j = 0;
         foreach ($rows as $key => $name): ?>
-            <tr class="line" data-course-number="<?= $name ?>">
+            <tr class="line" data-group="<?= $key ?>">
                 <td>
                     <?php if ($studyPlan): ?>
                         <span><?= $key; ?></span>

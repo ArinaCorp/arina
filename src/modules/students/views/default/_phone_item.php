@@ -25,6 +25,6 @@ use yii\widgets\MaskedInput;
         <?php if (!$model->isNewRecord): ?>
             <?= Html::activeHiddenInput($model, "[{$index}]id"); ?>
         <?php endif ?>
-        <?= $form->field($model, "[{$index}]phone")->textInput(['data' => ['mask' => '(999) 999-9999']]); ?>
+        <?= $form->field($model, "[{$index}]phone")->textInput(['data' => ['mask' => '+99 (999) 999-9999']]); ?>
     </div>
 </div>

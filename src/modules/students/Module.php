@@ -96,6 +96,11 @@ class Module extends BaseModule implements IAdminModule, IAccessibleModule
                         ],
                     ],
                 ],
+                [
+                    'label' => Yii::t('app', 'Student card'),
+                    'url' => ['/students/student-card'],
+                    'icon' => 'address-book',
+                ],
             ],
             'roles' => ['head-of-department', 'teacher', 'curator', 'staff-office'],
         ];

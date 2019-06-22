@@ -1,43 +1,21 @@
 <?php
+
 namespace app\modules\geo\models;
 
-use nullref\core\models\Model as BaseModel;
-use nullref\useful\DropDownTrait;
+use nullref\useful\traits\Mappable;
 use Yii;
-use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "country".
- *
- * @property integer $id
- * @property string $code
- * @property string $name
- * @property string $data
- * @property integer $createdAt
- * @property integer $updatedAt
- *
- * @property Region[] $regions
- * @property City[] $cities
  */
-class Country extends BaseModel
+class Country extends \tigrov\country\Country
 {
-    use DropDownTrait;
-    /**
-     * @inheritdoc
-     */
-    public static function tableName()
-    {
-        return 'country';
-    }
+    use Mappable;
 
     public function behaviors()
     {
         return array_merge(parent::behaviors(), [
-            'timestamp' => [
-                'class' => TimestampBehavior::class,
-                'createdAtAttribute' => 'createdAt',
-                'updatedAtAttribute' => 'updatedAt',
-            ],
+
         ]);
     }
 
@@ -46,13 +24,9 @@ class Country extends BaseModel
      */
     public function rules()
     {
-        return [
-            [['code', 'name'], 'required'],
-            [['data'], 'safe'],
-            [['createdAt', 'updatedAt'], 'integer'],
-            [['code'], 'string', 'max' => 10],
-            [['name'], 'string', 'max' => 255],
-        ];
+        return array_merge(parent::rules(), [
+
+        ]);
     }
 
     /**
@@ -61,26 +35,20 @@ class Country extends BaseModel
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'ID'),
             'code' => Yii::t('app', 'Code'),
             'name' => Yii::t('app', 'Name'),
-            'data' => Yii::t('app', 'Data'),
-            'createdAt' => Yii::t('app', 'Created At'),
-            'updatedAt' => Yii::t('app', 'Updated At'),
+            'name_en' => Yii::t('app', 'English name'),
         ];
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * Get name in current localization.
+     * @param null|string $lang Optional excplicit localization
+     * @return string
      */
-    public function getRegions()
+    public function getName($lang = null)
     {
-        return $this->hasMany(Region::class, ['country_id' => 'id'])->orderBy(['name' => SORT_ASC]);
-    }
-
-    public function getCities()
-    {
-        return $this->hasMany(City::class, ['country_id' => 'id'])->orderBy(['name' => SORT_ASC]);
+        return Yii::t('geo', $this->name_en, [], $lang);
     }
 
 }

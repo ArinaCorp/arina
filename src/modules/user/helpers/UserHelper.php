@@ -83,4 +83,14 @@ class UserHelper
     {
         return in_array($role, array_keys(UserHelper::getRoles($user)));
     }
+
+    /**
+     * Check if user has role 'teacher'
+     * @param User $user
+     * @return bool
+     */
+    public static function isTeacher(User $user)
+    {
+        return self::hasRole($user, 'teacher');
+    }
 }

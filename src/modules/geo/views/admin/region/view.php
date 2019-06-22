@@ -16,33 +16,30 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="row">
         <div class="col-lg-12">
             <h1><?= Html::encode($this->title) ?></h1>
-        </div>         <!-- /.col-lg-12 -->
+        </div>
     </div>
 
     <p>
-        <?= Html::a(Yii::t('app', 'List'), Url::to('index'), ['class' =>'btn btn-success']) ?>
-        <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
-                'method' => 'post',
-            ],
-        ]) ?>
+        <?= Html::a(Yii::t('app', 'List'), Url::to('index'), ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            //'id',
+            'country_code',
+            'division_code',
+            'geoname_id',
+            'capital_geoname_id',
+//            'language_codes',
+            'timezone_code',
+            'latitude',
+            'longitude',
+            'name_en',
+            'code',
             'name',
-            //'data:ntext',
-            [
-                'attribute' => 'country_id',
-                'value' => $model->country->name,
-            ],
-            'createdAt:datetime',
-            'updatedAt:datetime',
+//            'languageCodes',
+            'countryName',
+            'timezoneName',
         ],
     ]) ?>
 

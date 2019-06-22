@@ -3,6 +3,16 @@
 
 namespace app\modules\students\models;
 
+use app\modules\directories\models\department\Department;
+use app\modules\directories\models\speciality\Speciality;
+use app\modules\directories\models\speciality_qualification\SpecialityQualification;
+use app\modules\directories\models\study_year\StudyYear;
+use app\modules\geo\models\City;
+use app\modules\geo\models\Country;
+use app\modules\geo\models\Region;
+use app\modules\journal\models\record\JournalMark;
+use app\modules\journal\models\record\JournalRecord;
+use app\modules\load\models\Load;
 use nullref\useful\behaviors\RelatedBehavior;
 use voskobovich\linker\LinkerBehavior;
 use Yii;
@@ -33,6 +43,10 @@ use yii\web\UploadedFile;
  * @property string $photo
  * @property string $passport_issued
  * @property string $passport_issued_date
+ * @property string $country_id
+ * @property string $region_id
+ * @property integer $city_id
+ * @property string $address
  *
  *
  * @property string $fullName
@@ -48,6 +62,35 @@ use yii\web\UploadedFile;
  * @property StudentSocialNetwork[] $socialNetworksList
  * @property Group[] $groups
  *
+ * @property SpecialityQualification $specialityQualification
+ * @property Speciality $speciality
+ * @property Department $department
+ *
+ * @property Country $country
+ * @property Region $region
+ * @property City $city
+ *
+ * @property FamilyRelation $mother
+ * @property FamilyRelation $father
+ * @property FamilyRelation $spouse
+ *
+ * @property string $familyStatus
+ * @property string $fullAddress
+ * @property string $fullPhoneString
+ * @property string $livingAddress
+ *
+ * @property string $finished_inst
+ * @property string $finished_year
+ * @property string $finishedInstitution
+ *
+ * @property string $fullExemptionString
+ * @property bool $withoutCompetition
+ *
+ * @property StudentsHistory[] $edicts
+ * @property StudentsHistory $enrollmentEdict
+ * @property Group $currentGroup
+ * @property Group $firstGroup
+ * @property integer $course
  *
  * @method loadWithRelations($data, $formName = null)
  * @method validateWithRelations()
@@ -221,6 +264,10 @@ class Student extends \yii\db\ActiveRecord
             [['passport_code'], 'unique'],
             [['tax_id'], 'unique'],
             ['photo', 'file', 'extensions' => 'jpeg, jpg, gif, png'],
+            [['country_id', 'region_id', 'address'], 'string'],
+            [['city_id'], 'integer'],
+            [['finished_inst'], 'string'],
+            [['finished_year'], 'integer'],
         ];
     }
 
@@ -255,6 +302,11 @@ class Student extends \yii\db\ActiveRecord
             'passport_issued_date' => Yii::t('app', 'Passport issued date'),
             'exemptions' => Yii::t('app', 'Exemptions'),
             'exemption_ids' => Yii::t('app', 'Exemptions'),
+            'city_id' => Yii::t('app', 'City ID'),
+            'address' => Yii::t('app', 'Address'),
+            'fullAddress' => Yii::t('app', 'Full address'),
+            'finished_inst' => Yii::t('app', 'Finished'),
+            'finished_year' => Yii::t('app', 'Input year'),
         ];
     }
 
@@ -458,10 +510,250 @@ class Student extends \yii\db\ActiveRecord
 
     /**
      * @return integer
+     * @throws \yii\base\InvalidConfigException
      */
     public function getCourse()
     {
-        return $this->getGroups()[0]->getCourse();
+        return $this->currentGroup->getCourse();
     }
+
+    /**
+     * Find a year, when student had a defined course.
+     * @param $course
+     * @return StudyYear|null
+     */
+    public function getCourseStudyYear($course)
+    {
+        //TODO: What if student switched groups? Does it matter?
+        return StudyYear::findOne($this->currentGroup->created_study_year_id + ($course - 1));
+    }
+
+    /**
+     * @return SpecialityQualification
+     */
+    public function getSpecialityQualification()
+    {
+        //TODO: Implement a proper "Get current group method"
+        return $this->groups[count($this->groups) - 1]->specialityQualification;
+    }
+
+    /**
+     * @return Speciality
+     */
+    public function getSpeciality()
+    {
+        return $this->specialityQualification->speciality;
+    }
+
+    /**
+     * @return Department
+     */
+    public function getDepartment()
+    {
+        return $this->speciality->department;
+    }
+
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getCountry()
+    {
+        return $this->hasOne(Country::class, ['code' => 'country_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getRegion()
+    {
+        return $this->hasOne(Region::class, ['country_code' => 'country_id', 'division_code' => 'region_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getCity()
+    {
+        return $this->hasOne(City::class, ['geoname_id' => 'city_id']);
+    }
+
+    /**
+     * @return string
+     */
+    public function getFullAddress()
+    {
+        return implode(', ', [$this->country->name, $this->region->name, $this->city->name, $this->address]);
+    }
+
+    /**
+     * Returns all phones(relatives, etc.) in a string imploded with commas.
+     * @param null $lang
+     * @return string
+     */
+    public function getFullPhoneString($lang = null)
+    {
+        $motherPhone = $this->mother ? Yii::t('app', 'mothers tel. {phone}', ['phone' => $this->mother->phone1], $lang) : '';
+        $fatherPhone = $this->father ? Yii::t('app', 'fathers tel. {phone}', ['phone' => $this->father->phone1], $lang) : '';
+        $studentPhone = (count($this->phones) > 0) ? Yii::t('app', 'students tel. {phone}', ['phone' => $this->phones[0]->number], $lang) : '';
+        return implode(', ', array_filter([$motherPhone, $fatherPhone, $studentPhone], function ($value) {
+            return !empty($value);
+        }));
+    }
+
+    /**
+     * Returns full address and all phones.
+     * @param null $lang
+     * @return string
+     */
+    public function getLivingAddress($lang = null)
+    {
+        return $this->getFullAddress() . ', ' . $this->getFullPhoneString($lang);
+    }
+
+    /**
+     * @param null $lang
+     * @return string
+     */
+    public function getFamilyStatus($lang = null)
+    {
+        if ($this->gender) {
+            return $this->spouse ? Yii::t('app', 'Married (f)', [], $lang) : Yii::t('app', 'Unmarried (f)', [], $lang);
+        } else {
+            return $this->spouse ? Yii::t('app', 'Married (m)', [], $lang) : Yii::t('app', 'Unmarried (m)', [], $lang);
+        }
+    }
+
+    /**
+     * @return Student|array|\yii\db\ActiveRecord|null
+     */
+    public function getMother()
+    {
+        return $this->getFamilyRelations()->where(['type_id' => FamilyRelation::TYPE_MOTHER])->one();
+    }
+
+    /**
+     * @return Student|array|\yii\db\ActiveRecord|null
+     */
+    public function getFather()
+    {
+        return $this->getFamilyRelations()->where(['type_id' => FamilyRelation::TYPE_FATHER])->one();
+    }
+
+    /**
+     * @return Student|array|\yii\db\ActiveRecord|null
+     */
+    public function getSpouse()
+    {
+        return $this->getFamilyRelations()->where(['type_id' => FamilyRelation::TYPE_SPOUSE])->one();
+    }
+
+    /**
+     * @param null $lang
+     * @return string
+     */
+    public function getFinishedInstitution($lang = null)
+    {
+        return Yii::t('app', '{something} in {year} year', ['something' => $this->finished_inst, 'year' => $this->finished_year], $lang);
+    }
+
+    /**
+     * String with all exemptions imploded with comas.
+     * @return string
+     */
+    public function getFullExemptionString()
+    {
+        return implode(', ', ArrayHelper::getColumn($this->exemptions, 'title'));
+    }
+
+    /**
+     * Returns the first edict(StudentsHistory record) which enrolled the student to the college
+     * @return array|\yii\db\ActiveRecord|null
+     */
+    public function getEnrollmentEdict()
+    {
+        return $this->getStudentsHistory()->where(['action_type' => StudentsHistory::$TYPE_INCLUDE])->orderBy(['date' => SORT_ASC])->one();
+    }
+
+    /**
+     * TODO: Might want to review StudentsHistory implementation and this method in general
+     * @return Group|null
+     */
+    public function getCurrentGroup()
+    {
+        $lastHistoryRecord = StudentsHistory::find()->where(['student_id' => $this->id])->orderBy(['date' => SORT_DESC])->one();
+        return Group::findOne($lastHistoryRecord->group->id);
+    }
+
+    /**
+     * First group (enrollment group) of a student.
+     * @return Group
+     */
+    public function getFirstGroup()
+    {
+        return $this->enrollmentEdict->group;
+    }
+
+    /**
+     * Check if student has any of defined exemptions, if so - he enrolls without competition.
+     * @return bool
+     */
+    public function getWithoutCompetition()
+    {
+        return $this->getExemptions()->where(['id' => [
+                Exemption::TYPE_ORPHAN,
+                Exemption::TYPE_DISABLED_GROUP_2,
+                Exemption::TYPE_DISABLED_GROUP_3,
+                Exemption::TYPE_ATO
+            ]])->count() > 0;
+    }
+
+    /**
+     * All StudentsHistory records with ascending sorting by date (the newest are in the end).
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public function getEdicts()
+    {
+        return $this->getStudentsHistory()->orderBy(['date' => SORT_ASC])->all();
+    }
+
+    /**
+     * @param integer|null $semester
+     * @return JournalMark[]|\app\modules\plans\models\WorkPlan[]|Group[]|Student[]|array|\yii\db\ActiveRecord[]
+     */
+    public function getMarks($semester = null)
+    {
+        $allMarks = JournalMark::find()
+            ->joinWith('journalRecord')
+            ->joinWith('evaluation')
+            ->leftJoin('load', 'load.id = journal_record.load_id')
+            ->where(['student_id' => $this->id])->all();
+
+        if ($semester) {
+            // TODO: Seems to be a heavy execution, implement differently?
+            return array_filter($allMarks, function (JournalMark $mark) use ($semester) {
+                $record = $mark->journalRecord;
+                $graph = $record->load->getGraphRow($record->load->study_year_id);
+                $recordWeek = Yii::$app->get('calendar')->getWeekNumberByDate(strtotime($record->date));
+                $recordSemester = Yii::$app->get('calendar')->getSemester($graph, $recordWeek);
+                // We compare the record semester on scale of 8 semester based on group's course at the date of a mark.
+                // Basically (course * 2) = even semester number; If recordSemester == 1, we subtract 1, to correct the value.
+                return ($record->load->group->getCourse($record->load->study_year_id) * 2) - ($recordSemester === 1 ? 1 : 0) === $semester;
+            });
+        }
+
+        return $allMarks;
+    }
+
+    /**
+     * Returns the edict which was used to transfer this student to a given course.
+     * @param int $course
+     * @return array|\yii\db\ActiveRecord|null|StudentsHistory
+     */
+    public function getCourseEdict(int $course)
+    {
+        return $this->getStudentsHistory()->where(['action_type' => StudentsHistory::$TYPE_TRANSFER_COURSE, 'course' => $course])->one();
+    }
+
 }
 

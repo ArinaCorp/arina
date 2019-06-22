@@ -30,6 +30,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= Html::a(Yii::t('plans', 'Add subject'), Url::toRoute(['work-plan/create-subject', 'id' => $model->id]), ['class' => 'btn btn-primary']); ?>
 
+    <?= Html::a(Yii::t('plans', 'Info'), Url::toRoute(['calendar/info', 'work_plan_id' => $model->id]), ['class' => 'btn btn-info']); ?>
+
     <br/><br/>
 
     <?= Graph::widget(

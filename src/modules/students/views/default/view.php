@@ -60,6 +60,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'value' => $model->getGroupLinksList(),
             ],
+            'fullAddress'
+
         ],
     ]) ?>
     <div class="panel panel-default">

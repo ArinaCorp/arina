@@ -204,16 +204,9 @@ class SpecialityQualification extends ActiveRecord
      */
     public function getGroupsActive($year_id = null)
     {
-        $array = $this->groups;
-        /**
-         * @var Group[] $array
-         */
-        foreach ($array as $key => $item) {
-            if (!$item->isActive($year_id)) {
-                unset($array[$key]);
-            }
-        }
-        return $array;
+        return array_filter($this->groups, function (Group $group) use ($year_id) {
+            return $group->isActive($year_id);
+        });
     }
 
     /**
@@ -222,14 +215,12 @@ class SpecialityQualification extends ActiveRecord
      */
     public function getGroupsByStudyYear($yearId)
     {
-        $list = [];
-        foreach ($this->groups as $group) {
-            if ($group->getCourse($yearId) < 5) {
-                $list[$group->getSystemTitle()] = $group->getCourse($yearId);
-            }
-        }
-        array_multisort($list);
-        return $list;
+        $groups = array_reduce($this->getGroupsActive($yearId), function($acc, Group $group) use ($yearId){
+            $acc[$group->getSystemTitle()] = $group->getCourse($yearId);
+            return $acc;
+        });
+        array_multisort($groups);
+        return $groups;
     }
 
     /**

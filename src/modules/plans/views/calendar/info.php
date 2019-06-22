@@ -17,19 +17,15 @@ $url = \yii\helpers\Url::to(['/plans/calendar/info', 'work_plan_id' => $workPlan
 $this->registerJs(<<<JS
 jQuery('[data-week-number="$week"]').css('background','#afd9ee');
 
-jQuery('[data-course-number="$course"]').css('background','#afd9ee');
+jQuery('[data-group="$group"]').css('background','#afd9ee');
 
 jQuery('body').on('calendar.change', function(){
     location.reload();
 });
 
-jQuery('body').on('calendar.change', function(){
-    location.reload();
-});
-
-jQuery('[data-course-number]').on('click', function(){
-    var course =  jQuery(this).data('courseNumber');
-    location = '$url'.addUrlParam('course', course);
+jQuery('[data-group]').on('click', function(){
+    var group =  jQuery(this).data('group');
+    location = '$url'.addUrlParam('group', group);
 });
 JS
 );
