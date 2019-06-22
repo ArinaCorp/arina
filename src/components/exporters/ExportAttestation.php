@@ -4,6 +4,8 @@
 namespace app\components\exporters;
 
 use app\components\ExportHelpers;
+use app\modules\directories\models\study_year\StudyYear;
+use app\modules\load\models\Load;
 use app\modules\plans\models\StudyPlan;
 use app\modules\plans\models\StudySubject;
 use app\modules\plans\models\WorkPlan;
@@ -46,20 +48,39 @@ class ExportAttestation
         $count = [0, 0, 0];
         $startRow = 8;
         $current = $startRow;
-        self::getSubjects($studyPlan, $semester, $subject_titles, $subjects);
+
+//      hardcode
+        $loads = Load::findAll(['study_year_id' => StudyYear::findOne(['year_start' => '2015'])->id]);
+        $subjects = [];
+        /**
+         * @var $load Load
+         */
+        foreach ($loads as $load) {
+            $load_group_id = $load->group_id == $group_id;
+            $double = in_array($load->workSubject->subject->title,$subject_titles); //1=>true
+            if ($load_group_id && !$double && $load->workSubject->weeks[$semester - 1] != 0) {
+                array_push($subject_titles, $load->workSubject->subject->title);
+                array_push($subjects, ['subject' => $load->workSubject->subject]);
+            }
+
+        }
+//        var_dump($subject_titles);
+//        die;
+
+//        self::getSubjects($studyPlan, $semester, $subject_titles, $subjects);
         self::insertFormData($spreadsheet, $romanSemester, $data, $group_id);
         self::insertStudents($spreadsheet, $students, $current);
         self::insertSubjectTitles($spreadsheet, $subject_titles);
         self::insertDateAndGroupLeaders($spreadsheet, $current, $group);
 
         if ($data["data"]['marks_checker']) {
-            $marks = ExportHelpers::getMarks($subjects, $students);
+            $marks = ExportHelpers::getRealMarks($subjects, $students,$loads,2);
             $current = $startRow;
             $letter = self::drawMarks($spreadsheet, $students, $subjects, $marks, $current, $count, $marks_two_three, $avg_marks)['letter'];
             $current = $startRow;
-            self::insertPass($spreadsheet,$letter,$current,$students,$passes,$hours_sum);
+            self::insertPass($spreadsheet, $letter, $current, $students, $passes, $hours_sum);
             $afterMarksLetter = $letter;
-            self::insertQualitySuccess($spreadsheet,$letter,$current,$hours_sum);
+            self::insertQualitySuccess($spreadsheet, $letter, $current, $hours_sum);
             $letter = $afterMarksLetter;
             $current++;
             $excel->setCellValue("${letter}${current}", $hours_sum[0] / count($passes));
@@ -279,7 +300,7 @@ class ExportAttestation
      * @param $hours_sum integer[]
      * @throws PhpSpreadsheet\Exception
      */
-    public static function insertQualitySuccess($spreadsheet,&$letter,&$current,&$hours_sum)
+    public static function insertQualitySuccess($spreadsheet, &$letter, &$current, &$hours_sum)
     {
         $excel = $spreadsheet->getActiveSheet();
         $excel->setCellValue("${letter}${current}", $hours_sum[0]);

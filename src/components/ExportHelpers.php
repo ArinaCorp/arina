@@ -4,6 +4,9 @@
 namespace app\components;
 
 
+use app\modules\journal\models\record\JournalMark;
+use app\modules\journal\widgets\MarksAccounting;
+use app\modules\load\models\Load;
 use app\modules\plans\models\StudySubject;
 use codemix\excelexport\ActiveExcelSheet;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -79,20 +82,60 @@ class ExportHelpers
     {
         $marks = [];
         $range = [2, 5, 4, 5, 3, 4, 5, 3, 4, 5, 3];
-//        var_dump($subjects[0]);die;
+//      var_dump($subjects[0]);die;
         foreach ($subjects as $subject) {
             foreach ($students as $student) {
-                $subject_type = isset($subject['type'])? $subject['type'] : "NaN";
+                $subject_type = isset($subject['type']) ? $subject['type'] : "NaN";
                 array_push($marks, [
                     'value' => $range[array_rand($range)],
                     'subject_id' => $subject['subject']->id,
                     'student_id' => $student->id,
-                    'type'=>$subject_type
+                    'type' => $subject_type
                 ]);
             }
         }
         return $marks;
     }
+
+    /**
+     * @param array $subjects
+     * @param array $students
+     * @param array $loads Load
+     * @param null $type string
+     * @return array
+     */
+    public static function getRealMarks($subjects = [], $students = [], $loads = [], $type = NULL)
+    {
+        $allMarks = [];
+//        var_dump($subjects[0]);die;
+        /*** @var $load Load */
+        foreach ($loads as $load) {
+            foreach ($subjects as $subject) {
+                foreach ($students as $student) {
+                    foreach ($load->journalRecords as $journalRecord) {
+                        if ($journalRecord->type == $type && $load->workSubject->subject->id == $subject['subject']->id) {
+                            $marks = JournalMark::findAll([
+                                'student_id' => $student->id,
+                                'record_id' => $journalRecord->id
+                            ]);
+                            foreach ($marks as $mark) {
+                                $subject_type = isset($subject['type']) ? $subject['type'] : "NaN";
+                                array_push($allMarks, [
+                                    'value' => $mark->evaluation->value,
+                                    'subject_id' => $subject['subject']->id,
+                                    'student_id' => $student->id,
+                                    'type' => $subject_type
+                                ]);
+                            }
+                            $marks=[];
+                        }
+                    }
+                }
+            }
+        }
+        return $allMarks;
+    }
+
 
     public static function getPropusk($students = [])
     {
