@@ -8,16 +8,16 @@ use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\accounting\models\YearlyHourAccounting */
-/* @var $loads \app\modules\load\models\Load[] */
+/* @var $records \app\modules\accounting\models\HourAccountingRecord[] */
 
-$this->title = $model->id;
+$this->title = Yii::t('app', 'Yearly Hour Accounting');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Yearly Hour Accountings'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <?php
 $actionUrl = Url::to(['yearly-hour-accounting/set-month-hour']);
-$recordIds = json_encode(ArrayHelper::getColumn($model->hourAccountingRecords, 'id'));
+$recordIds = json_encode(ArrayHelper::getColumn($records, 'id'));
 
 $this->registerJs(<<<JS
 function getTotal(selector) {
@@ -146,6 +146,7 @@ JS
                 'method' => 'post',
             ],
         ]) ?>
+        <?= Html::a(Yii::t('app', 'Export'), ['export', 'id' => $model->id], ['class' => 'btn btn-info']) ?>
     </p>
 
     <?= DetailView::widget([
@@ -161,25 +162,25 @@ JS
         <tbody>
         <tr>
             <th>Курс</th>
-            <?php foreach ($loads as $load): ?>
+            <?php foreach ($records as $record): ?>
                 <td>
-                    <?= $load->group->getCourse($model->study_year_id) ?>
+                    <?= $record->load->group->getCourse($model->study_year_id) ?>
                 </td>
             <?php endforeach ?>
         </tr>
         <tr>
             <th>Групи</th>
-            <?php foreach ($loads as $load): ?>
+            <?php foreach ($records as $record): ?>
                 <td>
-                    <?= $load->group->getSystemTitle() ?>
+                    <?= $record->load->group->getSystemTitle() ?>
                 </td>
             <?php endforeach ?>
         </tr>
         <tr>
             <th>Предмет</th>
-            <?php foreach ($loads as $load): ?>
+            <?php foreach ($records as $record): ?>
                 <td>
-                    <?= $load->workSubject->subject->short_name ?>
+                    <?= $record->load->workSubject->subject->short_name ?>
                 </td>
             <?php endforeach ?>
         </tr>
@@ -187,7 +188,7 @@ JS
         <?php foreach (GlobalHelper::getWeeksByMonths() as $month => $_): ?>
             <tr>
                 <td><?= Yii::t('app', $month) ?></td>
-                <?php foreach ($model->hourAccountingRecords as $record): ?>
+                <?php foreach ($records as $record): ?>
                     <td>
                         <?= Html::input('number', 'hours', $record->hours_per_month[$monthIndex], [
                             'class' => 'form-control no-spinner',
@@ -210,7 +211,7 @@ JS
 
         <tr>
             <td>Всього годин</td>
-            <?php foreach ($model->hourAccountingRecords as $record): ?>
+            <?php foreach ($records as $record): ?>
                 <td>
                     <?= Html::input('number', 'total', 0, [
                         'class' => 'form-control',
@@ -230,7 +231,7 @@ JS
         <tr>
             <td>Всього годин по плану</td>
             <?php $sumPlanTotals = 0; ?>
-            <?php foreach ($model->hourAccountingRecords as $record): ?>
+            <?php foreach ($records as $record): ?>
                 <td>
                     <?= Html::input('number', 'perPlanTotal', $record->load->getPlanTotal(), [
                         'class' => 'form-control',
@@ -250,7 +251,7 @@ JS
 
         <tr>
             <td>Не виконано годин</td>
-            <?php foreach ($model->hourAccountingRecords as $record): ?>
+            <?php foreach ($records as $record): ?>
                 <td>
                     <?= Html::input('number', 'incompleteHours', 0, [
                         'class' => 'form-control',
@@ -269,7 +270,7 @@ JS
 
         <tr>
             <td>Дано годин понад план</td>
-            <?php foreach ($model->hourAccountingRecords as $record): ?>
+            <?php foreach ($records as $record): ?>
                 <td>
                     <?= Html::input('number', 'excessiveHours', 0, [
                         'class' => 'form-control',
@@ -288,7 +289,7 @@ JS
 
         <tr>
             <td>Екзамени, заліки</td>
-            <?php foreach ($model->hourAccountingRecords as $record): ?>
+            <?php foreach ($records as $record): ?>
                 <td>
                     <?= Html::input('number', 'controlHours', 0, [
                         'class' => 'form-control',
@@ -301,7 +302,7 @@ JS
 
         <tr>
             <td>Всього дано за рік годин</td>
-            <?php foreach ($model->hourAccountingRecords as $record): ?>
+            <?php foreach ($records as $record): ?>
                 <td>
                     <?= Html::input('number', 'perYearTotal', 0, [
                         'class' => 'form-control',

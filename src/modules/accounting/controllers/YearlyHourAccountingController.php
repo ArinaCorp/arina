@@ -2,8 +2,11 @@
 
 namespace app\modules\accounting\controllers;
 
+use app\components\ExportToExcel;
 use app\modules\accounting\models\HourAccountingRecord;
-use app\modules\load\models\Load;
+use app\modules\rbac\filters\AccessControl;
+use app\modules\user\helpers\UserHelper;
+use app\modules\user\models\User;
 use Yii;
 use app\modules\accounting\models\YearlyHourAccounting;
 use yii\data\ActiveDataProvider;
@@ -26,17 +29,48 @@ class YearlyHourAccountingController extends Controller implements IAdminControl
                     'delete' => ['POST'],
                 ],
             ],
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => [],
+                        'roles' => ['teacher'],
+                    ]
+                ]
+            ]
         ];
     }
 
     /**
      * Lists all YearlyHourAccounting models.
      * @return mixed
+     * @throws \yii\base\InvalidConfigException
      */
     public function actionIndex()
     {
+        $query = YearlyHourAccounting::find();
+
+        /** @var User $user */
+        $user = Yii::$app->user->identity;
+        if (UserHelper::isTeacher($user)) {
+            $queryParams = [
+                'teacher_id' => $user->employee_id,
+                'study_year_id' => Yii::$app->get('calendar')->getCurrentYear()->id
+            ];
+
+            $model = $query->where($queryParams)->one();
+
+            if (is_null($model)){
+                $model = new YearlyHourAccounting($queryParams);
+                $model->save();
+            }
+
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+
         $dataProvider = new ActiveDataProvider([
-            'query' => YearlyHourAccounting::find(),
+            'query' => $query,
         ]);
 
         return $this->render('index', [
@@ -54,18 +88,16 @@ class YearlyHourAccountingController extends Controller implements IAdminControl
     {
         $model = $this->findModel($id);
 
-        $loads = Load::find()
-            ->joinWith('group')
-            ->joinWith('workSubject')
-            ->joinWith('workSubject.subject')
-            ->where([
-                'employee_id' => $model->teacher_id,
-                'study_year_id' => $model->study_year_id,
-            ])->all();
+        $records = $model->getHourAccountingRecords()
+            ->joinWith('load')
+            ->joinWith('load.group')
+            ->joinWith('load.workSubject')
+            ->joinWith('load.workSubject.subject')
+            ->all();
 
         return $this->render('view', [
-            'model' => $this->findModel($id),
-            'loads' => $loads,
+            'model' => $model,
+            'records' => $records,
         ]);
     }
 
@@ -157,5 +189,18 @@ class YearlyHourAccountingController extends Controller implements IAdminControl
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    /**
+     * @param $id
+     * @throws NotFoundHttpException
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
+    public function actionExport($id)
+    {
+        $model = $this->findModel($id);
+        ExportToExcel::getDocument('YearlyHourAccounting', $model);
     }
 }

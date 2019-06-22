@@ -34,9 +34,10 @@ class Module extends BaseModule implements IAdminModule, IAccessibleModule
             'icon' => 'sticky-note',
             'items' => [
                 [
-                    'label' => Yii::t('app', 'Yearly hour accounting'),
+                    'label' => Yii::t('app', 'Yearly Hour Accounting'),
                     'url' => ['/accounting/yearly-hour-accounting'],
                     'icon' => 'list',
+                    'roles' => ['teacher'],
                 ],
             ],
             'roles' => ['teacher'],

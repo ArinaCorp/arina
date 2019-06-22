@@ -15,6 +15,7 @@ use yii\behaviors\TimestampBehavior;
  * @property int $study_year_id
  * @property int $teacher_id
  * @property int $created_at
+ * @property int $updated_at
  *
  * @property HourAccountingRecord[] $hourAccountingRecords
  * @property StudyYear $studyYear
@@ -100,7 +101,6 @@ class YearlyHourAccounting extends \yii\db\ActiveRecord
 
     public function afterSave($insert, $changedAttributes)
     {
-        parent::afterSave($insert, $changedAttributes);
         if ($insert) {
             $loads = Load::findAll([
                 'employee_id' => $this->teacher_id,
@@ -115,6 +115,8 @@ class YearlyHourAccounting extends \yii\db\ActiveRecord
                 $record->save();
             }
         }
+
+        return parent::afterSave($insert, $changedAttributes);
     }
 
 
