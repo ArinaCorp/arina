@@ -4,16 +4,20 @@
 namespace app\components;
 
 
+use app\modules\directories\models\study_year\StudyYear;
 use app\modules\directories\models\subject\Subject;
 use app\modules\journal\models\record\JournalMark;
+use app\modules\journal\models\record\JournalRecord;
 use app\modules\journal\widgets\MarksAccounting;
 use app\modules\load\models\Load;
 use app\modules\plans\models\StudySubject;
 use codemix\excelexport\ActiveExcelSheet;
 use Mpdf\Tag\Sub;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Color;
 use Yii;
+use yii\helpers\ArrayHelper;
 
 class ExportHelpers
 {
@@ -102,12 +106,13 @@ class ExportHelpers
     /**
      * @param array $subjects
      * @param array $students
-     * @param array $loads Load
+     * @param array $loads Load[]
      * @param null $type string
-     * @param $semester integer
+     * @param $firstDate Date
+     * @param $lastDate Date
      * @return array
      */
-    public static function getRealMarks($subjects = [], $students = [], $loads = [], $type = NULL, $semester)
+    public static function getRealMarks($firstDate, $lastDate, $subjects = [], $students = [], $loads = [], $type = NULL)
     {
         $allMarks = [];
 //        var_dump($subjects[0]);die;
@@ -115,14 +120,19 @@ class ExportHelpers
          * @var $load Load
          * @var $subject Subject
          */
+        $date1 = strtotime($firstDate);
+        $date2 = strtotime($lastDate);
         foreach ($loads as $load) {
             foreach ($subjects as $subject) {
                 foreach ($students as $student) {
                     foreach ($load->journalRecords as $journalRecord) {
                         $types = $journalRecord->type == $type;
                         $sub = $load->workSubject->subject->id == $subject['subject']->id;
-                        $sem = $load->workSubject->weeks[$semester-1]!=0;
-                        if ($types && $sub && $sem) {
+                        $sem = $date1 <= strtotime($journalRecord->date) && strtotime($journalRecord->date) <= $date2;
+                        $rec = $journalRecord->id == $subject['record_id'];
+//                        var_dump(Date('d.m.Y',$date2).'   :   '.$journalRecord->date);die;
+
+                        if ($types && $sub && $sem && $rec) {
                             $marks = JournalMark::findAll([
                                 'student_id' => $student->id,
                                 'record_id' => $journalRecord->id
@@ -133,10 +143,11 @@ class ExportHelpers
                                     'value' => $mark->evaluation->value,
                                     'subject_id' => $subject['subject']->id,
                                     'student_id' => $student->id,
-                                    'type' => $subject_type
+                                    'type' => $subject_type,
+                                    'record_id' => $subject['record_id']
                                 ]);
                             }
-                            $marks=[];
+                            $marks = [];
                         }
                     }
                 }
@@ -235,6 +246,52 @@ class ExportHelpers
             7 => Yii::t('app', 'Seventh'),
             8 => Yii::t('app', 'Eighth'),
         ];
+    }
+
+    public static function getJournalRecordsByLoad($group_id)
+    {
+        $year = StudyYear::findOne(['year_start' => Yii::$app->get('calendar')->getCurrentYear()]);
+        $loads = Load::findAll(['group_id' => $group_id, 'study_year_id' => $year]);
+        $journal_records = [];
+        foreach ($loads as $load) {
+            array_push($journal_records, JournalRecord::findOne(['load_id' => $load->id]));
+        }
+        return ArrayHelper::map($journal_records, 'id', 'date');
+    }
+
+    /**
+     * @param $dateFrom Date
+     * @param $dateTo Date
+     * @param $load Load
+     */
+    public static function getSemester($dateFrom, $dateTo, $load)
+    {
+        $date1 = strtotime($dateFrom);
+        $date2 = strtotime($dateTo);
+        $year = StudyYear::findOne(['id' => $load->study_year_id])->year_start;
+        $education_begin = Date('d.m.Y', strtotime('01.09.' . $year));
+        $education_center = Date('d.m.Y', strtotime($education_begin . '+ 6 months'));
+        $education_end = Date('d.m.Y', strtotime($education_begin . '+ 1 year'));
+
+        $f_begin = $date1 >= strtotime($education_begin);
+        $f_center = $date2 < strtotime($education_center);
+        $s_begin = $date1 >= strtotime($education_center);
+        $s_center = $date2 < strtotime($education_end);
+        if ($f_begin && $f_center) {
+            return 1;
+        } elseif ($s_begin && $s_center) {
+            return 2;
+        }
+        return 1;
+    }
+
+
+    public static function debugger()
+    {
+        $params = func_get_args();
+        echo '<p style="color:white;background: red;padding: 10px;font-size: 30px;margin: 0;">Debugger 2.2.8</p>';
+        highlight_string("<?php\n" . var_export($params, true) . "?>");
+        die;
     }
 
 }

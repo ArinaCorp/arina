@@ -3,6 +3,7 @@
 use app\components\ExportHelpers;
 use app\modules\directories\models\speciality\Speciality;
 use app\modules\employee\models\Teacher;
+use app\modules\journal\models\record\JournalRecord;
 use app\modules\plans\models\StudyPlan;
 use app\modules\plans\models\StudySubject;
 use kartik\date\DatePicker;
@@ -181,15 +182,6 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="dialog-card">
         <div class="dialog-header text-left"><h4><?= Yii::t('app', 'Attestation note') ?></h4></div>
         <div class="dialog-content">
-
-            <?= $form->field($exportParams, 'semester')->widget(Select2::class, [
-                'data' => ExportHelpers::getSemesterList(),
-                'options' => [
-                    'placeholder' => Yii::t('app', 'Input semester'),
-                    'id' => 'att-sem',
-                    'class' => 'dialog-input form-control text-center',
-                ]
-            ])->label(false) ?>
 
             <?= $form->field($exportParams, 'dateFrom')->widget(DatePicker::class, [
                 'options' => [

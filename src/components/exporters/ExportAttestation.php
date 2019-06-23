@@ -5,7 +5,9 @@ namespace app\components\exporters;
 
 use app\components\ExportHelpers;
 use app\modules\directories\models\study_year\StudyYear;
+use app\modules\journal\models\record\JournalRecord;
 use app\modules\load\models\Load;
+use app\modules\plans\components\Calendar;
 use app\modules\plans\models\StudyPlan;
 use app\modules\plans\models\StudySubject;
 use app\modules\plans\models\WorkPlan;
@@ -35,9 +37,6 @@ class ExportAttestation
         $group = Group::findOne($group_id);
         $students = $group->getStudentsArray();
         $studyPlan_id = $data["data"]["plan_id"];
-        $studyPlan = StudyPlan::findOne(['id' => $studyPlan_id]);
-        $semester = $data["data"]["semester"];
-        $romanSemester = ExportHelpers::ConvertToRoman($data["data"]["semester"]);
         $excel = $spreadsheet->getActiveSheet();
         $passes = ExportHelpers::getPropusk($students);
         $hours_sum = [0, 0];
@@ -50,36 +49,44 @@ class ExportAttestation
         $current = $startRow;
 
 //      hardcode
+        $startYear = Date('Y', strtotime($data['data']['dateFrom']));
         $loads = Load::findAll([
-            'study_year_id' => StudyYear::findOne(['year_start' => '2015'])->id,
-            'group_id'=>$group_id
+            'study_year_id' => StudyYear::findOne(['year_start' => $startYear])->id,
+            'group_id' => $group_id
         ]);
-        $subjects = [];
+        if(count($loads)==0)return $spreadsheet;
+        $semester = ExportHelpers::getSemester($data['data']['dateFrom'],$data['data']['dateTo'],$loads[0]);
+        $romanSemester = ExportHelpers::ConvertToRoman($semester);
+        $date1 = strtotime($data['data']['dateFrom']);
+        $date2 = strtotime($data['data']['dateTo']);
+
         /**
          * @var $load Load
          */
-        foreach ($loads as $load) {
-            $load_group_id = $load->group_id == $group_id;
-//            $double = in_array($load->workSubject->subject->title,$subject_titles); //1=>true
-            if ($load_group_id  && $load->workSubject->weeks[$semester - 1] != 0) {
-                array_push($subject_titles, $load->workSubject->subject->title);
-                array_push($subjects, ['subject' => $load->workSubject->subject]);
+        $allRecords = [];
+        foreach ($loads as $load){
+            $records = JournalRecord::findAll(['load_id' => $load->id]);
+//            var_dump($records);die;
+            foreach ($records as $record) {
+                array_push($allRecords, $record);
+
+                $inDateRange = strtotime($record->date) >= $date1 && strtotime($record->date) <= $date2;
+
+                if ($inDateRange) {
+                    array_push($subject_titles, $load->workSubject->subject->title);
+                    array_push($subjects, ['subject' => $load->workSubject->subject, 'record_id' => $record->id]);
+                }
             }
-
         }
-        var_dump($subject_titles);
-        die;
-
 //        self::getSubjects($studyPlan, $semester, $subject_titles, $subjects);
         self::insertFormData($spreadsheet, $romanSemester, $data, $group_id);
         self::insertStudents($spreadsheet, $students, $current);
-        self::insertSubjectTitles($spreadsheet, $subject_titles);
         self::insertDateAndGroupLeaders($spreadsheet, $current, $group);
-
-        if ($data["data"]['marks_checker']) {
-            $marks = ExportHelpers::getRealMarks($subjects, $students,$loads,2);
+        if ($data["data"]['marks_checker'] && count($subjects) != 0) {
+            self::insertSubjectTitles($spreadsheet, $subject_titles);
+            $marks = ExportHelpers::getRealMarks($data['data']['dateFrom'], $data['data']['dateTo'], $subjects, $students, $loads, 2);
             $current = $startRow;
-            $letter = self::drawMarks($spreadsheet, $students, $subjects, $marks, $current, $count, $marks_two_three, $avg_marks)['letter'];
+            $letter = self::drawMarks($spreadsheet, $students, $subjects, $allRecords, $marks, $current, $count, $marks_two_three, $avg_marks)['letter'];
             $current = $startRow;
             self::insertPass($spreadsheet, $letter, $current, $students, $passes, $hours_sum);
             $afterMarksLetter = $letter;
@@ -220,6 +227,7 @@ class ExportAttestation
      * @param $spreadsheet PhpSpreadsheet\Spreadsheet
      * @param $students Student[]
      * @param $subjects StudySubject[]
+     * @param $records JournalRecord[]
      * @param $marks
      * @param $current integer
      * @param $count integer[]
@@ -228,7 +236,7 @@ class ExportAttestation
      * @return array
      * @throws PhpSpreadsheet\Exception
      */
-    public static function drawMarks($spreadsheet, $students, $subjects, $marks, &$current, &$count, &$marks_two_three, &$avg_marks)
+    public static function drawMarks($spreadsheet, $students, $subjects, $records, $marks, &$current, &$count, &$marks_two_three, &$avg_marks)
     {
         $letter = 'C';
         $excel = $spreadsheet->getActiveSheet();
@@ -237,16 +245,27 @@ class ExportAttestation
             $marks_sum = 0;
             foreach ($subjects as $subject) {
                 foreach ($marks as $mark) {
-                    if ($mark["student_id"] == $student->id && $mark["subject_id"] == $subject['subject']->id) {
-                        $cords = "${letter}${current}";
-                        $excel->setCellValue($cords, $mark["value"]);
-                        $marks_sum += $mark["value"];
-                        ExportHelpers::MarkColorized($spreadsheet, $mark["value"], $cords);
-                        array_push($marks_two_three, $mark["value"]);
+                    foreach ($records as $record) {
+//                        $types = $record->type == 2;
+                        $sub = $mark["subject_id"] == $subject['subject']->id;
+                        $rec = $mark["record_id"] == $record->id;
+                        $stud = $mark["student_id"] == $student->id;
+                        $subject_record = $subject['record_id'] == $record->id;
+                        if ($stud && $sub && $rec && $subject_record) {
+                            $cords = "${letter}${current}";
+                            $excel->setCellValue($cords, $mark["value"]);
+                            $marks_sum += $mark["value"];
+                            ExportHelpers::MarkColorized($spreadsheet, $mark["value"], $cords);
+                            array_push($marks_two_three, $mark["value"]);
+                        }
                     }
                 }
                 $letter++;
             }
+//            foreach ($marks as $mark){
+//                if($mark['student_id']==$student->id){
+//                }
+//            }
             self::countQualitySuccess($marks_two_three, $count);
             $marks_two_three = [];
             $avg = $marks_sum / count($subjects);

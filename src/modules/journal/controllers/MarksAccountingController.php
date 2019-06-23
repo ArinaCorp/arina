@@ -146,7 +146,7 @@ class MarksAccountingController extends Controller implements IAdminController
         if ($parents = Yii::$app->request->post('depdrop_parents')) {
             if ($parents) {
                 $work_plan_id = $parents[0];
-                $groups = WorkPlan::findOne(['id' => $work_plan_id])->specialityQualification->groups;
+                $groups = WorkPlan::findOne(['id' => $work_plan_id])->getGroups();
                 $out = DepDropHelper::convertMap(ArrayHelper::map($groups, 'id', 'title'));
                 return $this->asJson(['output' => $out, 'selected' => Yii::t('app', 'Select group')]);
             }
@@ -207,5 +207,10 @@ class MarksAccountingController extends Controller implements IAdminController
                 ]);
             }
         }
+    }
+
+    public function actionExport($loadId)
+    {
+        ExportToExcel::getDocument('MarksAccounting', $loadId);
     }
 }

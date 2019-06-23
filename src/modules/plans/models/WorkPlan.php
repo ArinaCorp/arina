@@ -440,4 +440,9 @@ class WorkPlan extends ActiveRecord
         ExportToExcel::getDocument('WorkPlan', $this);
     }
 
+    public function getGroups()
+    {
+        return $this->specialityQualification->getGroupsActive($this->study_year_id);
+    }
+
 }
