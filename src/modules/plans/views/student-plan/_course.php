@@ -8,7 +8,7 @@ use yii\helpers\Url;
 /**
  * @var $model StudentPlan
  * @var $course integer
- * @var $semester integer
+ * @var $semester integer|string
  */
 
 switch ($course) {
@@ -21,19 +21,18 @@ switch ($course) {
         $spring = 3;
         break;
     case 3:
-        // TODO: remove subtraction, it's
-        $fall = 4 - 1;
-        $spring = 5 - 2;
+        $fall = 4;
+        $spring = 5;
         break;
     case 4:
-        $fall = 6 - 3;
-        $spring = 7 - 4;
+        $fall = 6;
+        $spring = 7;
         break;
     default:
         $fall = 0;
         $spring = 1;
 }
-$semester = $semester == 2 ? 'spring' : 'fall';
+$semester = ($semester == 2 ? 'spring' : 'fall');
 ?>
 
 <table class="table table-bordered">
@@ -109,19 +108,19 @@ $semester = $semester == 2 ? 'spring' : 'fall';
     </tr>
     <!--    Selected Subject blocks   -->
 
-    <?php foreach ($model->getWorkSubjectsBlock() as $subject): ?>
-        <?php if ($subject->presentIn($course)): ?>
+    <?php foreach ($model->subjectBlock->workSubjects as $workSubject): ?>
+        <?php if ($workSubject->presentIn($course)): ?>
             <tr>
-                <td><?= isset($subject->subject) ? $subject->subject->title : $subject->subject_id; ?></td>
+                <td><?= isset($workSubject->subject) ? $workSubject->subject->title : $workSubject->subject_id; ?></td>
 
-                <td><?= $subject->total[${$semester}]; ?></td>
-                <td><?= $subject->getClasses(${$semester}); ?></td>
-                <td><?= $subject->lectures[${$semester}]; ?></td>
-                <td><?= $subject->practices[${$semester}]; ?></td>
-                <td><?= $subject->lab_works[${$semester}]; ?></td>
-                <td><?= $subject->getSelfWork(${$semester}); ?></td>
-                <td><?= $subject->project_hours; ?></td>
-                <td><?= $subject->weeks[${$semester}]; ?></td>
+                <td><?= $workSubject->total[${$semester}]; ?></td>
+                <td><?= $workSubject->getClasses(${$semester}); ?></td>
+                <td><?= $workSubject->lectures[${$semester}]; ?></td>
+                <td><?= $workSubject->practices[${$semester}]; ?></td>
+                <td><?= $workSubject->lab_works[${$semester}]; ?></td>
+                <td><?= $workSubject->getSelfWork(${$semester}); ?></td>
+                <td><?= $workSubject->project_hours; ?></td>
+                <td><?= $workSubject->weeks[${$semester}]; ?></td>
 
             </tr>
         <?php endif; ?>

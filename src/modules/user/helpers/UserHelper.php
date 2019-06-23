@@ -14,6 +14,7 @@ use yii\helpers\ArrayHelper;
 
 class UserHelper
 {
+
     public static function getProfileMenuItems()
     {
         return [
@@ -91,6 +92,16 @@ class UserHelper
      */
     public static function isTeacher(User $user)
     {
-        return self::hasRole($user, 'teacher');
+        return self::hasRole($user, User::ROLE_TEACHER);
+    }
+
+    /**
+     * Check if user has role 'student'
+     * @param User $user
+     * @return bool
+     */
+    public static function isStudent(User $user)
+    {
+        return self::hasRole($user, User::ROLE_STUDENT);
     }
 }

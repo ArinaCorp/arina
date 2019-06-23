@@ -31,9 +31,9 @@ class ExportStudentplan
     public static function getSpreadsheet($spreadsheet, $plan)
     {
         // Default semester is 1 (fall), optional is 2 (spring)
-        $semester = $plan->semester === 2 ? 'spring' : 'fall';
+        $semester = ($plan->semester === 2 ? 'spring' : 'fall');
         $student = $plan->student;
-        $group = $plan->student->groups[0];
+        $group = $plan->group;
         $workplan = $plan->workPlan;
 
         $spreadsheet->setActiveSheetIndex(0);
@@ -93,13 +93,12 @@ class ExportStudentplan
                 $spring = 3;
                 break;
             case 3:
-                // TODO: remove subtraction
-                $fall = 4 - 1;
-                $spring = 5 - 2;
+                $fall = 4;
+                $spring = 5;
                 break;
             case 4:
-                $fall = 6 - 3;
-                $spring = 7 - 4;
+                $fall = 6;
+                $spring = 7;
                 break;
             default:
                 $fall = 0;
@@ -110,18 +109,18 @@ class ExportStudentplan
         $mandatoryRow = 18;
         $counter = 1;
         // Actual subject data
-        foreach ($plan->getWorkSubjects() as $subject) {
+        foreach ($plan->workSubjects as $workSubject) {
             $activeSheet->setCellValue("A$mandatoryRow", $counter);
-            $activeSheet->setCellValue("B$mandatoryRow", $subject->subject->title);
-            $activeSheet->setCellValue("C$mandatoryRow", ($subject->total[${$semester}]) / 30);
-            $activeSheet->setCellValue("D$mandatoryRow", $subject->total[${$semester}]);
-            $activeSheet->setCellValue("E$mandatoryRow", $subject->lectures[${$semester}]);
-            $activeSheet->setCellValue("F$mandatoryRow", $subject->lab_works[${$semester}]);
-            $activeSheet->setCellValue("G$mandatoryRow", $subject->practices[${$semester}]);
-            $activeSheet->setCellValue("H$mandatoryRow", $subject->getSelfWork(${$semester}));
-            $activeSheet->setCellValue("I$mandatoryRow", $subject->project_hours ? $subject->project_hours : '0');
+            $activeSheet->setCellValue("B$mandatoryRow", $workSubject->subject->title);
+            $activeSheet->setCellValue("C$mandatoryRow", ($workSubject->total[${$semester}]) / 30);
+            $activeSheet->setCellValue("D$mandatoryRow", $workSubject->total[${$semester}]);
+            $activeSheet->setCellValue("E$mandatoryRow", $workSubject->lectures[${$semester}]);
+            $activeSheet->setCellValue("F$mandatoryRow", $workSubject->lab_works[${$semester}]);
+            $activeSheet->setCellValue("G$mandatoryRow", $workSubject->practices[${$semester}]);
+            $activeSheet->setCellValue("H$mandatoryRow", $workSubject->getSelfWork(${$semester}));
+            $activeSheet->setCellValue("I$mandatoryRow", $workSubject->project_hours ? $workSubject->project_hours : '0');
             $activeSheet->setCellValue("J$mandatoryRow", 'WIP');
-            $activeSheet->setCellValue("K$mandatoryRow", $subject->cyclicCommission ? $subject->cyclicCommission->short_title : '');
+            $activeSheet->setCellValue("K$mandatoryRow", $workSubject->cyclicCommission ? $workSubject->cyclicCommission->short_title : '');
             //Here is our row 17, well for the first iteration
             $activeSheet->insertNewRowBefore($mandatoryRow + 1);
             $mandatoryRow++;
@@ -153,18 +152,18 @@ class ExportStudentplan
             $counter = 1;
 
             // Same story as for the mandatory subjects
-            foreach ($plan->getWorkSubjectsBlock() as $subject) {
+            foreach ($plan->subjectBlock->workSubjects as $workSubject) {
                 $activeSheet->setCellValue("A$selectableRow", $counter);
-                $activeSheet->setCellValue("B$selectableRow", $subject->subject->title);
-                $activeSheet->setCellValue("C$selectableRow", ($subject->total[${$semester}]) / 30);
-                $activeSheet->setCellValue("D$selectableRow", $subject->total[${$semester}]);
-                $activeSheet->setCellValue("E$selectableRow", $subject->lectures[${$semester}]);
-                $activeSheet->setCellValue("F$selectableRow", $subject->lab_works[${$semester}]);
-                $activeSheet->setCellValue("G$selectableRow", $subject->practices[${$semester}]);
-                $activeSheet->setCellValue("H$selectableRow", $subject->getSelfWork(${$semester}));
-                $activeSheet->setCellValue("I$selectableRow", $subject->project_hours ? $subject->project_hours : '0');
+                $activeSheet->setCellValue("B$selectableRow", $workSubject->subject->title);
+                $activeSheet->setCellValue("C$selectableRow", ($workSubject->total[${$semester}]) / 30);
+                $activeSheet->setCellValue("D$selectableRow", $workSubject->total[${$semester}]);
+                $activeSheet->setCellValue("E$selectableRow", $workSubject->lectures[${$semester}]);
+                $activeSheet->setCellValue("F$selectableRow", $workSubject->lab_works[${$semester}]);
+                $activeSheet->setCellValue("G$selectableRow", $workSubject->practices[${$semester}]);
+                $activeSheet->setCellValue("H$selectableRow", $workSubject->getSelfWork(${$semester}));
+                $activeSheet->setCellValue("I$selectableRow", $workSubject->project_hours ? $workSubject->project_hours : '0');
                 $activeSheet->setCellValue("J$selectableRow", 'WIP');
-                $activeSheet->setCellValue("K$selectableRow", $subject->cyclicCommission ? $subject->cyclicCommission->short_title : '');
+                $activeSheet->setCellValue("K$selectableRow", $workSubject->cyclicCommission ? $workSubject->cyclicCommission->short_title : '');
 
                 $activeSheet->insertNewRowBefore($selectableRow + 1);
                 $selectableRow++;

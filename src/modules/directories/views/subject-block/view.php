@@ -40,8 +40,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'specialityTitle',
+            'workPlanTitle',
             'course',
+            'semester',
             [
                 'attribute' => 'created',
                 'format' => 'datetime'

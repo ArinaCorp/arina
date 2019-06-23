@@ -1,10 +1,13 @@
 <?php
 
+use app\components\DepDropHelper;
 use app\modules\directories\models\speciality\Speciality;
 use app\modules\directories\models\subject_block\SubjectBlock;
 use app\modules\plans\models\StudentPlan;
 use app\modules\plans\models\WorkPlan;
 use app\modules\students\models\Student;
+use app\modules\user\helpers\UserHelper;
+use app\modules\user\models\User;
 use kartik\depdrop\DepDrop;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
@@ -18,88 +21,83 @@ use yii\widgets\DetailView;
 /* @var $this View
  * @var $model StudentPlan
  * @var $form ActiveForm
+ *
+ * @var $user User
  */
 
+$user = Yii::$app->user->identity;
 ?>
 
 <div class="subject-form">
 
-    <?php $form = ActiveForm::begin(['id' => 'student-plan-form']); ?>
+    <?php $form = ActiveForm::begin(); ?>
 
     <div class="row">
 
         <div class="col-sm-6">
 
-            <?= $form->field($model, 'student_id')->widget(Select2::class, [
-                'data' => Student::getList(),
-                'options' => [
-                    'id' => 'student-id',
+                <?= $form->field($model, 'student_id')->widget(Select2::class, [
+                    'data' => Student::getList(),
+                    'options' => [
+                        'placeholder' => Yii::t('app', 'Select ...'),
+                    ],
+                ]) ?>
+
+                <?= $form->field($model, 'work_plan_id')->widget(DepDrop::class, [
+                    'type' => DepDrop::TYPE_SELECT2,
+                    'data' => [$model->work_plan_id => 'default'],
+                    'pluginOptions' => [
+                        'depends' => ['studentplan-student_id'],
+                        'placeholder' => Yii::t('app', 'Select ...'),
+                        'url' => Url::to(['/plans/student-plan/get-student-work-plans']),
+                    ],
+                ]); ?>
+
+                <?= $form->field($model, 'semester')->dropDownList([1 => 'Перший', 2 => 'Другий']); ?>
+
+            <?= $form->field($model, 'subject_block_id')->widget(DepDrop::class, [
+                'type' => DepDrop::TYPE_SELECT2,
+                'data' => [$model->subject_block_id => 'default'],
+                'pluginOptions' => [
+                    'depends' => ['studentplan-student_id', 'studentplan-work_plan_id', 'studentplan-semester'],
                     'placeholder' => Yii::t('app', 'Select ...'),
-                    'onchange' => 'loadSubBlockSelect(event)'
+                    'url' => Url::to(['/plans/student-plan/get-student-subject-blocks']),
                 ],
-            ]) ?>
-            <?php // TODO: This stuff is retarded, have to look for better way to imp. it ?>
-            <!--  Hidden checkbox used with javaScript  -->
-            <div class="hidden">
-                <?= $form->field($model, 'loadSubBlockSelect')->checkbox(['id' => 'loadSubBlockSelect-checkbox', 'class' => '']) ?>
+            ]); ?>
+
+
+            <div id="subject-block-preview" class="col-lg-12">
+
             </div>
-
-            <?= $form->field($model, 'work_plan_id')->widget(Select2::class, [
-                'data' => WorkPlan::getList(),
-                'options' => [
-                    'placeholder' => Yii::t('app', 'Select ...'),
-                ],
-            ]) ?>
-
-            <?= $form->field($model, 'semester')->dropDownList([1 => 'Перший', 2 => 'Другий']); ?>
-
-            <?= $model->student_id ? $form->field($model, 'subject_block_id')->widget(Select2::class, [
-                'data' => SubjectBlock::getSubjectBlocksForStudent($model->student_id),
-                'options' => [
-                    'placeholder' => Yii::t('app', 'Select ...'),
-                    'onchange' => 'loadSubjectBlock(event)',
-                ]
-            ]) : '' ?>
-            <!--  Hidden checkbox used with javaScript  -->
-            <div class="hidden">
-                <?= $form->field($model, 'loadSubjectBlock')->checkbox(['id' => 'loadSubjectBlock-checkbox', 'class' => '']) ?>
-            </div>
-
-            <?= /** @var SubjectBlock $subjectBlock */
-            $model->subject_block_id ? DetailView::widget([
-                'model' => $model->subjectBlock,
-                'attributes' => $model->subjectBlock->getSubjectsDetail(),
-            ]) : '' ?>
-
 
         </div>
 
     </div>
 
     <div class="form-group">
-
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-
     </div>
 
     <?php ActiveForm::end(); ?>
 
 </div>
 
-<script>
-    var loadSubjectBlock = function (event) {
-        var form = document.getElementById('student-plan-form');
-        var request = document.getElementById('loadSubjectBlock-checkbox');
-        request.checked = true;
-        form.submit();
-    };
-    var loadSubBlockSelect = function (event) {
-        var form = document.getElementById('student-plan-form');
-        var request = document.getElementById('loadSubBlockSelect-checkbox');
-        request.checked = true;
-        form.submit();
-    }
-</script>
+<?php
+$jUrlSubjectBlockView = Url::to(['/directories/subject-block/subject-preview']);
+$js = <<<JS
+jQuery('#studentplan-subject_block_id').on('change', function () {
+    jQuery.ajax({
+        url: '$jUrlSubjectBlockView',
+        type: 'get',
+        data: {id: jQuery('#studentplan-subject_block_id').val()},
+        success: function (data) {
+            jQuery('#subject-block-preview').html(data);
+        }
+    });
+});
+JS;
+$this->registerJs($js);
+?>
 
 
 

@@ -1,10 +1,14 @@
 <?php
 
 use app\modules\directories\models\speciality\Speciality;
+use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 use app\modules\directories\models\subject_block\SubjectBlock;
+use app\modules\plans\models\WorkPlan;
+use kartik\depdrop\DepDrop;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 use yii\web\View;
 use app\modules\directories\models\subject\Subject;
@@ -24,22 +28,33 @@ use app\modules\directories\models\subject\Subject;
 
         <div class="col-sm-6">
 
-            <?= $form->field($model, 'speciality_id')->widget(Select2::class, [
-                'data' => Speciality::getList(),
+            <?= $form->field($model, 'work_plan_id')->widget(Select2::class, [
+                'data' => WorkPlan::getList(),
                 'options' => [
-                    'placeholder' => Yii::t('app', 'Select speciality'),
+                    'placeholder' => Yii::t('app', 'Select plan'),
                 ],
-            ]) ?>
+            ]); ?>
 
-            <?= $form->field($model, 'course')->input('integer') ?>
+            <!-- TODO: Add localization -->
+            <?= $form->field($model, 'course')->dropDownList([1 => 'Перший', 2 => 'Другий', 3 => 'Третій', 4 => 'Четвертий']); ?>
 
-            <?= $form->field($model, 'selectedSubjects')->widget(Select2::class, [
-                'data' => Subject::getOptionalList(),
-                'options' => [
-                    'placeholder' => Yii::t('app', 'Select subject'),
-                    'multiple' => true,
+            <?= $form->field($model, 'semester')->dropDownList([1 => 'Перший', 2 => 'Другий']); ?>
+
+            <?= $form->field($model, 'selectedSubjects')->widget(DepDrop::class, [
+                'type' => DepDrop::TYPE_SELECT2,
+                'select2Options' => [
+                    'pluginOptions' => [
+                        'multiple' => true,
+                    ],
                 ],
-            ]) ?>
+                'data' => ArrayHelper::map($model->workSubjects, 'id', 'title'),
+                'pluginOptions' => [
+                    'depends' => ['subjectblock-work_plan_id', 'subjectblock-course', 'subjectblock-semester'],
+                    'initialize' => true,
+                    'placeholder' => Yii::t('app', 'Select ...'),
+                    'url' => Url::to(['/directories/subject-block/get-optional-subjects']),
+                ],
+            ]); ?>
 
         </div>
 

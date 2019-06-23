@@ -110,14 +110,4 @@ class Subject extends ActiveRecord
             'subject_id' => $this->id])->subjectCycle;
     }
 
-    /**
-     * @return array Returns list of optional subjects
-     */
-    public static function getOptionalList()
-    {
-        $subjects = Subject::find()->where(['like', 'code', 'ПВС'])->all();
-        $items = ArrayHelper::map($subjects, 'id', 'title');
-        return $items;
-    }
-
 }

@@ -37,7 +37,10 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'specialityTitle',
+            'workPlanTitle',
+            'course',
+            'semester',
+            'subjectCount',
             [
                 'attribute' => 'updated',
                 'format' => 'datetime'
@@ -46,7 +49,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'created',
                 'format' => 'datetime'
             ],
-            'subjectCount',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

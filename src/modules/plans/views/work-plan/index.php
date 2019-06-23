@@ -46,16 +46,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => 'title',
                 'format' => 'raw',
                 'value' => function (WorkPlan $model) {
-                    return $model->getTitle();
+                    return Html::a($model->getTitle(), Url::toRoute(['work-plan/view', 'id' => $model->id]), ['data-pjax' => 0]);
                 },
             ],
             [
                 'attribute' => 'updated',
-                'format'=>'datetime'
+                'format' => 'datetime'
             ],
             [
                 'attribute' => 'created',
-                'format'=>'datetime'
+                'format' => 'datetime'
             ],
             [
                 'header' => Yii::t('app', 'Actions'),

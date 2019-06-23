@@ -60,17 +60,17 @@ class m190324_213740_create_subject_to_block_table extends Migration
     {
 
         $this->dropForeignKey(
-            'idx-stb-subject_id',
-            'subject_to_block'
-        );
-
-        $this->dropIndex(
             'fk-stb-subject_id',
             'subject_to_block'
         );
 
+        $this->dropIndex(
+            'idx-stb-subject_id',
+            'subject_to_block'
+        );
+
         $this->dropForeignKey(
-            'idx-stb-block_id',
+            'fk-stb-block_id',
             'subject_to_block'
         );
 

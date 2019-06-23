@@ -63,54 +63,6 @@ class GlobalHelper
     }
 
     /**
-     * Returns the national scale for a mark value
-     * 0 - no match
-     * 1 - uncompleted/unfair
-     * 2 - unsatisfiable
-     * 3 - satisfiable
-     * 4 - good
-     * 5 - excellent
-     * @param $mark int
-     * @param $evalSystemId int
-     * @return string
-     */
-    public static function getMarkScale($mark, $evalSystemId)
-    {
-        // Five-level system is equal to the scale, In both systems mark 1 equals scale 1
-        if ($evalSystemId == 1 || $mark == 1) {
-            return $mark;
-        }
-
-        // Twelve-level system
-        if ($evalSystemId == 2) {
-            if ($mark < 4) {
-                return 2;
-            } elseif ($mark < 7) {
-                return 3;
-            } elseif ($mark < 10) {
-                return 4;
-            } elseif ($mark < 13) {
-                return 5;
-            }
-        }
-
-        // No match
-        return 0;
-    }
-
-    public static function getMarkScaleLiteral($mark, $evalSystemId, $lang = null)
-    {
-        return Yii::t('number', [
-            '0' => 'ERR?',
-            '1' => 'Uncompleted/Unfair',
-            '2' => 'Unsatisfiable',
-            '3' => 'Satisfiable',
-            '4' => 'Good',
-            '5' => 'Excellent',
-        ][self::getMarkScale($mark, $evalSystemId)], [], $lang);
-    }
-
-    /**
      * Return an order literal.
      * @param $orderNumber integer Order number
      * @param $lang string Language to return

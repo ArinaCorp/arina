@@ -17,7 +17,6 @@ $this->title = Yii::t('app', 'Student card');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Study forms'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
-$student = $model->student;
 ?>
 
 <div class="subject-view">
@@ -32,13 +31,13 @@ $student = $model->student;
 
     <div class="row">
         <div class="col-lg-12">
-            <?= Html::a(Yii::t('app', 'Export'), ['student-card/export', 'student_id' => $model->studentId], ['class' => 'btn btn-success']) ?>
+            <?= Html::a(Yii::t('app', 'Export'), ['/students/student-card/export', 'student_id' => $model->id], ['class' => 'btn btn-success']) ?>
         </div>
     </div>
 
     <div class="table-bordered p1 hidden">
         <h3>Debug</h3>
-        <?= 'Student id = ' . $model->studentId ?>
+        <?= 'Student id = ' . $model->id ?>
         <br>
 
         <?php foreach ($model->marks as $mark): ?>
@@ -53,17 +52,17 @@ $student = $model->student;
         <div class="col-lg-8">
             <div class="clearfix">
                 <h4 class="pull-left"><?= Yii::t('app', 'Department') ?>:</h4>
-                <h4 class="pull-left fw-normal mx-1"><?= $student->department->title ?></h4>
+                <h4 class="pull-left fw-normal mx-1"><?= $model->department->title ?></h4>
             </div>
 
             <div class="clearfix">
                 <h4 class="pull-left"><?= Yii::t('app', 'Speciality Qualification ID') ?>:</h4>
-                <h4 class="pull-left fw-normal mx-1"><?= $student->specialityQualification->title ?></h4>
+                <h4 class="pull-left fw-normal mx-1"><?= $model->specialityQualification->title ?></h4>
             </div>
 
             <div class="clearfix">
                 <h4 class="pull-left"><?= Yii::t('app', 'Speciality') ?>:</h4>
-                <h4 class="pull-left fw-normal mx-1"><?= $student->speciality->title //TODO: speciality number (?)                                                                          ?></h4>
+                <h4 class="pull-left fw-normal mx-1"><?= $model->speciality->title //TODO: speciality number (?)                                                                          ?></h4>
             </div>
         </div>
 
@@ -78,42 +77,42 @@ $student = $model->student;
     <div class="row">
         <div class="col-lg-12 clearfix">
             <h4 class="pull-left"><?= Yii::t('app', 'Second name, first name, middle name') ?>:</h4>
-            <h4 class="pull-left fw-normal mx-1"><?= $student->fullName ?></h4>
+            <h4 class="pull-left fw-normal mx-1"><?= $model->fullName ?></h4>
         </div>
     </div>
 
     <div class="row">
         <div class="col-lg-12 clearfix">
             <h4 class="pull-left"><?= Yii::t('app', 'Birth Day') ?>:</h4>
-            <h4 class="pull-left fw-normal mx-1"><?= $student->birth_day ?></h4>
+            <h4 class="pull-left fw-normal mx-1"><?= $model->birth_day ?></h4>
         </div>
     </div>
 
     <div class="row">
         <div class="col-lg-12 clearfix">
             <h4 class="pull-left"><?= Yii::t('app', 'Citizenship') ?>:</h4>
-            <h4 class="pull-left fw-normal mx-1"><?= $student->country->name; ?></h4>
+            <h4 class="pull-left fw-normal mx-1"><?= $model->country->name; ?></h4>
         </div>
     </div>
 
     <div class="row">
         <div class="col-lg-12 clearfix">
             <h4 class="pull-left"><?= Yii::t('app', 'Finished') ?>:</h4>
-            <h4 class="pull-left fw-normal mx-1"><?= $student->finishedInstitution ?></h4>
+            <h4 class="pull-left fw-normal mx-1"><?= $model->finishedInstitution ?></h4>
         </div>
     </div>
 
     <div class="row">
         <div class="col-lg-12 clearfix">
             <h4 class="pull-left"><?= Yii::t('app', 'Family status') ?>:</h4>
-            <h4 class="pull-left fw-normal mx-1"><?= $student->familyStatus ?></h4>
+            <h4 class="pull-left fw-normal mx-1"><?= $model->familyStatus ?></h4>
         </div>
     </div>
 
     <div class="row">
         <div class="col-lg-12 clearfix">
             <h4 class="pull-left"><?= Yii::t('app', 'Living address') ?>:</h4>
-            <h4 class="pull-left fw-normal mx-1"><?= $student->livingAddress ?></h4>
+            <h4 class="pull-left fw-normal mx-1"><?= $model->livingAddress ?></h4>
         </div>
     </div>
 
@@ -122,14 +121,14 @@ $student = $model->student;
     <div class="row">
         <div class="col-lg-12 clearfix">
             <h4 class="pull-left"><?= Yii::t('app', 'Exemption presence upon entering') ?>:</h4>
-            <h4 class="pull-left fw-normal mx-1"><?= $student->fullExemptionString ?></h4>
+            <h4 class="pull-left fw-normal mx-1"><?= $model->fullExemptionString ?></h4>
         </div>
     </div>
 
     <div class="row">
         <div class="col-lg-12 clearfix">
             <h4 class="pull-left"><?= Yii::t('app', 'Enrolled by edict since') ?>:</h4>
-            <h4 class="pull-left fw-normal mx-1"><?= $student->enrollmentEdict->yearCmdString ?></h4>
+            <h4 class="pull-left fw-normal mx-1"><?= $model->enrollmentEdict->yearCmdString ?></h4>
         </div>
     </div>
 
@@ -143,7 +142,7 @@ $student = $model->student;
     <div class="row">
         <div class="col-lg-12 clearfix">
             <h5 class="pull-left"><?= Yii::t('app', 'Transferred in order from') ?>:</h5>
-            <h5 class="pull-left fw-normal mx-1"><?= $student->finished_inst ?></h5> <!-- TODO: Discuss -->
+            <h5 class="pull-left fw-normal mx-1"><?= $model->finished_inst ?></h5> <!-- TODO: Discuss -->
         </div>
     </div>
 
@@ -165,7 +164,7 @@ $student = $model->student;
     <div class="row">
         <div class="col-lg-12 clearfix">
             <h5 class="pull-left"><?= Yii::t('app', 'Without competition') ?>:</h5>
-            <h5 class="pull-left fw-normal mx-1"><?= $student->withoutCompetition ? Yii::t('app', 'On exemption basis') : '' ?></h5>
+            <h5 class="pull-left fw-normal mx-1"><?= $model->withoutCompetition ? Yii::t('app', 'On exemption basis') : '' ?></h5>
         </div>
     </div>
 
@@ -187,7 +186,7 @@ $student = $model->student;
         <div class="col-lg-12 clearfix">
             <h4 class="pull-left"><?= Yii::t('app',
                     'Tax ID(or Passport Serial and Number)') ?>:</h4>
-            <h4 class="pull-left fw-normal mx-1"><?= $student->tax_id ?></h4>
+            <h4 class="pull-left fw-normal mx-1"><?= $model->tax_id ?></h4>
         </div>
     </div>
 
@@ -206,8 +205,8 @@ $student = $model->student;
                 <th><?= Yii::t('app', 'Number and date of an edict') ?></th>
                 <th><?= Yii::t('app', 'Content of an edict') ?></th>
             </tr>
-            <?php if ($student->edicts):
-                foreach ($student->edicts as $edict): ?>
+            <?php if ($model->edicts):
+                foreach ($model->edicts as $edict): ?>
                     <tr>
                         <td><?= $edict->course ?></td>
                         <td><?= $edict->cmdSinceString ?></td>
@@ -234,7 +233,7 @@ $student = $model->student;
     ];
 
     // TODO: Implement a better way to get group's course, as at some point it will return >4. Define Max course for a group? Define finishing year?
-    for ($course = 2; $course <= $student->currentGroup->getCourse($student->currentGroup->created_study_year_id+4); $course++) {
+    for ($course = 2; $course <= $model->currentGroup->getCourse($model->currentGroup->created_study_year_id+4); $course++) {
         $items[] = [
             'label' => GlobalHelper::getOrderLiteral($course) . ' ' . Yii::t('app', 'course'),
             'content' => $this->render('_course', ['model' => $model, 'course' => $course], true),
@@ -251,8 +250,8 @@ $student = $model->student;
     <?php Pjax::end(); ?>
 
     <?php
-//    var_dump($student->currentGroup->title);
-//    var_dump($student->currentGroup->getCourse($student->currentGroup->created_study_year_id+4));
+//    var_dump($model->currentGroup->title);
+//    var_dump($model->currentGroup->getCourse($model->currentGroup->created_study_year_id+4));
 //    die;
     ?>
 </div>

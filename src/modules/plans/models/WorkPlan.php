@@ -5,6 +5,7 @@ namespace app\modules\plans\models;
 use app\components\ExportToExcel;
 use app\modules\user\helpers\UserHelper;
 use app\modules\user\models\User;
+use nullref\useful\traits\Mappable;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\db\ActiveQuery;
@@ -32,6 +33,8 @@ use app\modules\directories\models\subject\Subject;
  * @property integer $updated
  * @property integer $study_year_id
  *
+ * @property WorkSubject[] $optionalWorkSubjects
+ *
  * The followings are the available model relations:
  * @property StudyYear $studyYear
  * @property WorkSubject[] $workSubjects
@@ -39,6 +42,7 @@ use app\modules\directories\models\subject\Subject;
  */
 class WorkPlan extends ActiveRecord
 {
+    use Mappable;
     /**
      * Allowable difference between the hours of study and work plan
      */
@@ -428,6 +432,29 @@ class WorkPlan extends ActiveRecord
             }
         }
         return $result;
+    }
+
+    /**
+     * Returns an array of optional subjects that have hours in given semester(1-8) | If null - all optional subjects
+     * @param integer|null $semester
+     * @return WorkSubject[]
+     */
+    public function getOptionalWorkSubjects($semester = null)
+    {
+        $allOptional = $this->getWorkSubjects()
+            ->joinWith('subject')
+            // TODO: Add constant 'ПВС'
+            ->where(['like', 'subject.code', 'ПВС'])
+            ->all();
+
+        if ($semester) {
+            $semesterId = $semester - 1;
+            return array_filter($allOptional, function (WorkSubject $subject) use ($semesterId) {
+                return $subject->total[$semesterId] != 0;
+            });
+        }
+
+        return $allOptional;
     }
 
     /**

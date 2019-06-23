@@ -19,6 +19,7 @@ use yii\widgets\Pjax;
         [
             'label' => GlobalHelper::getOrderLiteral($model->course) . ' ' . Yii::t('app', 'course'),
             'active' => true,
+            //This view render requires a parameter because of a variable variable inside the rendered view.
             'content' => $this->render('_course', ['model' => $model, 'course' => $model->course, 'semester' => $model->semester], true),
         ],
     ],

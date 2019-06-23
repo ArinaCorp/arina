@@ -58,8 +58,8 @@ switch ($course) {
         <th colspan="6"><?= Yii::t('plans', 'Autumn semester') ?></th>
     </tr>
 
-    <?php if ($model->getMarks($fall + 1)):
-        foreach ($model->getMarks($fall + 1) as $mark): ?>
+    <?php if ($model->getMarks([], $fall + 1)):
+        foreach ($model->getMarks([], $fall + 1) as $mark): ?>
             <tr>
                 <td><?= $mark->workSubject->title; ?></td>
                 <!--TODO: Total hours per semester should probably be taken from Load rather than Work Plan-->
@@ -76,8 +76,8 @@ switch ($course) {
         <th colspan="6"><?= Yii::t('plans', 'Spring semester') ?></th>
     </tr>
 
-    <?php if ($model->getMarks($spring + 1)):
-        foreach ($model->getMarks($spring + 1) as $mark): ?>
+    <?php if ($model->getMarks([], $spring + 1)):
+        foreach ($model->getMarks([], $spring + 1) as $mark): ?>
             <tr>
                 <td><?= $mark->workSubject->title; ?></td>
                 <td><?= $mark->workSubject->total[$spring]; ?></td>

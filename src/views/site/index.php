@@ -1,7 +1,10 @@
 <?php
+
 use yii\helpers\Html;
+use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
+/* @var $role string */
 $this->title = Yii::$app->name;
 ?>
 <div class="site-index">
@@ -11,8 +14,12 @@ $this->title = Yii::$app->name;
                 <?= Html::encode($this->title) ?>
             </h1>
         </div>
-        <?php foreach ($widgets as $widget){
-            echo $widget;
-        } ?>
+        <?php
+        Pjax::begin();
+        if ($role) {
+            echo $this->render('dashboard/_' . $role);
+        }
+        Pjax::end();
+        ?>
     </div>
 </div>

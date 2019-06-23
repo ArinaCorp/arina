@@ -3,7 +3,10 @@
 namespace app\controllers;
 
 use app\modules\rbac\filters\AccessControl;
+use app\modules\user\helpers\UserHelper;
+use app\modules\user\models\User;
 use nullref\core\interfaces\IAdminController;
+use Yii;
 use yii\filters\AccessRule;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
@@ -48,10 +51,22 @@ class SiteController extends Controller implements IAdminController
         ];
     }
 
+    /**
+     * @return string
+     */
     public function actionIndex()
     {
-        $widgets = [];
+        /** @var User $user */
+        $user = Yii::$app->user->identity;
+        $role = null;
+        if ($user) {
+            switch ($user) {
+                case UserHelper::isStudent($user):
+                    $role = User::ROLE_STUDENT;
+                    break;
+            }
+        }
 
-        return $this->render('index', ['widgets' => $widgets]);
+        return $this->render('index', ['role' => $role]);
     }
 }
