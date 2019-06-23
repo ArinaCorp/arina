@@ -16,6 +16,7 @@ class ExportYearlyHourAccounting
      * @param YearlyHourAccounting $yearlyHourAccounting
      * @return PhpSpreadsheet\Spreadsheet
      * @throws PhpSpreadsheet\Exception
+     * @throws \yii\base\InvalidConfigException
      */
     public static function getSpreadsheet($spreadsheet, $yearlyHourAccounting)
     {
@@ -24,14 +25,12 @@ class ExportYearlyHourAccounting
         $studyYear = $yearlyHourAccounting->studyYear;
         $teacher = $yearlyHourAccounting->teacher;
 
-        //set year, teacher
-        $activeSheet->setCellValue('B3', $studyYear->getTitle());
-        $activeSheet->setCellValue('B4', $teacher->getShortName());
 
         //insert new columns
         $records = $yearlyHourAccounting->hourAccountingRecords;
         $activeSheet->insertNewColumnBefore('B', count($records));
         $columnIndex = Coordinate::columnIndexFromString('B');
+        $rightBorderIndex = Coordinate::columnIndexFromString('K');
 
         $sumYearTotals = 0;
         $sumPlanTotals = 0;
@@ -76,7 +75,7 @@ class ExportYearlyHourAccounting
             $sumGrandYearTotals += $grandYearTotal;
 
             //
-            $activeSheet->getColumnDimension($column)->setAutoSize(true);
+            $activeSheet->getColumnDimension($column)->setWidth(6);
 
             $columnIndex++;
         }
@@ -103,26 +102,41 @@ class ExportYearlyHourAccounting
         $activeSheet->setCellValue($column . $row++, $sumControlHours);
         $activeSheet->setCellValue($column . $row, $sumGrandYearTotals);
 
-        //set styles for added columns
-        $styles = array_merge(ExportToExcel::getBorderStyle(), [
-                'font' => [
-                    'name' => 'Times New Roman',
-                    'size' => 16,
-                ],
-                'alignment' => [
-                    'horizontal' => Alignment::HORIZONTAL_CENTER,
-                    'vertical' => Alignment::VERTICAL_CENTER,
-                ]
-            ]
-        );
 
         //merge header cells
-        $activeSheet->mergeCells("A1:$column" . "1");
-//        $activeSheet->mergeCells("A2:$column" . "2");
-//        $activeSheet->mergeCells("A3:$column" . "3");
-//        $activeSheet->mergeCells("A6:$column" . "6");
+        $rightBorderColumn = Coordinate::stringFromColumnIndex($rightBorderIndex);
 
-        $activeSheet->getStyle("B6:$column$row")->applyFromArray($styles);
+        $activeSheet->mergeCells("A1:$rightBorderColumn" . "1");
+        $activeSheet->mergeCells("A3:$rightBorderColumn" . "3");
+        $activeSheet->mergeCells("A4:$rightBorderColumn" . "4");
+        $activeSheet->mergeCells("A28:$rightBorderColumn" . "28");
+
+        //set year, teacher
+        $studyYearTitle = $studyYear->getTitle();
+        $teacherShortName = $teacher->getShortName();
+
+        $activeSheet->setCellValue('A3', "Навчальний рік - $studyYearTitle");
+        $activeSheet->setCellValue('A4', "Викладач - $teacherShortName");
+        $activeSheet->setCellValue('A28', "Заступник директора по навчальній роботі ______________________________________");
+
+        //set styles for added columns
+        $textStyles = [
+            'font' => [
+                'name' => 'Times New Roman',
+                'size' => 14,
+            ],
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_CENTER,
+                'vertical' => Alignment::VERTICAL_CENTER,
+                'wrapText' => true,
+            ]
+        ];
+        $columnStyles = array_merge(ExportToExcel::getBorderStyle(), $textStyles);
+
+        $activeSheet->getStyle("B6:$column$row")->applyFromArray($columnStyles);
+
+        $activeSheet->getStyle("B8:$column" . "8")->getAlignment()->setTextRotation(90);
+
         return $spreadsheet;
     }
 }
