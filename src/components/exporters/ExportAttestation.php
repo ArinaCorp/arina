@@ -50,22 +50,25 @@ class ExportAttestation
         $current = $startRow;
 
 //      hardcode
-        $loads = Load::findAll(['study_year_id' => StudyYear::findOne(['year_start' => '2015'])->id]);
+        $loads = Load::findAll([
+            'study_year_id' => StudyYear::findOne(['year_start' => '2015'])->id,
+            'group_id'=>$group_id
+        ]);
         $subjects = [];
         /**
          * @var $load Load
          */
         foreach ($loads as $load) {
             $load_group_id = $load->group_id == $group_id;
-            $double = in_array($load->workSubject->subject->title,$subject_titles); //1=>true
-            if ($load_group_id && !$double && $load->workSubject->weeks[$semester - 1] != 0) {
+//            $double = in_array($load->workSubject->subject->title,$subject_titles); //1=>true
+            if ($load_group_id  && $load->workSubject->weeks[$semester - 1] != 0) {
                 array_push($subject_titles, $load->workSubject->subject->title);
                 array_push($subjects, ['subject' => $load->workSubject->subject]);
             }
 
         }
-//        var_dump($subject_titles);
-//        die;
+        var_dump($subject_titles);
+        die;
 
 //        self::getSubjects($studyPlan, $semester, $subject_titles, $subjects);
         self::insertFormData($spreadsheet, $romanSemester, $data, $group_id);

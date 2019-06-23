@@ -4,11 +4,13 @@
 namespace app\components;
 
 
+use app\modules\directories\models\subject\Subject;
 use app\modules\journal\models\record\JournalMark;
 use app\modules\journal\widgets\MarksAccounting;
 use app\modules\load\models\Load;
 use app\modules\plans\models\StudySubject;
 use codemix\excelexport\ActiveExcelSheet;
+use Mpdf\Tag\Sub;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Color;
 use Yii;
@@ -102,18 +104,25 @@ class ExportHelpers
      * @param array $students
      * @param array $loads Load
      * @param null $type string
+     * @param $semester integer
      * @return array
      */
-    public static function getRealMarks($subjects = [], $students = [], $loads = [], $type = NULL)
+    public static function getRealMarks($subjects = [], $students = [], $loads = [], $type = NULL, $semester)
     {
         $allMarks = [];
 //        var_dump($subjects[0]);die;
-        /*** @var $load Load */
+        /**
+         * @var $load Load
+         * @var $subject Subject
+         */
         foreach ($loads as $load) {
             foreach ($subjects as $subject) {
                 foreach ($students as $student) {
                     foreach ($load->journalRecords as $journalRecord) {
-                        if ($journalRecord->type == $type && $load->workSubject->subject->id == $subject['subject']->id) {
+                        $types = $journalRecord->type == $type;
+                        $sub = $load->workSubject->subject->id == $subject['subject']->id;
+                        $sem = $load->workSubject->weeks[$semester-1]!=0;
+                        if ($types && $sub && $sem) {
                             $marks = JournalMark::findAll([
                                 'student_id' => $student->id,
                                 'record_id' => $journalRecord->id
