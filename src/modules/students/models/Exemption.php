@@ -20,6 +20,15 @@ class Exemption extends \yii\db\ActiveRecord
 {
     use Mappable;
 
+    //TODO: create a seed migration according to constants
+    const TYPE_ORPHAN = 1,
+        TYPE_DISABLED_GROUP_2 = 2,
+        TYPE_DISABLED_GROUP_3 = 3,
+        TYPE_UNDER_CARE = 4,
+        TYPE_DISPLACED = 5,
+        TYPE_ATO = 6;
+
+
     /**
      * @inheritdoc
      */

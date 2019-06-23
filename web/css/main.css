@@ -139,3 +139,20 @@
 .calendar-widget {
     padding: 10px 15px;
 }
+
+.fw-normal{
+    font-weight: normal;
+}
+
+.fw-bold {
+    font-weight: bold;
+}
+
+.fw-bolder{
+    font-weight: bolder;
+}
+
+.mx-1{
+    margin-left: 1%;
+    margin-right: 1%;
+}

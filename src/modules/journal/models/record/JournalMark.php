@@ -2,9 +2,13 @@
 
 namespace app\modules\journal\models\record;
 
+use app\helpers\GlobalHelper;
+use app\modules\journal\helpers\MarkHelper;
 use app\modules\journal\models\evaluation\Evaluation;
 use app\modules\journal\models\evaluation\EvaluationSystem;
 use app\modules\journal\models\presence\NotPresenceType;
+use app\modules\load\models\Load;
+use app\modules\plans\models\WorkSubject;
 use app\modules\students\models\Student;
 use Yii;
 use yii\bootstrap\Html;
@@ -25,8 +29,10 @@ use yii\bootstrap\Html;
  * @property string $retake_ticket
  * @property string $retake_date
  * @property string $comment
- * @property integer $value
  *
+ * @property int $value
+ * @property string $valueLiteral
+ * @property string $valueScaleLiteral
  * @property Evaluation $evaluation
  * @property EvaluationSystem $evaluationSystem
  * @property Evaluation $retakeEvaluation
@@ -34,6 +40,8 @@ use yii\bootstrap\Html;
  * @property JournalRecord $journalRecord
  * @property Student $student
  * @property NotPresenceType $reason
+ *
+ * @property WorkSubject $workSubject
  */
 class JournalMark extends \yii\db\ActiveRecord
 {
@@ -126,6 +134,15 @@ class JournalMark extends \yii\db\ActiveRecord
         }
     }
 
+    /**
+     * Value shortcut
+     * @return string
+     */
+    public function getValue()
+    {
+        return $this->evaluation->value;
+    }
+
     public function getEvaluation()
     {
         return $this->hasOne(Evaluation::class, ['id' => 'evaluation_id']);
@@ -133,7 +150,9 @@ class JournalMark extends \yii\db\ActiveRecord
 
     public function getEvaluationSystem()
     {
-        return $this->hasOne(EvaluationSystem::class, ['id' => 'evaluation_system_id']);
+        return EvaluationSystem::findOne($this->journalRecord->load->evaluation_system_id);
+        // TODO: 'evaluation_system_id' is not used in JournalMark
+        //return $this->hasOne(EvaluationSystem::class, ['id' => 'evaluation_system_id']);
     }
 
     public function getRetakeEvaluation()
@@ -213,5 +232,24 @@ class JournalMark extends \yii\db\ActiveRecord
         $evaluations = Evaluation::getListBySystem($evaluation_system_id);
         $evaluations[null] = Yii::t('app', 'Not defined');
         return $evaluations;
+    }
+
+    /**
+     * @return \app\modules\plans\models\WorkSubject
+     */
+    public function getWorkSubject()
+    {
+        return Load::findOne($this->journalRecord->load_id)->workSubject;
+    }
+
+    public function getValueLiteral()
+    {
+        return GlobalHelper::getNumberLiteral($this->value);
+    }
+
+    public function getValueScaleLiteral()
+    {
+        // TODO: We're getting eval system from load (?)
+        return MarkHelper::getMarkScaleLiteral($this->value, $this->evaluationSystem->id);
     }
 }

@@ -34,6 +34,8 @@ use app\modules\directories\models\study_year\StudyYear;
  * @property bool $dual_lab_work
  * @property bool $dual_practice
  *
+ * @property string $title
+ *
  * The followings are the available model relations:
  * @property WorkPlan $workPlan
  * @property Subject $subject

@@ -100,13 +100,11 @@ class DefaultController extends Controller implements IAdminController
         $year = StudyYear::findOne($studyYear);
         Load::deleteAll(['study_year_id' => $studyYear]);
         foreach ($year->workPlans as $plan) {
-            $groups = $plan->specialityQualification->groups;
+            $groups = $plan->getGroups();
             foreach ($plan->workSubjects as $subject) {
+                /** @var Group $group */
                 foreach ($groups as $group) {
                     $course = $group->getCourse($year->id);
-                    if ($course > 4) {
-                        break;
-                    }
                     $spring = $course * 2;
                     $fall = $spring - 1;
                     if (!empty($subject->total[$fall - 1]) || !empty($subject->total[$spring - 1])) {
@@ -202,11 +200,16 @@ class DefaultController extends Controller implements IAdminController
      */
     public function actionView($id)
     {
-        $model = new LoadSearch();
+        $model = new LoadSearch([
+            'study_year_id' => $id
+        ]);
 
         $dataProvider = $model->search(Yii::$app->request->queryParams);
         $year = StudyYear::findOne($id);
-        return $this->render('view', ['model' => $model, 'dataProvider' => $dataProvider, 'year' => $year]);
+        return $this->render('view', [
+            'model' => $model,
+            'dataProvider' => $dataProvider,
+            'year' => $year]);
     }
 
     /**

@@ -20,6 +20,9 @@ use yii\db\ActiveRecord;
  * @property integer $active
  * @property string $title
  *
+ * @property string $fullName
+ * @property string $title
+ *
  * @property WorkPlan[] $workPlans
  * @property Load[] $loads
  */

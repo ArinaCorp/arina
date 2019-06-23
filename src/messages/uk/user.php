@@ -17,9 +17,6 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Employee' => 'Працівник',
-    'Permission' => 'Дозволи',
-    'Users' => 'Користувачі',
     '(not set)' => '',
     'A password will be generated automatically if not provided' => '',
     'Account' => '',
@@ -113,4 +110,7 @@ return [
     '{0, date, MMMM dd, YYYY HH:mm}' => '',
     'Last login' => 'Дата остннього входу',
     'Rules' => '',
+    'Employee' => 'Працівник',
+    'Permission' => 'Дозволи',
+    'Users' => 'Користувачі',
 ];

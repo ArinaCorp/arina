@@ -2,9 +2,11 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
+/* @var $searchModel \app\modules\geo\models\CitySearch */
 
 $this->title = Yii::t('app', 'Cities');
 $this->params['breadcrumbs'][] = $this->title;
@@ -14,41 +16,29 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="row">
         <div class="col-lg-12">
             <h1><?= Html::encode($this->title) ?></h1>
-        </div>         <!-- /.col-lg-12 -->
+        </div>
     </div>
 
-    <p>
-        <?= Html::a(Yii::t('app', 'Create City'), ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+    <?php Pjax::begin(); ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+//            ['class' => 'yii\grid\SerialColumn'],
 
-            // 'id',
-            'name',
-            // 'data:ntext',
-            [
-                'attribute' => 'district',
-                'value' => 'district.name',
-                'label' => Yii::t('app', 'District'),
-            ],
-            [
-                'attribute' => 'region',
-                'value' => 'region.name',
-                'label' => Yii::t('app', 'Region'),
-            ],
-            [
-                'attribute' => 'country',
-                'value' => 'country.name',
-                'label' => Yii::t('app', 'Country'),
-            ],
-            // 'createdAt',
-            // 'updatedAt',
+            'geoname_id',
+            'country_code',
+            'division_code',
+            'name_en',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{view}',
+            ],
         ],
     ]); ?>
+
+    <?php Pjax::end(); ?>
 
 </div>

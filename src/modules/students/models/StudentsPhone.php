@@ -40,7 +40,7 @@ class StudentsPhone extends \yii\db\ActiveRecord
     {
         return [
             [['student_id', 'created_at', 'updated_at'], 'integer'],
-            ['phone', 'match','pattern' => '/^\([0-9]{3}\) ?[0-9]{3}-[0-9]{4}$/'],
+            ['phone', 'match', 'pattern' => '/^\+[0-9]{2} \([0-9]{3}\) ?[0-9]{3}-[0-9]{4}$/'],
             [['phone'], 'string'],
             [['phone'], 'required'],
         ];
@@ -60,5 +60,13 @@ class StudentsPhone extends \yii\db\ActiveRecord
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
+    }
+
+    /**
+     * @return string
+     */
+    public function getNumber()
+    {
+        return $this->phone;
     }
 }

@@ -66,7 +66,7 @@ class ExportStudentplan
 
         // Start listing out the mandatory subjects
         // Begin with headers, template expects them to come on row 17 and have 11 columns ( A - K included )
-        // Headers could be included in template, but if we ever need to put localization here such approach would be nice.
+        // Headers could be included in template, but if we ever need to put localization here such approach would be nice... Which i VEEEERY DOOOUBT LUL
         $headerRow = 17;
         $activeSheet->setCellValue("A$headerRow", '№ п/п');
         $activeSheet->setCellValue("B$headerRow", 'Назва навчальної дисципліни');

@@ -17,8 +17,8 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Attestation' => '',
     'Choose subject' => '',
     'Choose type' => '',
+    'Attestation' => '',
     'Exam' => '',
 ];

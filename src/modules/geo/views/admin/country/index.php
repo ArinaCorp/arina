@@ -2,9 +2,11 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
+/* @var $searchModel \app\modules\students\models\CountrySearch */
 
 $this->title = Yii::t('app', 'Countries');
 $this->params['breadcrumbs'][] = $this->title;
@@ -17,24 +19,24 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>         <!-- /.col-lg-12 -->
     </div>
 
-    <p>
-        <?= Html::a(Yii::t('app', 'Create Country'), ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+    <?php Pjax::begin(); ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            // 'id',
             'code',
-            'name',
-            // 'data:ntext',
-            // 'createdAt',
-            // 'updatedAt',
-
-            ['class' => 'yii\grid\ActionColumn'],
+            'name_en',
+//            'name',
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{view}',
+            ],
         ],
     ]); ?>
+
+    <?php Pjax::end(); ?>
 
 </div>

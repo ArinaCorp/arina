@@ -97,21 +97,22 @@ class Calendar extends Component
     {
         $week = $this->_session->get(self::CALENDAR_WEEK_NUMBER);
         if ($week == null) {
-            $week = $this->getWeekNumberByDate();
+            $week = $this->getWeekNumberByDate(time());
         }
         return $week;
     }
 
     /**
+     * @param $timestamp
      * @return float|int
      */
-    protected function getWeekNumberByDate()
+    public function getWeekNumberByDate($timestamp)
     {
-        $month = intval(date('m'));
+        $month = intval(date('m', $timestamp));
         $week = 0;
         foreach (array_values(GlobalHelper::getWeeksByMonths()) as $m => $weeksByMonth) {
             if ($month == $this->fixMonth($m + self::STUDY_YEAR_MONTH_START)) {
-                $d = intval(date('d'));
+                $d = intval(date('d', $timestamp));
                 $week += $d / 7;
                 return ceil($week);
             }
@@ -166,19 +167,28 @@ class Calendar extends Component
     }
 
     /**
-     * @param WorkPlan $workPlan
+     * @param $courseGraph
      * @param int $course
      * @return int
      */
-    public function getCurrentSemester(WorkPlan $workPlan, int $course)
+    public function getCurrentSemester($courseGraph)
     {
-        $courseGraph = $workPlan->graph[$course - 1];
         $currentWeek = $this->getCurrentWeek();
+        return $this->getSemester($courseGraph, $currentWeek);
+    }
+
+    /**
+     * @param $courseGraph
+     * @param $week
+     * @return int
+     */
+    public function getSemester($courseGraph, $week)
+    {
         $findFirst = false;
         $findHoliday = false;
         $findSecond = false;
-        foreach ($courseGraph as $week => $type) {
-            if ($week >= $currentWeek) {
+        foreach ($courseGraph as $graphWeek => $type) {
+            if ($graphWeek >= $week) {
                 break;
             }
             if ($type == ' ') {
@@ -198,5 +208,13 @@ class Calendar extends Component
         return 1;
     }
 
-
+    /**
+     * @param $course
+     * @param $semester
+     * @return float|int
+     */
+    public function getSemesterIndexByCourse($course, $semester)
+    {
+        return $semesterIndex = $course * 2 + ($semester - 3);
+    }
 }

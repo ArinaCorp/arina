@@ -4,6 +4,7 @@ namespace app\modules\journal\models\record;
 
 use app\modules\directories\models\audience\Audience;
 use app\modules\employee\models\Employee;
+use app\modules\load\models\Load;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\bootstrap\Html;
@@ -30,6 +31,7 @@ use yii\db\Query;
  * @property Employee $teacher
  * @property Audience $audience
  * @property JournalMark[] $journalMarks
+ * @property Load $load
  */
 class JournalRecord extends \yii\db\ActiveRecord
 {
@@ -163,6 +165,11 @@ class JournalRecord extends \yii\db\ActiveRecord
             'div',
             Html::a($label, ['journal-record/view', 'id' => $this->id], $options)
         );
+    }
+
+    public function getLoad()
+    {
+        return $this->hasOne(Load::class, ['id' => 'load_id']);
     }
 
     public function getTypeObj()

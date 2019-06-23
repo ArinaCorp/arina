@@ -48,26 +48,11 @@ class Module extends BaseModule implements IAdminModule
                     'url' => ['/geo/admin/region'],
                     'icon' => FA::_MAP_O,
                 ],
-                'districts' => [
-                    'label' => \Yii::t('app', 'Districts'),
-                    'url' => ['/geo/admin/district'],
-                    'icon' => FA::_MAP_O,
-                ],
                 'cities' => [
                     'label' => \Yii::t('app', 'Cities'),
                     'url' => ['/geo/admin/city'],
                     'icon' => FA::_MAP_MARKER,
                 ],
-                'villages' => [
-                    'label' => \Yii::t('app', 'Villages'),
-                    'url' => ['/geo/admin/village'],
-                    'icon' => FA::_MAP_MARKER,
-                ],
-                'smts' => [
-                    'label' => \Yii::t('app', 'Smts'),
-                    'url' => ['/geo/admin/smt'],
-                    'icon' => FA::_MAP_MARKER,
-                ]
             ]
         ];
     }

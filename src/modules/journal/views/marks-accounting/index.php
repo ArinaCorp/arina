@@ -9,22 +9,22 @@
 use app\modules\journal\helpers\JournalHtmlHelper;
 use app\modules\journal\models\record\JournalMark;
 use app\modules\journal\models\record\JournalRecord;
-use app\modules\journal\models\record\JournalRecordType;
 use app\modules\load\models\Load;
 use app\modules\plans\models\WorkPlan;
-use kartik\date\DatePicker;
 use kartik\depdrop\DepDrop;
 use kartik\select2\Select2;
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\widgets\ActiveForm;
+use yii\web\View;
 use yii\widgets\Pjax;
 
 /**
+ * @var View $this
  * @var bool $isTeacher
  * @var array $loads
  * @var Load $load
  * @var JournalRecord $record
+ * @var JournalRecord[] $records
  * @var JournalMark[] $marks
  */
 
@@ -105,6 +105,12 @@ $js .= <<<JS
     });
 JS;
 
+$js .= <<<JS
+    jQuery('body').on('calendar.change', function(){
+        location.reload();
+    });
+JS;
+
 $this->registerJS($js);
 ?>
 
@@ -169,62 +175,23 @@ $this->registerJS($js);
     ]); ?>
 
 
+
     <?php if ($load->id): ?>
         <p>
             <?= Html::button(Yii::t('app', 'Add column'), ['class' => 'btn btn-success', 'data-toggle' => 'modal', 'data-target' => '#recordCreateModal']) ?>
+            <?= Html::a(Yii::t('app', 'Export'), Url::to(['export', 'loadId' => $load->id]), ['class' => 'btn btn-info']) ?>
         </p>
-    <?php endif ?>
 
-    <div class="modal fade" id="recordCreateModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span>
-                    </button>
-                    <h4 class="modal-title"><?= Yii::t('app', 'Add column') ?></h4>
-                </div>
-                <?php $form = ActiveForm::begin([
-                    'options' => ['data-pjax' => ''],
-                    'id' => 'recordCreateFrom',
-                ]); ?>
-                <div class="modal-body">
+        <?= $this->render('_create_record', [
+            'record' => $record
+        ]); ?>
 
-                    <?= $form->field($record, 'teacher_id')->hiddenInput()->label(false) ?>
-                    <?= $form->field($record, 'load_id')->hiddenInput()->label(false) ?>
-
-                    <?= $form->field($record, 'type')->widget(Select2::class, [
-                        'data' => JournalRecordType::getMap('title'),
-                        'pluginOptions' => [
-                            'placeholder' => Yii::t('journal', 'Choose type')
-                        ]
-                    ]) ?>
-
-                    <?= $form->field($record, 'date')->widget(DatePicker::class, [
-                        'pluginOptions' => [
-                            'format' => 'yyyy-mm-dd',
-                            'todayHighlight' => true,
-                            'autoclose' => true
-                        ]
-                    ]) ?>
-
-                </div>
-                <div class="modal-footer">
-                    <?= Html::button(Yii::t('app', 'Cancel'), ['class' => 'btn btn-default', 'data-dismiss' => 'modal']) ?>
-                    <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success', 'id' => 'add_column']); ?>
-                </div>
-                <?php ActiveForm::end(); ?>
-            </div>
-        </div>
-    </div>
-
-
-    <?php if ($load->id): ?>
         <table class="table table-condensed table-bordered table-hover">
             <thead>
             <tr>
                 <th style="width: 35px;"><?= Yii::t('app', 'N p/p'); ?></th>
                 <th><?= Yii::t('app', 'Student'); ?></th>
-                <?php foreach ($load->journalRecords as $record): ?>
+                <?php foreach ($records as $record): ?>
                     <th>
                         <?= $record->getLabel() ?>
                     </th>
@@ -237,7 +204,7 @@ $this->registerJS($js);
                 <tr>
                     <td><?= $index + 1 ?></td>
                     <td><?= $student->getShortName(); ?></td>
-                    <?php foreach ($load->journalRecords as $record): ?>
+                    <?php foreach ($records as $record): ?>
                         <td class="<?= JournalHtmlHelper::getRecordCssClass($record) ?>"
                             data-id="<?= $marks[$student->id][$record->id]->id ?>"
                             data-student="<?= $student->id ?>"
