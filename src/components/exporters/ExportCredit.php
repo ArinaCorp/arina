@@ -10,7 +10,7 @@ use PhpOffice\PhpSpreadsheet;
 use Yii;
 use app\components\ExportHelpers;
 
-class ExportExam
+class ExportCredit
 {
     /**
      *
@@ -27,7 +27,6 @@ class ExportExam
         $speciality = Group::findOne(['id' => $data["data"]["group_id"]])->specialityQualification->speciality->title;
         $semester = ExportHelpers::ConvertToRoman($data["data"]["semester"]);
         $group = Group::findOne(['id' => $data["data"]["group_id"]])->title;
-
         /**
          * @var $teachers Employee
          */
@@ -39,12 +38,12 @@ class ExportExam
 
         $teachers = join($teachers_list, ", ");
 
-        $cursor->setCellValue("K101", $subject->title);
-        $cursor->setCellValue("K102", $speciality);
-        $cursor->setCellValue("K103", $semester);
-        $cursor->setCellValue("K104", round($data["data"]["semester"]/2));
-        $cursor->setCellValue("K105", $group);
-        $cursor->setCellValue("K106", $teachers);
+        $cursor->setCellValue("J101", $subject->title);
+        $cursor->setCellValue("J102", $speciality);
+        $cursor->setCellValue("J103", $semester);
+        $cursor->setCellValue("J104", round($data["data"]["semester"]/2));
+        $cursor->setCellValue("J105", $group);
+        $cursor->setCellValue("J106", $teachers);
 
         $id = $data["data"]["group_id"];
         $group = Group::findOne($id);
@@ -53,27 +52,25 @@ class ExportExam
         $avg = 0;
         $subjects = [['subject'=>$subject]];
         $student_mark = [];
-        $tickets = [];
         if ($data["data"]['marks_checker']) {
             $student_mark = ExportHelpers::getMarks($subjects, $students);
-            $tickets = ExportHelpers::getTickets(count($students));
         }
         $student_marks_two_three = [];
         $count = [0, 0, 0];
         $current = 19;
         $i = 1;
-        foreach ($students as $index => $student) {
+        foreach ($students as $student) {
             $cursor->insertNewRowBefore($current + 1);
             $cursor->mergeCells("B${current}:E${current}");
-            $cursor->mergeCells("G${current}:H${current}");
+            $cursor->mergeCells("F${current}:G${current}");
+
             $cursor->setCellValue("A${current}", $i);
             $cursor->setCellValue('B' . $current, $student->getFullName());
             if (!empty($student_mark)) {
                 $mark = $student_mark[array_search($student->id, array_column($student_mark, "student_id"))];
                 $avg += $mark['value'];
                 $failed_students += $mark['value'] < 3.5 ? 1 : 0;
-                $cursor->setCellValue("F${current}", $tickets[$index])->getStyle("F${current}")->getAlignment()->setHorizontal('center');
-                $cursor->setCellValue("G${current}", $mark['value']);
+                $cursor->setCellValue("F${current}", $mark['value']);
                 array_push($student_marks_two_three, $mark["value"]);
             }
             $i++;
@@ -89,17 +86,16 @@ class ExportExam
             }) ? 1 : 0;
             $student_marks_two_three = [];
         }
-
         $cursor->removeRow($current);
         $cursor->removeRow($current);
-        $cursor->setCellValue("G${current}", count($student_mark) != 0 ? (round($avg /  count($student_mark), 2)):"");
+        $cursor->setCellValue("F${current}", count($student_mark) != 0 ? (round($avg /  count($student_mark), 2)):"");
         $quality = count($student_mark) != 0 ? (round((count($students) - $count[2]) / count($student_mark) * 100, 2)) : "  ";
         $success_rate = count($student_mark) != 0 ? (round((count($students) - $count[0]) / count($student_mark) * 100, 2)) : "  ";;
-        $current += 3;
+        $current += 2;
         $footer_current = $current;
-        $cursor->setCellValue("I${current}", "${success_rate} %");
+        $cursor->setCellValue("H${current}", "${success_rate} %");
         $current++;
-        $cursor->setCellValue("I${current}", "${quality} %");
+        $cursor->setCellValue("H${current}", "${quality} %");
         $marks_sum = [0, 0, 0, 0];
         $marks = array_map(function ($item) {
             return $item["value"];
@@ -116,7 +112,7 @@ class ExportExam
             $cursor->getStyle("B${current}")->getAlignment()->setHorizontal('left');
             $current++;
         }
-        $cursor->setCellValue('C' . ($current + 3), Yii::t('app', 'Date') . ": " . date('d.m.Y') . "  " . Yii::t('app', 'Time') . ": " . date('H:i:s'));
+        $cursor->setCellValue('C' . ($current + 2), Yii::t('app', 'Date') . ": " . date('d.m.Y') . "  " . Yii::t('app', 'Time') . ": " . date('H:i:s'));
 
         return $spreadsheet;
     }

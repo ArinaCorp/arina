@@ -194,7 +194,7 @@ class JournalMark extends \yii\db\ActiveRecord
             Html::a(
                 $label,
                 [
-                    'journal-mark/view',
+                    '/journal/journal-mark/view',
                     'id' => $this->id
                 ]
             )
