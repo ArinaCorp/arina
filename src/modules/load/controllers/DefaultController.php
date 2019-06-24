@@ -11,6 +11,8 @@ use app\modules\load\models\LoadSearch;
 use app\modules\plans\models\WorkSubject;
 use app\modules\rbac\filters\AccessControl;
 use app\modules\students\models\Group;
+use app\modules\user\helpers\UserHelper;
+use app\modules\user\models\User;
 use nullref\core\interfaces\IAdminController;
 use Yii;
 use yii\filters\VerbFilter;
@@ -59,8 +61,9 @@ class DefaultController extends Controller implements IAdminController
     {
         $studyYearIds = Load::find()->select('study_year_id')->groupBy('study_year_id')->column();
         $searchModel = new StudyYearSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams
-            , StudyYear::find()->andWhere(['id' => $studyYearIds])
+        $dataProvider = $searchModel->search(
+            Yii::$app->request->queryParams,
+            StudyYear::find()->andWhere(['id' => $studyYearIds])
         );
 
         return $this->render('index', [
@@ -203,6 +206,14 @@ class DefaultController extends Controller implements IAdminController
         $model = new LoadSearch([
             'study_year_id' => $id
         ]);
+
+        //set filtering by current teacher
+        /** @var User $user */
+        $user = Yii::$app->user->identity;
+        if(UserHelper::isTeacher($user)){
+            $model->commission_id = $user->employee->cyclic_commission_id;
+            $model->employee_id = $user->employee_id;
+        }
 
         $dataProvider = $model->search(Yii::$app->request->queryParams);
         $year = StudyYear::findOne($id);
