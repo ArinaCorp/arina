@@ -136,7 +136,7 @@ class ExportStudentcard
                     $activeSheet->setCellValue("E$row", number_format($mark->workSubject->total[$semesterId] / 30, 2));
                     $activeSheet->setCellValue("F$row", $mark->valueLiteral);
                     $activeSheet->setCellValue("G$row", $mark->valueScaleLiteral);
-                    $activeSheet->setCellValue("H$row", $mark->retake_date ? $mark->retake_date : $mark->date);
+                    $activeSheet->setCellValue("H$row", $mark->date);
                     //Insert next
                     $activeSheet->insertNewRowBefore($row + 1);
                     $row++;

@@ -91,7 +91,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="row">
         <div class="col-lg-12 clearfix">
             <h4 class="pull-left"><?= Yii::t('app', 'Citizenship') ?>:</h4>
-            <h4 class="pull-left fw-normal mx-1"><?= $model->country->name; ?></h4>
+            <?php if($model->country): ?>
+                <h4 class="pull-left fw-normal mx-1"><?= $model->country->name; ?></h4>
+            <?php endif ?>
         </div>
     </div>
 

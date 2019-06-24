@@ -48,6 +48,27 @@ class JournalMark extends \yii\db\ActiveRecord
         return '{{%journal_mark}}';
     }
 
+    /**
+     * @param $student
+     * @param $load
+     * @return JournalMark|null
+     */
+    public static function getFinalMark($student, $load)
+    {
+        /** @var self[] $allMarks */
+        $lastMark = JournalMark::find()
+            ->joinWith('journalRecord')
+            ->joinWith('evaluation')
+            ->rightJoin('load', 'load.id = journal_record.load_id')
+            ->where(['student_id' => $student->id, 'load_id' => $load->id])
+            ->orderBy(['journal_record.date' => SORT_DESC])
+            ->one();
+
+        //@TODO improve logic of final mark selection
+
+        return $lastMark;
+    }
+
 
     /**
      * @inheritdoc

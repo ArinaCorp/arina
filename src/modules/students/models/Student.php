@@ -11,9 +11,7 @@ use app\modules\geo\models\City;
 use app\modules\geo\models\Country;
 use app\modules\geo\models\Region;
 use app\modules\journal\models\record\JournalMark;
-use app\modules\journal\models\record\JournalRecord;
 use app\modules\load\models\Load;
-use app\modules\plans\components\Calendar;
 use app\modules\plans\models\StudentPlan;
 use app\modules\plans\models\WorkPlan;
 use nullref\useful\behaviors\RelatedBehavior;
@@ -592,7 +590,17 @@ class Student extends \yii\db\ActiveRecord
      */
     public function getFullAddress()
     {
-        return implode(', ', [$this->country->name, $this->region->name, $this->city->name, $this->address]);
+        if ($this->country) {
+            $pieces[] = $this->country->name;
+        }
+        if ($this->region) {
+            $pieces[] = $this->region->name;
+        }
+        if ($this->city) {
+            $pieces[] = $this->city->name;
+        }
+        $pieces[] = $this->address;
+        return implode(', ', $pieces);
     }
 
     /**
@@ -733,10 +741,35 @@ class Student extends \yii\db\ActiveRecord
      */
     public function getMarks($condition = [], $semester = null)
     {
+//        Example of getFinalMark usage
+//        //#1 get all student loads
+//        /** @var Load[] $loads */
+//        $loads = Load::find()
+//            ->joinWith('workSubject')
+//            ->joinWith('workSubject.workPlan')
+//            ->where(['work_plan_id' => $this->currentWorkPlan->id,
+//                'group_id' => $this->getFirstGroup(),
+//            ])
+//            ->all();
+//
+//        //#2 filter loads by semester
+//        $loads = array_filter($loads, function (Load $load) {
+//            $course = $load->group->getCourse();
+//            $graph = $load->getGraphRow(Yii::$app->get('calendar')->getCurrentYear()->id);
+//            $semesterIndex = Yii::$app->get('calendar')->getSemesterIndexByCourse($course, Yii::$app->get('calendar')->getCurrentSemester($graph));
+//            return $load->workSubject->total[$semesterIndex];
+//        });
+//
+//        foreach ($loads as $load){
+//            $mark = JournalMark::getFinalMark($this, $load);
+//
+//            echo $load->workSubject->subject->title. ' : '.($mark? $mark->value:' n/a'). '<br>';
+//        }
+
         $allMarks = JournalMark::find()
             ->joinWith('journalRecord')
             ->joinWith('evaluation')
-            ->leftJoin('load', 'load.id = journal_record.load_id')
+            ->rightJoin('load', 'load.id = journal_record.load_id')
             ->where(array_merge(['student_id' => $this->id], $condition))->all();
 
         if ($semester) {
