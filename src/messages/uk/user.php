@@ -92,6 +92,7 @@ return [
     'Save' => '',
     'Sign in' => '',
     'Sign up' => '',
+    'Student' => 'Студент',
     'Thank you for signing up on {0}' => '',
     'Unblock' => '',
     'Unconfirmed' => '',
