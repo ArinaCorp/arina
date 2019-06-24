@@ -36,28 +36,29 @@ $user = Yii::$app->user->identity;
 
         <div class="col-sm-6">
 
-                <?= $form->field($model, 'student_id')->widget(Select2::class, [
-                    'data' => Student::getList(),
-                    'options' => [
-                        'placeholder' => Yii::t('app', 'Select ...'),
-                    ],
-                ]) ?>
+            <?= $form->field($model, 'student_id')->widget(Select2::class, [
+                'data' => Student::getList(),
+                'options' => [
+                    'placeholder' => Yii::t('app', 'Select ...'),
+                ],
+            ]) ?>
 
-                <?= $form->field($model, 'work_plan_id')->widget(DepDrop::class, [
-                    'type' => DepDrop::TYPE_SELECT2,
-                    'data' => [$model->work_plan_id => 'default'],
-                    'pluginOptions' => [
-                        'depends' => ['studentplan-student_id'],
-                        'placeholder' => Yii::t('app', 'Select ...'),
-                        'url' => Url::to(['/plans/student-plan/get-student-work-plans']),
-                    ],
-                ]); ?>
+            <?= $form->field($model, 'work_plan_id')->widget(DepDrop::class, [
+                'type' => DepDrop::TYPE_SELECT2,
+                'data' => $model->isNewRecord ? null : [$model->workPlan->id => $model->workPlan->getTitle()],
+                'pluginOptions' => [
+                    'initialize' => !$model->isNewRecord,
+                    'depends' => ['studentplan-student_id'],
+                    'placeholder' => Yii::t('app', 'Select ...'),
+                    'url' => Url::to(['/plans/student-plan/get-student-work-plans']),
+                ],
+            ]); ?>
 
-                <?= $form->field($model, 'semester')->dropDownList([1 => 'Перший', 2 => 'Другий']); ?>
+            <?= $form->field($model, 'semester')->dropDownList([1 => 'Перший', 2 => 'Другий']); ?>
 
             <?= $form->field($model, 'subject_block_id')->widget(DepDrop::class, [
                 'type' => DepDrop::TYPE_SELECT2,
-                'data' => [$model->subject_block_id => 'default'],
+                'data' => $model->isNewRecord ? null : [$model->subjectBlock->id => $model->subjectBlock->created],
                 'pluginOptions' => [
                     'depends' => ['studentplan-student_id', 'studentplan-work_plan_id', 'studentplan-semester'],
                     'placeholder' => Yii::t('app', 'Select ...'),

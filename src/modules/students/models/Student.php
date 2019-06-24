@@ -17,6 +17,7 @@ use app\modules\plans\components\Calendar;
 use app\modules\plans\models\StudentPlan;
 use app\modules\plans\models\WorkPlan;
 use nullref\useful\behaviors\RelatedBehavior;
+use nullref\useful\traits\Mappable;
 use voskobovich\linker\LinkerBehavior;
 use Yii;
 use yii\behaviors\TimestampBehavior;
@@ -104,6 +105,8 @@ use yii\web\UploadedFile;
  */
 class Student extends \yii\db\ActiveRecord
 {
+    use Mappable;
+
     public $payment_type;
     public $has_characteristics;
 

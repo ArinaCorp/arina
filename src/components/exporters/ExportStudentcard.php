@@ -68,11 +68,11 @@ class ExportStudentcard
         $activeSheet->setCellValue('E30', $student->withoutCompetition ? Yii::t('app', 'On exemption basis') : '');
 
         // if(condition) TODO: implement(?) Discuss
-        $activeSheet->getCell('L31')->getStyle()->getFont()->setUnderline(true); // gov. credit
+        $activeSheet->getCell('L31')->getStyle()->getFont()->setUnderline(false); // gov. credit
         // elseif
-        $activeSheet->getCell('O31')->getStyle()->getFont()->setUnderline(true); // individual
+        $activeSheet->getCell('O31')->getStyle()->getFont()->setUnderline(false); // individual
         // else
-        $activeSheet->getCell('P31')->getStyle()->getFont()->setUnderline(true); // legal entity
+        $activeSheet->getCell('P31')->getStyle()->getFont()->setUnderline(false); // legal entity
 
         $activeSheet->setCellValue('F32', ''); // employment history book
         $activeSheet->setCellValue('C35', $student->tax_id); //TODO: We don't have a checkbox to check if someone uses passport serial and number instead
@@ -101,7 +101,7 @@ class ExportStudentcard
         $row = 5;
         // TODO: Implement a better way to get group's course, as at some point it will return >4. Define Max course for a group? Define finishing year?
         // TODO: Start with the semester (Course) when student was enrolled.(It already does just put it in a method)
-        for ($semester = ($student->enrollmentEdict->course * 2) - 1; $semester <= $student->currentGroup->getCourse($student->currentGroup->created_study_year_id + 4) * 2; $semester++) {
+        for ($semester = ($student->enrollmentEdict->course * 2) - 1; $semester <= $student->course * 2; $semester++) {
             $semesterId = $semester - 1;
 
             /**
@@ -172,6 +172,11 @@ class ExportStudentcard
         // Page 3
         $spreadsheet->setActiveSheetIndex(2);
         $activeSheet = $spreadsheet->getActiveSheet();
+
+        //Set Dep Head Initials and Second name
+        $activeSheet->setCellValue("F32", $student->currentGroup->specialityQualification->speciality->department->head->getNameWithInitials());
+        $activeSheet->setCellValue("F48", $student->currentGroup->specialityQualification->speciality->department->head->getNameWithInitials());
+
 
         $allMarks = $student->getMarks();
 

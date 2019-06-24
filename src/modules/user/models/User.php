@@ -18,6 +18,7 @@ use Yii;
  * Class User
  *
  * @property integer $employee_id
+ * @property integer $student_id
  * @property Employee $employee
  * @property Student $student
  *
@@ -50,7 +51,8 @@ class User extends BaseUser
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'employee_id' => \Yii::t('user', 'Employee'),
+            'employee_id' => Yii::t('user', 'Employee'),
+            'student_id' => Yii::t('user', 'Student'),
         ]);
     }
 
@@ -76,6 +78,6 @@ class User extends BaseUser
      */
     public function getStudent()
     {
-        return $this->hasOne(Student::class, ['id'=>'student_id']);
+        return $this->hasOne(Student::class, ['id' => 'student_id']);
     }
 }

@@ -15,10 +15,22 @@
  */
 
 use app\modules\employee\models\Employee;
+use app\modules\students\models\Student;
+use kartik\select2\Select2;
 
 ?>
 
 <?= $form->field($user, 'email')->textInput(['maxlength' => 255]) ?>
 <?= $form->field($user, 'username')->textInput(['maxlength' => 255]) ?>
 <?= $form->field($user, 'password')->passwordInput() ?>
-<?= $form->field($user, 'employee_id')->dropDownList(Employee::getMap('fullName', 'id', [], false), ['prompt' => '']) ?>
+<?= $form->field($user, 'employee_id')->widget(Select2::class, [
+    'data' => Employee::getMap('fullName', 'id', [], false),
+    'options' => [
+        'placeholder' => Yii::t('app', 'Select'),
+    ]]); ?>
+<?= $form->field($user, 'student_id')->widget(Select2::class, [
+    'data' => Student::getMap('fullName', 'id', [], false),
+    'options' => [
+        'placeholder' => Yii::t('app', 'Select'),
+    ]]); ?>
+
