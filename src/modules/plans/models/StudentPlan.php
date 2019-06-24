@@ -33,6 +33,7 @@ use app\modules\directories\models\subject\Subject;
  * @property integer $semester
  * @property integer $work_plan_id
  * @property integer $subject_block_id
+ * @property integer $approved_by
  * @property string $created
  * @property string $updated
  *
@@ -40,6 +41,8 @@ use app\modules\directories\models\subject\Subject;
  * @property WorkPlan $workPlan
  * @property SubjectBlock $subjectBlock
  * @property WorkSubject[] $workSubjects
+ * @property User $approvedBy
+ * @property string approverFullName
  *
  * @property string $groupTitle
  *
@@ -93,7 +96,8 @@ class StudentPlan extends ActiveRecord
             'work_plan_id' => Yii::t('plans', 'The work plan for the base'),
             'subject_block_id' => Yii::t('app', 'Subject block'),
             'semester' => Yii::t('app', 'Semester'),
-            'groupTitle' => Yii::t('app','Group'),
+            'groupTitle' => Yii::t('app', 'Group'),
+            'approved_by' => Yii::t('app', 'Approved by'),
         ];
     }
 
@@ -146,12 +150,18 @@ class StudentPlan extends ActiveRecord
     {
         $subjects = [];
         foreach ($this->workPlan->workSubjects as $workSubject) {
+            //TODO: Set a constant for 'ПВС' code
             if (strpos($workSubject->subject->code, 'ПВС') === false)
                 $subjects [] = $workSubject;
         }
         return $subjects;
     }
 
+    /**
+     * @param bool $insert
+     * @return bool
+     * @throws \yii\base\InvalidConfigException
+     */
     public function beforeSave($insert)
     {
         if (parent::beforeSave($insert)) {
@@ -171,6 +181,39 @@ class StudentPlan extends ActiveRecord
     public function getDocument()
     {
         ExportToExcel::getDocument('StudentPlan', $this);
+    }
+
+    /**
+     * Returns the user that approved the plan.
+     * @return \yii\db\ActiveQuery
+     */
+    public function getApprovedBy()
+    {
+        return $this->hasOne(User::class, ['id' => 'approved_by']);
+    }
+
+    /**
+     * Check if the plan is approved.
+     * @return bool
+     */
+    public function isApproved()
+    {
+        return isset($this->approved_by);
+    }
+
+    /**
+     * Returns the string of approver's name, if approver has no employee_id returns 'Admin...', if not approved - null.
+     * @return string|null
+     */
+    public function getApproverFullName()
+    {
+        if ($this->isApproved()) {
+            if ($employee = $this->approvedBy->employee) {
+                return $employee->fullName;
+            }
+            return Yii::t('app', 'Administrator');
+        }
+        return null;
     }
 
 }

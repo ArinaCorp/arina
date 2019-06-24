@@ -44,7 +44,7 @@ class StudentPlanController extends Controller implements IAdminController
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['index','create', 'update', 'view', 'export'],
+                        'actions' => ['index', 'create', 'update', 'view', 'export'],
                         'roles' => [User::ROLE_STUDENT],
                     ],
                     [
@@ -169,6 +169,38 @@ class StudentPlanController extends Controller implements IAdminController
     {
         $model = $this->findModel($id);
         $model->getDocument();
+    }
+
+    /**
+     * @param $id
+     * @return string
+     * @throws NotFoundHttpException
+     */
+    public function actionApprove($id)
+    {
+        /** @var User $user */
+        $user = Yii::$app->user->identity;
+
+        $model = $this->findModel($id);
+        $model->approved_by = $user->id;
+        $model->save(false);
+
+        return $this->render('view', ['model' => $model]);
+    }
+
+    /**
+     * @param $id
+     * @return string
+     * @throws NotFoundHttpException
+     */
+    public function actionDisapprove($id)
+    {
+        $model = $this->findModel($id);
+        $model->approved_by = null;
+        $model->save(false);
+
+        return $this->render('view', ['model' => $model]);
+
     }
 
     /**

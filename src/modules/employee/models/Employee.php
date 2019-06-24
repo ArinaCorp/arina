@@ -36,6 +36,8 @@ use yii\helpers\Url;
  * @property EmployeeEducation[] $education
  * @property EmployeeEducation[] $employeeEducationList
  * @property Department department
+ *
+ * @property string $fullName
  */
 class Employee extends ActiveRecord
 {

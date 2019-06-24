@@ -10,7 +10,7 @@ use yii\web\View;
 use yii\widgets\Pjax;
 
 /* @var $this View
- * @var $model \app\modules\students\models\StudentCard
+ * @var $model \app\modules\students\models\Student
  */
 
 $this->title = Yii::t('app', 'Student card');
@@ -233,7 +233,7 @@ $this->params['breadcrumbs'][] = $this->title;
     ];
 
     // TODO: Implement a better way to get group's course, as at some point it will return >4. Define Max course for a group? Define finishing year?
-    for ($course = 2; $course <= $model->currentGroup->getCourse($model->currentGroup->created_study_year_id+4); $course++) {
+    for ($course = 2; $course <= $model->course; $course++) {
         $items[] = [
             'label' => GlobalHelper::getOrderLiteral($course) . ' ' . Yii::t('app', 'course'),
             'content' => $this->render('_course', ['model' => $model, 'course' => $course], true),
