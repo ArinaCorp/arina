@@ -327,4 +327,27 @@ class ExportHelpers
             ->all();
         return $records;
     }
+
+    public static function getRecordsInLoadByGroupYearAndType($group_id,$year_id,$type_id)
+    {
+        $records = JournalRecord::find()
+            ->leftJoin('load','journal_record.load_id = load.id')
+            ->leftJoin('work_subject', 'load.work_subject_id = work_subject.id')
+            ->leftJoin('subject', 'subject.id = work_subject.subject_id')
+            ->andWhere(['load.group_id' => $group_id])
+            ->andWhere(['journal_record.type'=>$type_id])
+            ->andWhere(['load.study_year_id' => $year_id])
+            ->all();
+        $export = [];
+        array_map(function(JournalRecord $record)use(&$export){
+            $subject = $record->load->workSubject->subject;
+            $item = [
+                'id'=>$record->id,
+                'subject_title'=>"{$record->date} ({$subject->title})",
+            ];
+            array_push($export,$item);
+        },$records);
+        return $export;
+    }
+
 }

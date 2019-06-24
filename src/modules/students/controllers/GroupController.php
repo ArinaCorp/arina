@@ -241,6 +241,30 @@ class GroupController extends Controller implements IAdminController
         ExportToExcel::getDocument('Exam', $model);
     }
 
+    public static function actionAttestationJournalRecordList($group_id)
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = [];
+        if (isset($_POST['depdrop_parents'])) {
+            $parents = $_POST['depdrop_parents'];
+            if ($parents != null) {
+                if (!empty($_POST['depdrop_all_params'])) {
+                    $params = $_POST['depdrop_all_params'];
+                    $semester = null;
+                    $year_id = $params["att-years-id"];
+                    $type_id = JournalRecordType::findOne(['title' => 'Атестація'])->id;
+                    $records = ExportHelpers::getRecordsInLoadByGroupYearAndType($group_id, $year_id, $type_id);
+                    $out = DepDropHelper::convertMap(ArrayHelper::map($records, 'id', 'subject_title'));
+
+                    if (empty($year_id)) {
+                        $out = '';
+                    }
+                    return ['output' => $out, 'selected' => ''];
+                }
+            }
+        }
+        return ['output' => '', 'selected' => ''];
+    }
 
     public static function actionCreditSubjectList($group_id)
     {
@@ -280,8 +304,8 @@ class GroupController extends Controller implements IAdminController
                     $semester = null;
                     $year_id = $params["years-id"];
                     $subject_id = $params["subject-id"];
-                    $type_id = JournalRecordType::findOne(['title'=>'Залік'])->id;
-                    $records = ExportHelpers::getRecordsInLoadBySubjectGroupAndType($group_id,$subject_id,$type_id);
+                    $type_id = JournalRecordType::findOne(['title' => 'Залік'])->id;
+                    $records = ExportHelpers::getRecordsInLoadBySubjectGroupAndType($group_id, $subject_id, $type_id);
 
                     $out = DepDropHelper::convertMap(ArrayHelper::map($records, 'id', 'date'));
 

@@ -5,21 +5,14 @@ namespace app\components\exporters;
 
 use app\components\ExportHelpers;
 use app\modules\directories\models\study_year\StudyYear;
+use app\modules\journal\models\record\JournalMark;
 use app\modules\journal\models\record\JournalRecord;
-use app\modules\load\models\Load;
-use app\modules\plans\components\Calendar;
 use app\modules\plans\models\StudyPlan;
 use app\modules\plans\models\StudySubject;
-use app\modules\plans\models\WorkPlan;
 use app\modules\students\models\Group;
-
 use app\modules\students\models\Student;
-use codemix\excelexport\ActiveExcelSheet;
-use codemix\excelexport\ExcelSheet;
-use DateTime;
 use PhpOffice\PhpSpreadsheet;
 use Yii;
-use yii\helpers\ArrayHelper;
 
 class ExportAttestation
 {
@@ -36,7 +29,6 @@ class ExportAttestation
         $group_id = $data["data"]["group_id"];
         $group = Group::findOne($group_id);
         $students = $group->getStudentsArray();
-        $studyPlan_id = $data["data"]["plan_id"];
         $excel = $spreadsheet->getActiveSheet();
         $passes = ExportHelpers::getPropusk($students);
         $hours_sum = [0, 0];
@@ -47,46 +39,45 @@ class ExportAttestation
         $count = [0, 0, 0];
         $startRow = 8;
         $current = $startRow;
-
-//      hardcode
-        $startYear = Date('Y', strtotime($data['data']['dateFrom']));
-        $loads = Load::findAll([
-            'study_year_id' => StudyYear::findOne(['year_start' => $startYear])->id,
-            'group_id' => $group_id
-        ]);
-        if(count($loads)==0)return $spreadsheet;
-        $semester = ExportHelpers::getSemester($data['data']['dateFrom'],$data['data']['dateTo'],$loads[0]);
+        $semester = 1;
+        $marks = [];
+        $years = StudyYear::findOne(['id' => $data["data"]["years_id"]]);
         $romanSemester = ExportHelpers::ConvertToRoman($semester);
-        $date1 = strtotime($data['data']['dateFrom']);
-        $date2 = strtotime($data['data']['dateTo']);
 
         /**
-         * @var $load Load
+         * @var $journal_record JournalRecord
          */
-        $allRecords = [];
-        foreach ($loads as $load){
-            $records = JournalRecord::findAll(['load_id' => $load->id]);
-//            var_dump($records);die;
-            foreach ($records as $record) {
-                array_push($allRecords, $record);
+        foreach ($data['data']['journal_record_id'] as $journal_record_id) {
+            $record = JournalRecord::findOne(['id'=>$journal_record_id]);
+            array_push($subject_titles, $record->load->workSubject->subject->title);
+            array_push($subjects, ['subject' => $record->load->workSubject->subject, 'record_id' => $record->id]);
+            $record_marks = JournalMark::findAll([
+                'record_id'=>$record->id,
 
-                $inDateRange = strtotime($record->date) >= $date1 && strtotime($record->date) <= $date2;
-
-                if ($inDateRange) {
-                    array_push($subject_titles, $load->workSubject->subject->title);
-                    array_push($subjects, ['subject' => $load->workSubject->subject, 'record_id' => $record->id]);
-                }
+            ]);
+            /**
+             * @var $mark JournalMark
+             */
+            foreach ($record_marks as $mark){
+            array_push($marks, [
+                'value' => $mark->evaluation->value,
+                'subject_id' => $record->load->workSubject->subject->id,
+                'student_id' => $mark->student_id,
+                'type' => $mark->journalRecord->type,
+                'record_id' => $mark->journalRecord->id
+            ]);
             }
         }
+
 //        self::getSubjects($studyPlan, $semester, $subject_titles, $subjects);
-        self::insertFormData($spreadsheet, $romanSemester, $data, $group_id);
+        self::insertFormData($spreadsheet, $romanSemester, $years, $group_id);
         self::insertStudents($spreadsheet, $students, $current);
         self::insertDateAndGroupLeaders($spreadsheet, $current, $group);
         if ($data["data"]['marks_checker'] && count($subjects) != 0) {
             self::insertSubjectTitles($spreadsheet, $subject_titles);
-            $marks = ExportHelpers::getRealMarks($data['data']['dateFrom'], $data['data']['dateTo'], $subjects, $students, $loads, 2);
+
             $current = $startRow;
-            $letter = self::drawMarks($spreadsheet, $students, $subjects, $allRecords, $marks, $current, $count, $marks_two_three, $avg_marks)['letter'];
+            $letter = self::drawMarks($spreadsheet, $students, $subjects, $data['data']['journal_record_id'], $marks, $current, $count, $marks_two_three, $avg_marks)['letter'];
             $current = $startRow;
             self::insertPass($spreadsheet, $letter, $current, $students, $passes, $hours_sum);
             $afterMarksLetter = $letter;
@@ -157,19 +148,19 @@ class ExportAttestation
     /**
      * @param $spreadsheet PhpSpreadsheet\Spreadsheet
      * @param $romanSemester string
-     * @param $data
+     * @param $years StudyYear
      * @param $group_id integer
      * @throws PhpSpreadsheet\Exception
      */
-    public static function insertFormData($spreadsheet, $romanSemester, $data, $group_id)
+    public static function insertFormData($spreadsheet, $romanSemester, $years, $group_id)
     {
         $excel = $spreadsheet->getActiveSheet();
         $excel->setCellValue('A300', $romanSemester);
-        $excel->setCellValue('A301', Date('d.m', strtotime($data['data']['dateFrom'])));
-        $excel->setCellValue('B301', Date('d.m', strtotime($data['data']['dateTo'])));
+        $excel->setCellValue('A301', Date('d.m', strtotime(1)));
+        $excel->setCellValue('B301', Date('d.m', strtotime(1)));
         $excel->setCellValue('A302', Group::findOne($group_id)->title);
-        $excel->setCellValue('A303', Date('Y', strtotime($data['data']['dateFrom'])));
-        $excel->setCellValue('B303', Date('Y', strtotime($data['data']['dateTo'])));
+        $excel->setCellValue('A303', $years->year_start);
+        $excel->setCellValue('B303', $years->year_start+1);
     }
 
     /**
@@ -248,9 +239,9 @@ class ExportAttestation
                     foreach ($records as $record) {
 //                        $types = $record->type == 2;
                         $sub = $mark["subject_id"] == $subject['subject']->id;
-                        $rec = $mark["record_id"] == $record->id;
+                        $rec = $mark["record_id"] == $record;
                         $stud = $mark["student_id"] == $student->id;
-                        $subject_record = $subject['record_id'] == $record->id;
+                        $subject_record = $subject['record_id'] == $record;
                         if ($stud && $sub && $rec && $subject_record) {
                             $cords = "${letter}${current}";
                             $excel->setCellValue($cords, $mark["value"]);

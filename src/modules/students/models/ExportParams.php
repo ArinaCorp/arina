@@ -40,6 +40,7 @@ class ExportParams extends \yii\base\Model
             [['date-from','date-to','year'],'date'],
             [['marks_checker'],'boolean'],
             ['teachers_id', 'each', 'rule' => ['integer']],
+            ['journal_record_id', 'each', 'rule' => ['integer']],
         ];
     }
     public function attributeLabels()
@@ -51,6 +52,7 @@ class ExportParams extends \yii\base\Model
             'subject_id' => Yii::t('app', 'Subject'),
             'plan_id' => Yii::t('app', 'Plan'),
             'marks_checker'=>Yii::t('app', 'Marks'),
+            'journal_record_id'=>Yii::t('app', 'Select attestations')
         ];
     }
 

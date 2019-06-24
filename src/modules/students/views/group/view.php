@@ -185,33 +185,30 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="dialog-header text-left"><h4><?= Yii::t('app', 'Attestation note') ?></h4></div>
         <div class="dialog-content">
 
-            <?= $form->field($exportParams, 'dateFrom')->widget(DatePicker::class, [
+            <?= $form->field($exportParams, 'years_id')->widget(Select2::class, [
+                'data' => ArrayHelper::map(ExportHelpers::getYearsByLoads($model->id),'id','title'),
                 'options' => [
-                    'placeHolder' => Yii::t('app', 'Choose start date'),
-                    'class' => 'text-center',
-                    'id' => 'att-start-date'
-                ],
-                'type' => DatePicker::TYPE_INPUT,
-                'language' => Yii::$app->language,
-                'pluginOptions' => [
-                    'clearBtn' => true,
-                    'autoclose' => true,
-                    'format' => 'dd.mm.yyyy'
-                ],
-            ])->label(false);
-            ?>
+                    'placeholder' => Yii::t('app', 'Select years'),
+                    'id' => 'att-years-id',
+                    'class' => 'dialog-input form-control text-center',
+                ]
+            ])->label(false) ?>
 
-            <?= $form->field($exportParams, 'dateTo')->widget(DatePicker::class, [
-                'options' => ['placeHolder' => Yii::t('app', 'Choose finish date'), 'class' => 'text-center'],
-                'type' => DatePicker::TYPE_INPUT,
-                'language' => Yii::$app->language,
+            <?= $form->field($exportParams, 'journal_record_id')->widget(DepDrop::className(), [
                 'pluginOptions' => [
-                    'clearBtn' => true,
-                    'autoclose' => true,
-                    'format' => 'dd.mm.yyyy'
+                    'depends' => ['att-years-id'],
+                    'url' => Url::to(['attestation-journal-record-list','group_id'=>$model->id]),
                 ],
-            ])->label(false);
-            ?>
+                'type' => DepDrop::TYPE_SELECT2,
+                'select2Options' => ['pluginOptions' => ['allowClear' => true]],
+                'options' => [
+                    'id' => 'attestation-journal-record-id',
+                    'class' => 'dialog-input form-control text-center',
+                    'placeholder' => 'Select ...',
+                    'multiple'=>true,
+                ]
+            ]) ?>
+
             <?= $form->field($exportParams, 'group_id')->textInput(['readonly' => true, 'class' => 'dialog-input form-control'])->hiddenInput(['value' => $model->id])->label(false) ?>
             <?= $form->field($exportParams, 'plan_id')->textInput(['readonly' => true, 'class' => 'dialog-input form-control'])->hiddenInput(['value' => $exportParams->plan->id])->label(false) ?>
             <?= $form->field($exportParams, 'marks_checker')->textInput(['readonly' => true, 'class' => 'dialog-input form-control'])->hiddenInput(['value' => $exportParams->marks_checker])->label(false) ?>
@@ -254,7 +251,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <?= $form->field($exportParams, 'journal_record_id')->widget(DepDrop::className(), [
                 'pluginOptions' => [
                     'depends' => ['years-id','subject-id'],
-                    'placeholder' => Yii::t('app', 'Select record'),
+                    'placeholder' => Yii::t('app', 'Select credit'),
                     'url' => Url::to(['journal-record-list','group_id'=>$model->id]),
                 ],
                 'type' => DepDrop::TYPE_SELECT2,
