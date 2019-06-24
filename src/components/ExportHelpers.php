@@ -248,21 +248,20 @@ class ExportHelpers
         ];
     }
 
-    public static function getJournalRecordsByLoad($group_id)
+    public static function getYearsByLoads($group_id)
     {
-        $year = StudyYear::findOne(['year_start' => Yii::$app->get('calendar')->getCurrentYear()]);
-        $loads = Load::findAll(['group_id' => $group_id, 'study_year_id' => $year]);
-        $journal_records = [];
-        foreach ($loads as $load) {
-            array_push($journal_records, JournalRecord::findOne(['load_id' => $load->id]));
-        }
-        return ArrayHelper::map($journal_records, 'id', 'date');
+        $years = StudyYear::find()
+            ->rightJoin('load', 'study_years.id = load.study_year_id')
+            ->where(['group_id' => $group_id])
+            ->all();
+        return $years;
     }
 
     /**
      * @param $dateFrom Date
      * @param $dateTo Date
      * @param $load Load
+     * @return int
      */
     public static function getSemester($dateFrom, $dateTo, $load)
     {
@@ -290,8 +289,42 @@ class ExportHelpers
     {
         $params = func_get_args();
         echo '<p style="color:white;background: red;padding: 10px;font-size: 30px;margin: 0;">Debugger 2.2.8</p>';
-        highlight_string("<?php\n" . var_export($params, true) . "?>");
+        /*        highlight_string("<?php\n" . var_export($params, true) . "?>");*/
+        echo '<pre>', var_dump($params), '</pre>';
         die;
     }
 
+    public static function isRecordInSemester($record, $semester)
+    {
+        //*
+        $graph = $record->load->getGraphRow($record->load->study_year_id);
+        $recordWeek = Yii::$app->get('calendar')->getWeekNumberByDate(strtotime($record->date));
+        $recordSemester = Yii::$app->get('calendar')->getSemester($graph, $recordWeek);
+        //*
+        return ($record->load->group->getCourse($record->load->study_year_id) * 2) - ($recordSemester === 1 ? 1 : 0) == $semester;
+    }
+
+    public static function getSubjectsInLoadByGroupAndYear($group_id,$year_id)
+    {
+        $subjects = Subject::find()
+            ->rightJoin('work_subject', 'work_subject.subject_id = subject.id')
+            ->rightjoin('load', 'load.work_subject_id = work_subject.id')
+            ->andWhere(['load.group_id' => $group_id])
+            ->andWhere(['load.study_year_id' => $year_id])
+            ->all();
+        return $subjects;
+    }
+
+    public static function getRecordsInLoadBySubjectGroupAndType($group_id,$subject_id,$type_id)
+    {
+        $records = JournalRecord::find()
+            ->leftJoin('load','journal_record.load_id = load.id')
+            ->leftJoin('work_subject', 'load.work_subject_id = work_subject.id')
+            ->leftJoin('subject', 'subject.id = work_subject.subject_id')
+            ->andWhere(['subject.id' => $subject_id])
+            ->andWhere(['load.group_id' => $group_id])
+            ->andWhere(['journal_record.type'=>$type_id])
+            ->all();
+        return $records;
+    }
 }

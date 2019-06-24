@@ -3,8 +3,12 @@
 
 namespace app\components\exporters;
 
+use app\modules\directories\models\study_year\StudyYear;
 use app\modules\directories\models\subject\Subject;
 use app\modules\employee\models\Employee;
+use app\modules\journal\models\record\JournalMark;
+use app\modules\journal\models\record\JournalRecord;
+use app\modules\plans\models\StudySubject;
 use app\modules\students\models\Group;
 use PhpOffice\PhpSpreadsheet;
 use Yii;
@@ -23,9 +27,12 @@ class ExportCredit
     {
         $spreadsheet->setActiveSheetIndex(0);
         $cursor = $spreadsheet->getActiveSheet();
+        $years = StudyYear::findOne(['id' => $data["data"]["years_id"]]);
+        $journal_record = JournalRecord::findOne(['id' => $data["data"]["journal_record_id"]]);
         $subject = Subject::findOne(['id' => $data["data"]["subject_id"]]);
         $speciality = Group::findOne(['id' => $data["data"]["group_id"]])->specialityQualification->speciality->title;
-        $semester = ExportHelpers::ConvertToRoman($data["data"]["semester"]);
+        $roman = ExportHelpers::ConvertToRoman(1);
+        $semester = 1;
         $group = Group::findOne(['id' => $data["data"]["group_id"]])->title;
         /**
          * @var $teachers Employee
@@ -40,8 +47,8 @@ class ExportCredit
 
         $cursor->setCellValue("J101", $subject->title);
         $cursor->setCellValue("J102", $speciality);
-        $cursor->setCellValue("J103", $semester);
-        $cursor->setCellValue("J104", round($data["data"]["semester"]/2));
+        $cursor->setCellValue("J103", $roman);
+        $cursor->setCellValue("J104", $semester);
         $cursor->setCellValue("J105", $group);
         $cursor->setCellValue("J106", $teachers);
 
@@ -50,12 +57,11 @@ class ExportCredit
         $students = $group->getStudentsArray();
         $failed_students = 0;
         $avg = 0;
-        $subjects = [['subject'=>$subject]];
-        $student_mark = [];
+        $marks = NULL;
         if ($data["data"]['marks_checker']) {
-            $student_mark = ExportHelpers::getMarks($subjects, $students);
+            $marks = JournalMark::findAll(['record_id'=>$journal_record->id]);
         }
-        $student_marks_two_three = [];
+        $marks_two_three = [];
         $count = [0, 0, 0];
         $current = 19;
         $i = 1;
@@ -66,31 +72,31 @@ class ExportCredit
 
             $cursor->setCellValue("A${current}", $i);
             $cursor->setCellValue('B' . $current, $student->getFullName());
-            if (!empty($student_mark)) {
-                $mark = $student_mark[array_search($student->id, array_column($student_mark, "student_id"))];
-                $avg += $mark['value'];
-                $failed_students += $mark['value'] < 3.5 ? 1 : 0;
-                $cursor->setCellValue("F${current}", $mark['value']);
-                array_push($student_marks_two_three, $mark["value"]);
+            if (!empty($marks)) {
+                $mark = $marks[array_search($student->id, array_column($marks, "student_id"))];
+                $avg += $mark->value;
+                $failed_students += $mark->value < 3.5 ? 1 : 0;
+                $cursor->setCellValue("F${current}", $mark->value);
+                array_push($marks_two_three, $mark->value);
             }
             $i++;
             $current++;
-            $count[0] += array_filter($student_marks_two_three, function ($num) {
+            $count[0] += array_filter($marks_two_three, function ($num) {
                 return (int)$num < 2.5;
             }) ? 1 : 0;
-            $count[1] += array_filter($student_marks_two_three, function ($num) {
+            $count[1] += array_filter($marks_two_three, function ($num) {
                 return (int)$num >= 2.5 && $num < 3.5;
             }) ? 1 : 0;
-            $count[2] += array_filter($student_marks_two_three, function ($num) {
+            $count[2] += array_filter($marks_two_three, function ($num) {
                 return (int)$num < 3.5;
             }) ? 1 : 0;
-            $student_marks_two_three = [];
+            $marks_two_three = [];
         }
         $cursor->removeRow($current);
         $cursor->removeRow($current);
-        $cursor->setCellValue("F${current}", count($student_mark) != 0 ? (round($avg /  count($student_mark), 2)):"");
-        $quality = count($student_mark) != 0 ? (round((count($students) - $count[2]) / count($student_mark) * 100, 2)) : "  ";
-        $success_rate = count($student_mark) != 0 ? (round((count($students) - $count[0]) / count($student_mark) * 100, 2)) : "  ";;
+        $cursor->setCellValue("F${current}", count($marks) != 0 ? (round($avg / count($marks), 2)) : "");
+        $quality = count($marks) != 0 ? (round((count($students) - $count[2]) / count($marks) * 100, 2)) : "  ";
+        $success_rate = count($marks) != 0 ? (round((count($students) - $count[0]) / count($marks) * 100, 2)) : "  ";;
         $current += 2;
         $footer_current = $current;
         $cursor->setCellValue("H${current}", "${success_rate} %");
@@ -98,8 +104,8 @@ class ExportCredit
         $cursor->setCellValue("H${current}", "${quality} %");
         $marks_sum = [0, 0, 0, 0];
         $marks = array_map(function ($item) {
-            return $item["value"];
-        }, $student_mark);
+            return $item->value;
+        }, $marks);
         foreach ($marks as $mark) {
             $marks_sum[0] += ($mark >= 4.5) ? 1 : 0;
             $marks_sum[1] += ($mark >= 3.5 && $mark < 4.5) ? 1 : 0;

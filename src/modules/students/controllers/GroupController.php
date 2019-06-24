@@ -3,8 +3,13 @@
 namespace app\modules\students\controllers;
 
 use app\components\DepDropHelper;
+use app\components\ExportHelpers;
 use app\components\ExportToExcel;
 use app\modules\directories\models\speciality_qualification\SpecialityQualification;
+use app\modules\directories\models\subject\Subject;
+use app\modules\journal\models\record\JournalRecord;
+use app\modules\journal\models\record\JournalRecordType;
+use app\modules\load\models\Load;
 use app\modules\plans\models\StudyPlan;
 use app\modules\plans\models\StudySubject;
 use app\modules\rbac\filters\AccessControl;
@@ -236,6 +241,60 @@ class GroupController extends Controller implements IAdminController
         ExportToExcel::getDocument('Exam', $model);
     }
 
+
+    public static function actionCreditSubjectList($group_id)
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = [];
+        if (isset($_POST['depdrop_parents'])) {
+            $parents = $_POST['depdrop_parents'];
+            if ($parents != null) {
+                if (!empty($_POST['depdrop_all_params'])) {
+                    $params = $_POST['depdrop_all_params'];
+                    $semester = null;
+                    $year_id = $params["years-id"];
+
+                    $subjects = ExportHelpers::getSubjectsInLoadByGroupAndYear($group_id, $year_id);
+
+                    $out = DepDropHelper::convertMap(ArrayHelper::map($subjects, 'id', 'title'));
+
+                    if (empty($year_id)) {
+                        $out = '';
+                    }
+                    return ['output' => $out, 'selected' => ''];
+                }
+            }
+        }
+        return ['output' => '', 'selected' => ''];
+    }
+
+    public static function actionJournalRecordList($group_id)
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = [];
+        if (isset($_POST['depdrop_parents'])) {
+            $parents = $_POST['depdrop_parents'];
+            if ($parents != null) {
+                if (!empty($_POST['depdrop_all_params'])) {
+                    $params = $_POST['depdrop_all_params'];
+                    $semester = null;
+                    $year_id = $params["years-id"];
+                    $subject_id = $params["subject-id"];
+                    $type_id = JournalRecordType::findOne(['title'=>'Залік'])->id;
+                    $records = ExportHelpers::getRecordsInLoadBySubjectGroupAndType($group_id,$subject_id,$type_id);
+
+                    $out = DepDropHelper::convertMap(ArrayHelper::map($records, 'id', 'date'));
+
+                    if (empty($year_id)) {
+                        $out = '';
+                    }
+                    return ['output' => $out, 'selected' => ''];
+                }
+            }
+        }
+        return ['output' => '', 'selected' => ''];
+    }
+
     public static function actionSubjectList()
     {
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
@@ -247,32 +306,44 @@ class GroupController extends Controller implements IAdminController
                     $params = $_POST['depdrop_all_params'];
                     $semester = null;
                     $dep_id = null;
-                    if($params["plan_id"]){
+                    if ($params["plan_id"]) {
                         $dep_id = $params["plan_id"];
                     }
 
-                    $plan = StudyPlan::findOne(['id'=>$dep_id]);
+                    $plan = StudyPlan::findOne(['id' => $dep_id]);
                     $subjects = $plan->studySubjects;
                     $subject_list = ArrayHelper::map($subjects, 'id', 'title');
                     $out = DepDropHelper::convertMap($subject_list);
 
-                    if(!empty($params['ex-sem'])){
+                    if (!empty($params['ex-sem'])) {
                         $semester = $params["ex-sem"];
 
-                        $subjects = array_filter($subjects,function($sub)use($semester){
-                            /** @var StudySubject $sub*/
-                            return $sub->control[$semester - 1][1]==true;
+                        $subjects = array_filter($subjects, function ($sub) use ($semester) {
+                            /** @var StudySubject $sub */
+                            return $sub->control[$semester - 1][1] == true;
                         });
-                        $out = DepDropHelper::convertMap(ArrayHelper::map($subjects,'subject_id','title'));
+                        $out = DepDropHelper::convertMap(ArrayHelper::map($subjects, 'subject_id', 'title'));
                     }
-                    if(!empty($params['cred-sem'])){
+                    if (!empty($params['cred-sem'])) {
                         $semester = $params["cred-sem"];
-
-                        $subjects = array_filter($subjects,function($sub)use($semester){
-                            /** @var StudySubject $sub*/
-                            return $sub->control[$semester - 1][0]==true;
+//                        $subjects = [];
+//                        $allSubjects = Subject::find()
+//                            ->joinWith('workSubject')
+//                            ->leftJoin('load', 'load.work_subject_id = work_subject.id')
+//                            ->leftJoin('journalRecords', 'journal_record.load_id == load.id')
+//                            ->where(['load.group_id' => 5])
+//                            ->all();
+//                        foreach ($allSubjects as $subject) {
+//                            $records = array_filter($subject->relatedRecords, function ($record)use($semester){
+//                                return ExportHelpers::isRecordInSemester($record,$semester);
+//                            });
+//                            if(count($records)!=0)array_push($subjects,$subject);
+//                        }
+                        $subjects = array_filter($subjects, function ($sub) use ($semester) {
+                            /** @var StudySubject $sub */
+                            return $sub->control[$semester - 1][0] == true;
                         });
-                        $out = DepDropHelper::convertMap(ArrayHelper::map($subjects,'subject_id','title'));
+                        $out = DepDropHelper::convertMap(ArrayHelper::map($subjects, 'subject_id', 'title'));
                     }
                     if (empty($dep_id)) {
                         $out = '';

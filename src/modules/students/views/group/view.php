@@ -2,8 +2,10 @@
 
 use app\components\ExportHelpers;
 use app\modules\directories\models\speciality\Speciality;
+use app\modules\directories\models\subject\Subject;
 use app\modules\employee\models\Teacher;
 use app\modules\journal\models\record\JournalRecord;
+use app\modules\load\models\Load;
 use app\modules\plans\models\StudyPlan;
 use app\modules\plans\models\StudySubject;
 use kartik\date\DatePicker;
@@ -226,26 +228,39 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="dialog-card">
         <div class="dialog-header text-left"><h4><?= Yii::t('app', 'Scoring note') ?></h4></div>
         <div class="dialog-content">
-            <?= $form->field($exportParams, 'semester')->widget(Select2::class, [
-                'data' => ExportHelpers::getSemesterList(),
+            <?= $form->field($exportParams, 'years_id')->widget(Select2::class, [
+                'data' => ArrayHelper::map(ExportHelpers::getYearsByLoads($model->id),'id','title'),
                 'options' => [
-                    'placeholder' => Yii::t('app', 'Input semester'),
-                    'id' => 'cred-sem',
+                    'placeholder' => Yii::t('app', 'Select years'),
+                    'id' => 'years-id',
                     'class' => 'dialog-input form-control text-center',
                 ]
             ])->label(false) ?>
 
             <?= $form->field($exportParams, 'subject_id')->widget(DepDrop::className(), [
-//                'data' => ArrayHelper::map($exportParams->plan->studySubjects, 'subject_id', 'title'),
                 'pluginOptions' => [
-                    'depends' => ['plan_id','cred-sem'],
+                    'depends' => ['years-id'],
                     'placeholder' => Yii::t('app', 'Select subject'),
-                    'url' => Url::to(['subject-list']),
+                    'url' => Url::to(['credit-subject-list','group_id'=>$model->id]),
                 ],
                 'type' => DepDrop::TYPE_SELECT2,
                 'select2Options' => ['pluginOptions' => ['allowClear' => true]],
                 'options' => [
                     'id' => 'subject-id',
+                    'placeholder' => 'Select ...'
+                ]
+            ])->label(false) ?>
+
+            <?= $form->field($exportParams, 'journal_record_id')->widget(DepDrop::className(), [
+                'pluginOptions' => [
+                    'depends' => ['years-id','subject-id'],
+                    'placeholder' => Yii::t('app', 'Select record'),
+                    'url' => Url::to(['journal-record-list','group_id'=>$model->id]),
+                ],
+                'type' => DepDrop::TYPE_SELECT2,
+                'select2Options' => ['pluginOptions' => ['allowClear' => true]],
+                'options' => [
+                    'id' => 'journal-record-id',
                     'placeholder' => 'Select ...'
                 ]
             ])->label(false) ?>

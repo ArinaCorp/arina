@@ -21,6 +21,9 @@ class ExportParams extends \yii\base\Model
     public $group_id;
     public $plan;
     public $marks_checker;
+    public $years_id;
+    public $journal_record_id;
+
 
     public function rules()
     {
@@ -33,7 +36,7 @@ class ExportParams extends \yii\base\Model
             ['course','integer','max' => 4, 'min'=>1,
                 'tooBig'=>Yii::t('app','Course value must be >1 and <4'),
                 'tooSmall'=>Yii::t('app','Course value must be >1 and <4')],
-            [['group_id','course','subject_id','plan_id','plan'],'required'],
+            [['group_id','course','subject_id','plan_id','plan','journal_record_id','years_id'],'required'],
             [['date-from','date-to','year'],'date'],
             [['marks_checker'],'boolean'],
             ['teachers_id', 'each', 'rule' => ['integer']],
