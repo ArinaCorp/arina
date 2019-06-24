@@ -24,6 +24,7 @@ use yii\db\Query;
  * @property int $number_in_day
  * @property int $hours
  * @property int $audience_id
+ * @property int $retake_for_id
  * @property int $created_at
  * @property int $updated_at
  *
@@ -32,9 +33,12 @@ use yii\db\Query;
  * @property Audience $audience
  * @property JournalMark[] $journalMarks
  * @property Load $load
+ * @property JournalRecord $retakeFor
  */
 class JournalRecord extends \yii\db\ActiveRecord
 {
+    public $isRetake = false;
+
     /**
      * @param $loadId
      * @param int $employeeId
@@ -74,8 +78,9 @@ class JournalRecord extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['isRetake'], 'boolean'],
             [['load_id', 'teacher_id', 'type', 'date'], 'required'],
-            [['load_id', 'teacher_id', 'type', 'number', 'number_in_day', 'hours', 'audience_id', 'created_at', 'updated_at'], 'integer'],
+            [['load_id', 'teacher_id', 'type', 'number', 'number_in_day', 'hours', 'audience_id', 'created_at', 'updated_at', 'retake_for_id'], 'integer'],
 //            ['number', 'required', 'when' => function ($model) {
 //                /**
 //                 * @var $model JournalRecord
@@ -158,7 +163,15 @@ class JournalRecord extends \yii\db\ActiveRecord
         if ($this->typeObj && $this->typeObj->date && !$this->typeObj->is_report) {
             $label = date('d', strtotime($this->date)) . '<br/>' . date('m', strtotime($this->date));
         } else {
-            $label = $this->typeObj ? $this->typeObj->title . '<br/>' . $this->date : '';
+            if ($this->typeObj) {
+                $label = $this->typeObj->title;
+            }
+
+            if ($this->retake_for_id) {
+                $label .= ' (Перездача)';
+            }
+            $label .= '<br/>';
+            $label .= $this->date;
             $options = ['class' => 'vertical-label'];
         }
         return Html::tag(
@@ -245,5 +258,13 @@ class JournalRecord extends \yii\db\ActiveRecord
             return $record['date'];
         }
         return false;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getRetakeFor()
+    {
+        return $this->hasOne(self::class, ['id' => 'retake_for_id']);
     }
 }

@@ -1,14 +1,14 @@
 <?php
 
+use app\modules\journal\models\evaluation\Evaluation;
+use app\modules\journal\models\evaluation\EvaluationSystem;
+use app\modules\journal\models\presence\NotPresenceType;
+use app\modules\journal\models\record\JournalRecordType;
+use kartik\depdrop\DepDrop;
+use kartik\select2\Select2;
+use kartik\switchinput\SwitchInput;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use app\modules\journal\models\record\JournalRecordType;
-use kartik\select2\Select2;
-use app\modules\journal\models\presence\NotPresenceType;
-use kartik\switchinput\SwitchInput;
-use app\modules\journal\models\evaluation\EvaluationSystem;
-use kartik\depdrop\DepDrop;
-use app\modules\journal\models\evaluation\Evaluation;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\journal\models\record\JournalMark */
@@ -77,23 +77,7 @@ use app\modules\journal\models\evaluation\Evaluation;
         ]
     ]) ?>
 
-    <?php if ($type->ticket) : ?>
-        <?= $form->field($model, 'ticket')->textInput() ?>
-    <?php endif; ?>
-    <?= $form->field($model, 'retake_evaluation_id')->widget(DepDrop::class, ['data' => $evaluation,
-        'options' => [
-            'placeholder' => Yii::t('app', 'Select mark')
-        ],
-        'pluginOptions' => [
-            'depends' => ['journalmark-evaluation_system_id'],
-            'url' => ['get-evaluation-list'],
-            'allowClear' => true,
-        ]
-
-    ]) ?>
-    <?php if ($type->ticket) : ?>
-        <?= $form->field($model, 'retake_ticket')->textInput() ?>
-    <?php endif; ?>
+    <?= $form->field($model, 'ticket')->textInput() ?>
     <?= $form->field($model, 'comment')->textarea(['rows' => 6]) ?>
 
     <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

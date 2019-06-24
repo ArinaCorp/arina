@@ -96,6 +96,12 @@ $this->params['breadcrumbs'][] = $this->title;
                     return ($model->is_report) ? Yii::t('app', "Yes") : Yii::t('app', 'No');
                 },
             ],
+            [
+                'attribute' => 'has_retake',
+                'value' => function ($model) {
+                    return ($model->has_retake) ? Yii::t('app', 'Yes') : Yii::t('app', 'No');
+                },
+            ],
             'report_title',
             [
                 'attribute' => 'work_type_id',

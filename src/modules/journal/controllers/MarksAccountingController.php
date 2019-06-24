@@ -8,8 +8,8 @@ use app\modules\journal\helpers\MarkHelper;
 use app\modules\journal\models\record\JournalMark;
 use app\modules\journal\models\record\JournalRecord;
 use app\modules\load\models\Load;
-use app\modules\plans\models\WorkPlan;
 use app\modules\plans\components\Calendar;
+use app\modules\plans\models\WorkPlan;
 use app\modules\rbac\filters\AccessControl;
 use app\modules\user\helpers\UserHelper;
 use app\modules\user\models\User;
@@ -19,6 +19,7 @@ use yii\base\Module;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
+use yii\widgets\ActiveForm;
 
 class MarksAccountingController extends Controller implements IAdminController
 {
@@ -212,5 +213,39 @@ class MarksAccountingController extends Controller implements IAdminController
     public function actionExport($loadId)
     {
         ExportToExcel::getDocument('MarksAccounting', $loadId);
+    }
+
+    public function actionRetakeForm()
+    {
+        $model = new JournalRecord();
+        $model->load(Yii::$app->request->post());
+
+        $retakeItems = [];
+
+        if ( $load = $model->load){
+
+            $records = $load->journalRecords;
+
+            //get graph for load by group and workPlan
+            $graph = $load->getGraphRow($this->_calendar->getCurrentYear()->id);
+            $currentSemester = $this->_calendar->getCurrentSemester($graph);
+
+            //get records that were added in current semester
+            $records = array_filter($records, function (JournalRecord $record) use ($model, $graph, $currentSemester) {
+                $recordWeek = $this->_calendar->getWeekNumberByDate(strtotime($record->date));
+                $recordSemester = $this->_calendar->getSemester($graph, $recordWeek);
+                return $recordSemester === $currentSemester && $record->type == $model->type && !$record->retake_for_id;
+            });
+            $retakeItems = ArrayHelper::map($records, 'id', function ($record) {
+                return ($record->typeObj ? $record->typeObj->title : '') . ' ' . $record->date;
+            });
+        }
+
+
+        return $this->renderPartial('_retake', [
+            'record' => $model,
+            'form' => new ActiveForm(),
+            'retakeItems' => $retakeItems,
+        ]);
     }
 }

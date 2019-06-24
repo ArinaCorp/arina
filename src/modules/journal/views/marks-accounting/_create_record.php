@@ -1,12 +1,12 @@
 <?php
 
 use app\modules\journal\models\record\JournalRecord;
-use yii\web\View;
-use yii\widgets\ActiveForm;
-use kartik\select2\Select2;
 use app\modules\journal\models\record\JournalRecordType;
 use kartik\date\DatePicker;
+use kartik\select2\Select2;
 use yii\helpers\Html;
+use yii\web\View;
+use yii\widgets\ActiveForm;
 
 /* @var $this View */
 /* @var $record JournalRecord */
@@ -33,9 +33,12 @@ use yii\helpers\Html;
                 <?= $form->field($record, 'type')->widget(Select2::class, [
                     'data' => JournalRecordType::getMap('title'),
                     'pluginOptions' => [
-                        'placeholder' => Yii::t('journal', 'Choose type')
-                    ]
+                        'placeholder' => Yii::t('journal', 'Choose type'),
+                    ],
                 ]) ?>
+                <div id="retakePartial">
+                    <?= $this->render('_retake', ['record' => $record, 'form' => $form, 'retakeItems'=>[]]) ?>
+                </div>
 
                 <?= $form->field($record, 'date')->widget(DatePicker::class, [
                     'pluginOptions' => [
