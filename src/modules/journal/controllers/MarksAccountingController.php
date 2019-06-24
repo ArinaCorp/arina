@@ -3,6 +3,7 @@
 namespace app\modules\journal\controllers;
 
 use app\components\DepDropHelper;
+use app\components\exporters\marks\BaseMarkExporter;
 use app\components\ExportToExcel;
 use app\modules\journal\helpers\MarkHelper;
 use app\modules\journal\models\record\JournalMark;
@@ -19,6 +20,7 @@ use yii\base\Module;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 use yii\widgets\ActiveForm;
 
 class MarksAccountingController extends Controller implements IAdminController
@@ -210,9 +212,21 @@ class MarksAccountingController extends Controller implements IAdminController
         }
     }
 
-    public function actionExport($loadId)
+    /**
+     * @param $recordId
+     * @throws NotFoundHttpException
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     * @throws \yii\base\Exception
+     */
+    public function actionExport($recordId)
     {
-        ExportToExcel::getDocument('MarksAccounting', $loadId);
+        $record = JournalRecord::findOne($recordId);
+        if ($record === null) {
+            throw  new NotFoundHttpException();
+        }
+        BaseMarkExporter::exportRecord($record);
     }
 
     public function actionRetakeForm()
@@ -222,7 +236,7 @@ class MarksAccountingController extends Controller implements IAdminController
 
         $retakeItems = [];
 
-        if ( $load = $model->load){
+        if ($load = $model->load) {
 
             $records = $load->journalRecords;
 

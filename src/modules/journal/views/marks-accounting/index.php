@@ -13,6 +13,7 @@ use app\modules\load\models\Load;
 use app\modules\plans\models\WorkPlan;
 use kartik\depdrop\DepDrop;
 use kartik\select2\Select2;
+use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\View;
@@ -211,6 +212,13 @@ $this->registerJS($js);
                 <th><?= Yii::t('app', 'Student'); ?></th>
                 <?php foreach ($records as $record): ?>
                     <th>
+                        <?php if ($record->isExportable()): ?>
+                            <div class="export-btn-wrap">
+                                <?= Html::a(FA::icon(FA::_FILE), ['export', 'recordId' => $record->id], [
+                                    'data-pjax' => 0,
+                                ]) ?>
+                            </div>
+                        <?php endif ?>
                         <?= $record->getLabel() ?>
                     </th>
                 <?php endforeach ?>

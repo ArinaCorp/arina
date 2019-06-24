@@ -267,4 +267,12 @@ class JournalRecord extends \yii\db\ActiveRecord
     {
         return $this->hasOne(self::class, ['id' => 'retake_for_id']);
     }
+
+    /**
+     * @return bool
+     */
+    public function isExportable()
+    {
+        return $this->typeObj && $this->typeObj->report_title;
+    }
 }

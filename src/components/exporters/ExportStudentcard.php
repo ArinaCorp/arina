@@ -48,7 +48,9 @@ class ExportStudentcard
         $activeSheet->setCellValue('J11', $student->fullName);
         $activeSheet->setCellValue('F12', $student->birth_day);
         $activeSheet->setCellValue('G13', 'birth_place'); //TODO: Implement birth place
-        $activeSheet->setCellValue('E14', $student->country->name); //TODO: Implement citizenship later(?)
+        if ($student->country) {
+            $activeSheet->setCellValue('E14', $student->country->name); //TODO: Implement citizenship later(?)
+        }
         $activeSheet->setCellValue('E15', $student->finishedInstitution);
         $activeSheet->setCellValue('E17', $student->familyStatus);
         $activeSheet->setCellValue('J18', $student->livingAddress);

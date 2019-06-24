@@ -1,6 +1,7 @@
 <?php
 
 use app\helpers\GlobalHelper;
+use app\modules\user\helpers\UserHelper;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -137,15 +138,17 @@ JS
     </div>
 
     <p>
-        <?= Html::a(Yii::t('app', 'List'), ['index'], ['class' => 'btn btn-success']) ?>
-        <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
-                'method' => 'post',
-            ],
-        ]) ?>
+        <?php if (!UserHelper::isTeacher(Yii::$app->user->identity)): ?>
+            <?= Html::a(Yii::t('app', 'List'), ['index'], ['class' => 'btn btn-success']) ?>
+            <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+            <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
+                'class' => 'btn btn-danger',
+                'data' => [
+                    'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
+                    'method' => 'post',
+                ],
+            ]) ?>
+        <?php endif ?>
         <?= Html::a(Yii::t('app', 'Export'), ['export', 'id' => $model->id], ['class' => 'btn btn-info']) ?>
     </p>
 
@@ -239,7 +242,7 @@ JS
                         'data-record-id' => $record->id,
                     ]) ?>
                 </td>
-                <?php $sumPlanTotals+=$record->load->getPlanTotal() ?>
+                <?php $sumPlanTotals += $record->load->getPlanTotal() ?>
             <?php endforeach ?>
             <td>
                 <?= Html::input('number', 'sumPlanTotals', $sumPlanTotals, [
