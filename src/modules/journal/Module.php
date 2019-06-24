@@ -46,6 +46,12 @@ class Module extends BaseModule implements IAdminModule
             'icon' => 'book',
             'items' => [
                 [
+                    'label' => Yii::t('app', 'Marks accounting'),
+                    'url' => ['/journal/marks-accounting'],
+                    'icon' => 'files-o',
+                    'roles' => ['teacher'],
+                ],
+                [
                     'label' => Yii::t('app', 'Evaluation systems'),
                     'url' => ['/journal/evaluation-systems'],
                     'icon' => 'tag',
@@ -60,23 +66,11 @@ class Module extends BaseModule implements IAdminModule
                     'url' => ['/journal/journal-record-type'],
                     'icon' => 'bookmark',
                 ],
-                [
-                    'label' => Yii::t('app', 'Not Presence Types'),
-                    'url' => ['/journal/presence-type'],
-                    'icon' => 'times-rectangle-o',
-                ],
-                [
-                    'label' => Yii::t('app', 'Journal pages'),
-                    'url' => ['/journal'],
-                    'icon' => 'files-o',
-                    'roles' => ['teacher'],
-                ],
-                [
-                    'label' => Yii::t('app', 'Marks accounting'),
-                    'url' => ['/journal/marks-accounting'],
-                    'icon' => 'files-o',
-                    'roles' => ['teacher'],
-                ],
+//                [
+//                    'label' => Yii::t('app', 'Not Presence Types'),
+//                    'url' => ['/journal/presence-type'],
+//                    'icon' => 'times-rectangle-o',
+//                ],
             ],
             'roles' => ['teacher'],
         ];

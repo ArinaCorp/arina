@@ -85,20 +85,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
             ],
             'date',
-            [
-                'attribute' => 'retake_evaluation_id',
-                'value' => function ($model) {
-                    /**
-                     * @var $model JournalMark;
-                     */
-                    if (is_null($model->retake_evaluation_id)) {
-                        return null;
-                    }
-                    //@TODO refactor it (used relation)
-                    return Evaluation::getListBySystem($model->evaluation_system_id)[$model->retake_evaluation_id];
-                },
-            ],
-            'retake_date',
             'comment:ntext',
         ],
     ]) ?>

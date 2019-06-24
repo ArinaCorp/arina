@@ -11,9 +11,11 @@ use app\modules\geo\models\City;
 use app\modules\geo\models\Country;
 use app\modules\geo\models\Region;
 use app\modules\journal\models\record\JournalMark;
-use app\modules\journal\models\record\JournalRecord;
 use app\modules\load\models\Load;
+use app\modules\plans\models\StudentPlan;
+use app\modules\plans\models\WorkPlan;
 use nullref\useful\behaviors\RelatedBehavior;
+use nullref\useful\traits\Mappable;
 use voskobovich\linker\LinkerBehavior;
 use Yii;
 use yii\behaviors\TimestampBehavior;
@@ -92,11 +94,17 @@ use yii\web\UploadedFile;
  * @property Group $firstGroup
  * @property integer $course
  *
+ * @property WorkPlan $currentWorkPlan
+ * @property StudentPlan $currentStudentPlan
+ * @property integer $currentSemester
+ *
  * @method loadWithRelations($data, $formName = null)
  * @method validateWithRelations()
  */
 class Student extends \yii\db\ActiveRecord
 {
+    use Mappable;
+
     public $payment_type;
     public $has_characteristics;
 
@@ -533,8 +541,7 @@ class Student extends \yii\db\ActiveRecord
      */
     public function getSpecialityQualification()
     {
-        //TODO: Implement a proper "Get current group method"
-        return $this->groups[count($this->groups) - 1]->specialityQualification;
+        return $this->currentGroup->specialityQualification;
     }
 
     /**
@@ -583,7 +590,17 @@ class Student extends \yii\db\ActiveRecord
      */
     public function getFullAddress()
     {
-        return implode(', ', [$this->country->name, $this->region->name, $this->city->name, $this->address]);
+        if ($this->country) {
+            $pieces[] = $this->country->name;
+        }
+        if ($this->region) {
+            $pieces[] = $this->region->name;
+        }
+        if ($this->city) {
+            $pieces[] = $this->city->name;
+        }
+        $pieces[] = $this->address;
+        return implode(', ', $pieces);
     }
 
     /**
@@ -719,15 +736,41 @@ class Student extends \yii\db\ActiveRecord
 
     /**
      * @param integer|null $semester
+     * @param array $condition
      * @return JournalMark[]|\app\modules\plans\models\WorkPlan[]|Group[]|Student[]|array|\yii\db\ActiveRecord[]
      */
-    public function getMarks($semester = null)
+    public function getMarks($condition = [], $semester = null)
     {
+//        Example of getFinalMark usage
+//        //#1 get all student loads
+//        /** @var Load[] $loads */
+//        $loads = Load::find()
+//            ->joinWith('workSubject')
+//            ->joinWith('workSubject.workPlan')
+//            ->where(['work_plan_id' => $this->currentWorkPlan->id,
+//                'group_id' => $this->getFirstGroup(),
+//            ])
+//            ->all();
+//
+//        //#2 filter loads by semester
+//        $loads = array_filter($loads, function (Load $load) {
+//            $course = $load->group->getCourse();
+//            $graph = $load->getGraphRow(Yii::$app->get('calendar')->getCurrentYear()->id);
+//            $semesterIndex = Yii::$app->get('calendar')->getSemesterIndexByCourse($course, Yii::$app->get('calendar')->getCurrentSemester($graph));
+//            return $load->workSubject->total[$semesterIndex];
+//        });
+//
+//        foreach ($loads as $load){
+//            $mark = JournalMark::getFinalMark($this, $load);
+//
+//            echo $load->workSubject->subject->title. ' : '.($mark? $mark->value:' n/a'). '<br>';
+//        }
+
         $allMarks = JournalMark::find()
             ->joinWith('journalRecord')
             ->joinWith('evaluation')
-            ->leftJoin('load', 'load.id = journal_record.load_id')
-            ->where(['student_id' => $this->id])->all();
+            ->rightJoin('load', 'load.id = journal_record.load_id')
+            ->where(array_merge(['student_id' => $this->id], $condition))->all();
 
         if ($semester) {
             // TODO: Seems to be a heavy execution, implement differently?
@@ -753,6 +796,42 @@ class Student extends \yii\db\ActiveRecord
     public function getCourseEdict(int $course)
     {
         return $this->getStudentsHistory()->where(['action_type' => StudentsHistory::$TYPE_TRANSFER_COURSE, 'course' => $course])->one();
+    }
+
+    public function getStudentPlans()
+    {
+        return $this->hasMany(StudentPlan::class, ['student_id' => 'id']);
+    }
+
+    /**
+     * Returns the current work plan which the student ( his group ) studies by.
+     * @return WorkPlan|null
+     */
+    public function getCurrentWorkPlan()
+    {
+        return $this->currentGroup->currentWorkPlan;
+    }
+
+    /**
+     * Returns the current semester for student ( which depends on his current group and it's graph )
+     * @return mixed
+     */
+    public function getCurrentSemester()
+    {
+        return $this->currentGroup->currentSemester;
+    }
+
+    /**
+     * Returns the current student plan according to current semester of current work plan
+     * @return ActiveQuery
+     */
+    public function getCurrentStudentPlan()
+    {
+        return $this->getStudentPlans()->where([
+            'work_plan_id' => $this->currentWorkPlan->id,
+            'course' => $this->course,
+            'semester' => $this->currentSemester
+        ])->one();
     }
 
 }

@@ -1,6 +1,8 @@
 <?php
 
+use app\modules\directories\models\subject_block\SubjectBlock;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 use yii\grid\GridView;
 
@@ -37,7 +39,17 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'specialityTitle',
+            [
+                'header' => Yii::t('plans', 'Work plan title'),
+                'label' => 'title',
+                'format' => 'raw',
+                'value' => function (SubjectBlock $model) {
+                    return Html::a($model->getWorkPlanTitle(), Url::toRoute(['subject-block/view', 'id' => $model->id]));
+                },
+            ],
+            'course',
+            'semester',
+            'subjectCount',
             [
                 'attribute' => 'updated',
                 'format' => 'datetime'
@@ -46,7 +58,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'created',
                 'format' => 'datetime'
             ],
-            'subjectCount',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

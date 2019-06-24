@@ -4,8 +4,6 @@ namespace app\modules\journal\models\record;
 
 use nullref\useful\traits\Mappable;
 use Yii;
-use yii\behaviors\TimestampBehavior;
-use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%journal_record_types}}".
@@ -24,10 +22,12 @@ use yii\helpers\ArrayHelper;
  * @property int $is_report
  * @property int $report_title
  * @property int $work_type_id
+ * @property bool $has_retake
  */
 class JournalRecordType extends \yii\db\ActiveRecord
 {
     use Mappable;
+
     /**
      * @inheritdoc
      */
@@ -44,6 +44,7 @@ class JournalRecordType extends \yii\db\ActiveRecord
     {
         return [
             [['title'], 'required'],
+            [['has_retake'], 'boolean'],
             [['work_type_id', 'report_title'], 'required', 'when' => function ($model) {
                 return $model->is_report == 1;
             }, 'whenClient' => "function (attribute, value) {
@@ -73,6 +74,7 @@ class JournalRecordType extends \yii\db\ActiveRecord
             'is_report' => Yii::t('app', 'Is Report'),
             'report_title' => Yii::t('app', 'Report Title'),
             'work_type_id' => Yii::t('app', 'Work Type ID'),
+            'has_retake' => Yii::t('app', 'Has retake'),
         ];
     }
 }

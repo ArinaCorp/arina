@@ -2,7 +2,10 @@
 
 namespace app\modules\students\controllers;
 
+use app\modules\rbac\filters\AccessControl;
+use app\modules\students\models\Student;
 use app\modules\students\models\StudentCard;
+use app\modules\user\models\User;
 use yii\web\Controller;
 
 use nullref\core\interfaces\IAdminController;
@@ -16,7 +19,16 @@ class StudentCardController extends Controller implements IAdminController
     public function behaviors()
     {
         return [
-
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['view','export'],
+                        'roles' => [User::ROLE_STUDENT],
+                    ],
+                ]
+            ]
         ];
     }
 
@@ -44,7 +56,7 @@ class StudentCardController extends Controller implements IAdminController
      */
     public function actionView($student_id)
     {
-        $model = new StudentCard(['studentId' => $student_id]);
+        $model = Student::findOne($student_id);
 
         return $this->render('view', [
             'model' => $model,

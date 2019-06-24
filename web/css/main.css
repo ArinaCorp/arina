@@ -58,51 +58,84 @@
 .form-template {
     display: none;
 }
-
 #select2-group-speciality_qualifications_id-results .select2-results__option .select2-results__option,
 #select2-workplan-speciality_qualification_id-results .select2-results__option .select2-results__option,
 #select2-studyplan-speciality_qualification_id-results .select2-results__option .select2-results__option {
     padding-left: 35px;
 }
 
-.m1 {
+.m1{
     margin: 1%;
 }
-
-.m2 {
+.m2{
     margin: 2%;
 }
-
-.m3 {
+.m3{
     margin: 3%;
 }
-
-.m4 {
+.m4{
     margin: 4%;
 }
-
-.m5 {
+.m5{
     margin: 5%;
 }
 
-.p1 {
+.p1{
     padding: 1%;
 }
-
-.p2 {
+.p2{
     padding: 2%;
 }
-
-.p3 {
+.p3{
     padding: 3%;
 }
-
-.p4 {
+.p4{
     padding: 4%;
 }
-
-.p5 {
+.p5{
     padding: 5%;
+}
+
+.dialog-window,.dialog-background{
+    position: fixed;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    overflow: hidden;
+    width:100%;
+    top: 0;
+    left: 0;
+}
+
+.dialog-background {
+    background-color: rgba(255,255,255, .8);
+}
+
+.dialog-card {
+    position: relative;
+    margin: 50px auto;
+    width: 330px;
+    padding: 10px 20px 10px 20px;
+    background: white;
+    text-align: center;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, .2);
+    z-index: 10;
+}
+
+@media all and (max-width:767px){
+    .dialog-card {
+        width: 90%;
+    }
+}
+
+.dialog-header {
+    color: rgba(0, 0, 0, .6);
+    border-bottom: solid 1.5px rgba(0, 0, 0, .2);
+    user-select: none;
+}
+
+.dialog-content {
+    padding-top: 30px;
 }
 
 /* If spinners on input zaebali you */

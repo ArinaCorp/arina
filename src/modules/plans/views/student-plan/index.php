@@ -49,10 +49,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $model->student->fullName;
                 },
             ],
-            [
-                'header' => Yii::t('app', 'Course'),
-                'value' => 'course',
-            ],
+            'groupTitle',
+            'course',
+            'semester',
             [
                 'header' => Yii::t('app', 'Updated'),
                 'value' => 'created',

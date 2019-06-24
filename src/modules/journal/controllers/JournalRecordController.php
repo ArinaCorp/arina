@@ -156,8 +156,9 @@ class JournalRecordController extends Controller implements IAdminController
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $model->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['/journal/marks-accounting/index', 'load_id' => $model->load_id]);
     }
 }

@@ -9,6 +9,7 @@ use yii\helpers\Url;
 /**
  * @var $this View
  * @var $model WorkPlan
+ * @var $formView string
  */
 
 $this->title = Yii::t('plans', 'Student plan editing');
@@ -22,6 +23,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <?= $this->render('_form', ['model' => $model]) ?>
+    <?= $this->render($formView, ['model' => $model]) ?>
 
 </div>

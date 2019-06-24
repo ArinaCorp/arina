@@ -6,6 +6,8 @@ use app\components\ExportToExcel;
 use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 use app\modules\directories\models\study_year\StudyYear;
 use app\modules\employee\models\Employee;
+use app\modules\plans\components\Calendar;
+use app\modules\plans\models\WorkPlan;
 use Yii;
 use yii\bootstrap\Html;
 use yii\db\ActiveQuery;
@@ -27,6 +29,9 @@ use yii\helpers\Url;
  * @property SpecialityQualification $specialityQualification
  * @property Student $groupLeader
  * @property StudyYear $studyYear
+ *
+ * @property WorkPlan $currentWorkPlan
+ * @property integer $currentSemester
  *
  */
 class Group extends ActiveRecord
@@ -441,6 +446,37 @@ class Group extends ActiveRecord
     {
         return $this->hasMany(Student::class, ['id' => 'student_id'])
             ->viaTable('student_group', ['group_id' => 'id']);
+    }
+
+    /**
+     * Returns the current work plan which the group studies by.
+     * @return WorkPlan|null
+     * @throws \yii\base\InvalidConfigException
+     * @throws \app\modules\plans\components\exceptions\Calendar
+     */
+    public function getCurrentWorkPlan()
+    {
+        /** @var Calendar $calendar */
+        $calendar = Yii::$app->get('calendar');
+        return WorkPlan::findOne([
+            'speciality_qualification_id' => $this->speciality_qualifications_id,
+            'study_year_id' => $calendar->getCurrentYear()->id,
+        ]);
+    }
+
+    /**
+     * Returns the current semester for group ( which depends on it's current WorkPlan and it's graph )
+     * @return mixed
+     * @throws \app\modules\plans\components\exceptions\Calendar
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function getCurrentSemester()
+    {
+        /** @var Calendar $calendar */
+        $calendar = Yii::$app->get('calendar');
+        $rows = $this->currentWorkPlan->specialityQualification->getGroupsByStudyYear($calendar->getCurrentYear()->id);
+        $graphIndex = array_search($this->getSystemTitle(), array_keys($rows));
+        return $calendar->getCurrentSemester($this->currentWorkPlan->graph[$graphIndex]);
     }
 
 }

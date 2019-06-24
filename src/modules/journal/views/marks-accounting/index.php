@@ -57,6 +57,7 @@ JS;
 $actionCreateMarkUrl = Url::to(['marks-accounting/create-mark']);
 $actionUpdateMarkUrl = Url::to(['marks-accounting/update-mark']);
 $actionDeleteMarkUrl = Url::to(['marks-accounting/delete-mark']);
+$retakeFormUrl = Url::to(['marks-accounting/retake-form']);
 
 $js .= <<<JS
     jQuery('body').on('change', 'td[data-id] select, td[data-id] input', function(){
@@ -108,6 +109,23 @@ JS;
 $js .= <<<JS
     jQuery('body').on('calendar.change', function(){
         location.reload();
+    });
+    jQuery('body').on('change', '#journalrecord-type, #journalrecord-isretake', function(e){
+        var typeId = jQuery('#journalrecord-type').val();
+        var isRetake = jQuery('#journalrecord-isretake').is(':checked');
+        var loadId = jQuery('#journalrecord-load_id').val();
+        jQuery.ajax({
+            url: '$retakeFormUrl',
+            type: 'POST',
+            data: {JournalRecord: {load_id: loadId, type: typeId, isRetake: isRetake ? 1 : 0}},
+            success: function(data) {
+              jQuery('#retakePartial').html(data);
+            }
+        });
+        if (jQuery(e.target).attr('id') === 'journalrecord-isretake'){
+            e.preventDefault(e);
+            return false;
+        }
     });
 JS;
 

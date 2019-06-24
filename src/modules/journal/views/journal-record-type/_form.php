@@ -96,6 +96,14 @@ use app\modules\plans\models\WorkSubject;
             ]
     ]); ?>
 
+    <?= $form->field($model, 'has_retake')->widget(SwitchInput::class, [
+        'pluginOptions' =>
+            [
+                'onText' => Yii::t('app', 'Yes'),
+                'offText' => Yii::t('app', 'No'),
+            ]
+    ]); ?>
+
     <?= $form->field($model, 'report_title')->textInput() ?>
 
     <?= $form->field($model, 'work_type_id')->widget(Select2::class, [

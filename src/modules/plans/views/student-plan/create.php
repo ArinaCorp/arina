@@ -6,11 +6,13 @@ use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
 /* @var $model \app\modules\plans\models\StudentPlan */
+/* @var $formView string Passed from controller, depending on user role */
 
 $this->title = Yii::t('plans', 'Create student plan');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Student plan'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+
 <div class="students-history-create">
 
     <div class="row">
@@ -25,12 +27,9 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a(Yii::t('app', 'List'), ['index'], ['class' => 'btn btn-success']) ?>
     </p>
 
-    <?php Pjax::begin(); ?>
 
-    <?= $this->render('_form', [
+    <?= $this->render($formView, [
         'model' => $model,
     ]) ?>
-
-    <?php Pjax::end() ?>
 
 </div>

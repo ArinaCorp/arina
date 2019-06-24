@@ -3,7 +3,11 @@
 namespace app\modules\directories\models\subject_block;
 
 use app\modules\directories\models\speciality\Speciality;
+use app\modules\directories\models\speciality_qualification\SpecialityQualification;
 use app\modules\directories\models\subject\Subject;
+use app\modules\plans\components\Calendar;
+use app\modules\plans\models\WorkPlan;
+use app\modules\plans\models\WorkSubject;
 use app\modules\students\models\Group;
 use app\modules\students\models\Student;
 use app\modules\students\models\StudentsHistory;
@@ -19,13 +23,15 @@ use yii\helpers\ArrayHelper;
  * This is the model class for table "subject_block".
  *
  * @property integer $id
- * @property integer $speciality_id
+ * @property integer $speciality_qualification_id
  * @property integer $course
  * @property string $title
  * @property string $created
  *
- * @property Subject[] $subjects
- * @property Speciality $speciality
+ * @property WorkSubject[] $workSubjects
+ * @property SpecialityQualification $specialityQualification
+ *
+ * @property WorkPlan $workPlan
  *
  * Form property
  * @property int[] $selectedSubjects
@@ -70,11 +76,11 @@ class SubjectBlock extends ActiveRecord
     public function rules()
     {
         return [
-            [['id'], 'integer'],
-            [['speciality_id'], 'integer'],
-            [['speciality_id', 'course'], 'required'],
+            [['work_plan_id'], 'integer'],
+            [['work_plan_id', 'course'], 'required'],
             [['course'], 'integer', 'min' => 1, 'max' => 4],
-            ['selectedSubjects', 'each', 'rule' => ['integer']]
+            [['semester'], 'integer', 'min' => 1, 'max' => 2],
+            ['selectedSubjects', 'each', 'rule' => ['integer']],
         ];
     }
 
@@ -85,54 +91,54 @@ class SubjectBlock extends ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'speciality_id' => Yii::t('app', 'Speciality'),
+            'work_plan_id' => Yii::t('plans', 'Work plan'),
             'course' => Yii::t('app', 'Course'),
+            'semester' => Yii::t('app', 'Semester'),
             'selectedSubjects' => Yii::t('app', 'Selected subject'),
             'created' => Yii::t('app', 'Created At'),
             'updated' => Yii::t('app', 'Updated At'),
             'subjectCount' => Yii::t('app', 'Subject count'),
-            'specialityTitle' => Yii::t('app', 'Speciality title'),
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getSubjects()
+    public function getWorkSubjects()
     {
-        return $this->hasMany(Subject::className(), ['id' => 'subject_id'])->viaTable('subject_to_block', ['block_id' => 'id']);
+        return $this->hasMany(WorkSubject::className(), ['id' => 'work_subject_id'])->viaTable('work_subject_to_subject_block', ['block_id' => 'id']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getSpeciality()
+    public function getWorkPlan()
     {
-        return $this->hasOne(Speciality::className(), ['id' => 'speciality_id']);
+        return $this->hasOne(WorkPlan::class, ['id' => 'work_plan_id']);
     }
 
     /**
-     * @return string Speciality title
+     * @return string
      */
-    public function getSpecialityTitle()
+    public function getWorkPlanTitle()
     {
-        return $this->speciality->title;
+        return $this->workPlan->getTitle();
     }
 
     public function getSubjectsDetail()
     {
         $details = [];
-        foreach ($this->subjects as $subject)
+        foreach ($this->workSubjects as $workSubject)
             $details[] =
                 [
-                    'label' => $subject->code,
-                    'value' => $subject->title,
+                    'label' => $workSubject->subject->code,
+                    'value' => $workSubject->title,
                 ];
         return $details;
     }
 
     /**
-     * Save multiselected subjects in form;
+     * Save multi-selected subjects in form;
      * subject's non/existence is checked.
      *
      * @param $update bool
@@ -142,15 +148,15 @@ class SubjectBlock extends ActiveRecord
     {
         try {
             if ($update) {
-                foreach ($this->subjects as $subject) {
-                    if (!in_array($subject->id, $this->selectedSubjects)) {
-                        $this->unlink('subjects', $subject, true);
+                foreach ($this->workSubjects as $workSubject) {
+                    if (!in_array($workSubject->id, $this->selectedSubjects)) {
+                        $this->unlink('workSubjects', $workSubject, true);
                     }
                 }
             }
-            foreach ($this->selectedSubjects as $subjectId) {
-                if (!$this->getSubjects()->where(['id' => $subjectId])->exists()) {
-                    $this->link('subjects', Subject::findOne($subjectId));
+            foreach ($this->selectedSubjects as $workSubjectId) {
+                if (!$this->getWorkSubjects()->where(['id' => $workSubjectId])->exists()) {
+                    $this->link('workSubjects', WorkSubject::findOne($workSubjectId));
                 }
             }
             return true;
@@ -161,20 +167,7 @@ class SubjectBlock extends ActiveRecord
 
     public function getSubjectCount()
     {
-        return count($this->subjects);
+        return count($this->workSubjects);
     }
-
-    /**
-     * @param $studentId
-     * @return SubjectBlock[]
-     */
-    public static function getSubjectBlocksForStudent($studentId)
-    {
-        $student = Student::findOne($studentId);
-        /** @var Group $group */
-        $group = $student->getGroups()[0];
-        return ArrayHelper::Map(SubjectBlock::findAll(['course' => $group->getCourse(), 'speciality_id' => $group->specialityQualification->speciality_id]), 'id', 'created');
-    }
-
 
 }

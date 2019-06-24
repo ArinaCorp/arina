@@ -57,27 +57,26 @@ class ExportStudentcard
         $activeSheet->setCellValue('J22', $student->fullExemptionString);
         $activeSheet->setCellValue('J23', $student->enrollmentEdict->yearCmdString);
 
-        // if(condition) TODO: implement(?) Discuss
-        $activeSheet->getCell('E24')->getStyle()->getFont()->setUnderline(true); // with experience
+        // if(condition) TODO: For now leave with no underline. To be implemented later.
+        $activeSheet->getCell('E24')->getStyle()->getFont()->setUnderline(false); // with experience
         // else
-        $activeSheet->getCell('J24')->getStyle()->getFont()->setUnderline(true); // without experience
+        $activeSheet->getCell('J24')->getStyle()->getFont()->setUnderline(false); // without experience
 
-        $activeSheet->setCellValue('I25', $student->finished_inst); //TODO: It has to be discussed and changed(?)
+        $activeSheet->setCellValue('I25', $student->finished_inst);
         $activeSheet->setCellValue('F27', ''); //by_direction
         $activeSheet->setCellValue('N29', ''); //by_special_conditions_of_partaking_in_the_competition
         $activeSheet->setCellValue('E30', $student->withoutCompetition ? Yii::t('app', 'On exemption basis') : '');
 
         // if(condition) TODO: implement(?) Discuss
-        $activeSheet->getCell('L31')->getStyle()->getFont()->setUnderline(true); // gov. credit
+        $activeSheet->getCell('L31')->getStyle()->getFont()->setUnderline(false); // gov. credit
         // elseif
-        $activeSheet->getCell('O31')->getStyle()->getFont()->setUnderline(true); // individual
+        $activeSheet->getCell('O31')->getStyle()->getFont()->setUnderline(false); // individual
         // else
-        $activeSheet->getCell('P31')->getStyle()->getFont()->setUnderline(true); // legal entity
+        $activeSheet->getCell('P31')->getStyle()->getFont()->setUnderline(false); // legal entity
 
-        $activeSheet->setCellValue('F32', ''); // employment_history
+        $activeSheet->setCellValue('F32', ''); // employment history book
         $activeSheet->setCellValue('C35', $student->tax_id); //TODO: We don't have a checkbox to check if someone uses passport serial and number instead
 
-        //Some edict list logic, TODO: Discuss and implement(?) edicts
         $row = 38;
         if ($student->edicts) {
             foreach ($student->edicts as $edict) {
@@ -102,24 +101,26 @@ class ExportStudentcard
         $row = 5;
         // TODO: Implement a better way to get group's course, as at some point it will return >4. Define Max course for a group? Define finishing year?
         // TODO: Start with the semester (Course) when student was enrolled.(It already does just put it in a method)
-        for ($semester = ($student->enrollmentEdict->course * 2) - 1; $semester <= $student->currentGroup->getCourse($student->currentGroup->created_study_year_id + 4) * 2; $semester++) {
+        for ($semester = ($student->enrollmentEdict->course * 2) - 1; $semester <= $student->course * 2; $semester++) {
             $semesterId = $semester - 1;
 
-            /** TODO: Don't forget another way of implementing StudentCard marks export.
+            /**
              * We have 4 tables for 4 courses on 2nd page of the template
              *
              * Right now the headers are written out even when no marks are found.
              * The $row incrementation is currently distributed to if() conditions which check if any marks are found per given course.
              *
+             * Imp_#1
              * So, with this implementation headers are basically rewritten on the first table and the output begins with the first course that has marks.
              * Ex.: table 1 has headers and is filled with 4th course marks, tables 2,3,4 are empty.
              *
+             * Imp_#2
              * Another way to do it is to ignore "marks per given course are present" conditions and simply fill the courses according to their tables
              * Ex.: all tables have headers, table 1,2,4 are empty, table 3 is filled with 3rd course marks.
              */
 
-            // Set up the headers even if there is no info to output
-            if (($semester) % 2) { // set this header for each new course (odd semester)
+            // Set up the headers
+            if (($semester) % 2) { // this header for each new course (odd semester)
                 $studyYear = $student->firstGroup->getStudyYearForCourse(GlobalHelper::getCourseForSemester($semester));
                 $courseHeader = mb_strtoupper(GlobalHelper::getOrderLiteral(GlobalHelper::getCourseForSemester($semester), 'uk') . " $studyYear->title навчальний рік");
                 $activeSheet->setCellValue("A$row", $courseHeader);
@@ -127,15 +128,15 @@ class ExportStudentcard
             $semesterHeader = mb_strtoupper(GlobalHelper::getOrderLiteral($semester, 'uk'));
             $activeSheet->setCellValue("B$row", $semesterHeader);
 
-            if ($marks = $studentCard->getMarks($semester)) {
+            if ($marks = $student->getMarks([], $semester)) {
                 // Output marks if there are any
                 foreach ($marks as $mark) {
                     $activeSheet->setCellValue("C$row", $mark->workSubject->title);
-                    $activeSheet->setCellValue("D$row", $mark->workSubject->total[$semesterId]); // TODO: Same here, hours should probs be taken from load
+                    $activeSheet->setCellValue("D$row", $mark->workSubject->total[$semesterId]);
                     $activeSheet->setCellValue("E$row", number_format($mark->workSubject->total[$semesterId] / 30, 2));
                     $activeSheet->setCellValue("F$row", $mark->valueLiteral);
                     $activeSheet->setCellValue("G$row", $mark->valueScaleLiteral);
-                    $activeSheet->setCellValue("H$row", $mark->retake_date ? $mark->retake_date : $mark->date);
+                    $activeSheet->setCellValue("H$row", $mark->date);
                     //Insert next
                     $activeSheet->insertNewRowBefore($row + 1);
                     $row++;
@@ -146,28 +147,36 @@ class ExportStudentcard
                 // TODO: Implement empty row here(before incrementation)
                 $row++;
 
-                // The offset is +7 per course, that is until edicts are implemented
-                if (!(($semester) % 2)) {
-                    // At the end of each course, output the line with the transfer edict.
-                    $courseEdict = $student->getCourseEdict(GlobalHelper::getCourseForSemester($semester));
-                    $courseTransferStr = 'Переведено на ' . GlobalHelper::getOrderLiteral($courseEdict->course, 'uk')
-                        . ' курс. Наказ від' . Yii::t('app', '{date} year №{cmd}', ['date' => $courseEdict->date, 'cmd' => $courseEdict->command]);
-                    $activeSheet->setCellValue("A$row", $courseEdict ? $courseTransferStr : 'ERR: Наказ не знайдено.');
-                    $row += 7;
-                }
             } else {
                 //If no marks found for odd semester, increase row increment by 2
                 //But only if the next semester, which is even, has any marks
-                //TODO: Basically check if any marks are present for given course, implement a method later(?)
-                if (($semester % 2) && $student->getMarks($semester + 1)) {
-                    $row += 2;
-                }
+                //Required for Imp_#1
+                //if (($semester % 2) && $student->getMarks($semester + 1)) {
+                $row += 2;
+                //}
             }
+
+            //For Imp_#1, move it inside the if() block
+            if (!(($semester) % 2)) {
+                // At the end of each course, output the line with the transfer edict.
+                if ($courseEdict = $student->getCourseEdict(GlobalHelper::getCourseForSemester($semester))) {
+                    $courseTransferStr = 'Переведено на ' . GlobalHelper::getOrderLiteral($courseEdict->course, 'uk')
+                        . ' курс. Наказ від' . Yii::t('app', '{date} year №{cmd}', ['date' => $courseEdict->date, 'cmd' => $courseEdict->command]);
+                }
+                $activeSheet->setCellValue("A$row", $courseEdict ? $courseTransferStr : 'ERR: Наказ не знайдено.');
+                $row += 7;
+            }
+
         }
 
         // Page 3
         $spreadsheet->setActiveSheetIndex(2);
         $activeSheet = $spreadsheet->getActiveSheet();
+
+        //Set Dep Head Initials and Second name
+        $activeSheet->setCellValue("F32", $student->currentGroup->specialityQualification->speciality->department->head->getNameWithInitials());
+        $activeSheet->setCellValue("F48", $student->currentGroup->specialityQualification->speciality->department->head->getNameWithInitials());
+
 
         $allMarks = $student->getMarks();
 

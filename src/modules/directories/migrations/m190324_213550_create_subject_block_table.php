@@ -44,12 +44,12 @@ class m190324_213550_create_subject_block_table extends Migration
     {
 
         $this->dropForeignKey(
-            'idx-subject_block-speciality_id',
+            'fk-subject_block-speciality_id',
             'subject_block'
         );
 
         $this->dropIndex(
-            'fk-subject_block-speciality_id',
+            'idx-subject_block-speciality_id',
             'subject_block'
         );
 

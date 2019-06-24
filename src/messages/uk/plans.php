@@ -27,6 +27,7 @@ return [
     'Subjects' => '',
     'The requested page does not exist' => '',
     'Work plan' => '',
+    'Work plan title' => '',
     'Work subject' => '',
     'Years amount must be set' => '',
     '' => '',

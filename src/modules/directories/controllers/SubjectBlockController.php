@@ -2,15 +2,24 @@
 
 namespace app\modules\directories\controllers;
 
+use app\components\DepDropHelper;
+use app\modules\directories\models\subject\Subject;
 use app\modules\directories\models\subject_block\SubjectBlock;
 use app\modules\directories\models\subject_block\SubjectBlockSearch;
+use app\modules\plans\models\WorkPlan;
+use app\modules\plans\models\WorkSubject;
+use app\modules\rbac\filters\AccessControl;
+use app\modules\user\models\User;
 use Yii;
 use yii\bootstrap\Alert;
 use yii\data\ActiveDataProvider;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use nullref\core\interfaces\IAdminController;
+use yii\web\Response;
+use yii\widgets\DetailView;
 
 /**
  * SubjectBlockController implements the CRUD actions for SubjectBlock model.
@@ -27,6 +36,16 @@ class SubjectBlockController extends Controller implements IAdminController
                     'delete' => ['POST'],
                 ],
             ],
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['subject-preview'],
+                        'roles' => [User::ROLE_STUDENT],
+                    ],
+                ]
+            ]
         ];
     }
 
@@ -91,7 +110,7 @@ class SubjectBlockController extends Controller implements IAdminController
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $model->selectedSubjects = $model->subjects;
+        $model->selectedSubjects = $model->workSubjects;
 
         if ($model->load(Yii::$app->request->post())
             && $model->save() && $model->saveSelectedSubjects(true)) {
@@ -133,6 +152,47 @@ class SubjectBlockController extends Controller implements IAdminController
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+    /**
+     * @return array
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function actionGetOptionalSubjects()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $out = '';
+        if (isset($_POST['depdrop_parents'])) {
+            $parents = $_POST['depdrop_parents'];
+            if ($parents != null) {
+
+                $workPlanId = $parents[0];
+                $course = $parents[1];
+                $semester = $parents[2];
+
+                // TODO: add the '+1' option for this method
+                $fullSemester = Yii::$app->get('calendar')->getSemesterIndexByCourse($course, $semester) + 1;
+                $workPlan = WorkPlan::findOne($workPlanId);
+                $map = ArrayHelper::map($workPlan->getOptionalWorkSubjects($fullSemester), 'id', 'title');
+                $out = DepDropHelper::convertMap($map);
+            }
+        }
+        return ['output' => $out, 'selected' => ''];
+    }
+
+    /**
+     * Returns the preview of subjects.
+     * @param $id
+     * @return string
+     * @throws \Exception
+     */
+    public function actionSubjectPreview($id)
+    {
+        $model = $this->findModel($id);
+        return DetailView::widget([
+            'model' => $model,
+            'attributes' => $model->getSubjectsDetail(),
+        ]);
     }
 
 }

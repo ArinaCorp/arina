@@ -37,21 +37,9 @@ class StudentCard extends Model
         ];
     }
 
-    /**
-     * @return Student|null
-     */
     public function getStudent()
     {
         return Student::findOne($this->studentId);
-    }
-
-    /**
-     * @param integer|null $semester
-     * @return JournalMark[]|\app\modules\plans\models\WorkPlan[]|Group[]|Student[]|array|\yii\db\ActiveRecord[]
-     */
-    public function getMarks($semester = null)
-    {
-        return $this->student->getMarks($semester);
     }
 
     /**

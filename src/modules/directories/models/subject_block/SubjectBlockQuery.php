@@ -2,6 +2,7 @@
 
 namespace app\modules\directories\models\subject_block;
 
+use nullref\useful\traits\MappableQuery;
 use yii\db\ActiveQuery;
 
 /**
@@ -11,7 +12,7 @@ use yii\db\ActiveQuery;
  */
 class SubjectBlockQuery extends ActiveQuery
 {
-
+    use MappableQuery;
     /**
      * @inheritdoc
      * @return SubjectBlock[]|array
