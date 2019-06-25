@@ -41,10 +41,6 @@ class ExportExam extends BaseMarkExporter
             $originalMarks = self::getMarks($record->retakeFor);
         }
 
-//        if ($record->retakeFor){
-//            $beforeRetakenMarks = self::getMarks($record->retakeFor);
-//        }
-
         $activeSheet->SetCellValue('A11', $subjectTitle);
         $activeSheet->SetCellValue('D13', $specialityTitle);
         $activeSheet->SetCellValue('A15', $teacherFullName);
@@ -79,13 +75,6 @@ class ExportExam extends BaseMarkExporter
             }
             $activeSheet->removeRow($current);
             $activeSheet->removeRow($current);
-//            $current += 1;
-//            $activeSheet->setCellValue('F' . $current, $group->getCuratorShortNameInitialFirst());
-//            $current += 2;
-//            $activeSheet->setCellValue('F' . $current, $group->getGroupLeaderShortNameInitialFirst());
-//            $current += 2;
-//            $activeSheet->setCellValue('F' . $current, Yii::t('app', 'Date created'));
-//            $activeSheet->setCellValue('G' . $current, date('d.m.Y H:i:s'));
 
             $activeSheet->setCellValue('C' . ($current + 8), Yii::t('app', 'Date') . ": " . date('d.m.Y') . "  " . Yii::t('app', 'Time') . ": " . date('H:i:s'));
         }
