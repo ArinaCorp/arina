@@ -31,7 +31,10 @@ class ExportToExcel
             $exporter = 'app\components\exporters\\' . $dir . '\Export' . $module;
         }
         if (class_exists($exporter)) {
-            $tmpfname = Yii::getAlias('@webroot') . "/templates/$dir/" . strtolower($module) . ".xlsx";
+            $tmpfname = Yii::getAlias('@webroot') . "/templates/" . strtolower($module) . ".xlsx";
+            if ($dir) {
+                $tmpfname = Yii::getAlias('@webroot') . "/templates/$dir/" . strtolower($module) . ".xlsx";
+            }
             $spreadsheet = IOFactory::load($tmpfname);
             if (is_null($entryData)) {
                 $spreadsheet = $exporter::getSpreadsheet($spreadsheet);
