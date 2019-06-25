@@ -1,10 +1,11 @@
 <?php
 
+use app\components\exporters\marks\BaseMarkExporter;
+use app\modules\plans\models\WorkSubject;
+use kartik\select2\Select2;
+use kartik\switchinput\SwitchInput;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use kartik\switchinput\SwitchInput;
-use kartik\select2\Select2;
-use app\modules\plans\models\WorkSubject;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\journal\models\record\JournalRecordType */
@@ -104,11 +105,11 @@ use app\modules\plans\models\WorkSubject;
             ]
     ]); ?>
 
-    <?= $form->field($model, 'report_title')->textInput() ?>
+    <?= $form->field($model, 'report_title')->dropDownList(BaseMarkExporter::getTypeTitles(), ['prompt' => '']) ?>
 
     <?= $form->field($model, 'work_type_id')->widget(Select2::class, [
         'data' => WorkSubject::getControlLabelList(),
-        'options' => ['placeholder' => Yii::t('app','Select a type')],
+        'options' => ['placeholder' => Yii::t('app', 'Select a type')],
         'pluginOptions' => [
             'allowClear' => true
         ],
