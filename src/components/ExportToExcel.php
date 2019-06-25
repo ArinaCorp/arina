@@ -47,6 +47,8 @@ class ExportToExcel
             header('Cache-Control: max-age=0');
             $objWriter = IOFactory::createWriter($spreadsheet, 'Xlsx');
             $objWriter->save('php://output');
+        } else {
+            echo 'Class ' . $exporter . 'doesn\'t exist';
         }
         exit();
     }
