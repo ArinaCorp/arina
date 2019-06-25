@@ -794,7 +794,7 @@ class Student extends \yii\db\ActiveRecord
 
         $finalMarks = [];
         foreach ($loads as $load) {
-            $mark = MarkHelper::getFinalMarkBySemester($this, $load, $semesterIndex);
+            $mark = JournalMark::getFinalMarkBySemester($this, $load, $semesterIndex);
             if ($mark) {
                 $finalMarks[] = $mark;
             }
