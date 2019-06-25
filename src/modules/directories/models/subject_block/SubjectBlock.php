@@ -170,4 +170,12 @@ class SubjectBlock extends ActiveRecord
         return count($this->workSubjects);
     }
 
+    /**
+     * @return string
+     */
+    public function getTitle()
+    {
+        return Yii::t('app', 'Subject block') . ' - ' . $this->id;
+    }
+
 }

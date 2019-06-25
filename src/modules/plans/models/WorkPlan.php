@@ -442,9 +442,10 @@ class WorkPlan extends ActiveRecord
     public function getOptionalWorkSubjects($semester = null)
     {
         $allOptional = $this->getWorkSubjects()
-            ->joinWith('subject')
-            // TODO: Add constant 'ПВС'
-            ->where(['like', 'subject.code', 'ПВС'])
+//            ->joinWith('subject')
+            ->leftJoin('subject_relation', 'subject_relation.subject_id=work_subject.subject_id')
+            // TODO: Temporary kostyl
+            ->where(['subject_relation.subject_cycle_id' => '1'])
             ->all();
 
         if ($semester) {

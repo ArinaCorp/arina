@@ -87,6 +87,10 @@ class ExportStudentcard
                 $activeSheet->setCellValue("N$row", $edict->content);
                 //Insert next
                 $activeSheet->insertNewRowBefore($row + 1);
+                //Merge cells
+                $spreadsheet->getActiveSheet()->mergeCells("B$row:M$row");
+                $spreadsheet->getActiveSheet()->mergeCells("N$row:R$row");
+
                 $row++;
             }
             //Don't want to risk fucking up the doc, so leave one empty row.
@@ -130,7 +134,7 @@ class ExportStudentcard
             $semesterHeader = mb_strtoupper(GlobalHelper::getOrderLiteral($semester, 'uk'));
             $activeSheet->setCellValue("B$row", $semesterHeader);
 
-            if ($marks = $student->getMarks([], $semester)) {
+            if ($marks = $student->getFinalMarks($semesterId)) {
                 // Output marks if there are any
                 foreach ($marks as $mark) {
                     $activeSheet->setCellValue("C$row", $mark->workSubject->title);
@@ -138,7 +142,7 @@ class ExportStudentcard
                     $activeSheet->setCellValue("E$row", number_format($mark->workSubject->total[$semesterId] / 30, 2));
                     $activeSheet->setCellValue("F$row", $mark->valueLiteral);
                     $activeSheet->setCellValue("G$row", $mark->valueScaleLiteral);
-                    $activeSheet->setCellValue("H$row", $mark->date);
+                    $activeSheet->setCellValue("H$row", $mark->journalRecord->date);
                     //Insert next
                     $activeSheet->insertNewRowBefore($row + 1);
                     $row++;
@@ -163,7 +167,7 @@ class ExportStudentcard
                 // At the end of each course, output the line with the transfer edict.
                 if ($courseEdict = $student->getCourseEdict(GlobalHelper::getCourseForSemester($semester))) {
                     $courseTransferStr = 'Переведено на ' . GlobalHelper::getOrderLiteral($courseEdict->course, 'uk')
-                        . ' курс. Наказ від' . Yii::t('app', '{date} year №{cmd}', ['date' => $courseEdict->date, 'cmd' => $courseEdict->command]);
+                        . ' курс. Наказ від ' . Yii::t('app', '{date} year №{cmd}', ['date' => $courseEdict->date, 'cmd' => $courseEdict->command]);
                 }
                 $activeSheet->setCellValue("A$row", $courseEdict ? $courseTransferStr : 'ERR: Наказ не знайдено.');
                 $row += 7;
@@ -180,7 +184,7 @@ class ExportStudentcard
         $activeSheet->setCellValue("F48", $student->currentGroup->specialityQualification->speciality->department->head->getNameWithInitials());
 
 
-        $allMarks = $student->getMarks();
+        $allMarks = $student->finalMarks;
 
         $total = count($allMarks);
         $satisfiable = count(array_filter($allMarks, function (JournalMark $mark) {

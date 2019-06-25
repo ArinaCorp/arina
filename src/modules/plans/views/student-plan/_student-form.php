@@ -41,11 +41,11 @@ $user = Yii::$app->user->identity;
         <div class="col-sm-6">
 
             <?= $form->field($model, 'subject_block_id')->widget(Select2::class, [
-                'data' => SubjectBlock::getMap('created', 'id', [
+                'data' => SubjectBlock::getMap('title', 'id', [
                     'work_plan_id' => $model->work_plan_id,
                     'course' => $user->student->course,
                     'semester' => $user->student->currentSemester
-                ]),
+                ], false),
                 'options' => [
                     'placeholder' => Yii::t('app', 'Select ...'),
                 ],

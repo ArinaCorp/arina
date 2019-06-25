@@ -735,57 +735,65 @@ class Student extends \yii\db\ActiveRecord
     }
 
     /**
-     * @param integer|null $semester
-     * @param array $condition
+     * @param null $semesterIndex
      * @return JournalMark[]|\app\modules\plans\models\WorkPlan[]|Group[]|Student[]|array|\yii\db\ActiveRecord[]
      */
-    public function getMarks($condition = [], $semester = null)
+    public function getFinalMarks($semesterIndex = null)
     {
 //        Example of getFinalMark usage
 //        //#1 get all student loads
-//        /** @var Load[] $loads */
-//        $loads = Load::find()
-//            ->joinWith('workSubject')
-//            ->joinWith('workSubject.workPlan')
-//            ->where(['work_plan_id' => $this->currentWorkPlan->id,
-//                'group_id' => $this->getFirstGroup(),
-//            ])
-//            ->all();
-//
+        /** @var Load[] $loads */
+        $loads = Load::find()
+            ->joinWith('workSubject')
+            ->joinWith('workSubject.workPlan')
+            ->where([
+//                'work_plan_id' => $this->currentWorkPlan->id,
+                'group_id' => array_keys($this->getGroupArray()),
+            ])
+            ->all();
+
+        if ($semesterIndex) {
 //        //#2 filter loads by semester
-//        $loads = array_filter($loads, function (Load $load) {
-//            $course = $load->group->getCourse();
+            $loads = array_filter($loads, function (Load $load) use ($semesterIndex) {
+//                $course = $load->group->getCourse();
 //            $graph = $load->getGraphRow(Yii::$app->get('calendar')->getCurrentYear()->id);
-//            $semesterIndex = Yii::$app->get('calendar')->getSemesterIndexByCourse($course, Yii::$app->get('calendar')->getCurrentSemester($graph));
-//            return $load->workSubject->total[$semesterIndex];
-//        });
-//
-//        foreach ($loads as $load){
-//            $mark = JournalMark::getFinalMark($this, $load);
-//
-//            echo $load->workSubject->subject->title. ' : '.($mark? $mark->value:' n/a'). '<br>';
-//        }
-
-        $allMarks = JournalMark::find()
-            ->joinWith('journalRecord')
-            ->joinWith('evaluation')
-            ->rightJoin('load', 'load.id = journal_record.load_id')
-            ->where(array_merge(['student_id' => $this->id], $condition))->all();
-
-        if ($semester) {
-            // TODO: Seems to be a heavy execution, implement differently?
-            return array_filter($allMarks, function (JournalMark $mark) use ($semester) {
-                $record = $mark->journalRecord;
-                $graph = $record->load->getGraphRow($record->load->study_year_id);
-                $recordWeek = Yii::$app->get('calendar')->getWeekNumberByDate(strtotime($record->date));
-                $recordSemester = Yii::$app->get('calendar')->getSemester($graph, $recordWeek);
-                // We compare the record semester on scale of 8 semester based on group's course at the date of a mark.
-                // Basically (course * 2) = even semester number; If recordSemester == 1, we subtract 1, to correct the value.
-                return ($record->load->group->getCourse($record->load->study_year_id) * 2) - ($recordSemester === 1 ? 1 : 0) === $semester;
+//                $semesterIndex = Yii::$app->get('calendar')->getSemesterIndexByCourse($course, $semester);
+                return $load->workSubject->total[$semesterIndex];
             });
         }
 
-        return $allMarks;
+        $finalMarks = [];
+        foreach ($loads as $load) {
+            $mark = JournalMark::getFinalMark($this, $load);
+            if ($mark) {
+                $finalMarks[] = $mark;
+            }
+//            echo $load->workSubject->subject->title. ' : '.($mark? $mark->value:' n/a'). '<br>';
+        }
+
+        return $finalMarks;
+//
+//        $allMarks = JournalMark::find()
+//            ->joinWith('journalRecord')
+//            ->joinWith('evaluation')
+//            ->rightJoin('load', 'load.id = journal_record.load_id')
+//            ->where(array_merge(['student_id' => $this->id], $condition))->all();
+//        $allMarks = $finalMarks;
+//
+//        if ($semesterIndex) {
+//            return array_filter($allMarks, function (JournalMark $mark) use ($semesterIndex) {
+//                $semester = $semesterIndex + 1;
+//                $record = $mark->journalRecord;
+//                $graph = $record->load->getGraphRow($record->load->study_year_id);
+//                $recordWeek = Yii::$app->get('calendar')->getWeekNumberByDate(strtotime($record->date));
+//                $recordSemester = Yii::$app->get('calendar')->getSemester($graph, $recordWeek);
+//                // We compare the record semester on scale of 8 semester based on group's course at the date of a mark.
+//                // Basically (course * 2) = even semester number; If recordSemester == 1, we subtract 1, to correct the value.
+//                return ($record->load->group->getCourse($record->load->study_year_id) * 2) - ($recordSemester === 1 ? 1 : 0) === $semester;
+//            });
+//        }
+
+//        return $allMarks;
     }
 
     /**

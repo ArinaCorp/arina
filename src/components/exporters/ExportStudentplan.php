@@ -119,7 +119,7 @@ class ExportStudentplan
             $activeSheet->setCellValue("G$mandatoryRow", $workSubject->practices[${$semester}]);
             $activeSheet->setCellValue("H$mandatoryRow", $workSubject->getSelfWork(${$semester}));
             $activeSheet->setCellValue("I$mandatoryRow", $workSubject->project_hours ? $workSubject->project_hours : '0');
-            $activeSheet->setCellValue("J$mandatoryRow", 'WIP');
+            $activeSheet->setCellValue("J$mandatoryRow", '');//WIP
             $activeSheet->setCellValue("K$mandatoryRow", $workSubject->cyclicCommission ? $workSubject->cyclicCommission->short_title : '');
             //Here is our row 17, well for the first iteration
             $activeSheet->insertNewRowBefore($mandatoryRow + 1);
@@ -162,7 +162,7 @@ class ExportStudentplan
                 $activeSheet->setCellValue("G$selectableRow", $workSubject->practices[${$semester}]);
                 $activeSheet->setCellValue("H$selectableRow", $workSubject->getSelfWork(${$semester}));
                 $activeSheet->setCellValue("I$selectableRow", $workSubject->project_hours ? $workSubject->project_hours : '0');
-                $activeSheet->setCellValue("J$selectableRow", 'WIP');
+                $activeSheet->setCellValue("J$selectableRow", ''); // WIP
                 $activeSheet->setCellValue("K$selectableRow", $workSubject->cyclicCommission ? $workSubject->cyclicCommission->short_title : '');
 
                 $activeSheet->insertNewRowBefore($selectableRow + 1);
