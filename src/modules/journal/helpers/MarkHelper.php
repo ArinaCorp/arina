@@ -97,4 +97,34 @@ class MarkHelper
         ][self::getMarkScale($mark, $evalSystemId)], [], $lang);
     }
 
+    public static function getFinalMarkBySemester($student, $load, $semesterIndex)
+    {
+        /** @var self[] $allMarks */
+        $allMarks = JournalMark::find()
+            ->joinWith('journalRecord')
+            ->joinWith('evaluation')
+            ->rightJoin('load', 'load.id = journal_record.load_id')
+            ->where(['student_id' => $student->id, 'load_id' => $load->id])
+            ->orderBy(['journal_record.date' => SORT_DESC])
+            ->all();
+
+        $allMarks = array_filter($allMarks, function(JournalMark $mark) use ($semesterIndex){
+            $record = $mark->journalRecord;
+            $graph = $record->load->getGraphRow(Yii::$app->get('calendar')->getCurrentYear()->id);
+            $recordWeek = Yii::$app->get('calendar')->getWeekNumberByDate(strtotime($record->date));
+            $recordSemester = Yii::$app->get('calendar')->getSemester($graph, $recordWeek);
+            // We compare the record semester on scale of 8 semester based on group's course at the date of a mark.
+            // Basically (course * 2) = even semester number; If recordSemester == 1, we subtract 1, to correct the value.
+//                return ($record->load->group->getCourse($record->load->study_year_id) * 2) - ($recordSemester === 1 ? 1 : 0) === $semester;
+            $recordSemesterIndex = Yii::$app->get('calendar')->getSemesterIndexByCourse($record->load->course, $recordSemester);
+            return $recordSemesterIndex === $semesterIndex;
+        });
+
+        return count($allMarks) > 0 ? array_pop($allMarks) : null;
+
+        //@TODO improve logic of final mark selection
+
+//        return $lastMark;
+    }
+
 }

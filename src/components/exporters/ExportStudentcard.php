@@ -47,7 +47,7 @@ class ExportStudentcard
         $activeSheet->setCellValue('D8', $student->speciality->title);
         $activeSheet->setCellValue('J11', $student->fullName);
         $activeSheet->setCellValue('F12', $student->birth_day);
-        $activeSheet->setCellValue('G13', 'birth_place'); //TODO: Implement birth place
+        $activeSheet->setCellValue('G13', ''); //TODO: Implement birth place
         if ($student->country) {
             $activeSheet->setCellValue('E14', $student->country->name); //TODO: Implement citizenship later(?)
         }
@@ -184,7 +184,7 @@ class ExportStudentcard
         $activeSheet->setCellValue("F48", $student->currentGroup->specialityQualification->speciality->department->head->getNameWithInitials());
 
 
-        $allMarks = $student->finalMarks;
+        $allMarks = $student->getMarks();
 
         $total = count($allMarks);
         $satisfiable = count(array_filter($allMarks, function (JournalMark $mark) {
