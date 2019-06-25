@@ -43,6 +43,11 @@ class StudyPlanController extends Controller implements IAdminController
                         'allow' => true,
                         'actions' => [],
                         'roles' => ['head-of-department', 'head-of-cyclic-commission'],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['index', 'export', 'view'],
+                        'roles' => [User::ROLE_TEACHER],
                     ]
                 ]
             ]

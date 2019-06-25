@@ -41,7 +41,7 @@ class Module extends BaseModule implements IAdminModule
                     'label' => Yii::t('plans', 'Study plans'),
                     'url' => ['/plans/study-plan/index'],
                     'icon' => 'th-list',
-                    'roles' => [User::ROLE_HEAD_OF_DEP, User::ROLE_HEAD_OF_CYC_COM],
+                    'roles' => [User::ROLE_HEAD_OF_DEP, User::ROLE_HEAD_OF_CYC_COM, User::ROLE_TEACHER],
                 ],
                 [
                     'label' => Yii::t('plans', 'Create study plan'),
@@ -53,7 +53,7 @@ class Module extends BaseModule implements IAdminModule
                     'label' => Yii::t('plans', 'Work plans'),
                     'url' => ['/plans/work-plan/index'],
                     'icon' => 'th-list',
-                    'roles' => [User::ROLE_HEAD_OF_DEP, User::ROLE_HEAD_OF_CYC_COM],
+                    'roles' => [User::ROLE_HEAD_OF_DEP, User::ROLE_HEAD_OF_CYC_COM, User::ROLE_TEACHER],
                 ],
                 [
                     'label' => Yii::t('plans', 'Create work plan'),
@@ -68,7 +68,7 @@ class Module extends BaseModule implements IAdminModule
                     'roles' => [User::ROLE_HEAD_OF_DEP, User::ROLE_HEAD_OF_CYC_COM, User::ROLE_STUDENT],
                 ]
             ],
-            'roles' => [User::ROLE_HEAD_OF_DEP, User::ROLE_HEAD_OF_CYC_COM, User::ROLE_STUDENT],
+            'roles' => [User::ROLE_HEAD_OF_DEP, User::ROLE_HEAD_OF_CYC_COM, User::ROLE_STUDENT, User::ROLE_TEACHER],
         ];
     }
 }
