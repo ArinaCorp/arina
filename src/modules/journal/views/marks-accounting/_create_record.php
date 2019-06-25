@@ -33,7 +33,7 @@ use yii\widgets\ActiveForm;
                 <?= $form->field($record, 'type')->widget(Select2::class, [
                     'data' => JournalRecordType::getMap('title'),
                     'pluginOptions' => [
-                        'placeholder' => Yii::t('journal', 'Choose type'),
+                        'placeholder' => Yii::t('app', 'Choose type'),
                     ],
                 ]) ?>
                 <div id="retakePartial">
