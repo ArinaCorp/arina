@@ -1,12 +1,11 @@
 <?php
 
-use app\modules\plans\models\WorkPlan;
-use app\modules\students\models\StudentCard;
+use app\modules\students\models\Student;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
 /**
- * @var $model StudentCard
+ * @var $model Student
  * @var $course integer
  */
 
@@ -58,8 +57,8 @@ switch ($course) {
         <th colspan="6"><?= Yii::t('plans', 'Autumn semester') ?></th>
     </tr>
 
-    <?php if ($model->getMarks([], $fall + 1)):
-        foreach ($model->getMarks([], $fall + 1) as $mark): ?>
+    <?php if ($model->getFinalMarks($fall)):
+        foreach ($model->getFinalMarks($fall) as $mark): ?>
             <tr>
                 <td><?= $mark->workSubject->title; ?></td>
                 <!--TODO: Total hours per semester should probably be taken from Load rather than Work Plan-->
@@ -67,7 +66,7 @@ switch ($course) {
                 <td><?= number_format($mark->workSubject->total[$fall] / 30, 2); ?></td>
                 <td><?= $mark->valueLiteral; ?></td>
                 <td><?= $mark->valueScaleLiteral; ?></td>
-                <td><?= $mark->date; ?></td>
+                <td><?= $mark->journalRecord->date; ?></td>
             </tr>
         <?php endforeach;
     endif; ?>
@@ -76,15 +75,15 @@ switch ($course) {
         <th colspan="6"><?= Yii::t('plans', 'Spring semester') ?></th>
     </tr>
 
-    <?php if ($model->getMarks([], $spring + 1)):
-        foreach ($model->getMarks([], $spring + 1) as $mark): ?>
+    <?php if ($model->getFinalMarks($spring)):
+        foreach ($model->getFinalMarks($spring) as $mark): ?>
             <tr>
                 <td><?= $mark->workSubject->title; ?></td>
                 <td><?= $mark->workSubject->total[$spring]; ?></td>
                 <td><?= number_format($mark->workSubject->total[$spring] / 30, 2); ?></td>
                 <td><?= $mark->valueLiteral; ?></td>
                 <td><?= $mark->valueScaleLiteral; ?></td>
-                <td><?= $mark->date; ?></td>
+                <td><?= $mark->journalRecord->date; ?></td>
             </tr>
         <?php endforeach;
     endif; ?>

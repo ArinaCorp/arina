@@ -261,7 +261,7 @@ class StudentPlanController extends Controller implements IAdminController
                 $course = $student->currentGroup->getCourse($workPlan->study_year_id);
                 $semester = $parents[2];
 
-                $subjectBlocks = SubjectBlock::getMap('created', 'id', ['work_plan_id' => $workPlanId, 'course' => $course, 'semester' => $semester]);
+                $subjectBlocks = SubjectBlock::getMap('title', 'id', ['work_plan_id' => $workPlanId, 'course' => $course, 'semester' => $semester], false);
 
                 $out = DepDropHelper::convertMap($subjectBlocks);
 

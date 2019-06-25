@@ -4,6 +4,7 @@ namespace app\modules\plans\models;
 
 use app\components\ExportToExcel;
 use app\modules\directories\models\subject_block\SubjectBlock;
+use app\modules\directories\models\subject_relation\SubjectRelation;
 use app\modules\students\models\Group;
 use app\modules\students\models\Student;
 use app\modules\user\helpers\UserHelper;
@@ -151,7 +152,12 @@ class StudentPlan extends ActiveRecord
         $subjects = [];
         foreach ($this->workPlan->workSubjects as $workSubject) {
             //TODO: Set a constant for 'ПВС' code
-            if (strpos($workSubject->subject->code, 'ПВС') === false)
+            $optionalRelation = SubjectRelation::find()
+//            ->joinWith('subject')
+                // TODO: Temporary kostyl
+                ->where(['subject_id' => $workSubject->subject_id, 'subject_relation.subject_cycle_id' => '1'])
+                ->one();
+            if (!$optionalRelation)
                 $subjects [] = $workSubject;
         }
         return $subjects;

@@ -71,7 +71,7 @@ $semester = ($semester == 2 ? 'spring' : 'fall');
         'project' => 0,
     ]; ?>
 
-    <?php foreach ($model->workPlan->workSubjects as $subject): ?>
+    <?php foreach ($model->workSubjects as $subject): ?>
         <?php if ($subject->presentIn($course) && strpos($subject->subject->code, 'ПВС') === false): ?>
             <tr>
                 <td><?= isset($subject->subject) ? $subject->subject->title : $subject->subject_id; ?></td>

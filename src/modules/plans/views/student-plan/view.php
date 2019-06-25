@@ -50,7 +50,13 @@ $user = Yii::$app->user->identity;
             echo Html::a(Yii::t('app', 'Update'), Url::toRoute(['/plans/student-plan/update', 'id' => $model->id]), ['class' => 'btn btn-info mx-1']);
         }
         if (!UserHelper::isStudent($user)) {
-            echo Html::a(Yii::t('app', 'Delete'), Url::toRoute(['/plans/student-plan/delete', 'id' => $model->id]), ['class' => 'btn btn-danger']);
+            echo Html::a(Yii::t('app', 'Delete'), Url::toRoute(['/plans/student-plan/delete', 'id' => $model->id]), [
+                'class' => 'btn btn-danger',
+                'data' => [
+                    'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
+                    'method' => 'post',
+                ]
+            ]);
         }
         ?>
     </div>
@@ -77,9 +83,9 @@ $user = Yii::$app->user->identity;
     </div>
 
     <div class="col-lg-12">
-        <h5><?= Html::encode(Yii::t('app', 'Created At') . ' ' . Yii::$app->formatter->asDate($model->created, 'dd.mm.y')); ?></h5>
+        <h5><?= Html::encode(Yii::t('app', 'Created At') . ' ' . Yii::$app->formatter->asDate($model->created, 'dd.MM.y')); ?></h5>
         <?php if ($model->updated): ?>
-            <h5><?= Html::encode(Yii::t('app', 'Updated At') . ' ' . Yii::$app->formatter->asDate($model->updated, 'dd.mm.y')); ?></h5>
+            <h5><?= Html::encode(Yii::t('app', 'Updated At') . ' ' . Yii::$app->formatter->asDate($model->updated, 'dd.MM.y')); ?></h5>
         <?php endif; ?>
         <h4><?= Html::encode(Yii::t('app', 'Group curator') . ' ' . $model->group->getCuratorFullName()); ?></h4>
     </div>

@@ -40,10 +40,10 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= 'Student id = ' . $model->id ?>
         <br>
 
-        <?php foreach ($model->marks as $mark): ?>
+        <?php foreach ($model->finalMarks as $mark): ?>
             <h5><?= "Student: $mark->student_id Value: $mark->value Ticket: $mark->ticket Date: $mark->date Type: " . $mark->journalRecord->type ?></h5>
         <?php endforeach; ?>
-        <h4><?= "Count: " . count($model->marks) ?></h4>
+        <h4><?= "Count: " . count($model->finalMarks) ?></h4>
     </div>
 
     <div class="row clearfix">
