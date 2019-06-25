@@ -9,7 +9,7 @@ use PhpOffice\PhpSpreadsheet;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 
-class ExportYearlyHourAccounting
+class ExportYearlyhouraccounting
 {
     /**
      * @param $spreadsheet PhpSpreadsheet\Spreadsheet

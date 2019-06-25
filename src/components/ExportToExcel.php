@@ -48,7 +48,7 @@ class ExportToExcel
             $objWriter = IOFactory::createWriter($spreadsheet, 'Xlsx');
             $objWriter->save('php://output');
         } else {
-            echo 'Class ' . $exporter . 'doesn\'t exist';
+            echo 'Class ' . $exporter . ' doesn\'t exist';
         }
         exit();
     }
