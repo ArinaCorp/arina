@@ -148,6 +148,8 @@ class JournalRecord extends \yii\db\ActiveRecord
             'audience_id' => Yii::t('app', 'Audience ID'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
+            'isRetake' => Yii::t('app', 'Is Retake'),
+            'retake_for_id' => Yii::t('app', 'Retake For'),
         ];
     }
 
