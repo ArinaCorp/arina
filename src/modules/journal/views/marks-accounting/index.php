@@ -198,7 +198,6 @@ $this->registerJS($js);
     <?php if ($load->id): ?>
         <p>
             <?= Html::button(Yii::t('app', 'Add column'), ['class' => 'btn btn-success', 'data-toggle' => 'modal', 'data-target' => '#recordCreateModal']) ?>
-            <?= Html::a(Yii::t('app', 'Export'), Url::to(['export', 'loadId' => $load->id]), ['class' => 'btn btn-info']) ?>
         </p>
 
         <?= $this->render('_create_record', [

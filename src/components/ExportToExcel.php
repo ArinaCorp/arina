@@ -45,7 +45,7 @@ class ExportToExcel
             $objWriter = IOFactory::createWriter($spreadsheet, 'Xlsx');
             $objWriter->save('php://output');
         }
-        Yii::$app->end();
+        exit();
     }
 
     public static function getBorderStyle()

@@ -479,4 +479,19 @@ class Group extends ActiveRecord
         return $calendar->getCurrentSemester($this->currentWorkPlan->graph[$graphIndex]);
     }
 
+
+    /**
+     * Returns the current semester for group ( which depends on it's current WorkPlan and it's graph )
+     * @return mixed
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function getSemester()
+    {
+        /** @var Calendar $calendar */
+        $calendar = Yii::$app->get('calendar');
+        $rows = $this->currentWorkPlan->getGroups();
+        $graphIndex = array_search($this->getSystemTitle(), array_keys($rows));
+        return $calendar->getCurrentSemester($this->currentWorkPlan->graph[$graphIndex]);
+    }
+
 }

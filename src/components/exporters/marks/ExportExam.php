@@ -13,42 +13,72 @@ use Yii;
 class ExportExam extends BaseMarkExporter
 {
 
-
+    /**
+     * @param \PhpOffice\PhpSpreadsheet\Spreadsheet $spreadsheet
+     * @param \app\modules\journal\models\record\JournalRecord $record
+     * @return mixed|\PhpOffice\PhpSpreadsheet\Spreadsheet
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \yii\base\InvalidConfigException
+     */
     public static function getSpreadsheet($spreadsheet, $record)
     {
-//        $spreadsheet->setActiveSheetIndex(0);
+        $activeSheet = $spreadsheet->setActiveSheetIndex(0);
+
+        $load = $record->load;
+
+        $subjectTitle = $load->workSubject->getTitle();
+        $specialityTitle = $load->workSubject->workPlan->specialityQualification->speciality->title;
+        $teacherFullName = $load->employee->getFullName();
+
+        $semester = $load->group->getSemester();
+        $course = $load->group->getCourse($load->study_year_id);
+        $groupTitle = $load->group->getSystemTitle();
 
         $students = self::getStudents($record);
         $marks = self::getMarks($record);
-//        $spreadsheet->getActiveSheet()->SetCellValue('B2', $record->typeObj->title);
-//        $spreadsheet->getActiveSheet()->SetCellValue('B3', Yii::$app->get('calendar')->getCurrentYear()->fullName . " навчального року");
+
+//        if ($record->retakeFor){
+//            $beforeRetakenMarks = self::getMarks($record->retakeFor);
+//        }
+
+        $activeSheet->SetCellValue('A11', $subjectTitle);
+        $activeSheet->SetCellValue('D13', $specialityTitle);
+        $activeSheet->SetCellValue('A15', $teacherFullName);
+
+        $activeSheet->SetCellValue('C14', $semester);
+        $activeSheet->SetCellValue('F14', $course);
+        $activeSheet->SetCellValue('I14', $groupTitle);
 
         if (!is_null($students)) {
-//            $startRow = 19;
-//            $current = $startRow;
-//            $i = 1;
-//            foreach ($students as $student) {
-//                $spreadsheet->getActiveSheet()->insertNewRowBefore($current + 1);
-//                $spreadsheet->getActiveSheet()->mergeCells('B' . $current . ':E' . $current);
-//                $spreadsheet->getActiveSheet()->mergeCells('G' . $current . ':H' . $current);
-//                $spreadsheet->getActiveSheet()->setCellValue('A' . $current, $i);
-//                $spreadsheet->getActiveSheet()->setCellValue('B' . $current, $student->getFullName());
-//                if (isset($marks[$student->id])) {
-//                    $mark = $marks[$student->id];
-//                    $spreadsheet->getActiveSheet()->setCellValue('G' . $current, $mark->value);
-//                }
-//                $i++;
-//                $current++;
-//            }
-//            $spreadsheet->getActiveSheet()->removeRow($current);
-//            $spreadsheet->getActiveSheet()->removeRow($current);
+            $startRow = 19;
+            $current = $startRow;
+            $i = 1;
+            foreach ($students as $student) {
+                $activeSheet->insertNewRowBefore($current + 1);
+                $activeSheet->mergeCells('B' . $current . ':E' . $current);
+                $activeSheet->mergeCells('G' . $current . ':H' . $current);
+                $activeSheet->setCellValue('A' . $current, $i);
+                $activeSheet->setCellValue('B' . $current, $student->getFullName());
+                if (isset($marks[$student->id])) {
+                    $mark = $marks[$student->id];
+                    $activeSheet->setCellValue('F' . $current, $mark->ticket);
+                    $activeSheet->setCellValue('G' . $current, $mark->value);
+                }
+                $activeSheet->setCellValue('I' . $current, $student->getPaymentTypeLabel());
+                $i++;
+                $current++;
+            }
+            $activeSheet->removeRow($current);
+            $activeSheet->removeRow($current);
 //            $current += 1;
-//            $spreadsheet->getActiveSheet()->setCellValue('F' . $current, $group->getCuratorShortNameInitialFirst());
+//            $activeSheet->setCellValue('F' . $current, $group->getCuratorShortNameInitialFirst());
 //            $current += 2;
-//            $spreadsheet->getActiveSheet()->setCellValue('F' . $current, $group->getGroupLeaderShortNameInitialFirst());
+//            $activeSheet->setCellValue('F' . $current, $group->getGroupLeaderShortNameInitialFirst());
 //            $current += 2;
-//            $spreadsheet->getActiveSheet()->setCellValue('F' . $current, Yii::t('app', 'Date created'));
-//            $spreadsheet->getActiveSheet()->setCellValue('G' . $current, date('d.m.Y H:i:s'));
+//            $activeSheet->setCellValue('F' . $current, Yii::t('app', 'Date created'));
+//            $activeSheet->setCellValue('G' . $current, date('d.m.Y H:i:s'));
+
+            $activeSheet->setCellValue('C' . ($current + 8), Yii::t('app', 'Date') . ": " . date('d.m.Y') . "  " . Yii::t('app', 'Time') . ": " . date('H:i:s'));
         }
         return $spreadsheet;
     }
