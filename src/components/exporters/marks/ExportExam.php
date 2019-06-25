@@ -36,6 +36,10 @@ class ExportExam extends BaseMarkExporter
 
         $students = self::getStudents($record);
         $marks = self::getMarks($record);
+        $originalMarks = [];
+        if ($record->retakeFor) {
+            $originalMarks = self::getMarks($record->retakeFor);
+        }
 
 //        if ($record->retakeFor){
 //            $beforeRetakenMarks = self::getMarks($record->retakeFor);
@@ -54,6 +58,7 @@ class ExportExam extends BaseMarkExporter
             $current = $startRow;
             $i = 1;
             foreach ($students as $student) {
+                $mark = null;
                 $activeSheet->insertNewRowBefore($current + 1);
                 $activeSheet->mergeCells('B' . $current . ':E' . $current);
                 $activeSheet->mergeCells('G' . $current . ':H' . $current);
@@ -61,6 +66,10 @@ class ExportExam extends BaseMarkExporter
                 $activeSheet->setCellValue('B' . $current, $student->getFullName());
                 if (isset($marks[$student->id])) {
                     $mark = $marks[$student->id];
+                } elseif (isset($originalMarks[$student->id])) {
+                    $mark = $originalMarks[$student->id];
+                }
+                if ($mark != null) {
                     $activeSheet->setCellValue('F' . $current, $mark->ticket);
                     $activeSheet->setCellValue('G' . $current, $mark->value);
                 }
